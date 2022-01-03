@@ -12,7 +12,7 @@ class Herbivore:
 
     def determine_birthweight(self, w_birth, sigma_birth):
         """
-        Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian dist.
+        Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian distribution.
         """
         pass
 
@@ -39,6 +39,12 @@ class Herbivore:
         """
         pass
 
+    def aging(self):
+        """
+        After 1 year passed, each herbivore becomes 1 year older
+        """
+        self.age += 1
+
     def migration(self):
         """
         Migrating-function
@@ -48,6 +54,25 @@ class Herbivore:
     def probability_to_give_birth(self, gamma, number_of_herbivores):
         """
         Function giving the probability for giving birth
+        (number_of_herbivores is the number of herbivores before the breeding season starts)
         """
         pass
+
+    def giving_birth(self, xi):
+        """
+        function handling the birth of a new herbivore.
+        Runs if probability_to_give_birth > random number
+
+        Possible procedure:
+        1. Find birthweight of new baby using Gaussian distribution
+        2. Find mother's weight loss (birthweight * xi)
+        3.1 If weight in point 2 is bigger than mother's weight - No new baby, stop giving_birth
+        3.2 Else; Adjust mother's weight + create new Herbivore with birthweight found in point 2
+
+        ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
+        this year. (self.mother = False/True)!
+        """
+        pass
+
+
 
