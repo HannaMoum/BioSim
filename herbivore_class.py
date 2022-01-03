@@ -5,9 +5,10 @@ class Herbivore:
     Legg inn doc-string
     """
 
-    def __init__(self, age = 0, weight = None):
+    def __init__(self, age = 0, weight = None, loc = None):
         self.age = age
         self.weight = weight
+        self.loc = loc
 
     def determine_birthweight(self, w_birth, sigma_birth):
         """
@@ -29,9 +30,24 @@ class Herbivore:
         """
         pass
 
+    @Property
     def fitness(self, phi_age, phi_weight, a_half, w_half):
         """
         calculate fitness-condition based on age and weight
         (Might use numpy.heaviside function)
+        Return "self.fitness"
         """
         pass
+
+    def migration(self):
+        """
+        Migrating-function
+        """
+        pass
+
+    def probability_to_give_birth(self, gamma, number_of_herbivores):
+        """
+        Function giving the probability for giving birth
+        """
+        pass
+
