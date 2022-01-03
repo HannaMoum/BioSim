@@ -45,7 +45,7 @@ class Herbivore:
         """
         self.age += 1
 
-    def migration(self):
+    def migration(self, geography):
         """
         Migrating-function
         """
@@ -71,6 +71,12 @@ class Herbivore:
 
         ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
         this year. (self.mother = False/True)!
+        """
+        pass
+
+    def death(self):
+        """
+        Function deciding if the Herbivore should die.
         """
         pass
 
