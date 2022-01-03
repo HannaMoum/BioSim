@@ -1,0 +1,1 @@
+Denne filen inneholder en beskrivelse av simuleringen. 
