@@ -23,6 +23,12 @@ class Herbivore:
         """
         pass
 
+    #def eat_fodder(self, F_tilde, beta):
+    #    """
+    #    Call on function "increase_weight_when_eating" and adjust weight
+    #    """
+    #    pass
+
     def decrease_weight_when_aging(self, eta):
         """
         Funksjon som regner ut hvor mye vekten minker per år
