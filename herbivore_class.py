@@ -1,3 +1,4 @@
+import math
 
 class Herbivore:
     """"
@@ -25,5 +26,12 @@ class Herbivore:
         """
         Funksjon som regner ut hvor mye vekten minker per år
         eta*weight
+        """
+        pass
+
+    def fitness(self, phi_age, phi_weight, a_half, w_half):
+        """
+        calculate fitness-condition based on age and weight
+        (Might use numpy.heaviside function)
         """
         pass
