@@ -1,5 +1,5 @@
 
-class Low_land():
+class Lowland():
     """
     Doc-strings
     """
