@@ -6,6 +6,24 @@ class Animal:
 
 # class Herbivore(Animal):
 class Herbivore:
+
+    params = {
+        'w_birth':8,
+        'sigma_birth': 1.5,
+        'beta': 0.9,
+        'eta': 0.05,
+        'a_half': 40.0,
+        'phi_age': 0.6,
+        'w_half': 10.0,
+        'phi_weight': 0.1,
+        'mu': 0.25,
+        'gamma': 0.2,
+        'zeta': 3.5,
+        'xi': 1.2,
+        'omega': 0.4,
+        'F': 10.0,
+        'DeltaPhiMax': None # Sjekk om dette er riktig. Står ingen verdi i tabellen.
+    }
     """"
     Legg inn doc-string
     """
@@ -14,26 +32,27 @@ class Herbivore:
         """Legg til doc-string."""
         self.age = age
 
+        birth_weight = self.find_birthweight()
+
         if weight is None:
-            # Regne ut fødselsvekt, kanskje ved bruk av find_birthweight
-            # self.weight = find_birthweight()
+            self.weight = birth_weight
         else:
             self.weight = weight
 
         self.loc = loc
 
-    @property
-    def weight(self):
+    # @property
+    # def weight(self):
+    #
+    #     return self.weight
 
-        return self.weight
 
 
-
-    def find_birthweight(self, w_birth, sigma_birth):
+    def find_birthweight(self):
         """
         Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian distribution.
         """
-        birthweight = random.gauss(w_birth, sigma_birth)
+        birthweight = random.gauss(self.params['w_birth'], self.sigma_birth)
         return birthweight
 
 
@@ -66,6 +85,12 @@ class Herbivore:
         (Might use numpy.heaviside function)
         Return "self.fitness"
         """
+
+        fitness = q_plus * q_minus
+        if self.weight <= 0:
+            return 0
+        else:
+
         pass
 
     def aging(self):
@@ -73,6 +98,7 @@ class Herbivore:
         After 1 year passed, each herbivore becomes 1 year older
         """
         self.age += 1
+        # Sett inn minking av vekt
 
     def migration(self, geography):
         """
@@ -102,6 +128,18 @@ class Herbivore:
         ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
         this year. (self.mother = False/True)!
         """
+        # check if it can give birth
+        if can_give_birth:
+            newborn = Herbivore()
+            w = newborn.weight
+            # check if the baby is too heavy
+            if too_heavy:
+                del newborn
+                return None
+            else:
+                # lose weight here
+                return newborn
+        return None
         pass
 
     def death(self):
