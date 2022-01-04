@@ -62,11 +62,6 @@ class Herbivore:
         self.weight += F_tilde * self.params['beta']
         return self.weight
 
-    #def eat_fodder(self, F_tilde, beta):
-    #    """
-    #    Call on function "increase_weight_when_eating" and adjust weight
-    #    """
-    #    pass
 
     @staticmethod
     def _q(sgn, x, x_half, phi):
@@ -110,7 +105,7 @@ class Herbivore:
         """
         self.age += 1
         self.weight = self.decrease_weight_when_aging() # Kan man hete ut vekten fra den forrige metoden på denne måten?
-
+        #Har testet -> Ja, ser ut til å fungere
 
     def migration(self, geography):
         """
@@ -125,14 +120,14 @@ class Herbivore:
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
         probability = min(1, self.params['gamma'] * self.fitness * (num_of_species_in_cell - 1))
-        r = random.uniform(0, 1 )
+        r = random.uniform(0, 1)
 
         if r < probability:
             return True
-        if self.weight < (self.params['zeta'] * self.params['w_birth'] * self.params['sigma_birth']):
+        if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
             return False
         else:
-            return False
+            return False #TODO: Hvorfor er denne her - er dette riktig?
 
     def giving_birth(self):
         """
@@ -154,14 +149,16 @@ class Herbivore:
             newborn = Herbivore()
             w = newborn.weight
             # check if the baby is too heavy
-            if w > self.weight:
+            if w > self.weight: #TODO: Burde være *xi her vel?
                 # del newborn
                 return None
+                # TODO: Make sure this removes w from the list of Herbivores.
+                # If it doesn't - kill it right away
             else:
                 # lose weight
                 self.weight -= self.weight * self.params['xi']
                 return newborn
-        return None
+        return None #TODO: Make sure this is correct... Necessary at all?
 
 
     def probability_of_death(self):
