@@ -11,6 +11,7 @@ class Herbivore:
     """
 
     def __init__(self, age = 0, weight = None, loc = None):
+        """Legg til doc-string."""
         self.age = age
 
         if weight is None:
@@ -23,6 +24,7 @@ class Herbivore:
 
     @property
     def weight(self):
+
         return self.weight
 
 
