@@ -38,6 +38,7 @@ class Herbivore:
         """
         Funksjon som regner ut hvor mye vekten minker per år
         eta*weight
+        self.weight = self.weight - self.weight*eta
         """
         pass
 
