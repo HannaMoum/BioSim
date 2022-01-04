@@ -72,6 +72,10 @@ class Herbivore:
 
     @staticmethod
     def _q(sgn, x, x_half, phi):
+        """
+        Legg inn doc-string
+        sgn = fortegnet i regnestykket (+1 eller -1)
+        """
         return 1/(1 + math.exp(sgn * phi * (x - x_half)))
 
 
