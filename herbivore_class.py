@@ -131,13 +131,14 @@ class Herbivore:
         """
         pass
 
-    def probability_to_give_birth(self, num_of_species_in_cell):
+    def probability_to_give_birth(self)#, num_of_species_in_cell):
         """
         Function giving the probability for giving birth
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
-        probability = min(1, self.params['gamma'] * self.fitness * (num_of_species_in_cell - 1))
+        #probability = min(1, self.params['gamma'] * self.fitness * (num_of_species_in_cell - 1))
+        probability = min(1, self.params['gamma'] * self.fitness * (len(self.herbivores) - 1))
         r = random.uniform(0, 1)
 
         if r < probability:
@@ -202,6 +203,7 @@ class Herbivore:
         cls.herbivores = list(set(cls.herbivores) - dead_animals)
 
     # Or...
+
 
     @classmethod
     def death_Badversion(cls, self):
