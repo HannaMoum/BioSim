@@ -141,7 +141,7 @@ class Herbivore:
         this year. (self.mother = False/True)!
         """
         # check if it can give birth
-        if probability_to_give_birth:
+        if probability_to_give_birth():
             newborn = Herbivore()
             w = newborn.weight
             # check if the baby is too heavy
@@ -155,11 +155,25 @@ class Herbivore:
         return None
 
 
+    def probability_of_death(self, fitness):
+        probability = self.params['omega'] * (1 - fitness)
+        r = random.uniform(0, 1)
+
+        if self.weight == 0:
+            return True  # Dyret dør
+            # Evt. delete animal
+        if r < probability:
+            return True
+        else:
+            return False
+
     def death(self):
         """
         Function deciding if the Herbivore should die.
         """
-        pass
+        if probability_of_death():
+            # Should we delete this animal?
+            pass
 
 
 
