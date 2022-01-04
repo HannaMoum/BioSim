@@ -1,11 +1,18 @@
+import .herbivore_class
 
 class Lowland():
     """
     Doc-strings
     """
-    def __init__(self, f_max=800.0):
-        self.f_max = f_max ###
-        self.fodder = f_max
+
+    params = {
+        'f_max': 800.0,
+        'F' : 10.0
+    }
+
+    def __init__(self):
+        self.f_max = params['f_max'] #Maximum available fodder
+        self.fodder = params['f_max'] #Initial amount of fodder
 
     def grassing(self, some_list_of_Herbivores_in_area, F):
         """
@@ -23,6 +30,10 @@ class Lowland():
             else:
                 nothing?
         """
+
         pass
 
     # Need to reset the amount of fodder by the end of the year. vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
+
+    def regrowth(self):
+        self.fodder = self.f_max
