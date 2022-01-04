@@ -122,7 +122,7 @@ class Herbivore:
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
-        probability = min(1, self.params['gamma'] * fitness * (num_of_species_in_cell - 1))
+        probability = min(1, self.params['gamma'] * self.fitness * (num_of_species_in_cell - 1))
         r = random.uniform(0, 1 )
 
         if r < probability:
@@ -162,8 +162,8 @@ class Herbivore:
         return None
 
 
-    def probability_of_death(self, fitness):
-        probability = self.params['omega'] * (1 - fitness)
+    def probability_of_death(self):
+        probability = self.params['omega'] * (1 - self.fitness) # Blir dette riktig måte å hente ut fitness-verdien på?
         r = random.uniform(0, 1)
 
         if self.weight == 0:
