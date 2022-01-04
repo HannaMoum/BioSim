@@ -12,6 +12,10 @@ class Herbivore:
 
     def __init__(self, age = 0, weight = None, loc = None):
         self.age = age
+        # if weight is None:
+            #self.weight = self.birthweight
+        # else:
+            # self.weight = weight
         self.weight = weight
         self.loc = loc
         self.birthweight = birtweight
