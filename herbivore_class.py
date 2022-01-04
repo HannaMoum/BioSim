@@ -70,9 +70,9 @@ class Herbivore:
     #    """
     #    pass
 
-    @staticmetod
-    def q(sign, x, x_half, phi):
-        return 1/(1 + math.exp(sign * phi * (x - x_half)
+    @staticmethod
+    def _q(sgn, x, x_half, phi):
+        return 1/(1 + math.exp(sgn * phi * (x - x_half)))
 
 
     @property
@@ -83,8 +83,8 @@ class Herbivore:
         Return "self.fitness"
         """
 
-        q_plus = self.q(+1, self.age, self.params['a_half'], self.params['phi_age'])
-        q_minus = self.q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+        q_plus = self._q(+1, self.age, self.params['a_half'], self.params['phi_age'])
+        q_minus = self._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
 
         if self.weight <= 0:
             return 0
@@ -107,7 +107,7 @@ class Herbivore:
         After 1 year passed, each herbivore becomes 1 year older
         """
         self.age += 1
-        self.weight = decrease_weight_when_aging()
+        self.weight = self.decrease_weight_when_aging() # Kan man hete ut vekten fra den forrige metoden på denne måten?
 
 
     def migration(self, geography):
@@ -148,7 +148,7 @@ class Herbivore:
         this year. (self.mother = False/True)!
         """
         # check if it can give birth
-        if probability_to_give_birth():
+        if self.probability_to_give_birth():
             newborn = Herbivore()
             w = newborn.weight
             # check if the baby is too heavy
@@ -178,7 +178,7 @@ class Herbivore:
         """
         Function deciding if the Herbivore should die.
         """
-        if probability_of_death():
+        if self.probability_of_death():
             # Should we delete this animal?
             pass
 
