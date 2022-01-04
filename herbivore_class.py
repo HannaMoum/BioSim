@@ -41,12 +41,6 @@ class Herbivore:
 
         self.loc = loc
 
-    # @property
-    # def weight(self):
-    #
-    #     return self.weight
-
-
 
     def find_birthweight(self):
         """
