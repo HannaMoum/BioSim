@@ -1,4 +1,4 @@
-import .herbivore_class
+from .herbivore_class import Herbivore
 
 class Lowland():
     """
