@@ -7,6 +7,8 @@ class Animal:
 # class Herbivore(Animal):
 class Herbivore:
 
+    herbivores = []
+
     params = {
         'w_birth':8,
         'sigma_birth': 1.5,
@@ -28,6 +30,21 @@ class Herbivore:
     Legg inn doc-string
     """
 
+    @classmethod
+    def all_alive_herbivores(cls, self): #Liste av alle herbivores
+        """
+        :param self: Classobject
+        Adds the current classobject to list herbivores
+        """
+        cls.herbivores.append(self)
+
+    @classmethod
+    def herbivores_list(cls):
+        """ When called, this function returns a complete list of all herbivores
+        (currently just one area)
+        """
+        return cls.herbivores
+
     def __init__(self, age = 0, weight = None, loc = None):
         """Legg til doc-string."""
         self.age = age
@@ -40,6 +57,7 @@ class Herbivore:
             self.weight = weight
 
         self.loc = loc
+        self.all_alive_herbivores(self) #Adding this herbivore to the list og all herbivores
 
 
     def find_birthweight(self):
@@ -173,13 +191,32 @@ class Herbivore:
         else:
             return False
 
-    def death(self):
+    #def death(self):
+    #    """
+    #    Function deciding if the Herbivore should die.
+    #    """
+    #    if self.probability_of_death():
+    #        # Should we delete this animal?
+    #        pass
+
+    @classmethod
+    def death(cls, self):
         """
-        Function deciding if the Herbivore should die.
+        self: Current classobject
+        Possible way to handle death of a Herbivore.
+
+        Transfer to script:
+        ---------------------
+        death_set = {animal for animal in list_of_herbivores if animal.probability_to_die()}
+
+        for animal in death_set:
+            Herbivore.death(animal)
+
+        VIKTIG! Må her samle opp alle døde dyr i ett set før de fjernes.
+                Skaper bugs om man fjerner elementer fra liste, mens man itererer gjennom denne.
+
         """
-        if self.probability_of_death():
-            # Should we delete this animal?
-            pass
+        cls.herbivores.remove(self)
 
 
 
