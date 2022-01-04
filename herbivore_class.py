@@ -10,12 +10,14 @@ class Herbivore:
         self.age = age
         self.weight = weight
         self.loc = loc
+        self.birthweight = birtweight
 
-    @Property
+    @property
     def birthweight(self, w_birth, sigma_birth):
         """
         Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian distribution.
-        "birth
+        self.birthweight = random.gauss(w_birth, sigma_birth)
+        return self.birtweight
         """
         pass
 
@@ -39,7 +41,7 @@ class Herbivore:
         """
         pass
 
-    @Property
+    @property
     def fitness(self, phi_age, phi_weight, a_half, w_half):
         """
         calculate fitness-condition based on age and weight
