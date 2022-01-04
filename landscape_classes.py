@@ -33,19 +33,24 @@ class Lowland:
         """
         F_satisfied = self.params['F']
         for herbivore in Herbivore.herbivores_list().sort(key=lambda x: x.fitness, reverse=True):
+
             if self.fodder >= F_satisfied:
                 herbivore.eat(F_satisfied)  # Gains weight
                 self.fodder -= F_satisfied  # Adjust available fodder
+
             elif self.fodder > 0:  # More than zero, but less than F_satisfied
                 herbivore.eat(self.fodder)
                 self.fodder = 0
+
             else:
                 None #Is this correct?
 
 
-    # Need to reset the amount of fodder by the end of the year. vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
-
+    # vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
     def regrowth(self):
+        """
+        Method to reset the amount of fodder by the end of the year
+        """
         self.fodder = self.f_max
 
 
