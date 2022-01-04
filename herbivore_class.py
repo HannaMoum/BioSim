@@ -70,21 +70,28 @@ class Herbivore:
     #    """
     #    pass
 
+    @staticmethod
+    def _q(sgn, x, x_half, phi):
+        return 1/(1 + math.exp(sgn * phi * (x - x_half)))
+
 
     @property
-    def fitness(self, phi_age, phi_weight, a_half, w_half):
+    def fitness(self):
         """
         calculate fitness-condition based on age and weight
         (Might use numpy.heaviside function)
         Return "self.fitness"
         """
 
-        fitness = q_plus * q_minus
+        q_plus = self._q(+1, self.age, self.params['a_half'], self.params['phi_age'])
+        q_minus = self._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+
         if self.weight <= 0:
             return 0
         else:
+            return q_plus * q_minus
 
-        pass
+
 
     def decrease_weight_when_aging(self):
         """
@@ -100,7 +107,7 @@ class Herbivore:
         After 1 year passed, each herbivore becomes 1 year older
         """
         self.age += 1
-        self.weight = decrease_weight_when_aging()
+        self.weight = self.decrease_weight_when_aging() # Kan man hete ut vekten fra den forrige metoden på denne måten?
 
 
     def migration(self, geography):
@@ -109,23 +116,23 @@ class Herbivore:
         """
         pass
 
-    def probability_to_give_birth(self, N = number_of_herbivores):
+    def probability_to_give_birth(self, num_of_species_in_cell):
         """
         Function giving the probability for giving birth
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
-        probability = min(1, self.params['gamma'] * fitness * (N - 1))
+        probability = min(1, self.params['gamma'] * self.fitness * (num_of_species_in_cell - 1))
         r = random.uniform(0, 1 )
 
         if r < probability:
             return True
-        if self.weight < (self.params['zeta'] * self.params['w_birth'] * self.params['sigma_birth']:
+        if self.weight < (self.params['zeta'] * self.params['w_birth'] * self.params['sigma_birth']):
             return False
         else:
             return False
 
-    def giving_birth(self): # Hvorfor får ikke "self" riktig farge her?
+    def giving_birth(self):
         """
         function handling the birth of a new herbivore.
         Runs if probability_to_give_birth > random number
@@ -141,12 +148,12 @@ class Herbivore:
         this year. (self.mother = False/True)!
         """
         # check if it can give birth
-        if probability_to_give_birth():
+        if self.probability_to_give_birth():
             newborn = Herbivore()
             w = newborn.weight
             # check if the baby is too heavy
             if w > self.weight:
-                del newborn
+                # del newborn
                 return None
             else:
                 # lose weight
@@ -155,8 +162,8 @@ class Herbivore:
         return None
 
 
-    def probability_of_death(self, fitness):
-        probability = self.params['omega'] * (1 - fitness)
+    def probability_of_death(self):
+        probability = self.params['omega'] * (1 - self.fitness) # Blir dette riktig måte å hente ut fitness-verdien på?
         r = random.uniform(0, 1)
 
         if self.weight == 0:
@@ -171,7 +178,7 @@ class Herbivore:
         """
         Function deciding if the Herbivore should die.
         """
-        if probability_of_death():
+        if self.probability_of_death():
             # Should we delete this animal?
             pass
 
