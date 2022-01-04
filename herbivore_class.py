@@ -131,7 +131,7 @@ class Herbivore:
         """
         pass
 
-    def probability_to_give_birth(self)#, num_of_species_in_cell):
+    def probability_to_give_birth(self):#, num_of_species_in_cell):
         """
         Function giving the probability for giving birth
         (number_of_herbivores is the number of herbivores before the breeding season starts)
