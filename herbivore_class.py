@@ -1,5 +1,5 @@
 import math
-import numpy as np
+import random
 
 class Herbivore:
     """"
@@ -11,9 +11,11 @@ class Herbivore:
         self.weight = weight
         self.loc = loc
 
-    def determine_birthweight(self, w_birth, sigma_birth):
+    @Property
+    def birthweight(self, w_birth, sigma_birth):
         """
         Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian distribution.
+        "birth
         """
         pass
 
