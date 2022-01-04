@@ -1,6 +1,10 @@
 import math
 import random
 
+class Animal:
+    pass
+
+# class Herbivore(Animal):
 class Herbivore:
     """"
     Legg inn doc-string
