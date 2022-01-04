@@ -191,14 +191,6 @@ class Herbivore:
         else:
             return False
 
-    #def death(self):
-    #    """
-    #    Function deciding if the Herbivore should die.
-    #    """
-    #    if self.probability_of_death():
-    #        # Should we delete this animal?
-    #        pass
-
     @classmethod
     def death(cls):
         """
