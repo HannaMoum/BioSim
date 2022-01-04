@@ -12,29 +12,36 @@ class Herbivore:
 
     def __init__(self, age = 0, weight = None, loc = None):
         self.age = age
-        # if weight is None:
-            #self.weight = self.birthweight
-        # else:
-            # self.weight = weight
-        self.weight = weight
+
+        if weight is None:
+            # Regne ut fødselsvekt, kanskje ved bruk av find_birthweight
+            # self.weight = find_birthweight()
+        else:
+            self.weight = weight
+
         self.loc = loc
-        self.birthweight = birtweight
 
     @property
-    def birthweight(self, w_birth, sigma_birth):
+    def weight(self):
+        return self.weight
+
+
+
+    def find_birthweight(self, w_birth, sigma_birth):
         """
         Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian distribution.
-        self.birthweight = random.gauss(w_birth, sigma_birth)
-        return self.birtweight
         """
-        pass
+        birthweight = random.gauss(w_birth, sigma_birth)
+        return birthweight
 
-    def increase_weight_when_eating(self, F_tilde, beta):
+
+    def eat(self, F_tilde, beta):
         """
         Funksjon som regner ut vektøkningen etter at dyret har spist
         beta*F_tilde
         """
-        pass
+        self.weight += F_tilde * beta
+        return self.weight
 
     #def eat_fodder(self, F_tilde, beta):
     #    """
@@ -46,7 +53,7 @@ class Herbivore:
         """
         Funksjon som regner ut hvor mye vekten minker per år
         eta*weight
-        self.weight = self.weight - self.weight*eta
+        self.weight -= self.weight*eta
         """
         pass
 
@@ -85,6 +92,7 @@ class Herbivore:
 
         Possible procedure:
         1. Find birthweight of new baby using Gaussian distribution
+        birth_weight = random.gauss(
         2. Find mother's weight loss (birthweight * xi)
         3.1 If weight in point 2 is bigger than mother's weight - No new baby, stop giving_birth
         3.2 Else; Adjust mother's weight + create new Herbivore with birthweight found in point 2
