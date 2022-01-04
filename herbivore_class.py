@@ -41,12 +41,6 @@ class Herbivore:
 
         self.loc = loc
 
-    # @property
-    # def weight(self):
-    #
-    #     return self.weight
-
-
 
     def find_birthweight(self):
         """
@@ -61,6 +55,10 @@ class Herbivore:
         Funksjon som regner ut vektøkningen etter at dyret har spist
         beta*F_tilde
         """
+        # Sjekk om det er tilgjengelig mat i cellen.
+        # Om det ikke er det spiser dyret 0.
+        # Om matenmengden er mindre enn ønskelig mengde spiser den all maten i cellen.
+        # Om matmengden er mer enn ønskelig spiser dyret det den ønsker.
         self.weight += F_tilde * self.params['beta']
         return self.weight
 
@@ -72,6 +70,10 @@ class Herbivore:
 
     @staticmethod
     def _q(sgn, x, x_half, phi):
+        """
+        Legg inn doc-string
+        sgn = fortegnet i regnestykket (+1 eller -1)
+        """
         return 1/(1 + math.exp(sgn * phi * (x - x_half)))
 
 
@@ -166,7 +168,7 @@ class Herbivore:
         probability = self.params['omega'] * (1 - self.fitness) # Blir dette riktig måte å hente ut fitness-verdien på?
         r = random.uniform(0, 1)
 
-        if self.weight == 0:
+        if self.weight <= 0:
             return True  # Dyret dør
             # Evt. delete animal
         if r < probability:
