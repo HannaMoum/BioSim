@@ -6,6 +6,24 @@ class Animal:
 
 # class Herbivore(Animal):
 class Herbivore:
+
+    params = {
+        'w_birth':8,
+        'sigma_birth': 1.5,
+        'beta': 0.9,
+        'eta': 0.05,
+        'a_half': 40.0,
+        'phi_age': 0.6,
+        'w_half': 10.0,
+        'phi_weight': 0.1,
+        'mu': 0.25,
+        'gamma': 0.2,
+        'zeta': 3.5,
+        'xi': 1.2,
+        'omega': 0.4,
+        'F': 10.0,
+        'DeltaPhiMax': None # Sjekk om dette er riktig. Står ingen verdi i tabellen.
+    }
     """"
     Legg inn doc-string
     """
@@ -14,35 +32,36 @@ class Herbivore:
         """Legg til doc-string."""
         self.age = age
 
+        birth_weight = self.find_birthweight()
+
         if weight is None:
-            # Regne ut fødselsvekt, kanskje ved bruk av find_birthweight
-            # self.weight = find_birthweight()
+            self.weight = birth_weight
         else:
             self.weight = weight
 
         self.loc = loc
 
-    @property
-    def weight(self):
+    # @property
+    # def weight(self):
+    #
+    #     return self.weight
 
-        return self.weight
 
 
-
-    def find_birthweight(self, w_birth, sigma_birth):
+    def find_birthweight(self):
         """
         Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian distribution.
         """
-        birthweight = random.gauss(w_birth, sigma_birth)
+        birthweight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
         return birthweight
 
 
-    def eat(self, F_tilde, beta):
+    def eat(self, F_tilde):
         """
         Funksjon som regner ut vektøkningen etter at dyret har spist
         beta*F_tilde
         """
-        self.weight += F_tilde * beta
+        self.weight += F_tilde * self.params['beta']
         return self.weight
 
     #def eat_fodder(self, F_tilde, beta):
@@ -51,13 +70,6 @@ class Herbivore:
     #    """
     #    pass
 
-    def decrease_weight_when_aging(self, eta):
-        """
-        Funksjon som regner ut hvor mye vekten minker per år
-        eta*weight
-        self.weight -= self.weight*eta
-        """
-        pass
 
     @property
     def fitness(self, phi_age, phi_weight, a_half, w_half):
@@ -66,13 +78,30 @@ class Herbivore:
         (Might use numpy.heaviside function)
         Return "self.fitness"
         """
+
+        fitness = q_plus * q_minus
+        if self.weight <= 0:
+            return 0
+        else:
+
         pass
+
+    def decrease_weight_when_aging(self):
+        """
+        Funksjon som regner ut hvor mye vekten minker per år
+        eta*weight
+        self.weight -= self.weight*eta
+        """
+        self.weight -= self.weight * self.params['eta']
+        return self.weight
 
     def aging(self):
         """
         After 1 year passed, each herbivore becomes 1 year older
         """
         self.age += 1
+        self.weight = decrease_weight_when_aging()
+
 
     def migration(self, geography):
         """
@@ -80,14 +109,23 @@ class Herbivore:
         """
         pass
 
-    def probability_to_give_birth(self, gamma, number_of_herbivores):
+    def probability_to_give_birth(self, N = number_of_herbivores):
         """
         Function giving the probability for giving birth
         (number_of_herbivores is the number of herbivores before the breeding season starts)
+        N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
-        pass
+        probability = min(1, self.params['gamma'] * fitness * (N - 1))
+        r = random.uniform(0, 1 )
 
-    def giving_birth(self, xi):
+        if r < probability:
+            return True
+        if self.weight < (self.params['zeta'] * self.params['w_birth'] * self.params['sigma_birth']:
+            return False
+        else:
+            return False
+
+    def giving_birth(self): # Hvorfor får ikke "self" riktig farge her?
         """
         function handling the birth of a new herbivore.
         Runs if probability_to_give_birth > random number
@@ -102,13 +140,40 @@ class Herbivore:
         ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
         this year. (self.mother = False/True)!
         """
-        pass
+        # check if it can give birth
+        if probability_to_give_birth():
+            newborn = Herbivore()
+            w = newborn.weight
+            # check if the baby is too heavy
+            if w > self.weight:
+                del newborn
+                return None
+            else:
+                # lose weight
+                self.weight -= self.weight * self.params['xi']
+                return newborn
+        return None
+
+
+    def probability_of_death(self, fitness):
+        probability = self.params['omega'] * (1 - fitness)
+        r = random.uniform(0, 1)
+
+        if self.weight == 0:
+            return True  # Dyret dør
+            # Evt. delete animal
+        if r < probability:
+            return True
+        else:
+            return False
 
     def death(self):
         """
         Function deciding if the Herbivore should die.
         """
-        pass
+        if probability_of_death():
+            # Should we delete this animal?
+            pass
 
 
 
