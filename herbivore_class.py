@@ -196,7 +196,7 @@ class Herbivore:
     def death(cls):
         """
         Requires call: Herbivore.death()
-        Kills all animals that must die according to probability_to_die at once
+        Kill all animals that must die according to probability_to_die at once
         :return:
         """
         dead_animals = {animal for animal in cls.herbivores if animal.probability_to_die()}
@@ -205,13 +205,16 @@ class Herbivore:
     # Or...
 
 
-    @classmethod
-    def death_Badversion(cls, self):
+    def kill_only_one_herbivore(self):
         """
+        Todo: We should probably delete this one
         self: Current classobject
         Kills only one animal at a time
 
         - Transfer to script:
+
+        For one: animal.kill_only_one_herbivore(animal)
+        For several:
         dead_animals = {animal for animal in list_of_herbivores if animal.probability_to_die()}
         for animal in dead_animals:
             Herbivore.death(animal)
@@ -219,7 +222,8 @@ class Herbivore:
         NOTE! In this case must all dead animals be collected in a set before they are removed.
               We cannot remove elements from a list while iterating trough it
         """
-        cls.herbivores.remove(self)
+        self.herbivores.remove(self)
+
 
 
 
