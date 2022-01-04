@@ -25,4 +25,4 @@ class Lowland():
         """
         pass
 
-    # Need to reset the amount of fodder by the end of the year
+    # Need to reset the amount of fodder by the end of the year. vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
