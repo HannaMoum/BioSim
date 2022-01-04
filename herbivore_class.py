@@ -70,21 +70,28 @@ class Herbivore:
     #    """
     #    pass
 
+    @staticmetod
+    def q(sign, x, x_half, phi):
+        return 1/(1 + math.exp(sign * phi * (x - x_half)
+
 
     @property
-    def fitness(self, phi_age, phi_weight, a_half, w_half):
+    def fitness(self):
         """
         calculate fitness-condition based on age and weight
         (Might use numpy.heaviside function)
         Return "self.fitness"
         """
 
-        fitness = q_plus * q_minus
+        q_plus = self.q(+1, self.age, self.params['a_half'], self.params['phi_age'])
+        q_minus = self.q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+
         if self.weight <= 0:
             return 0
         else:
+            return q_plus * q_minus
 
-        pass
+
 
     def decrease_weight_when_aging(self):
         """
@@ -120,12 +127,12 @@ class Herbivore:
 
         if r < probability:
             return True
-        if self.weight < (self.params['zeta'] * self.params['w_birth'] * self.params['sigma_birth']:
+        if self.weight < (self.params['zeta'] * self.params['w_birth'] * self.params['sigma_birth']):
             return False
         else:
             return False
 
-    def giving_birth(self): # Hvorfor får ikke "self" riktig farge her?
+    def giving_birth(self):
         """
         function handling the birth of a new herbivore.
         Runs if probability_to_give_birth > random number
@@ -146,7 +153,7 @@ class Herbivore:
             w = newborn.weight
             # check if the baby is too heavy
             if w > self.weight:
-                del newborn
+                # del newborn
                 return None
             else:
                 # lose weight
