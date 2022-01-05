@@ -25,12 +25,12 @@ def test_find_birthweight():
     pass
 
 @pytest.mark.skip('Not finished')
-def test_eat()
+def test_eat():
     pass
 
 @pytest.mark.skip('Not finished')
 def test__q():
-    pass
+    assert _q()
 
 @pytest.mark.skip('Not finished')
 def test_fitness():
@@ -40,9 +40,14 @@ def test_fitness():
 def test_decrease_weight_when_aging():
     pass
 
-@pytest.mark.skip('Not finished')
+#@pytest.mark.skip('Not finished')
 def test_aging():
-    pass
+    a = Herbivore()
+    num_years = 10
+    for n in range(num_years):
+        a.aging()
+    assert a.age == num_years + 1
+
 
 @pytest.mark.skip('Not finished')
 def test_probability_to_give_birth():
