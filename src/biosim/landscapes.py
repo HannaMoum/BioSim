@@ -25,8 +25,6 @@ class Lowland:
         # Sort list, highest fitness first:
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
 
-            herbivore.eat(self.fodder)
-
             eaten = herbivore.eat(self.fodder)
             self.fodder -= eaten
 
@@ -54,12 +52,13 @@ class Lowland:
         (We might want to adjust the names, and the probability_to_give_birth/giving_birth in Herbivores class,
         for a better code)
         """
-        newborns = {}
+        newborns = []
         for herbivore in self.herb_pop:
             possible_baby = herbivore.giving_birth()
             if possible_baby is not None:
-                newborns += possible_baby
-        self.herb_pop = list(set(self.herb_pop) + newborns)
+                newborns.append(possible_baby)
+        # self.herb_pop = self.herb_pop + newborns
+        self.herb_pop.extend(newborns)
 
 
     def regrowth(self):
