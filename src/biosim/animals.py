@@ -72,11 +72,6 @@ class Herbivore:
         return cls.instance_count
 
 
-
-
-
-
-
     def __init__(self, age=0, weight=None, loc=None):
         """Legg til doc-string."""
         self.age = age
@@ -91,14 +86,13 @@ class Herbivore:
             self.weight = weight
 
         self.loc = loc
-        self.count_herbivores()  # Adding this herbivore to the list og all herbivores
 
     def find_birthweight(self):
         """
-        Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian distribution.
+        Calulates the birth weight based on the mean and standard deviation, with the Gaussian distribution.
         """
-        birthweight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
-        return birthweight
+        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+        return birth_weight
 
 
     def eat(self, F_tilde):
