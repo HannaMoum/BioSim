@@ -1,4 +1,4 @@
-from biosim.animals import Herbivore  # Should this be a relative import, and not absolute
+from .animals import Herbivore
 
 
 class Lowland:
