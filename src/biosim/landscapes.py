@@ -67,7 +67,15 @@ class Lowland:
             herbivore.aging()
 
     def death(self):
+        """
+        Kill herbivores and adjust self.herb_pop to only contain the living
+        """
+        #alive = [animal for animal in self.herb_pop if not animal.probability_of_death()]
+        #self.herb_pop = alive
         def survivors(pop):
+            """
+            Return list of animals that do not die.
+            """
             return [animal for animal in pop if not animal.probability_of_death()]
 
         self.herb_pop = survivors(self.herb_pop)
