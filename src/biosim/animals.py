@@ -206,13 +206,8 @@ class Herbivore:
             w = newborn.weight
             # check if the baby is too heavy
             if w * self.params['xi'] > self.weight:
-                # > or >= (in if statement)
-                #   Hvis vektene er like, får mora 0 i vekt... Skal det være mulig å gi fødsel da?
-                # del newborn
                 self.instance_count -= 1
                 return None
-                # TODO: Make sure this removes w from the count of Herbivores.
-                # If it doesn't - kill it right away
             else:
                 # lose weight
                 self.weight -= self.weight * self.params['xi']
