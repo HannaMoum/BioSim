@@ -1,8 +1,10 @@
 import math
 import random
 
+
 class Animal:
     pass
+
 
 # class Herbivore(Animal):
 class Herbivore:
@@ -10,7 +12,7 @@ class Herbivore:
     herbivores = []
 
     params = {
-        'w_birth':8,
+        'w_birth': 8,
         'sigma_birth': 1.5,
         'beta': 0.9,
         'eta': 0.05,
@@ -24,14 +26,14 @@ class Herbivore:
         'xi': 1.2,
         'omega': 0.4,
         'F': 10.0,
-        'DeltaPhiMax': None # Sjekk om dette er riktig. Står ingen verdi i tabellen.
+        'DeltaPhiMax': None  # Sjekk om dette er riktig. Står ingen verdi i tabellen.
     }
     """"
     Legg inn doc-string
     """
 
     @classmethod
-    def all_alive_herbivores(cls, self): #Liste av alle herbivores
+    def all_alive_herbivores(cls, self):  # Liste av alle herbivores
         """
         :param self: Classobject
         Adds the current classobject to list herbivores
@@ -45,7 +47,7 @@ class Herbivore:
         """
         return cls.herbivores
 
-    def __init__(self, age = 0, weight = None, loc = None):
+    def __init__(self, age=0, weight=None, loc=None):
         """Legg til doc-string."""
         self.age = age
 
@@ -57,8 +59,7 @@ class Herbivore:
             self.weight = weight
 
         self.loc = loc
-        self.all_alive_herbivores(self) #Adding this herbivore to the list og all herbivores
-
+        self.all_alive_herbivores(self)  # Adding this herbivore to the list og all herbivores
 
     def find_birthweight(self):
         """
@@ -79,7 +80,6 @@ class Herbivore:
         # Om matmengden er mer enn ønskelig spiser dyret det den ønsker.
         self.weight += F_tilde * self.params['beta']
         # return self.weight
-
 
     @staticmethod
     def _q(sgn, x, x_half, phi):
@@ -181,9 +181,8 @@ class Herbivore:
                 return newborn
         return None
 
-
     def probability_of_death(self):
-        probability = self.params['omega'] * (1 - self.fitness) # Blir dette riktig måte å hente ut fitness-verdien på?
+        probability = self.params['omega'] * (1 - self.fitness)  # Blir dette riktig måte å hente ut fitness-verdien på?
         r = random.uniform(0, 1)
 
         if self.weight <= 0:

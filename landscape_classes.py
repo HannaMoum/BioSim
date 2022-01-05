@@ -43,10 +43,11 @@ class Lowland:
                 self.fodder = 0
 
             else:
-                None #Is this correct?
+                None  #Is this correct?
 
 
     # vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
+
     def regrowth(self):
         """
         Method to reset the amount of fodder by the end of the year
