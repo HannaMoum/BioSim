@@ -11,9 +11,11 @@ class Lowland:
         'F': 10.0
     }
 
-    def __init__(self):
+    def __init__(self, num_herb):
         self.f_max = self.params['f_max']  # Maximum available fodder
         self.fodder = self.params['f_max']  # Initial amount of fodder
+
+        self.herb_pop = [Herbivore() for _ in range(num_herb)]
 
     def grassing(self):
         """
