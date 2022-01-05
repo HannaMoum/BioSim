@@ -9,7 +9,7 @@ class Animal:
 # class Herbivore(Animal):
 class Herbivore:
 
-    herbivores = []
+
 
     params = {
         'w_birth': 8,
