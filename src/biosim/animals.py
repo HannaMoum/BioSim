@@ -129,7 +129,7 @@ class Herbivore:
         Return "self.fitness"
         """
 
-        q_plus = self._q(+1, self.age, self.params['a_half'], self.params['phi_age'])
+        q_plus = self._q(+1, self._age, self.params['a_half'], self.params['phi_age'])
         q_minus = self._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
 
         if self.weight <= 0:
