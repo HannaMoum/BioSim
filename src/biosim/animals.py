@@ -111,7 +111,7 @@ class Herbivore:
         elif food_available < self.params['F']:
             F_tilde = food_available
         else:
-            F_tilde = food_available
+            F_tilde = self.params['F']
 
         self.weight += F_tilde * self.params['beta']
 
