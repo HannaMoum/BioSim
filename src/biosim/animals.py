@@ -80,9 +80,9 @@ class Herbivore:
         self.count_new_herbi()
 
         if weight is None:
-            self.weight = birth_weight
+            self._weight = birth_weight
         else:
-            self.weight = weight
+            self._weight = weight
 
         self.loc = loc
 
@@ -107,7 +107,7 @@ class Herbivore:
         else:
             F_tilde = self.params['F']
 
-        self.weight += F_tilde * self.params['beta']
+        self._weight += F_tilde * self.params['beta']
 
         return F_tilde
 
@@ -130,9 +130,9 @@ class Herbivore:
         """
 
         q_plus = self._q(+1, self._age, self.params['a_half'], self.params['phi_age'])
-        q_minus = self._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+        q_minus = self._q(-1, self._weight, self.params['w_half'], self.params['phi_weight'])
 
-        if self.weight <= 0:
+        if self._weight <= 0:
             return 0
         else:
             return q_plus * q_minus
@@ -145,7 +145,7 @@ class Herbivore:
         eta*weight
         self.weight -= self.weight*eta
         """
-        self.weight -= self.weight * self.params['eta']
+        self._weight -= self._weight * self.params['eta']
 
     def aging(self):
         """
@@ -171,7 +171,7 @@ class Herbivore:
         r = random.uniform(0, 1)
 
         if r < probability:
-            if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
+            if self._weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
                 return False
             else:
                 return True
@@ -196,14 +196,14 @@ class Herbivore:
         # check if it can give birth
         if self.probability_to_give_birth():
             newborn = Herbivore()
-            w = newborn.weight
+            w = newborn._weight
             # check if the baby is too heavy
-            if w * self.params['xi'] > self.weight:
+            if w * self.params['xi'] > self._weight:
                 self.instance_count -= 1
                 return None
             else:
                 # lose weight
-                self.weight -= self.weight * self.params['xi']
+                self._weight -= self._weight * self.params['xi']
                 return newborn
         return None
 
@@ -212,7 +212,7 @@ class Herbivore:
         probability = self.params['omega'] * (1 - self.fitness)  # Blir dette riktig måte å hente ut fitness-verdien på?
         r = random.uniform(0, 1)
 
-        if self.weight <= 0:
+        if self._weight <= 0:
             self.instance_count -= 1
             return True  # Dyret dør
             # Evt. delete animal
