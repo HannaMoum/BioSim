@@ -1,4 +1,4 @@
-from .animals import Herbivore
+from biosim.animals import Herbivore
 
 
 class Lowland:
