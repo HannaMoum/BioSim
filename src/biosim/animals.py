@@ -115,6 +115,8 @@ class Herbivore:
 
         self.weight += F_tilde * self.params['beta']
 
+        return F_tilde
+
 
     @staticmethod
     def _q(sgn, x, x_half, phi):
