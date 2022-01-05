@@ -51,7 +51,7 @@ class Lowland:
         """
         Method to reset the amount of fodder by the end of the year
         """
-        self.fodder = self.f_max
+        self.fodder = self.f_max # Check if this is a pointer or a copy
 
 
 
