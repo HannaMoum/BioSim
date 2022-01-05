@@ -218,10 +218,7 @@ class Herbivore:
         if self.weight <= 0:
             return True  # Dyret dør
             # Evt. delete animal
-        if r < probability:
-            return True
-        else:
-            return False
+        return r < probability
 
     @classmethod
     def death(cls):
