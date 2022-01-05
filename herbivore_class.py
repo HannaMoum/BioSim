@@ -131,22 +131,22 @@ class Herbivore:
         """
         pass
 
-    def probability_to_give_birth(self):#, num_of_species_in_cell):
+    def probability_to_give_birth(self):
         """
         Function giving the probability for giving birth
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
-        #probability = min(1, self.params['gamma'] * self.fitness * (num_of_species_in_cell - 1))
         probability = min(1, self.params['gamma'] * self.fitness * (len(self.herbivores) - 1))
         r = random.uniform(0, 1)
 
         if r < probability:
-            return True
-        if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
-            return False
+            if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
+                return False
+            else:
+                return True
         else:
-            return False #TODO: Hvorfor er denne her - er dette riktig?
+            return False
 
     def giving_birth(self):
         """
@@ -168,7 +168,9 @@ class Herbivore:
             newborn = Herbivore()
             w = newborn.weight
             # check if the baby is too heavy
-            if w > self.weight: #TODO: Burde være *xi her vel?
+            if w * self.params['xi'] > self.weight:
+                # > or >= (in if statement)
+                #   Hvis vektene er like, får mora 0 i vekt... Skal det være mulig å gi fødsel da?
                 # del newborn
                 return None
                 # TODO: Make sure this removes w from the list of Herbivores.
@@ -177,7 +179,7 @@ class Herbivore:
                 # lose weight
                 self.weight -= self.weight * self.params['xi']
                 return newborn
-        return None #TODO: Make sure this is correct... Necessary at all?
+        return None
 
 
     def probability_of_death(self):
