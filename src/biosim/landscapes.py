@@ -10,6 +10,11 @@ class Lowland:
         'f_max': 800.0,
     }
 
+    @classmethod
+    def set_params(cls, new_params):
+        pass
+
+
     def __init__(self, num_herb):
         self.f_max = self.params['f_max']  # Maximum available fodder
         self.fodder = self.params['f_max']  # Initial amount of fodder
@@ -43,20 +48,19 @@ class Lowland:
             possible_baby = herbivore.giving_birth()
             if possible_baby is not None:
                 newborns.append(possible_baby)
-        # self.herb_pop = self.herb_pop + newborns
-        self.herb_pop.extend(newborns)
+        self.herb_pop += newborns
+
 
     def migration(self):
         pass
 
     def aging(self):
+        """
+        The herbivores turn one year older and looses weight.
+        """
         for herbivore in self.herb_pop:
             herbivore.aging()
-            # Får ny alder og ny vekt
-        pass
 
-    #def weightloss(self):
-    #    pass
 
     def regrowth(self):
         """
