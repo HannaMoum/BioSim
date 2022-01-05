@@ -50,13 +50,12 @@ class Lowland:
         pass
 
     def aging(self):
+        """
+        The herbivores turn one year older and looses weight.
+        """
         for herbivore in self.herb_pop:
             herbivore.aging()
-            # Får ny alder og ny vekt
-        pass
 
-    #def weightloss(self):
-    #    pass
 
     def regrowth(self):
         """
