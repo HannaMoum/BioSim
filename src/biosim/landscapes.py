@@ -7,12 +7,17 @@ class Lowland:
     """
 
     params = {
-        'f_max': 800.0,
+        'f_max': 800.0
     }
 
     @classmethod
     def set_params(cls, new_params):
-        pass
+        for key in new_params:
+            if key not in cls.params:
+                raise KeyError('Invalid parameter name: ' + key)
+            if key < 0:
+                raise ValueError('Invalid value for parameter: ' + key)
+            cls.params[key] = new_params[key]
 
 
     def __init__(self, num_herb):
