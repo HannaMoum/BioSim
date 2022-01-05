@@ -7,6 +7,8 @@ class Animal:
 # class Herbivore(Animal):
 class Herbivore:
 
+    herbivores = []
+
     params = {
         'w_birth':8,
         'sigma_birth': 1.5,
@@ -28,6 +30,21 @@ class Herbivore:
     Legg inn doc-string
     """
 
+    @classmethod
+    def all_alive_herbivores(cls, self): #Liste av alle herbivores
+        """
+        :param self: Classobject
+        Adds the current classobject to list herbivores
+        """
+        cls.herbivores.append(self)
+
+    @classmethod
+    def herbivores_list(cls):
+        """ When called, this function returns a complete list of all herbivores
+        (currently just one area)
+        """
+        return cls.herbivores
+
     def __init__(self, age = 0, weight = None, loc = None):
         """Legg til doc-string."""
         self.age = age
@@ -40,6 +57,7 @@ class Herbivore:
             self.weight = weight
 
         self.loc = loc
+        self.all_alive_herbivores(self) #Adding this herbivore to the list og all herbivores
 
 
     def find_birthweight(self):
@@ -60,7 +78,7 @@ class Herbivore:
         # Om matenmengden er mindre enn ønskelig mengde spiser den all maten i cellen.
         # Om matmengden er mer enn ønskelig spiser dyret det den ønsker.
         self.weight += F_tilde * self.params['beta']
-        return self.weight
+        # return self.weight
 
 
     @staticmethod
@@ -113,21 +131,22 @@ class Herbivore:
         """
         pass
 
-    def probability_to_give_birth(self, num_of_species_in_cell):
+    def probability_to_give_birth(self):
         """
         Function giving the probability for giving birth
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
-        probability = min(1, self.params['gamma'] * self.fitness * (num_of_species_in_cell - 1))
+        probability = min(1, self.params['gamma'] * self.fitness * (len(self.herbivores) - 1))
         r = random.uniform(0, 1)
 
         if r < probability:
-            return True
-        if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
-            return False
+            if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
+                return False
+            else:
+                return True
         else:
-            return False #TODO: Hvorfor er denne her - er dette riktig?
+            return False
 
     def giving_birth(self):
         """
@@ -149,7 +168,9 @@ class Herbivore:
             newborn = Herbivore()
             w = newborn.weight
             # check if the baby is too heavy
-            if w > self.weight: #TODO: Burde være *xi her vel?
+            if w * self.params['xi'] > self.weight:
+                # > or >= (in if statement)
+                #   Hvis vektene er like, får mora 0 i vekt... Skal det være mulig å gi fødsel da?
                 # del newborn
                 return None
                 # TODO: Make sure this removes w from the list of Herbivores.
@@ -158,7 +179,7 @@ class Herbivore:
                 # lose weight
                 self.weight -= self.weight * self.params['xi']
                 return newborn
-        return None #TODO: Make sure this is correct... Necessary at all?
+        return None
 
 
     def probability_of_death(self):
@@ -173,13 +194,40 @@ class Herbivore:
         else:
             return False
 
-    def death(self):
+    @classmethod
+    def death(cls):
         """
-        Function deciding if the Herbivore should die.
+        Requires call: Herbivore.death()
+        Kill all animals that must die according to probability_to_die at once
+        :return:
         """
-        if self.probability_of_death():
-            # Should we delete this animal?
-            pass
+        dead_animals = {animal for animal in cls.herbivores if animal.probability_to_die()}
+        cls.herbivores = list(set(cls.herbivores) - dead_animals)
+
+    # Or...
+
+
+    def kill_only_one_herbivore(self):
+        """
+        Todo: We should probably delete this one
+        self: Current classobject
+        Kills only one animal at a time
+
+        - Transfer to script:
+
+        For one: animal.kill_only_one_herbivore(animal)
+        For several:
+        dead_animals = {animal for animal in list_of_herbivores if animal.probability_to_die()}
+        for animal in dead_animals:
+            Herbivore.death(animal)
+
+        NOTE! In this case must all dead animals be collected in a set before they are removed.
+              We cannot remove elements from a list while iterating trough it
+        """
+        self.herbivores.remove(self)
+
+
+
 
 
 

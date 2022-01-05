@@ -1,20 +1,21 @@
-import .herbivore_class
+from .herbivore_class import Herbivore
 
-class Lowland():
+
+class Lowland:
     """
     Doc-strings
     """
 
     params = {
         'f_max': 800.0,
-        'F' : 10.0
+        'F': 10.0
     }
 
     def __init__(self):
-        self.f_max = params['f_max'] #Maximum available fodder
-        self.fodder = params['f_max'] #Initial amount of fodder
+        self.f_max = self.params['f_max']  # Maximum available fodder
+        self.fodder = self.params['f_max']  # Initial amount of fodder
 
-    def grassing(self, some_list_of_Herbivores_in_area, F):
+    def grassing(self):
         """
         Function handling the animals eating in correct order
 
@@ -30,10 +31,27 @@ class Lowland():
             else:
                 nothing?
         """
+        F_satisfied = self.params['F']
+        for herbivore in Herbivore.herbivores_list().sort(key=lambda x: x.fitness, reverse=True):
 
-        pass
+            if self.fodder >= F_satisfied:
+                herbivore.eat(F_satisfied)  # Gains weight
+                self.fodder -= F_satisfied  # Adjust available fodder
 
-    # Need to reset the amount of fodder by the end of the year. vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
+            elif self.fodder > 0:  # More than zero, but less than F_satisfied
+                herbivore.eat(self.fodder)
+                self.fodder = 0
 
+            else:
+                None #Is this correct?
+
+
+    # vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
     def regrowth(self):
-        self.fodder = self.f_max
+        """
+        Method to reset the amount of fodder by the end of the year
+        """
+        self.fodder = self.f_max # Check if this is a pointer or a copy
+
+
+
