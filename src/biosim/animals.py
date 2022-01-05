@@ -9,7 +9,7 @@ class Animal:
 # class Herbivore(Animal):
 class Herbivore:
 
-    num_herbi = 0  # Number of herbivores
+    instance_count = 0  # Number of herbivores
 
     params = {
         'w_birth': 8,
@@ -64,7 +64,12 @@ class Herbivore:
     @classmethod
     def count_new_herbi(cls):
         """Legg inn noe her"""
-        cls.num_herbi += 1
+        cls.instance_count += 1
+
+    @classmethod
+    def num_herbis(cls):
+        """Legg inn noe her"""
+        return cls.instance_count
 
 
 
