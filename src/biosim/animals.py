@@ -211,6 +211,7 @@ class Herbivore:
         return None
 
     def probability_of_death(self):
+        """ Decides wether animal dies """
         probability = self.params['omega'] * (1 - self.fitness)  # Blir dette riktig måte å hente ut fitness-verdien på?
         r = random.uniform(0, 1)
 
