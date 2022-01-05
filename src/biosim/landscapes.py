@@ -42,6 +42,9 @@ class Lowland:
         """
         Every herbivore tries to give birth.
         Expanding self.herb_pop with the new population after all animals have given birth.
+
+        (We might want to adjust the names, and the probability_to_give_birth/giving_birth in Herbivores class,
+        for a better code)
         """
         newborns = {}
         for herbivore in self.herb_pop:
