@@ -36,12 +36,20 @@ class Lowland:
             else:
                 break  # No reason to continue looping if there are no more fodder available.
 
-
     # vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
 
-    def give_birth:
-        for herbivore in self.herb_pop():
-            herbivore.giving_birth()
+    def give_birth(self):
+        """
+        Every herbivore tries to give birth.
+        Expanding self.herb_pop with the new population after all animals have given birth.
+        """
+        newborns = {}
+        for herbivore in self.herb_pop:
+            possible_baby = herbivore.giving_birth()
+            if possible_baby is not None:
+                newborns += possible_baby
+        self.herb_pop = list(set(self.herb_pop) + newborns)
+
 
     def regrowth(self):
         """
