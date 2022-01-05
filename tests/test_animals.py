@@ -1,2 +1,2 @@
 import pytest
-from herbivore_class import Herbivore
+from animals import Herbivore
