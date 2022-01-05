@@ -9,7 +9,7 @@ class Animal:
 # class Herbivore(Animal):
 class Herbivore:
 
-
+    num_herbi = 0  # Number of herbivores
 
     params = {
         'w_birth': 8,
@@ -60,6 +60,12 @@ class Herbivore:
                 cls.eta = new_params['eta']
 
             cls.params[key] = new_params[key]
+
+    @classmethod
+    def count_new_herbi(cls):
+        """Legg inn noe her"""
+        cls.num_herbi += 1
+
 
 
 
