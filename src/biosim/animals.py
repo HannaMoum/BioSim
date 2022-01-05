@@ -46,11 +46,11 @@ class Herbivore:
         ------
         ValueError, KeyError
         """
-        # cls.params.update(new_params)
+
 
         #  Checks if key in new_params exists in params
         for key in new_params:
-            if key not in params:
+            if key not in cls.params:
                 raise KeyError('Invalid parameter name: ' + key)
             if not all(value >= 0 for value in new_params.values()):
                 raise ValueError('Invalid value for parameter: ' + key)
