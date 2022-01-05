@@ -167,7 +167,7 @@ class Herbivore:
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
-        probability = min(1, self.params['gamma'] * self.fitness * (len(self.herbivores) - 1))
+        probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
         r = random.uniform(0, 1)
 
         if r < probability:
