@@ -15,7 +15,7 @@ class Herbivore:
         'w_birth': 8,
         'sigma_birth': 1.5,
         'beta': 0.9,
-        'eta': 0.05,
+        'eta': 0.05, # Mindre eller lik 1
         'a_half': 40.0,
         'phi_age': 0.6,
         'w_half': 10.0,
@@ -25,17 +25,16 @@ class Herbivore:
         'zeta': 3.5,
         'xi': 1.2,
         'omega': 0.4,
-        'F': 10.0,
-        'DeltaPhiMax': None  # Sjekk om dette er riktig. Står ingen verdi i tabellen.
+        'F': 10.0
     }
     """"
     Legg inn doc-string
     """
 
-    """
+
     @classmethod
     def set_params(cls, new_params):
-        
+        """
         Set class parameters.
 
         Parameters
@@ -46,20 +45,20 @@ class Herbivore:
         Raises
         ------
         ValueError, KeyError
-        
+        """
+        # cls.params.update(new_params)
 
+        #  Checks if key in new_params exists in params
         for key in new_params:
             if key not in params:
                 raise KeyError('Invalid parameter name: ' + key)
+            if not all(value >= 0 for value in new_params.values()):
+                raise ValueError('Invalid value for parameter: ' + key)
 
-        if 'w_birth' in new_params:
-            pass
 
-        if 'sigma_birth' in new_params:
-            pass
         
         
-    """
+
 
     @classmethod
     def all_alive_herbivores(cls, self):  # Liste av alle herbivores
