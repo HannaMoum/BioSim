@@ -165,8 +165,8 @@ class Herbivore:
         After 1 year passed, each herbivore becomes 1 year older
         """
         self.age += 1
-        self.weight = self.decrease_weight_when_aging() # Kan man hete ut vekten fra den forrige metoden på denne måten?
-        #Har testet -> Ja, ser ut til å fungere
+        self.weight = self.decrease_weight_when_aging()
+
 
     def migration(self, geography):
         """
