@@ -12,6 +12,7 @@ class Lowland:
 
     @classmethod
     def set_params(cls, new_params):
+        #Should this be run for every simulation? If so, params should be default...
         for key in new_params:
             if key not in cls.params:
                 raise KeyError('Invalid parameter name: ' + key)
