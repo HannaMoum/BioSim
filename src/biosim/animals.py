@@ -73,7 +73,7 @@ class Herbivore:
 
     def __init__(self, age=0, weight=None, loc=None):
         """Legg til doc-string."""
-        self.age = age
+        self._age = age
 
         birth_weight = self.find_birthweight()
 
@@ -151,7 +151,7 @@ class Herbivore:
         """
         After 1 year passed, each herbivore becomes 1 year older
         """
-        self.age += 1
+        self._age += 1
         self.decrease_weight_when_aging()
 
 
