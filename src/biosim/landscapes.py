@@ -56,5 +56,12 @@ class Lowland:
         """
         self.fodder = self.f_max # Check if this is a pointer or a copy
 
+    def death(self):
+        def survivors(pop):
+            return [animal for animal in pop if not animal.probability_of_death()]
+
+        self.herb_pop = survivors(self.herb_pop)
+
+
 
 
