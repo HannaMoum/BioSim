@@ -9,13 +9,13 @@ class Animal:
 # class Herbivore(Animal):
 class Herbivore:
 
-    herbivores = []
+    instance_count = 0  # Number of herbivores
 
     params = {
         'w_birth': 8,
         'sigma_birth': 1.5,
         'beta': 0.9,
-        'eta': 0.05,
+        'eta': 0.05, # Mindre eller lik 1
         'a_half': 40.0,
         'phi_age': 0.6,
         'w_half': 10.0,
@@ -25,17 +25,16 @@ class Herbivore:
         'zeta': 3.5,
         'xi': 1.2,
         'omega': 0.4,
-        'F': 10.0,
-        'DeltaPhiMax': None  # Sjekk om dette er riktig. Står ingen verdi i tabellen.
+        'F': 10.0
     }
     """"
     Legg inn doc-string
     """
 
-    """
+
     @classmethod
     def set_params(cls, new_params):
-        
+        """
         Set class parameters.
 
         Parameters
@@ -46,35 +45,32 @@ class Herbivore:
         Raises
         ------
         ValueError, KeyError
-        
+        """
+        # cls.params.update(new_params)
 
+        #  Checks if key in new_params exists in params
         for key in new_params:
             if key not in params:
                 raise KeyError('Invalid parameter name: ' + key)
+            if not all(value >= 0 for value in new_params.values()):
+                raise ValueError('Invalid value for parameter: ' + key)
+            if key == 'eta':
+                if not 0 <= new_params['eta'] <= 1:
+                    raise ValueError('eta must be in [0, 1].')
+                cls.eta = new_params['eta']
 
-        if 'w_birth' in new_params:
-            pass
-
-        if 'sigma_birth' in new_params:
-            pass
-        
-        
-    """
-
-    @classmethod
-    def all_alive_herbivores(cls, self):  # Liste av alle herbivores
-        """
-        :param self: Classobject
-        Adds the current classobject to list herbivores
-        """
-        cls.herbivores.append(self)
+            cls.params[key] = new_params[key]
 
     @classmethod
-    def herbivores_list(cls):
-        """ When called, this function returns a complete list of all herbivores
-        (currently just one area)
-        """
-        return cls.herbivores
+    def count_new_herbi(cls):
+        """Legg inn noe her"""
+        cls.instance_count += 1
+
+    @classmethod
+    def num_herbis(cls):
+        """Legg inn noe her"""
+        return cls.instance_count
+
 
     def __init__(self, age=0, weight=None, loc=None):
         """Legg til doc-string."""
@@ -82,20 +78,21 @@ class Herbivore:
 
         birth_weight = self.find_birthweight()
 
+        self.count_new_herbi()
+
         if weight is None:
             self.weight = birth_weight
         else:
             self.weight = weight
 
         self.loc = loc
-        self.all_alive_herbivores(self)  # Adding this herbivore to the list og all herbivores
 
     def find_birthweight(self):
         """
-        Funksjon som avgjør fødselsvekten basert på mean og standard deviation. Gaussian distribution.
+        Calulates the birth weight based on the mean and standard deviation, with the Gaussian distribution.
         """
-        birthweight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
-        return birthweight
+        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+        return birth_weight
 
 
     def eat(self, F_tilde):
@@ -107,8 +104,12 @@ class Herbivore:
         # Om det ikke er det spiser dyret 0.
         # Om matenmengden er mindre enn ønskelig mengde spiser den all maten i cellen.
         # Om matmengden er mer enn ønskelig spiser dyret det den ønsker.
+
+        if food_available <= 0:
+            F_tilde = 0
+        elif food_available < self.params['F']:
         self.weight += F_tilde * self.params['beta']
-        # return self.weight
+
 
     @staticmethod
     def _q(sgn, x, x_half, phi):
@@ -151,8 +152,8 @@ class Herbivore:
         After 1 year passed, each herbivore becomes 1 year older
         """
         self.age += 1
-        self.weight = self.decrease_weight_when_aging() # Kan man hete ut vekten fra den forrige metoden på denne måten?
-        #Har testet -> Ja, ser ut til å fungere
+        self.weight = self.decrease_weight_when_aging()
+
 
     def migration(self, geography):
         """
