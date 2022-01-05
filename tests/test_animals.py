@@ -7,18 +7,43 @@ SEED = 12345678  # random seed for tests
 @pytest.mark.skip('Not finished')
 def test_set_params():
     pass
+    # old
+    # new
+    # Sammenlign etter å ha kjørt prossedyren
 
-@pytest.mark.skip('Not finished')
+#@pytest.mark.skip('Not finished')
 def test_count_new_herbi():
-    pass
+    x = Herbivore.instance_count # Sjekker status i klassen
+    Herbivore.count_new_herbi() # kaller prossedyren
+    assert Herbivore.instance_count == x + 1 # Sjekker om tellevariabel har økt
+    # Tilbakestilling
+    Herbivore.instance_count = x
 
-@pytest.mark.skip('Not finished')
+
+#@pytest.mark.skip('Not finished')
 def test_num_herbis():
-    pass
+    x = Herbivore.instance_count  # Sjekker status i klassen
+    assert x == Herbivore.num_herbis()  # kaller funksjonen
 
-@pytest.mark.skip('Not finished')
-def test_init():
-    pass
+
+#@pytest.mark.skip('Not finished')
+def test_init_class_variables():
+    x = Herbivore.instance_count
+    a = Herbivore()
+    assert Herbivore.instance_count == x + 1
+
+#@pytest.mark.skip('Not finished')
+
+    #assert a.__dict__ == {'_age': 0, '_weight': None, 'loc': None}
+
+#@pytest.mark.skip('Not finished')
+def test_animal_create():
+    """
+    Test that a new animal has age 0.
+    """
+    a = Herbivore()
+    assert a._age == 0
+
 
 @pytest.mark.skip('Not finished')
 def test_find_birthweight():
@@ -40,7 +65,7 @@ def test_fitness():
 def test_decrease_weight_when_aging():
     pass
 
-#@pytest.mark.skip('Not finished')
+@pytest.mark.skip('Not finished')
 def test_aging():
     a = Herbivore()
     num_years = 10
