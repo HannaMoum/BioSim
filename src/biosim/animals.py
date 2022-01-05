@@ -213,9 +213,10 @@ class Herbivore:
         r = random.uniform(0, 1)
 
         if self.weight <= 0:
+            self.instance_count -= 1
             return True  # Dyret dør
             # Evt. delete animal
-        return r < probability
+        return r < probability #TODO: Need to adjust instance_count
 
     @classmethod
     def death(cls):
