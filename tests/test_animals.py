@@ -1,2 +1,2 @@
 import pytest
-from animals import Herbivore
+from biosim.animals import Herbivore
