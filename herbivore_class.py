@@ -32,6 +32,35 @@ class Herbivore:
     Legg inn doc-string
     """
 
+    """
+    @classmethod
+    def set_params(cls, new_params):
+        
+        Set class parameters.
+
+        Parameters
+        ----------
+        new_params : dict
+            Legal keys: ''
+
+        Raises
+        ------
+        ValueError, KeyError
+        
+
+        for key in new_params:
+            if key not in params:
+                raise KeyError('Invalid parameter name: ' + key)
+
+        if 'w_birth' in new_params:
+            pass
+
+        if 'sigma_birth' in new_params:
+            pass
+        
+        
+    """
+
     @classmethod
     def all_alive_herbivores(cls, self):  # Liste av alle herbivores
         """
