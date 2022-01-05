@@ -147,15 +147,13 @@ class Herbivore:
         self.weight -= self.weight*eta
         """
         self.weight -= self.weight * self.params['eta']
-        #return self.weight
 
     def aging(self):
         """
         After 1 year passed, each herbivore becomes 1 year older
         """
         self.age += 1
-        #self.weight = self.decrease_weight_when_aging()
-        self.decrease_weight_when_aging() #TODO: Check if this is correct
+        self.decrease_weight_when_aging()
 
 
     def migration(self, geography):
