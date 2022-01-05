@@ -46,6 +46,17 @@ class Lowland:
         # self.herb_pop = self.herb_pop + newborns
         self.herb_pop.extend(newborns)
 
+    def migration(self):
+        pass
+
+    def aging(self):
+        for herbivore in self.herb_pop:
+            herbivore.aging()
+            # Får ny alder og ny vekt
+        pass
+
+    #def weightloss(self):
+    #    pass
 
     def regrowth(self):
         """
