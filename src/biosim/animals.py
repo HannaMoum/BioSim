@@ -104,8 +104,12 @@ class Herbivore:
         # Om det ikke er det spiser dyret 0.
         # Om matenmengden er mindre enn ønskelig mengde spiser den all maten i cellen.
         # Om matmengden er mer enn ønskelig spiser dyret det den ønsker.
+
+        if food_available <= 0:
+            F_tilde = 0
+        elif food_available < self.params['F']:
         self.weight += F_tilde * self.params['beta']
-        # return self.weight
+
 
     @staticmethod
     def _q(sgn, x, x_half, phi):
