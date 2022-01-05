@@ -15,26 +15,14 @@ class Lowland:
         self.f_max = self.params['f_max']  # Maximum available fodder
         self.fodder = self.params['f_max']  # Initial amount of fodder
 
-        self.herb_pop = [Herbivore() for _ in range(num_herb)]
+        self.herb_pop = [Herbivore() for _ in range(num_herb)]  # List containing all alive herbivores in one location
 
     def grassing(self):
         """
         Function handling the animals eating in correct order
-
-        Procedure-draft:
-        for Herbivore in sorted list of Herbivores (after fitness-level):
-            if self.fodder >= F:
-                Herbivore.eat_fodder(F) (!F for Herbivores is 10.0) (gains weight at the same time)
-                self.fodder -= F #Adjust available fodder
-            elif:
-                self.fodder > 0 and self.fodder < F:
-                    Herbivore.eat_fodder(self.fodder)
-                    self.fodder = 0
-            else:
-                nothing?
         """
         F_satisfied = self.params['F']
-        for herbivore in Herbivore.herbivores_list().sort(key=lambda x: x.fitness, reverse=True):
+        for herbivore in self.herb_pop.sort(key=lambda x: x.fitness, reverse=True): #TODO: This is not working
 
             if self.fodder >= F_satisfied:
                 herbivore.eat(F_satisfied)  # Gains weight
@@ -45,7 +33,7 @@ class Lowland:
                 self.fodder = 0
 
             else:
-                None  #Is this correct?
+                break  # No reason to continue looping if there are no more fodder available.
 
 
     # vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
