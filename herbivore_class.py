@@ -78,7 +78,7 @@ class Herbivore:
         # Om matenmengden er mindre enn ønskelig mengde spiser den all maten i cellen.
         # Om matmengden er mer enn ønskelig spiser dyret det den ønsker.
         self.weight += F_tilde * self.params['beta']
-        return self.weight
+        # return self.weight
 
 
     @staticmethod
