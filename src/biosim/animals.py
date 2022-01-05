@@ -54,10 +54,14 @@ class Herbivore:
                 raise KeyError('Invalid parameter name: ' + key)
             if not all(value >= 0 for value in new_params.values()):
                 raise ValueError('Invalid value for parameter: ' + key)
+            if key == 'eta':
+                if not 0 <= new_params['eta'] <= 1:
+                    raise ValueError('eta must be in [0, 1].')
+                cls.eta = new_params['eta']
+
+            cls.params[key] = new_params[key]
 
 
-        
-        
 
 
     @classmethod
@@ -87,7 +91,7 @@ class Herbivore:
             self.weight = weight
 
         self.loc = loc
-        self.all_alive_herbivores(self)  # Adding this herbivore to the list og all herbivores
+        self.count_herbivores()  # Adding this herbivore to the list og all herbivores
 
     def find_birthweight(self):
         """
