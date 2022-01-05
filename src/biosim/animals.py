@@ -95,10 +95,11 @@ class Herbivore:
         return birth_weight
 
 
-    def eat(self, F_tilde):
+    def eat(self, food_available):
         """
         Funksjon som regner ut vektøkningen etter at dyret har spist
         beta*F_tilde
+        F_tilde = det som blir spist
         """
         # Sjekk om det er tilgjengelig mat i cellen.
         # Om det ikke er det spiser dyret 0.
@@ -108,6 +109,10 @@ class Herbivore:
         if food_available <= 0:
             F_tilde = 0
         elif food_available < self.params['F']:
+            F_tilde = food_available
+        else:
+            F_tilde = food_available
+
         self.weight += F_tilde * self.params['beta']
 
 
