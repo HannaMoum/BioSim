@@ -101,11 +101,6 @@ class Herbivore:
         beta*F_tilde
         F_tilde = det som blir spist
         """
-        # Sjekk om det er tilgjengelig mat i cellen.
-        # Om det ikke er det spiser dyret 0.
-        # Om matenmengden er mindre enn ønskelig mengde spiser den all maten i cellen.
-        # Om matmengden er mer enn ønskelig spiser dyret det den ønsker.
-
         if food_available <= 0:
             F_tilde = 0
         elif food_available < self.params['F']:
@@ -152,14 +147,15 @@ class Herbivore:
         self.weight -= self.weight*eta
         """
         self.weight -= self.weight * self.params['eta']
-        return self.weight
+        #return self.weight
 
     def aging(self):
         """
         After 1 year passed, each herbivore becomes 1 year older
         """
         self.age += 1
-        self.weight = self.decrease_weight_when_aging()
+        #self.weight = self.decrease_weight_when_aging()
+        self.decrease_weight_when_aging() #TODO: Check if this is correct
 
 
     def migration(self, geography):
