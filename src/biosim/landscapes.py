@@ -22,7 +22,8 @@ class Lowland:
         Function handling the animals eating in correct order
         """
         F_satisfied = self.params['F']
-        for herbivore in self.herb_pop.sort(key=lambda x: x.fitness, reverse=True): #TODO: This is not working
+        # Sort list, highest fitness first:
+        for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
 
             if self.fodder >= F_satisfied:
                 herbivore.eat(F_satisfied)  # Gains weight
@@ -37,6 +38,10 @@ class Lowland:
 
 
     # vars(self.f_max) (https://www.programiz.com/python-programming/methods/built-in/vars)
+
+    def give_birth:
+        for herbivore in self.herb_pop():
+            herbivore.giving_birth()
 
     def regrowth(self):
         """
