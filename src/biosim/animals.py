@@ -57,7 +57,6 @@ class Herbivore:
             if key == 'eta':
                 if not 0 <= new_params['eta'] <= 1:
                     raise ValueError('eta must be in [0, 1].')
-                cls.eta = new_params['eta']
 
             cls.params[key] = new_params[key]
 
