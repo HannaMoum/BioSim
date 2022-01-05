@@ -10,6 +10,11 @@ class Lowland:
         'f_max': 800.0,
     }
 
+    @classmethod
+    def set_params(cls, new_params):
+        pass
+
+
     def __init__(self, num_herb):
         self.f_max = self.params['f_max']  # Maximum available fodder
         self.fodder = self.params['f_max']  # Initial amount of fodder
