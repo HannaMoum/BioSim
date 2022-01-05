@@ -19,7 +19,6 @@ class Lowland:
                 raise ValueError('Invalid value for parameter: ' + key)
             cls.params[key] = new_params[key]
 
-
     def __init__(self, num_herb):
         self.f_max = self.params['f_max']  # Maximum available fodder
         self.fodder = self.params['f_max']  # Initial amount of fodder
@@ -39,7 +38,6 @@ class Lowland:
             if self.fodder == 0:
                 break
 
-
     def give_birth(self):
         """
         Every herbivore tries to give birth.
@@ -55,8 +53,10 @@ class Lowland:
                 newborns.append(possible_baby)
         self.herb_pop += newborns
 
-
     def migration(self):
+        """
+        Herbivores migrating or staying put
+        """
         pass
 
     def aging(self):
@@ -66,6 +66,11 @@ class Lowland:
         for herbivore in self.herb_pop:
             herbivore.aging()
 
+    def death(self):
+        def survivors(pop):
+            return [animal for animal in pop if not animal.probability_of_death()]
+
+        self.herb_pop = survivors(self.herb_pop)
 
     def regrowth(self):
         """
@@ -73,11 +78,7 @@ class Lowland:
         """
         self.fodder = self.f_max  # Check if this is a pointer or a copy
 
-    def death(self):
-        def survivors(pop):
-            return [animal for animal in pop if not animal.probability_of_death()]
 
-        self.herb_pop = survivors(self.herb_pop)
 
 
 
