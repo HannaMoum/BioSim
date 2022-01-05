@@ -75,26 +75,15 @@ class Herbivore:
 
 
 
-    @classmethod
-    def all_alive_herbivores(cls, self):  # Liste av alle herbivores
-        """
-        :param self: Classobject
-        Adds the current classobject to list herbivores
-        """
-        cls.herbivores.append(self)
 
-    @classmethod
-    def herbivores_list(cls):
-        """ When called, this function returns a complete list of all herbivores
-        (currently just one area)
-        """
-        return cls.herbivores
 
     def __init__(self, age=0, weight=None, loc=None):
         """Legg til doc-string."""
         self.age = age
 
         birth_weight = self.find_birthweight()
+
+        self.count_new_herbi()
 
         if weight is None:
             self.weight = birth_weight
