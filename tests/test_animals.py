@@ -1,6 +1,9 @@
 import pytest
 from biosim.animals import Herbivore
 
+#  Overall parameters for probabilistic tests
+SEED = 12345678  # random seed for tests
+
 @pytest.mark.skip('Not finished')
 def test_set_params():
     pass
