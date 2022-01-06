@@ -157,7 +157,7 @@ class Herbivore:
         """
         pass
 
-    def probability_to_give_birth(self):
+    def probability_to_give_birth(self, number_of_animals):
         """
         Function giving the probability for giving birth
         (number_of_herbivores is the number of herbivores before the breeding season starts)
@@ -165,7 +165,10 @@ class Herbivore:
         """
 
         #probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
-        probability = min(1, self.params['gamma'] * self.fitness * (Lowland.number_of_current_living_animals() - 1))# TODO: Må oppdateres til ny liste fra landscape.
+        #number_of_animals = Lowland.number_of_current_living_animals()
+        probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))# TODO: Må oppdateres til ny liste fra landscape.
+
+
         r = random.uniform(0, 1)
 
         befruktning = r < probability # Sannsynligheten for at det skjer en befruktning
@@ -185,7 +188,7 @@ class Herbivore:
 
 
 
-    def giving_birth(self):
+    def giving_birth(self, number_of_animals):
         """
         function handling the birth of a new herbivore.
         Runs if probability_to_give_birth returns True
@@ -195,7 +198,7 @@ class Herbivore:
         """
 
 
-        p, birth_weight = self.probability_to_give_birth() # Kanskje parantes
+        p, birth_weight = self.probability_to_give_birth(number_of_animals) # Kanskje parantes
         if p:
             newborn = Herbivore(age = 0, weight = birth_weight)
             
