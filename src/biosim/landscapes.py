@@ -24,7 +24,7 @@ class Lowland:
                 raise ValueError('Invalid value for parameter: ' + key)
             cls.params[key] = new_params[key]
 
-    def __init__(self, num_herb):
+    def __init__(self, num_herb): #Change num_herbs to dictionary containing initial population with possibly age and weight
         self.f_max = self.params['f_max']  # Maximum available fodder
         self.fodder = self.params['f_max']  # Initial amount of fodder
 

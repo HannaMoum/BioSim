@@ -3,7 +3,12 @@
 from biosim.animals import Herbivore
 from biosim.landscapes import Lowland
 
+#Herbivore.set_params({'omega': 0.2, 'gamma': 0.7})
 sim = Lowland(20)
+
+new_params = {'f_max': 800}
+sim.set_params(new_params)
+
 #new_params = {'omega': 0.2} Does not work because this parameter is for Herbivore and not Lowland
 #sim.set_params(new_params)
 #print(sim.params)
