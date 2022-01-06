@@ -38,6 +38,8 @@ class Lowland:
         return self._fodder
     @fodder.setter
     def fodder(self, value):
+        if value > self.params['f_max']:
+            raise ValueError('Value must be bellow f_max')
         self._fodder = value
 
     @property
