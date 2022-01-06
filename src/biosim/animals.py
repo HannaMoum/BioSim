@@ -210,15 +210,14 @@ class Herbivore:
 
 
     def probability_of_death(self):
-        """ Decides wether animal dies """
-        probability = self.params['omega'] * (1 - self.fitness)  # Blir dette riktig måte å hente ut fitness-verdien på?
+        """ Decides whether or not the animal dies """
+        probability = self.params['omega'] * (1 - self.fitness)
         r = random.uniform(0, 1)
 
         if self._weight <= 0:
-            self.instance_count -= 1
-            return True  # Dyret dør
-            # Evt. delete animal
-        return r < probability #TODO: Need to adjust instance_count
+            return True  # animal dies
+
+        return r < probability  # Returns True or False
 
 
 
