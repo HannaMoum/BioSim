@@ -1,5 +1,6 @@
 import pytest
 from biosim.landscapes import Lowland
+from biosim.animals import Herbivore
 
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
