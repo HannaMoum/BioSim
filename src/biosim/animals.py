@@ -83,7 +83,7 @@ class Herbivore:
         # Nå trenger man ikke å ha default verider på age og weight fordi de alltid vil gis ved enten en fødsel
         # eller inlesing av en dictionary.
 
-        # Må teste at age og weight er positive og "rimelige".
+        # Må teste at age og weight er positive og "rimelige". Weight må være positiv, og age må være både positiv og int.
         # assert weight > 0
         # if weight <= 0:
         #   send valueerror som sier at verdien må være større enn 0
