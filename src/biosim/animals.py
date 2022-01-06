@@ -1,6 +1,5 @@
 import math
 import random
-from .landscapes import Lowland
 
 
 class Animal:
