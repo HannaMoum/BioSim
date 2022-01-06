@@ -15,26 +15,41 @@ ini_herb_pop = [{'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
 # new_params_landscape = {'f_max': 600}
 # Lowland.set_params(new_params_landscape)
 
-# Turning initial list of information into list of Herbivores
-initial_pop = []
-for animal in ini_herb_pop:
-    if animal['Species'] == 'Herbivore':
-        initial_pop.append(Herbivore(animal['age'], animal['weight']))
-for an in initial_pop:
-    print(an.params)
+
+class Simulation:
+
+    def __init__(self, initial_population):
+        self.initial_population = initial_population
+
+    def create_herb_list(self):
+        # Turning initial list of information into list of Herbivores
+        # NOW: Assuming we only have herbivores
+        pop_reorganised = []
+        for animal in self.initial_population:
+            if animal['Species'] == 'Herbivore':
+                pop_reorganised.append(Herbivore(animal['age'], animal['weight']))
+        return pop_reorganised
+
+    def cycle(self, herbs_in_one_field):
+        herbs_in_one_field.grassing()
+        herbs_in_one_field.give_birth()
+        herbs_in_one_field.aging()
+        herbs_in_one_field.death()
+        herbs_in_one_field.regrowth()
+        return
+
+    def run(self, years):
+        herbs = self.create_herb_list()
+        to_be_simulated = Lowland(herbs)
+        for year in range(years):
+            self.cycle(to_be_simulated)
+            print(len(to_be_simulated.herb_pop))
 
 
-sim = Lowland(initial_pop)
+my_sim = Simulation(ini_herb_pop)
+my_sim.run(100)
 
-
-def cycle(simulation):
-    simulation.grassing()
-    simulation.give_birth()
-    simulation.aging()
-    simulation.death()
-    simulation.regrowth()
-
-
-for year in range(100):
-    cycle(sim)
-    print(len(sim.herb_pop))
+#sim = Lowland(initial_pop)
+#for year in range(100):
+#    cycle(sim)
+#    print(len(sim.herb_pop))
