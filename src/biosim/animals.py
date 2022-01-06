@@ -61,7 +61,8 @@ class Herbivore:
             cls.params[key] = new_params[key]
 
     @classmethod
-    def count_new_herbi(cls):
+    def count_new_herbi(cls): # Usikker på om denne skal være her og ikke i en annen klasse.
+        # Når man tenker på egenskapene til en sau i virkeligheten er jo ikke en av de egenskapene å vite hvor mange andre sauer det er.
         """Legg inn noe her"""
         cls.instance_count += 1
 
