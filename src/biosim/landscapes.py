@@ -34,6 +34,9 @@ class Lowland:
         self.fodder = self.params['f_max']  # Initial amount of fodder
         self.herb_pop = initial_pop
 
+    def number_of_current_living_animals(self):
+        return len(self.herb_pop)
+
     def grassing(self):
         """
         Function handling the animals eating in correct order
