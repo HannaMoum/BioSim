@@ -16,6 +16,7 @@ ini_herb_pop = [{'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
 # Lowland.set_params(new_params_landscape)
 
 
+# Be aware; Currently awful variable names
 class Simulation:
 
     def __init__(self, initial_population):
@@ -36,20 +37,16 @@ class Simulation:
         herbs_in_one_field.aging()
         herbs_in_one_field.death()
         herbs_in_one_field.regrowth()
-        return
 
     def run(self, years):
         herbs = self.create_herb_list()
         to_be_simulated = Lowland(herbs)
         for year in range(years):
             self.cycle(to_be_simulated)
-            print(len(to_be_simulated.herb_pop))
+            print(f'Number of herbivores after year {year}: {len(to_be_simulated.herb_pop)}')
 
 
 my_sim = Simulation(ini_herb_pop)
 my_sim.run(100)
 
-#sim = Lowland(initial_pop)
-#for year in range(100):
-#    cycle(sim)
-#    print(len(sim.herb_pop))
+
