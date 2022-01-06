@@ -229,7 +229,7 @@ class Herbivore:
         r = random.uniform(0, 1)
         sickness = r < probability
 
-        return any([starvation, sickness])
+        return any((starvation, sickness))
 
 
 
