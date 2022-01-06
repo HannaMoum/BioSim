@@ -185,7 +185,7 @@ class Herbivore:
             # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
             return True, birth_weight
 
-        return None
+        return None, None #Se kommentar under giving_birth. Forbedringspotensiale
 
 
 
@@ -198,8 +198,7 @@ class Herbivore:
         this year. (self.mother = False/True)!
         """
 
-
-        p, birth_weight = self.probability_to_give_birth(number_of_animals) # Kanskje parantes
+        p, birth_weight = self.probability_to_give_birth(number_of_animals)  # Kan ikke unpacke uten noen verdien
         if p:
             newborn = Herbivore(age = 0, weight = birth_weight)
             
