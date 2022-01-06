@@ -67,7 +67,7 @@ class Lowland:
 
         newborns = []
         for herbivore in self.herb_pop:
-            possible_baby = herbivore.giving_birth()
+            possible_baby = herbivore.giving_birth(self.number_of_current_living_animals())
             if possible_baby is not None:
                 newborns.append(possible_baby)
         self.herb_pop += newborns
