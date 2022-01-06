@@ -9,8 +9,6 @@ class Animal:
 # class Herbivore(Animal):
 class Herbivore:
 
-    instance_count = 0  # Number of herbivores
-
     params = {
         'w_birth': 8,
         'sigma_birth': 1.5,
