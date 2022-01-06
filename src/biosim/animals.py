@@ -84,6 +84,11 @@ class Herbivore:
         # eller inlesing av en dictionary.
 
         # Må teste at age og weight er positive og "rimelige".
+        # assert weight > 0
+        # if weight <= 0:
+        #   send valueerror som sier at verdien må være større enn 0
+        # else:
+        #   self._weight = weight
 
 
     def eat(self, food_available):
