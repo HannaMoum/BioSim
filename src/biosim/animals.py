@@ -202,10 +202,11 @@ class Herbivore:
         if p:
             newborn = Herbivore(age = 0, weight = birth_weight)
             
-        # lose weight
-        self._weight -= birth_weight * self.params['xi']
+            # lose weight
+            self._weight -= birth_weight * self.params['xi']
         
-        return newborn
+            return newborn
+        return None
 
 
     def probability_of_death(self):
