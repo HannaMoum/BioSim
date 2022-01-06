@@ -31,10 +31,25 @@ def test_init_herb_pop():
 
 def test_grassing():
     """
-    Test they are eating in correct order (test sorting-funtion)
-    Test for weightgain after eating?
-    Test for the correctly updated value of fodder
-    Test that a loop break happens under correct circumstances
+    Test they are eating in correct order (test sorting-funtion) #How?...
+    Test for weightgain after eating? #SHOULD BE TESTED IN test_eat
+    Test for the correctly updated value of fodder #test here
+    Test that a loop break happens under correct circumstances #test here
     """
-    #herbivores = [Herb]
-    grass = Lowland()
+    herbivores_i = [Herbivore(10, 12.5), Herbivore(9, 10.3), Herbivore(3, 6.8)]  # before eating
+    herbivores_f = [Herbivore(10, 12.5), Herbivore(9, 10.3), Herbivore(3, 6.8)]  # after eating
+
+    #Weightgain
+    gain = Herbivore.params['F'] * Herbivore.params['beta']
+
+    initial = Lowland(herbivores_i).herb_pop
+
+    final_loc = Lowland(herbivores_f)
+    final_loc.grassing()
+    final = final_loc.herb_pop
+
+    for herbivore_i, herbivore_f in zip(initial, final):
+
+        assert herbivore_i._weight + gain == herbivore_f._weight
+
+
