@@ -9,9 +9,10 @@ sim = Lowland(20)
 new_params = {'f_max': 800}
 sim.set_params(new_params)
 
-#new_params = {'omega': 0.2} Does not work because this parameter is for Herbivore and not Lowland
-#sim.set_params(new_params)
-#print(sim.params)
+ini_herb_pop = [{'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
+                {'species': 'Herbivore', 'age': 9, 'weight': 10.3},
+                {'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
+                {'species': 'Herbivore', 'age': 9, 'weight': 10.3}]
 
 def cycle(sim):
     sim.grassing()
