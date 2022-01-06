@@ -25,11 +25,12 @@ sim = Lowland(initial)
 #sim.set_params(new_params)
 
 def cycle(sim):
+    sim.regrowth()
     sim.grassing()
     sim.give_birth()
     sim.aging()
     sim.death()
-    sim.regrowth()
+
 
 for year in range(100):
     cycle(sim)

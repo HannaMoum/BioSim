@@ -31,7 +31,14 @@ class Lowland:
         Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
         """
         self.fodder = self.params['f_max']  # Initial amount of fodder
-        self.herb_pop = initial_pop
+        self._herb_pop = initial_pop
+
+    @property
+    def herb_pop(self):
+        return self._herb_pop
+    @herb_pop.setter
+    def herb_pop(self, value):
+        self.herb_pop = value
 
     def grassing(self):
         """
@@ -43,7 +50,7 @@ class Lowland:
             eaten = herbivore.eat(self.fodder)
             self.fodder -= eaten
 
-            if self.fodder == 0:
+            if self.fodder <= 0:
                 break
 
     def give_birth(self):
@@ -66,13 +73,14 @@ class Lowland:
         new_herbivores = [newborn for herbivore in self.herb_pop if
                           (newborn := herbivore.giving_birth(number_of_herbivores))]
         ## Replaced version
-        #new_herbivores =[]
-        #for herbivore in self.herb_pop:
-        #    newborn = herbivore.giving_birth(number_of_herbivores)
-        #    if newborn:  # Checks that newborn is not None
-        #        new_herbivores.append(newborn)
+        new_herbivores =[]
+        for herbivore in self.herb_pop:
+            newborn = herbivore.giving_birth(number_of_herbivores)
+            if newborn:  # Checks that newborn is not None
+                new_herbivores.append(newborn)
+        if len(new_herbivores) > 0:
+            self.herb_pop.append(new_herbivores)
 
-        self.herb_pop += new_herbivores
 
     def migration(self):
         """
@@ -84,8 +92,9 @@ class Lowland:
         """
         The herbivores turn one year older and looses weight.
         """
+        print(self.herb_pop)
         for herbivore in self.herb_pop:
-            herbivore.aging()
+            herbivore.xaging()
 
     def death(self):
         """
@@ -93,13 +102,12 @@ class Lowland:
         """
         #alive = [animal for animal in self.herb_pop if not animal.probability_of_death()]
         #self.herb_pop = alive
-        def survivors(pop):
-            """
-            Return list of animals that do not die.
-            """
-            return [animal for animal in pop if not animal.probability_of_death()]
 
-        self.herb_pop = survivors(self.herb_pop)
+        alive = []
+        for animal in self.herb_pop:
+            if not animal.probability_of_death():
+                alive.append(animal)
+        self.herb_pop = alive
 
     def regrowth(self):
         """
