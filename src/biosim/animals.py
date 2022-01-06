@@ -72,12 +72,12 @@ class Herbivore:
     #     return cls.instance_count
 
 
-    def __init__(self, age, weight, loc=None):
+    def __init__(self, age, weight):
         """Legg til doc-string."""
         #self.count_new_herbi()
         self._age = age
         self._weight = weight
-        self.loc = loc  # sette lokasjon. Kanskje denne tilhører i landscape?
+
 
 
         # Nå trenger man ikke å ha default verider på age og weight fordi de alltid vil gis ved enten en fødsel
