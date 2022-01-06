@@ -182,20 +182,13 @@ class Herbivore:
     def giving_birth(self):
         """
         function handling the birth of a new herbivore.
-        Runs if probability_to_give_birth > random number
-
-        Possible procedure:
-        1. Find birthweight of new baby using Gaussian distribution
-        birth_weight = random.gauss(
-        2. Find mother's weight loss (birthweight * xi)
-        3.1 If weight in point 2 is bigger than mother's weight - No new baby, stop giving_birth
-        3.2 Else; Adjust mother's weight + create new Herbivore with birthweight found in point 2
+        Runs if probability_to_give_birth returns True
 
         ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
         this year. (self.mother = False/True)!
         """
 
-        """
+
         p,birth_weight = self.probability_to_give_birth
         if p:
             newborn = Herbivore(age = 0, weight = birth_weight)
@@ -204,20 +197,7 @@ class Herbivore:
         self._weight -= birth_weight * self.params['xi']
         
         return newborn
-        """
-        # check if it can give birth
-        if self.probability_to_give_birth():
-            newborn = Herbivore()
-            w = newborn._weight
-            # check if the baby is too heavy
-            if w * self.params['xi'] > self._weight:
-                self.instance_count -= 1
-                return None
-            else:
-                # lose weight
-                self._weight -= self._weight * self.params['xi']
-                return newborn
-        return None
+
 
     def probability_of_death(self):
         """ Decides wether animal dies """
