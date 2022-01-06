@@ -5,7 +5,8 @@ class Lowland:
     """
     Doc-strings
     """
-
+    # Vi må ha en tom liste med antall herbivores i ruta når vi starter. Denne oppdateres når dyr føder, og dør. (Samt migrerer).
+    # Dyrene som lages av klassen herbivore må legges til i denne lista.
     params = {
         'f_max': 800.0
     }
@@ -46,6 +47,11 @@ class Lowland:
 
         (We might want to adjust the names, and the probability_to_give_birth/giving_birth in Herbivores class,
         for a better code)
+
+        1. Gå gjennom lista med dyrene
+        2. Bruker probability_to_give_birt for å sjekke om det blir født et barn.
+            2.1 Barnet fødes via metoden giving_birth. Her oppdateres også vekten til moren.
+            2.2 Barnet må legges til i lista over alle herbivores.
         """
         newborns = []
         for herbivore in self.herb_pop:
