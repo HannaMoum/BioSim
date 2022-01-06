@@ -65,7 +65,7 @@ class Lowland:
         number_of_herbivores = len(self.herb_pop)
         for herbivore in self.herb_pop:
             newborn = herbivore.giving_birth(number_of_herbivores)
-            if newborn is not None:
+            if newborn:  # Checks that newborn is not None
                 new_herbivores.append(newborn)
         self.herb_pop += new_herbivores
 
