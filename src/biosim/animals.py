@@ -181,7 +181,7 @@ class Herbivore:
 
         maternal_health = self._weight > birth_weight * self.params['xi'] # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
 
-        if all(befruktning, fertil, maternal_health): # Om alle disse kriteriene stemmer vil det skje en fødsel.
+        if all((befruktning, fertil, maternal_health)): # Om alle disse kriteriene stemmer vil det skje en fødsel.
             # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
             return True, birth_weight
 
