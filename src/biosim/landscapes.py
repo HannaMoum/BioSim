@@ -34,10 +34,6 @@ class Lowland:
         self.fodder = self.params['f_max']  # Initial amount of fodder
         self.herb_pop = initial_pop
 
-    def number_of_current_living_animals(self):
-        return len(self.herb_pop)
-
-
     def grassing(self):
         """
         Function handling the animals eating in correct order
@@ -66,8 +62,9 @@ class Lowland:
         """
 
         new_herbivores = []
+        number_of_herbivores = len(self.herb_pop)
         for herbivore in self.herb_pop:
-            newborn = herbivore.giving_birth(self.number_of_current_living_animals())
+            newborn = herbivore.giving_birth(number_of_herbivores)
             if newborn is not None:
                 new_herbivores.append(newborn)
         self.herb_pop += new_herbivores
