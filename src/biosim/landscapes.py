@@ -5,6 +5,7 @@ class Lowland:
     """
     Doc-strings
     """
+
     # Vi må ha en tom liste med antall herbivores i ruta når vi starter. Denne oppdateres når dyr føder, og dør. (Samt migrerer).
     # Dyrene som lages av klassen herbivore må legges til i denne lista.
     params = {
@@ -25,11 +26,13 @@ class Lowland:
                 raise ValueError('Invalid value for parameter: ' + key)
             cls.params[key] = new_params[key]
 
-    def __init__(self, pop):
+    def __init__(self, initial_pop):
+        """
+        Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
+        """
         self.f_max = self.params['f_max']  # Maximum available fodder
         self.fodder = self.params['f_max']  # Initial amount of fodder
-
-        self.herb_pop = [Herbivore() for _ in range(num_herb)]  # List containing all alive herbivores in one location
+        self.herb_pop = initial_pop
 
     def grassing(self):
         """
