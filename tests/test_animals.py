@@ -41,8 +41,9 @@ def test_animal_create():
     """
     Test that a new animal has age 0.
     """
-    a = Herbivore()
-    assert a._age == 0
+    a = Herbivore(2, 10)
+    assert a._age == 2
+    assert a._weight == 10
 
 
 @pytest.mark.skip('Not finished')

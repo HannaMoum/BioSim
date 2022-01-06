@@ -84,7 +84,7 @@ class Herbivore:
         # eller inlesing av en dictionary.
 
         # Må teste at age og weight er positive og "rimelige". Weight må være positiv, og age må være både positiv og int.
-        # assert weight > 0
+        # assert weight > 0, 'Weight must be larger than 0
         # if weight <= 0:
         #   send valueerror som sier at verdien må være større enn 0
         # else:
@@ -165,7 +165,7 @@ class Herbivore:
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
 
-        probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
+        probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1)) # TODO: Må oppdateres til ny liste fra landscape.
         r = random.uniform(0, 1)
 
         befruktning = r < probability # Sannsyneligheten for at det skjer en befruktning
@@ -216,37 +216,6 @@ class Herbivore:
             # Evt. delete animal
         return r < probability #TODO: Need to adjust instance_count
 
-    @classmethod
-    def death(cls):
-        """
-        Requires call: Herbivore.death()
-        Kill all animals that must die according to probability_to_die at once
-        :return:
-        """
-        dead_animals = {animal for animal in cls.herbivores if animal.probability_to_die()}
-        cls.herbivores = list(set(cls.herbivores) - dead_animals)
-
-    # Or...
-
-
-    def kill_only_one_herbivore(self):
-        """
-        Todo: We should probably delete this one
-        self: Current classobject
-        Kills only one animal at a time
-
-        - Transfer to script:
-
-        For one: animal.kill_only_one_herbivore(animal)
-        For several:
-        dead_animals = {animal for animal in list_of_herbivores if animal.probability_to_die()}
-        for animal in dead_animals:
-            Herbivore.death(animal)
-
-        NOTE! In this case must all dead animals be collected in a set before they are removed.
-              We cannot remove elements from a list while iterating trough it
-        """
-        self.herbivores.remove(self)
 
 
 
