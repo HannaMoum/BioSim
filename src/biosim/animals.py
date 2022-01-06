@@ -84,7 +84,7 @@ class Herbivore:
         # eller inlesing av en dictionary.
 
         # Må teste at age og weight er positive og "rimelige". Weight må være positiv, og age må være både positiv og int.
-        # assert weight > 0
+        # assert weight > 0, 'Weight must be larger than 0
         # if weight <= 0:
         #   send valueerror som sier at verdien må være større enn 0
         # else:
@@ -165,7 +165,7 @@ class Herbivore:
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
 
-        probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
+        probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1)) # TODO: Må oppdateres til ny liste fra landscape.
         r = random.uniform(0, 1)
 
         befruktning = r < probability # Sannsyneligheten for at det skjer en befruktning
