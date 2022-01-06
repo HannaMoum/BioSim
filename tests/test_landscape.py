@@ -36,20 +36,23 @@ def test_grassing():
     Test for the correctly updated value of fodder #test here
     Test that a loop break happens under correct circumstances #test here
     """
-    herbivores_i = [Herbivore(10, 12.5), Herbivore(9, 10.3), Herbivore(3, 6.8)]  # before eating
-    herbivores_f = [Herbivore(10, 12.5), Herbivore(9, 10.3), Herbivore(3, 6.8)]  # after eating
+    # Transferred this code to test_eat in test_animals instead.
+    # Delete everything, should it be tested here...?
 
-    #Weightgain
-    gain = Herbivore.params['F'] * Herbivore.params['beta']
-
-    initial = Lowland(herbivores_i).herb_pop
-
-    final_loc = Lowland(herbivores_f)
-    final_loc.grassing()
-    final = final_loc.herb_pop
-
-    for herbivore_i, herbivore_f in zip(initial, final):
-
-        assert herbivore_i._weight + gain == herbivore_f._weight
-
+    # herbivores_i = [Herbivore(10, 12.5), Herbivore(9, 10.3), Herbivore(3, 6.8)]  # before eating
+    # herbivores_f = [Herbivore(10, 12.5), Herbivore(9, 10.3), Herbivore(3, 6.8)]  # after eating
+    #
+    # #Weightgain
+    # gain = Herbivore.params['F'] * Herbivore.params['beta']
+    #
+    # initial = Lowland(herbivores_i).herb_pop
+    #
+    # final_loc = Lowland(herbivores_f)
+    # final_loc.grassing()
+    # final = final_loc.herb_pop
+    #
+    # for herbivore_i, herbivore_f in zip(initial, final):
+    #
+    #     assert herbivore_i._weight + gain == herbivore_f._weight
+    pass
 
