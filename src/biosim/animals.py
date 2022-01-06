@@ -158,30 +158,26 @@ class Herbivore:
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
-        """
+
         probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
         r = random.uniform(0, 1)
-        befruktning = r < probability
 
-        fertil = self._weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
+        befruktning = r < probability # Sannsyneligheten for at det skjer en befruktning
+
+        fertil = self._weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']) # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
         
-        # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__. 
-        # 
-        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+        # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__ når en ny herbivore opprettes.
 
-        maternal_health = self._weight > birth_weight * self.params['xi']
+        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth']) # regner ut fødselsvekt.
 
-        if all(befruktning, fertil, maternal_health):
+        maternal_health = self._weight > birth_weight * self.params['xi'] # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
+
+        if all(befruktning, fertil, maternal_health): # Om alle disse kriteriene stemmer vil det skje en fødsel.
+            # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
             return True, birth_weight
         
-        """
-        if r < probability:
-            if self._weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
-                return False
-            else:
-                return True
-        else:
-            return False
+
+
 
     def giving_birth(self):
         """
