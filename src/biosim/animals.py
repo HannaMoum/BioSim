@@ -60,43 +60,40 @@ class Herbivore:
 
             cls.params[key] = new_params[key]
 
-    @classmethod
-    def count_new_herbi(cls):
-        """Legg inn noe her"""
-        cls.instance_count += 1
+    # @classmethod
+    # def count_new_herbi(cls): # Usikker på om denne skal være her og ikke i en annen klasse.
+    #     # Når man tenker på egenskapene til en sau i virkeligheten er jo ikke en av de egenskapene å vite hvor mange andre sauer det er.
+    #     """Legg inn noe her"""
+    #     cls.instance_count += 1
+    #
+    # @classmethod
+    # def num_herbis(cls):
+    #     """Legg inn noe her"""
+    #     return cls.instance_count
 
-    @classmethod
-    def num_herbis(cls):
-        """Legg inn noe her"""
-        return cls.instance_count
 
-
-    def __init__(self, age=0, weight=None, loc=None):
+    def __init__(self, age, weight):
         """Legg til doc-string."""
+        #self.count_new_herbi()
         self._age = age
+        self._weight = weight
 
-        birth_weight = self.find_birthweight()
 
-        self.count_new_herbi()
 
-        if weight is None:
-            self._weight = birth_weight
-        else:
-            self._weight = weight
+        # Nå trenger man ikke å ha default verider på age og weight fordi de alltid vil gis ved enten en fødsel
+        # eller inlesing av en dictionary.
 
-        self.loc = loc
-
-    def find_birthweight(self):
-        """
-        Calulates the birth weight based on the mean and standard deviation, with the Gaussian distribution.
-        """
-        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
-        return birth_weight
+        # Må teste at age og weight er positive og "rimelige". Weight må være positiv, og age må være både positiv og int.
+        # assert weight > 0
+        # if weight <= 0:
+        #   send valueerror som sier at verdien må være større enn 0
+        # else:
+        #   self._weight = weight
 
 
     def eat(self, food_available):
         """
-        Funksjon som regner ut vektøkningen etter at dyret har spist
+        Function that makes the animal eat. First step is to check if any fodder/food is available.
         beta*F_tilde
         F_tilde = det som blir spist
         """
@@ -167,45 +164,46 @@ class Herbivore:
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
+
         probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
         r = random.uniform(0, 1)
 
-        if r < probability:
-            if self._weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
-                return False
-            else:
-                return True
-        else:
-            return False
+        befruktning = r < probability # Sannsyneligheten for at det skjer en befruktning
+
+        fertil = self._weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']) # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
+        
+        # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__ når en ny herbivore opprettes.
+
+        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth']) # regner ut fødselsvekt.
+
+        maternal_health = self._weight > birth_weight * self.params['xi'] # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
+
+        if all(befruktning, fertil, maternal_health): # Om alle disse kriteriene stemmer vil det skje en fødsel.
+            # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
+            return True, birth_weight
+        
+
+
 
     def giving_birth(self):
         """
         function handling the birth of a new herbivore.
-        Runs if probability_to_give_birth > random number
-
-        Possible procedure:
-        1. Find birthweight of new baby using Gaussian distribution
-        birth_weight = random.gauss(
-        2. Find mother's weight loss (birthweight * xi)
-        3.1 If weight in point 2 is bigger than mother's weight - No new baby, stop giving_birth
-        3.2 Else; Adjust mother's weight + create new Herbivore with birthweight found in point 2
+        Runs if probability_to_give_birth returns True
 
         ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
         this year. (self.mother = False/True)!
         """
-        # check if it can give birth
-        if self.probability_to_give_birth():
-            newborn = Herbivore()
-            w = newborn._weight
-            # check if the baby is too heavy
-            if w * self.params['xi'] > self._weight:
-                self.instance_count -= 1
-                return None
-            else:
-                # lose weight
-                self._weight -= self._weight * self.params['xi']
-                return newborn
-        return None
+
+
+        p, birth_weight = self.probability_to_give_birth() # Kanskje parantes
+        if p:
+            newborn = Herbivore(age = 0, weight = birth_weight)
+            
+        # lose weight
+        self._weight -= birth_weight * self.params['xi']
+        
+        return newborn
+
 
     def probability_of_death(self):
         """ Decides wether animal dies """
