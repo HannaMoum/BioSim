@@ -85,15 +85,6 @@ class Herbivore:
         # Må teste at age og weight er positive og "rimelige".
 
 
-    def find_birthweight(self): # Denne er ikke nødvendig lenger siden fødselsvekten blir funnet når man undersøker
-        # sannsyneligheten for fødsel.
-        """
-        Calulates the birth weight based on the mean and standard deviation, with the Gaussian distribution.
-        """
-        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
-        return birth_weight
-
-
     def eat(self, food_available):
         """
         Function that makes the animal eat. First step is to check if any fodder/food is available.
