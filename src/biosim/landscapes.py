@@ -38,7 +38,7 @@ class Lowland:
         return self._herb_pop
     @herb_pop.setter
     def herb_pop(self, value):
-        self.herb_pop = value
+        self._herb_pop = value
 
     def grassing(self):
         """
@@ -70,16 +70,18 @@ class Lowland:
 
         number_of_herbivores = len(self.herb_pop)
 
-        new_herbivores = [newborn for herbivore in self.herb_pop if
-                          (newborn := herbivore.giving_birth(number_of_herbivores))]
+        #new_herbivores = [newborn for herbivore in self.herb_pop if
+                          #(newborn := herbivore.giving_birth(number_of_herbivores))]
         ## Replaced version
         new_herbivores =[]
         for herbivore in self.herb_pop:
             newborn = herbivore.giving_birth(number_of_herbivores)
+
             if newborn:  # Checks that newborn is not None
                 new_herbivores.append(newborn)
+
         if len(new_herbivores) > 0:
-            self.herb_pop.append(new_herbivores)
+            self.herb_pop += new_herbivores
 
 
     def migration(self):
@@ -92,9 +94,8 @@ class Lowland:
         """
         The herbivores turn one year older and looses weight.
         """
-        print(self.herb_pop)
         for herbivore in self.herb_pop:
-            herbivore.xaging()
+            herbivore.aging()
 
     def death(self):
         """
@@ -107,6 +108,7 @@ class Lowland:
         for animal in self.herb_pop:
             if not animal.probability_of_death():
                 alive.append(animal)
+
         self.herb_pop = alive
 
     def regrowth(self):

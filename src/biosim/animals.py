@@ -91,6 +91,7 @@ class Herbivore:
     @weight.setter
     def weight(self, value):
         self.check_positive(value)
+        self._weight = value
 
     @property
     def fitness(self):
@@ -151,7 +152,7 @@ class Herbivore:
     #     """
     #     self.weight -= self.weight * self.params['eta']
 
-    def xaging(self):
+    def aging(self):
         """
         After 1 year passed, each herbivore becomes 1 year older
         """
@@ -181,13 +182,14 @@ class Herbivore:
 
         befruktning = r < probability # Sannsynligheten for at det skjer en befruktning
 
-        fertil = self._weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']) # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
+        fertil = self.weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']) # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
         
         # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__ når en ny herbivore opprettes.
 
         birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth']) # regner ut fødselsvekt.
 
-        maternal_health = self._weight > birth_weight * self.params['xi'] # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
+        maternal_health = self.weight > birth_weight * self.params['xi'] # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
+
 
         if all((befruktning, fertil, maternal_health)): # Om alle disse kriteriene stemmer vil det skje en fødsel.
             # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
@@ -208,9 +210,10 @@ class Herbivore:
         """
 
         p, birth_weight = self.probability_to_give_birth(number_of_animals)  # Kan ikke unpacke uten noen verdien
+
         if p:
             newborn = Herbivore(age = 0, weight = birth_weight)
-            
+
             # lose weight
             self._weight -= birth_weight * self.params['xi']
         

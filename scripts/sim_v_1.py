@@ -5,9 +5,13 @@ from biosim.landscapes import Lowland
 
 # Creating initial population as list/dicts
 ini_herb_pop = [{'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
-                {'Species': 'Herbivore', 'age': 9, 'weight': 10.3},
-                {'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
-                {'Species': 'Herbivore', 'age': 9, 'weight': 10.3}]
+                {'Species': 'Herbivore', 'age': 11, 'weight': 10.3},
+                {'Species': 'Herbivore', 'age': 12, 'weight': 12.5},
+                {'Species': 'Herbivore', 'age': 13, 'weight': 10.3},
+                {'Species': 'Herbivore', 'age': 14, 'weight': 12.5},
+                {'Species': 'Herbivore', 'age': 15, 'weight': 10.3},
+                {'Species': 'Herbivore', 'age': 16, 'weight': 12.5},
+                {'Species': 'Herbivore', 'age': 17, 'weight': 10.3}]
 
 # Adjusting parameters
 #Herbivore.set_params(new_params)
@@ -34,4 +38,10 @@ def cycle(sim):
 
 for year in range(100):
     cycle(sim)
-    print(len(sim.herb_pop))
+    print('-' * 30)
+    print(f'Year: {year}   ', end='')
+    print('Pop:', len(sim.herb_pop))
+
+    #for i in sim.herb_pop:
+        #print(i.age, i.weight, i.fitness)
+
