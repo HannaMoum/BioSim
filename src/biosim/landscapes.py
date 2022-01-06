@@ -65,12 +65,12 @@ class Lowland:
             2.2 Barnet må legges til i lista over alle herbivores.
         """
 
-        newborns = []
+        new_herbivores = []
         for herbivore in self.herb_pop:
-            possible_baby = herbivore.giving_birth(self.number_of_current_living_animals())
-            if possible_baby is not None:
-                newborns.append(possible_baby)
-        self.herb_pop += newborns
+            newborn = herbivore.giving_birth(self.number_of_current_living_animals())
+            if newborn is not None:
+                new_herbivores.append(newborn)
+        self.herb_pop += new_herbivores
 
     def migration(self):
         """
