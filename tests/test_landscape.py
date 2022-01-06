@@ -32,10 +32,18 @@ def test_init_herb_pop():
 def test_grassing():
     """
     Test they are eating in correct order (test sorting-funtion) #How?...
-    Test for weightgain after eating? #SHOULD BE TESTED IN test_eat
+    Test for weightgain after eating? #SHOULD BE TESTED IN test_eat, transferred
     Test for the correctly updated value of fodder #test here
     Test that a loop break happens under correct circumstances #test here
     """
+
+    # Test fodder reduction
+    herbivores = [Herbivore(10, 12.5), Herbivore(9, 10.3), Herbivore(3, 6.8)]
+    loc = Lowland(herbivores)
+    loc.grassing()
+    # Assumption: Enough food available. Need some adjustments
+    assert Lowland.params['f_max'] - len(herbivores)*Herbivore.params['F'] == loc.fodder
+
     # Transferred this code to test_eat in test_animals instead.
     # Delete everything, should it be tested here...?
 
@@ -54,5 +62,5 @@ def test_grassing():
     # for herbivore_i, herbivore_f in zip(initial, final):
     #
     #     assert herbivore_i._weight + gain == herbivore_f._weight
-    pass
+    #pass
 
