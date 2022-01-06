@@ -60,21 +60,21 @@ class Herbivore:
 
             cls.params[key] = new_params[key]
 
-    @classmethod
-    def count_new_herbi(cls): # Usikker på om denne skal være her og ikke i en annen klasse.
-        # Når man tenker på egenskapene til en sau i virkeligheten er jo ikke en av de egenskapene å vite hvor mange andre sauer det er.
-        """Legg inn noe her"""
-        cls.instance_count += 1
+    # @classmethod
+    # def count_new_herbi(cls): # Usikker på om denne skal være her og ikke i en annen klasse.
+    #     # Når man tenker på egenskapene til en sau i virkeligheten er jo ikke en av de egenskapene å vite hvor mange andre sauer det er.
+    #     """Legg inn noe her"""
+    #     cls.instance_count += 1
+    #
+    # @classmethod
+    # def num_herbis(cls):
+    #     """Legg inn noe her"""
+    #     return cls.instance_count
 
-    @classmethod
-    def num_herbis(cls):
-        """Legg inn noe her"""
-        return cls.instance_count
 
-
-    def __init__(self, age=0, weight=None, loc=None):
+    def __init__(self, age, weight, loc=None):
         """Legg til doc-string."""
-        self.count_new_herbi()
+        #self.count_new_herbi()
         self._age = age
         self._weight = weight
         self.loc = loc  # sette lokasjon. Kanskje denne tilhører i landscape?
@@ -195,7 +195,7 @@ class Herbivore:
         """
 
 
-        p,birth_weight = self.probability_to_give_birth
+        p, birth_weight = self.probability_to_give_birth() # Kanskje parantes
         if p:
             newborn = Herbivore(age = 0, weight = birth_weight)
             
