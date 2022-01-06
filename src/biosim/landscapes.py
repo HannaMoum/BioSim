@@ -30,8 +30,15 @@ class Lowland:
         """
         Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
         """
-        self.fodder = self.params['f_max']  # Initial amount of fodder
+        self._fodder = self.params['f_max']  # Initial amount of fodder
         self._herb_pop = initial_pop
+
+    @property
+    def fodder(self):
+        return self._fodder
+    @fodder.setter
+    def fodder(self, value):
+        self._fodder = value
 
     @property
     def herb_pop(self):
