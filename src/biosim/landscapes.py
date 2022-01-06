@@ -13,11 +13,15 @@ class Lowland:
 
     @classmethod
     def set_params(cls, new_params):
+        """
+        Function to edit paramteres
+        new_params: Dict
+        """
         #Should this be run for every simulation? If so, params should be default...
-        for key in new_params:
+        for key, value in new_params.items():
             if key not in cls.params:
                 raise KeyError('Invalid parameter name: ' + key)
-            if key < 0:
+            if value < 0:
                 raise ValueError('Invalid value for parameter: ' + key)
             cls.params[key] = new_params[key]
 
