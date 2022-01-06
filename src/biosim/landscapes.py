@@ -53,6 +53,7 @@ class Lowland:
             2.1 Barnet fødes via metoden giving_birth. Her oppdateres også vekten til moren.
             2.2 Barnet må legges til i lista over alle herbivores.
         """
+
         newborns = []
         for herbivore in self.herb_pop:
             possible_baby = herbivore.giving_birth()
@@ -92,6 +93,7 @@ class Lowland:
         Method to reset the amount of fodder by the end of the year
         """
         self.fodder = self.f_max
+        # self.fodder = self.params['f_max']
 
 
 
