@@ -1,5 +1,6 @@
 import math
 import random
+from .landscapes import Lowland
 
 
 class Animal:
@@ -163,10 +164,11 @@ class Herbivore:
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
 
-        probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1)) # TODO: Må oppdateres til ny liste fra landscape.
+        #probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
+        probability = min(1, self.params['gamma'] * self.fitness * (Lowland.number_of_current_living_animals() - 1))# TODO: Må oppdateres til ny liste fra landscape.
         r = random.uniform(0, 1)
 
-        befruktning = r < probability # Sannsyneligheten for at det skjer en befruktning
+        befruktning = r < probability # Sannsynligheten for at det skjer en befruktning
 
         fertil = self._weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']) # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
         
