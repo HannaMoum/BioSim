@@ -16,7 +16,6 @@ ini_herb_pop = [{'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
 # Lowland.set_params(new_params_landscape)
 
 
-# Be aware; Currently awful variable names
 class Simulation:
 
     def __init__(self, initial_population):
@@ -25,25 +24,25 @@ class Simulation:
     def create_herb_list(self):
         # Turning initial list of information into list of Herbivores
         # NOW: Assuming we only have herbivores
-        pop_reorganised = []
+        herb_list = []
         for animal in self.initial_population:
             if animal['Species'] == 'Herbivore':
-                pop_reorganised.append(Herbivore(animal['age'], animal['weight']))
-        return pop_reorganised
+                herb_list.append(Herbivore(animal['age'], animal['weight']))
+        return herb_list
 
-    def cycle(self, herbs_in_one_field):
-        herbs_in_one_field.grassing()
-        herbs_in_one_field.give_birth()
-        herbs_in_one_field.aging()
-        herbs_in_one_field.death()
-        herbs_in_one_field.regrowth()
+    def cycle(self, loc_with_herbs):
+        loc_with_herbs.grassing()
+        loc_with_herbs.give_birth()
+        loc_with_herbs.aging()
+        loc_with_herbs.death()
+        loc_with_herbs.regrowth()
 
     def run(self, years):
         herbs = self.create_herb_list()
-        to_be_simulated = Lowland(herbs)
+        location = Lowland(herbs)
         for year in range(years):
-            self.cycle(to_be_simulated)
-            print(f'Number of herbivores after year {year}: {len(to_be_simulated.herb_pop)}')
+            self.cycle(location)
+            print(f'Number of herbivores after year {year}: {len(location.herb_pop)}')
 
 
 my_sim = Simulation(ini_herb_pop)
