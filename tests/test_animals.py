@@ -1,5 +1,6 @@
 import pytest
 from biosim.animals import Herbivore
+from biosim.landscapes import Lowland
 
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
@@ -50,9 +51,19 @@ def test_animal_create():
 def test_find_birthweight():
     pass
 
-@pytest.mark.skip('Not finished')
+#@pytest.mark.skip('Not finished')
 def test_eat():
-    pass
+    """ Test weightgain when eating"""
+    herbivore = Herbivore(10, 12.5)
+    initial_weight = herbivore._weight
+
+    food_available = Lowland.params['f_max']
+    herbivore.eat(food_available)
+    final_weight = herbivore._weight
+    weight_gain = Herbivore.params['F'] * Herbivore.params['beta']
+
+    assert initial_weight + weight_gain == final_weight
+
 
 @pytest.mark.skip('Not finished')
 def test__q():
