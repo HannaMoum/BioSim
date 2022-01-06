@@ -73,20 +73,20 @@ class Herbivore:
 
     def __init__(self, age=0, weight=None, loc=None):
         """Legg til doc-string."""
-        self._age = age
-
-        birth_weight = self.find_birthweight()
-
         self.count_new_herbi()
+        self._age = age
+        self._weight = weight
+        self.loc = loc  # sette lokasjon. Kanskje denne tilhører i landscape?
 
-        if weight is None:
-            self._weight = birth_weight
-        else:
-            self._weight = weight
 
-        self.loc = loc
+        # Nå trenger man ikke å ha default verider på age og weight fordi de alltid vil gis ved enten en fødsel
+        # eller inlesing av en dictionary.
 
-    def find_birthweight(self):
+        # Må teste at age og weight er positive og "rimelige".
+
+
+    def find_birthweight(self): # Denne er ikke nødvendig lenger siden fødselsvekten blir funnet når man undersøker
+        # sannsyneligheten for fødsel.
         """
         Calulates the birth weight based on the mean and standard deviation, with the Gaussian distribution.
         """
@@ -96,7 +96,7 @@ class Herbivore:
 
     def eat(self, food_available):
         """
-        Funksjon som regner ut vektøkningen etter at dyret har spist
+        Function that makes the animal eat. First step is to check if any fodder/food is available.
         beta*F_tilde
         F_tilde = det som blir spist
         """
@@ -167,9 +167,23 @@ class Herbivore:
         (number_of_herbivores is the number of herbivores before the breeding season starts)
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
+        """
         probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
         r = random.uniform(0, 1)
+        befruktning = r < probability
 
+        fertil = self._weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
+        
+        # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__. 
+        # 
+        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+
+        maternal_health = self._weight > birth_weight * self.params['xi']
+
+        if all(befruktning, fertil, maternal_health):
+            return True, birth_weight
+        
+        """
         if r < probability:
             if self._weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
                 return False
@@ -192,6 +206,17 @@ class Herbivore:
 
         ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
         this year. (self.mother = False/True)!
+        """
+
+        """
+        p,birth_weight = self.probability_to_give_birth
+        if p:
+            newborn = Herbivore(age = 0, weight = birth_weight)
+            
+        # lose weight
+        self._weight -= birth_weight * self.params['xi']
+        
+        return newborn
         """
         # check if it can give birth
         if self.probability_to_give_birth():
