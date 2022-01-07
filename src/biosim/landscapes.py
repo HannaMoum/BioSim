@@ -63,7 +63,7 @@ class Lowland:
         """
         # Sort list, highest fitness first:
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
-
+            herbivore.F_tilde = 0
             eaten = herbivore.eat(self.fodder)
             self.fodder -= eaten
 

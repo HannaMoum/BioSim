@@ -2,35 +2,24 @@ import math
 import random
 from abc import ABC, abstractmethod
 
-
 class Animal(ABC):
-    pass
-
-
-# class Herbivore(Animal):
-class Herbivore:
-
     params = {
-        'w_birth': 8,
-        'sigma_birth': 1.5,
-        'beta': 0.9,
-        'eta': 0.05,
-        'a_half': 40.0,
-        'phi_age': 0.6,
-        'w_half': 10.0,
-        'phi_weight': 0.1,
-        'mu': 0.25,
-        'gamma': 0.2,
-        'zeta': 3.5,
-        'xi': 1.2,
-        'omega': 0.4,
-        'F': 10.0
+        'w_birth': None,
+        'sigma_birth': None,
+        'beta': None,
+        'eta': None,
+        'a_half': None,
+        'phi_age': None,
+        'w_half': None,
+        'phi_weight': None,
+        'mu': None,
+        'gamma': None,
+        'zeta': None,
+        'xi': None,
+        'omega': None,
+        'F': None,
+        'DeltaPhiMax': None
     }
-    """"
-    Legg inn doc-string
-    """
-
-
     @classmethod
     def set_params(cls, new_params):
         """
@@ -45,7 +34,6 @@ class Herbivore:
         ------
         ValueError, KeyError
         """
-
 
         #  Checks if key in new_params exists in params
         for key in new_params:
@@ -65,6 +53,9 @@ class Herbivore:
         self._age = age
         self._weight = weight
 
+        # Property for mengde som dyret har spist
+        self._F_tilde = 0
+
     @staticmethod
     def check_positive(value):
         if value < 0:
@@ -74,7 +65,6 @@ class Herbivore:
     def check_integer(value):
         if not type(value) == int:
             raise ValueError('Value must be integer')
-
 
     @property
     def age(self):
@@ -95,6 +85,14 @@ class Herbivore:
         self._weight = value
 
     @property
+    def F_tilde(self):
+        """Eaten amount"""
+        return self._F_tilde
+    @F_tilde.setter
+    def F_tilde(self, value):
+        self._F_tilde = value
+
+    @property
     def fitness(self):
         """
         calculate fitness-condition based on age and weight
@@ -102,12 +100,11 @@ class Herbivore:
         """
         # Maby q as function inside fitness function.
 
-
         if self.weight <= 0:
             return 0
         else:
-            q_plus = _q(+1, self.age, self.params['a_half'], self.params['phi_age'])
-            q_minus = _q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+            q_plus = Animal._q(+1, self.age, self.params['a_half'], self.params['phi_age'])
+            q_minus = Animal._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
 
             return q_plus * q_minus
 
@@ -119,33 +116,27 @@ class Herbivore:
         """
         return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 
-
     def eat(self, food_available):
         """
         Function that makes the animal eat. First step is to check if any fodder/food is available.
         beta*F_tilde
         F_tilde = det som blir spist
         """
-        if food_available <= 0:
-            F_tilde = 0
-        elif food_available < self.params['F']:
-            F_tilde = food_available
+        max_måltid = self.params['F'] - self.F_tilde  # Hvor mye plass det er i magen
+        if max_måltid < food_available:
+            måltid = max_måltid
         else:
-            F_tilde = self.params['F']
+            måltid = food_available
 
-        self.weight += F_tilde * self.params['beta']
+        self.weight += måltid * self.params['beta']
+        self.F_tilde += måltid
 
-        return F_tilde
+        return måltid
 
-
-
-    # def decrease_weight_when_aging(self):
-    #     """
-    #     Funksjon som regner ut hvor mye vekten minker per år
-    #     eta*weight
-    #     self.weight -= self.weight*eta
-    #     """
-    #     self.weight -= self.weight * self.params['eta']
+    @property
+    def hungry(self):
+        """Sjekker om dyret er sulten, mao. ønsker å spise"""
+        return self.F_tilde < self.params['F']
 
     def aging(self):
         """
@@ -153,7 +144,6 @@ class Herbivore:
         """
         self.age += 1
         self.weight -= self.weight * self.params['eta']
-
 
     def migration(self, geography):
         """
@@ -168,32 +158,29 @@ class Herbivore:
         N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
         """
 
-        #probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
-        #number_of_animals = Lowland.number_of_current_living_animals()
+        # probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
+        # number_of_animals = Lowland.number_of_current_living_animals()
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
-
 
         r = random.uniform(0, 1)
 
-        befruktning = r < probability # Sannsynligheten for at det skjer en befruktning
+        befruktning = r < probability  # Sannsynligheten for at det skjer en befruktning
 
-        fertil = self.weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']) # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
-        
+        fertil = self.weight > self.params['zeta'] * (self.params['w_birth'] + self.params[
+            'sigma_birth'])  # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
+
         # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__ når en ny herbivore opprettes.
 
-        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth']) # regner ut fødselsvekt.
+        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])  # regner ut fødselsvekt.
 
-        maternal_health = self.weight > birth_weight * self.params['xi'] # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
+        maternal_health = self.weight > birth_weight * self.params[
+            'xi']  # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
 
-
-        if all((befruktning, fertil, maternal_health)): # Om alle disse kriteriene stemmer vil det skje en fødsel.
+        if all((befruktning, fertil, maternal_health)):  # Om alle disse kriteriene stemmer vil det skje en fødsel.
             # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
             return True, birth_weight
 
-        return None, None #Se kommentar under giving_birth. Forbedringspotensiale
-
-
-
+        return None, None  # Se kommentar under giving_birth. Forbedringspotensiale
 
     def giving_birth(self, number_of_animals):
         """
@@ -207,14 +194,13 @@ class Herbivore:
         p, birth_weight = self.probability_to_give_birth(number_of_animals)  # Kan ikke unpacke uten noen verdien
 
         if p:
-            newborn = Herbivore(age = 0, weight = birth_weight)
+            newborn = Herbivore(age=0, weight=birth_weight)
 
             # lose weight
             self._weight -= birth_weight * self.params['xi']
-        
+
             return newborn
         return None
-
 
     def probability_of_death(self):
         """ Decides whether or not the animal dies """
@@ -226,7 +212,10 @@ class Herbivore:
 
         return any((starvation, sickness))
 
-class Carnivore:
+
+# class Herbivore(Animal):
+class Herbivore(Animal):
+
     params = {
         'w_birth': 8,
         'sigma_birth': 1.5,
@@ -241,50 +230,45 @@ class Carnivore:
         'zeta': 3.5,
         'xi': 1.2,
         'omega': 0.4,
-        'F': 10.0,
-        'DeltaPhiMax': 10.0
+        'F': 10.0
     }
-
-    def __init__(self, age, weight):
-        """Legg til doc-string."""
-
-        self._age = age
-        self._weight = weight
-
-        # Property for mengde som dyret har spist
-        self._F_tilde = 0
-
-    @property
-    def F_tilde(self):
-        """Eaten amount"""
-        return self._F_tilde
-    @F_tilde.setter
-    def F_tilde(self, value):
-        self._F_tilde = value
-
-    @property
-    def hungry(self):
-        """Sjekker om dyret er sulten, mao. ønsker å jakte"""
-        return self.F_tilde < self.params['F']
-
-    def eat(self, w_herb):
-        max_måltid = self.params['F'] - self.F_tilde # Hvor mye plass det er i magen
-        if max_måltid < w_herb:
+    """"
+    Legg inn doc-string
+    """
+    def eat(self, food_available):
+        """
+        Function that makes the animal eat. First step is to check if any fodder/food is available.
+        beta*F_tilde
+        F_tilde = det som blir spist
+        """
+        max_måltid = self.params['F'] - self.F_tilde  # Hvor mye plass det er i magen
+        if max_måltid < food_available:
             måltid = max_måltid
         else:
-            måltid = w_herb
+            måltid = food_available
 
         self.weight += måltid * self.params['beta']
         self.F_tilde += måltid
 
+        return måltid
 
 
 
-
-
-
-
-
-
-
-
+class Carnivore(Animal):
+    params = {
+        'w_birth': 6.0,
+        'sigma_birth': 1.0,
+        'beta': 0.75,
+        'eta': 0.0125,
+        'a_half': 40.0,
+        'phi_age': 0.3,
+        'w_half': 4.0,
+        'phi_weight': 0.4,
+        'mu': 0.4,
+        'gamma': 0.8,
+        'zeta': 3.5,
+        'xi': 1.1,
+        'omega': 0.8,
+        'F': 50.0,
+        'DeltaPhiMax': 10.0
+    }
