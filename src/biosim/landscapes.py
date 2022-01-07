@@ -39,7 +39,7 @@ class Lowland:
     @fodder.setter
     def fodder(self, value):
         if value > self.params['f_max']:
-            raise ValueError('Value must be bellow f_max')
+            raise ValueError('Value must be below f_max')
         self._fodder = value
 
     @property
@@ -79,15 +79,15 @@ class Lowland:
 
         number_of_herbivores = len(self.herb_pop)
 
-        #new_herbivores = [newborn for herbivore in self.herb_pop if
-                          #(newborn := herbivore.giving_birth(number_of_herbivores))]
+        new_herbivores = [newborn for herbivore in self.herb_pop if
+                          (newborn := herbivore.giving_birth(number_of_herbivores))]
         ## Replaced version
-        new_herbivores =[]
-        for herbivore in self.herb_pop:
-            newborn = herbivore.giving_birth(number_of_herbivores)
-
-            if newborn:  # Checks that newborn is not None
-                new_herbivores.append(newborn)
+        # new_herbivores =[]
+        # for herbivore in self.herb_pop:
+        #     newborn = herbivore.giving_birth(number_of_herbivores)
+        #
+        #     if newborn:  # Checks that newborn is not None
+        #         new_herbivores.append(newborn)
 
         if len(new_herbivores) > 0:
             self.herb_pop += new_herbivores
@@ -110,15 +110,15 @@ class Lowland:
         """
         Kill herbivores and adjust self.herb_pop to only contain the living
         """
-        #alive = [animal for animal in self.herb_pop if not animal.probability_of_death()]
-        #self.herb_pop = alive
-
-        alive = []
-        for animal in self.herb_pop:
-            if not animal.probability_of_death():
-                alive.append(animal)
-
+        alive = [animal for animal in self.herb_pop if not animal.probability_of_death()]
         self.herb_pop = alive
+
+        # alive = []
+        # for animal in self.herb_pop:
+        #     if not animal.probability_of_death():
+        #         alive.append(animal)
+        #
+        # self.herb_pop = alive
 
     def regrowth(self):
         """

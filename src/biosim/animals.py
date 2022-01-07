@@ -55,12 +55,12 @@ class Herbivore:
             if key == 'eta':
                 if not 0 <= new_params['eta'] <= 1:
                     raise ValueError('eta must be in [0, 1].')
-
+            # Update params
             cls.params[key] = new_params[key]
 
     def __init__(self, age, weight):
         """Legg til doc-string."""
-        #self.count_new_herbi()
+
         self._age = age
         self._weight = weight
 
@@ -175,7 +175,7 @@ class Herbivore:
 
         #probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
         #number_of_animals = Lowland.number_of_current_living_animals()
-        probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))# TODO: Må oppdateres til ny liste fra landscape.
+        probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
 
 
         r = random.uniform(0, 1)
@@ -196,7 +196,7 @@ class Herbivore:
             return True, birth_weight
 
         return None, None #Se kommentar under giving_birth. Forbedringspotensiale
-        # Det er ikke noe poeng å returnere none, fordi det skjer automatisk
+
 
 
 
