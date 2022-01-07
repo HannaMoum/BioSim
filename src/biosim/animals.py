@@ -227,27 +227,51 @@ class Herbivore:
         return any((starvation, sickness))
 
 class Carnivore:
+    params = {
+        'w_birth': 8,
+        'sigma_birth': 1.5,
+        'beta': 0.9,
+        'eta': 0.05,
+        'a_half': 40.0,
+        'phi_age': 0.6,
+        'w_half': 10.0,
+        'phi_weight': 0.1,
+        'mu': 0.25,
+        'gamma': 0.2,
+        'zeta': 3.5,
+        'xi': 1.2,
+        'omega': 0.4,
+        'F': 10.0,
+        'DeltaPhiMax': 10.0
+    }
 
-    def probability_hunting(self, herbivore):
-        fit_diff = self.fitness - herbivore.fitness
+    def __init__(self, age, weight):
+        """Legg til doc-string."""
 
-        condition_1 = self.fitness <= herbivore.fitness
-        condition_2 = 0 < fit_diff < self.params['DeltaPhiMax']
+        self._age = age
+        self._weight = weight
+
+        # Property for mengde som dyret har spist
+        self._F_tilde = 0
+
+    @property
+    def F_tilde(self):
+        """Eaten amount"""
+        return self._F_tilde
+    @F_tilde.setter
+    def F_tilde(self, value):
+        self._F_tilde = value
+
+    def hungry(self):
+        """Sjekker om dyret er sulten, mao. ønsker å jakte"""
+        return self.F_tilde >= self.params['F']
+
+    def weight_increase_eat(self, w_herb):
+        self.weight += w_herb * self.params['beta']
 
 
-        r = random.uniform(0, 1)
 
-        if condition_1:
-            p = 0
-        elif condition_2:
-            p = fit_diff / self.params['DeltaPhiMax']
-        else:
-            p = 1
 
-        if r < p:
-            return True
-        else:
-            return False
 
 
 

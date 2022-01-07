@@ -49,6 +49,13 @@ class Lowland:
     def herb_pop(self, value):
         self._herb_pop = value
 
+    @property
+    def carn_pop(self):
+        return self._carn_pop
+    @carn_pop.setter
+    def carn_pop(self, value):
+        self._carn_pop = value
+
     def grassing(self):
         """
         Function handling the animals eating in correct order
@@ -62,13 +69,30 @@ class Lowland:
             if self.fodder <= 0:
                 break
 # ---------------------------------------------------------------------------------------------
+    @staticmethod
+    def hunting_success(herb_fitness, carn_fitness, deltaphimax):
+
+        r = random.uniform(0, 1)
+        fitness_diff = (carn_fitness - herb_fitness)
+
+        if carn_fitness <= herb_fitness:
+            p = 0
+        elif 0 < fitness_diff < deltaphimax:
+            p = fitness_diff / deltaphimax
+        else:
+            p = 1
+
+        return p > r
+
     def hunting(self):
         """ Carnivores hunting
         for carnivore in carnivor_populasjon:
             for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness):
 
         """
-        pass
+        # Randomize carn_population because they eat in random order
+
+
 # ---------------------------------------------------------------------------------------------
     def give_birth(self):
         """
