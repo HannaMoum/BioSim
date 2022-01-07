@@ -35,11 +35,12 @@ class Simulation:
         return herb_list
 
     def cycle(self, loc_with_herbs):
+        loc_with_herbs.regrowth()
         loc_with_herbs.grassing()
         loc_with_herbs.give_birth()
         loc_with_herbs.aging()
         loc_with_herbs.death()
-        loc_with_herbs.regrowth()
+
 
     def run(self, years):
         herbs = self.create_herb_list()
