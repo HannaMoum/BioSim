@@ -1,11 +1,13 @@
 """ Simulating only herbivores and lowland
 """
 from biosim.animals import Herbivore
+from biosim.animals import Carnivore
 from biosim.landscapes import Lowland
 
 # Creating initial population as list/dicts
 
 ini_herb_pop = [{'Species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(50)]
+ini_carn_pop = [{'Species': 'Carnivore', 'age': 5, 'weight': 8} for _ in range(50)]
 
 
                 # {'Species': 'Herbivore', 'age': 11, 'weight': 10.3},
@@ -38,20 +40,38 @@ class Simulation:
                 herb_list.append(Herbivore(animal['age'], animal['weight']))
         return herb_list
 
-    def cycle(self, loc_with_herbs):
-        loc_with_herbs.regrowth()
-        loc_with_herbs.grassing()
-        loc_with_herbs.give_birth()
-        loc_with_herbs.aging()
-        loc_with_herbs.death()
+    # def create_carn_list(self):
+    #     # Turning initial list of information into list of Herbivores
+    #     # NOW: Assuming we only have herbivores
+    #     carn_list = []
+    #     for animal in self.initial_population:
+    #         if animal['Species'] == 'Herbivore':
+    #             herb_list.append(Herbivore(animal['age'], animal['weight']))
+    #     return herb_list
+
+    def cycle(self, location):
+        location.regrowth()
+        location.grassing()
+        location.hunting()
+        location.give_birth()
+        location.aging()
+        location.death()
 
 
     def run(self, years):
         herbs = self.create_herb_list()
-        location = Lowland(herbs)
+        carns = [Carnivore(5, 8.1),
+                Carnivore(3, 7.3),
+                Carnivore(5, 8.1),
+                Carnivore(4, 6.7),
+                Carnivore(3, 12.0),
+                Carnivore(8, 8.1),
+                Carnivore(1, 4.0),
+                Carnivore(5, 8.1)]
+        location = Lowland(herbs, carns)
         for year in range(years):
             self.cycle(location)
-            print(f'Number of herbivores after year {year}: {len(location.herb_pop)}')
+            print(f'Number of animals after year {year}: h: {len(location.herb_pop)}  c: {len(location.carn_pop)}')
 
 
 my_sim = Simulation(ini_herb_pop)

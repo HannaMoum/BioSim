@@ -1,5 +1,27 @@
 from .animals import Herbivore
+from .animals import Carnivore
 import random
+
+from dataclasses import dataclass
+
+# Under arbeid
+@dataclass
+class Params:
+    w_birth: float = 6.0
+    sigma_birth: float = 1.0
+    beta: float = 0.75
+    eta: float = 0.0125
+    a_half: float = 40.0
+    phi_age: float = 0.3
+    w_half: float = 4.0
+    phi_weight: float = 0.4
+    mu: float = 0.4
+    gamma: float = 0.8
+    zeta: float = 3.5
+    xi: float = 1.1
+    omega: float = 0.8
+    F: float = 50.0
+    DeltaPhiMax: float = 10.0
 
 
 class Lowland:
@@ -27,12 +49,13 @@ class Lowland:
                 raise ValueError('Invalid value for parameter: ' + key)
             cls.params[key] = new_params[key]
 
-    def __init__(self, initial_pop):
+    def __init__(self, initial_herb_pop, initial_carn_pop):
         """
         Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
         """
         self._fodder = self.params['f_max']  # Initial amount of fodder
-        self._herb_pop = initial_pop
+        self._herb_pop = initial_herb_pop
+        self._carn_pop = initial_carn_pop
 
     @property
     def fodder(self):
@@ -57,6 +80,7 @@ class Lowland:
     def carn_pop(self, value):
         self._carn_pop = value
 
+
     def grassing(self):
         """
         Function handling the animals eating in correct order
@@ -72,7 +96,6 @@ class Lowland:
 # ---------------------------------------------------------------------------------------------
     @staticmethod
     def hunting_success(herb_fitness, carn_fitness, deltaphimax):
-
         r = random.uniform(0, 1)
         fitness_diff = (carn_fitness - herb_fitness)
 
@@ -99,11 +122,11 @@ class Lowland:
                 if hunter.hungry:
                     if Lowland.hunting_success(prey.fitness,
                                                hunter.fitness,
-                                               self.params['DeltaPhiMax']):
+                                               Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
                         hunter.eat(prey.weight)
                         del(prey_order[i])
-                else:
-                    break # Stopper hvis ikke hunter er sulten
+                #else:
+                    #break # Stopper hvis ikke hunter er sulten
 
         self.herb_pop = prey_order # Oppdaterer populasjonen til de som er igjen etter jakten
 
@@ -123,10 +146,22 @@ class Lowland:
         """
 
 
-        number_of_herbivores = len(self.herb_pop)
+        # pop_size = len(population)
+        population = self.herb_pop
+        herb_babies = [newborn for individual in population if
+                          (newborn := individual.giving_birth(len(population)))]
 
-        new_herbivores = [newborn for herbivore in self.herb_pop if
-                          (newborn := herbivore.giving_birth(number_of_herbivores))]
+        population = self.carn_pop
+        carn_babies = [newborn for individual in population if
+                       (newborn := individual.giving_birth(len(population)))]
+
+        if len(herb_babies) > 0:
+            self.herb_pop += herb_babies
+        if len(carn_babies) > 0:
+            self.carn_pop += carn_babies
+
+
+
         ## Replaced version
         # new_herbivores =[]
         # for herbivore in self.herb_pop:
@@ -135,8 +170,7 @@ class Lowland:
         #     if newborn:  # Checks that newborn is not None
         #         new_herbivores.append(newborn)
 
-        if len(new_herbivores) > 0:
-            self.herb_pop += new_herbivores
+
 
 
     def migration(self):
@@ -152,12 +186,18 @@ class Lowland:
         for herbivore in self.herb_pop:
             herbivore.aging()
 
+        for carnivore in self.carn_pop:
+            carnivore.aging()
+
+
     def death(self):
         """
         Kill herbivores and adjust self.herb_pop to only contain the living
         """
-        alive = [animal for animal in self.herb_pop if not animal.probability_of_death()]
-        self.herb_pop = alive
+        alive_herbs = [animal for animal in self.herb_pop if not animal.probability_of_death()]
+        alive_carns = [animal for animal in self.carn_pop if not animal.probability_of_death()]
+        self.herb_pop = alive_herbs
+        self.carn_pop = alive_carns
 
         # alive = []
         # for animal in self.herb_pop:
