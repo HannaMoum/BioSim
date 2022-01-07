@@ -14,34 +14,42 @@ ini_herb_pop = [{'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
                 {'Species': 'Herbivore', 'age': 17, 'weight': 10.3}]
 
 # Adjusting parameters
-#Herbivore.set_params(new_params)
-#Herbivore.set_params({'omega': 0.2, 'gamma': 0.7})
-
-# Turning initial list of information into list of Herbivores
-initial = []
-for animal in ini_herb_pop:
-    if animal['Species'] == 'Herbivore':
-        initial.append(Herbivore(animal['age'], animal['weight']))
-
-sim = Lowland(initial)
-
-#new_params = {'f_max': 800}
-#sim.set_params(new_params)
-
-def cycle(sim):
-    sim.regrowth()
-    sim.grassing()
-    sim.give_birth()
-    sim.aging()
-    sim.death()
+# new_params_herbivore = {'omega': 0.7, 'gamma': 0.3}
+# Herbivore.set_params(new_params_herbivore)
+# new_params_landscape = {'f_max': 600}
+# Lowland.set_params(new_params_landscape)
 
 
-for year in range(100):
-    cycle(sim)
-    print('-' * 30)
-    print(f'Year: {year}   ', end='')
-    print('Pop:', len(sim.herb_pop))
+class Simulation:
 
-    #for i in sim.herb_pop:
-        #print(i.age, i.weight, i.fitness)
+    def __init__(self, initial_population):
+        self.initial_population = initial_population
+
+    def create_herb_list(self):
+        # Turning initial list of information into list of Herbivores
+        # NOW: Assuming we only have herbivores
+        herb_list = []
+        for animal in self.initial_population:
+            if animal['Species'] == 'Herbivore':
+                herb_list.append(Herbivore(animal['age'], animal['weight']))
+        return herb_list
+
+    def cycle(self, loc_with_herbs):
+        loc_with_herbs.grassing()
+        loc_with_herbs.give_birth()
+        loc_with_herbs.aging()
+        loc_with_herbs.death()
+        loc_with_herbs.regrowth()
+
+    def run(self, years):
+        herbs = self.create_herb_list()
+        location = Lowland(herbs)
+        for year in range(years):
+            self.cycle(location)
+            print(f'Number of herbivores after year {year}: {len(location.herb_pop)}')
+
+
+my_sim = Simulation(ini_herb_pop)
+my_sim.run(100)
+
 
