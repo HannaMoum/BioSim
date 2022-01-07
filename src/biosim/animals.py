@@ -262,12 +262,20 @@ class Carnivore:
     def F_tilde(self, value):
         self._F_tilde = value
 
+    @property
     def hungry(self):
         """Sjekker om dyret er sulten, mao. ønsker å jakte"""
-        return self.F_tilde >= self.params['F']
+        return self.F_tilde < self.params['F']
 
-    def weight_increase_eat(self, w_herb):
-        self.weight += w_herb * self.params['beta']
+    def eat(self, w_herb):
+        max_måltid = self.params['F'] - self.F_tilde # Hvor mye plass det er i magen
+        if max_måltid < w_herb:
+            måltid = max_måltid
+        else:
+            måltid = w_herb
+
+        self.weight += måltid * self.params['beta']
+        self.F_tilde += måltid
 
 
 

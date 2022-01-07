@@ -1,4 +1,5 @@
 from .animals import Herbivore
+import random
 
 
 class Lowland:
@@ -86,12 +87,25 @@ class Lowland:
 
     def hunting(self):
         """ Carnivores hunting
-        for carnivore in carnivor_populasjon:
-            for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness):
-
         """
         # Randomize carn_population because they eat in random order
+        hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
+        # Sorted list for herbivores based on fitness
+        prey_order = sorted(self.herb_pop, key=lambda x: x.fitness)
 
+        for hunter in hunting_order:
+            hunter.F_tilde = 0
+            for i, prey in enumerate(prey_order):
+                if hunter.hungry:
+                    if Lowland.hunting_success(prey.fitness,
+                                               hunter.fitness,
+                                               self.params['DeltaPhiMax']):
+                        hunter.eat(prey.weight)
+                        del(prey_order[i])
+                else:
+                    break # Stopper hvis ikke hunter er sulten
+
+        self.herb_pop = prey_order # Oppdaterer populasjonen til de som er igjen etter jakten
 
 # ---------------------------------------------------------------------------------------------
     def give_birth(self):
