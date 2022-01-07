@@ -1,8 +1,9 @@
 import math
 import random
+from abc import ABC, abstractmethod
 
 
-class Animal:
+class Animal(ABC):
     pass
 
 
@@ -224,6 +225,30 @@ class Herbivore:
         sickness = r < probability
 
         return any((starvation, sickness))
+
+class Carnivore:
+
+    def probability_hunting(self, herbivore):
+        fit_diff = self.fitness - herbivore.fitness
+
+        condition_1 = self.fitness <= herbivore.fitness
+        condition_2 = 0 < fit_diff < self.params['DeltaPhiMax']
+
+
+        r = random.uniform(0, 1)
+
+        if condition_1:
+            p = 0
+        elif condition_2:
+            p = fit_diff / self.params['DeltaPhiMax']
+        else:
+            p = 1
+
+        if r < p:
+            return True
+        else:
+            return False
+
 
 
 
