@@ -55,39 +55,75 @@ class Herbivore:
             if key == 'eta':
                 if not 0 <= new_params['eta'] <= 1:
                     raise ValueError('eta must be in [0, 1].')
-
+            # Update params
             cls.params[key] = new_params[key]
-
-    # @classmethod
-    # def count_new_herbi(cls): # Usikker på om denne skal være her og ikke i en annen klasse.
-    #     # Når man tenker på egenskapene til en sau i virkeligheten er jo ikke en av de egenskapene å vite hvor mange andre sauer det er.
-    #     """Legg inn noe her"""
-    #     cls.instance_count += 1
-    #
-    # @classmethod
-    # def num_herbis(cls):
-    #     """Legg inn noe her"""
-    #     return cls.instance_count
-
 
     def __init__(self, age, weight):
         """Legg til doc-string."""
-        #self.count_new_herbi()
+
         self._age = age
         self._weight = weight
 
+    @staticmethod
+    def check_positive(value):
+        if value < 0:
+            raise ValueError('Value must be positive')
+
+    @staticmethod
+    def check_integer(value):
+        if not type(value) == int:
+            raise ValueError('Value must be integer')
 
 
-        # Nå trenger man ikke å ha default verider på age og weight fordi de alltid vil gis ved enten en fødsel
-        # eller inlesing av en dictionary.
+    @property
+    def age(self):
+        return self._age
+    @age.setter
+    def age(self, value):
+        self.check_integer(value)
+        self.check_positive(value)
 
-        # Må teste at age og weight er positive og "rimelige". Weight må være positiv, og age må være både positiv og int.
-        # assert weight > 0, 'Weight must be larger than 0
-        # if weight <= 0:
-        #   send valueerror som sier at verdien må være større enn 0
-        # else:
-        #   self._weight = weight
+        self._age = value
 
+    @property
+    def weight(self):
+        return self._weight
+    @weight.setter
+    def weight(self, value):
+        self.check_positive(value)
+        self._weight = value
+
+    @property
+    def fitness(self):
+        """
+        calculate fitness-condition based on age and weight
+        Return "self.fitness"
+        """
+
+        if self.weight <= 0:
+            return 0
+        else:
+            return self.phi(self.age,
+                            self.weight,
+                            self.params['a_half'],
+                            self.params['w_half'],
+                            self.params['phi_age'],
+                            self.params['phi_weight'])
+
+    @staticmethod
+    def _q(sgn, x, x_half, phi):
+        """
+        Legg inn doc-string
+        sgn = fortegnet i regnestykket (+1 eller -1)
+        """
+        return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
+
+    @staticmethod
+    def phi(age, weight, a_half, w_half, phi_age, phi_weight):
+        q_plus = Herbivore._q(+1, age, a_half, phi_age)
+        q_minus = Herbivore._q(-1, weight, w_half, phi_weight)
+
+        return q_plus * q_minus
 
     def eat(self, food_available):
         """
@@ -102,52 +138,26 @@ class Herbivore:
         else:
             F_tilde = self.params['F']
 
-        self._weight += F_tilde * self.params['beta']
+        self.weight += F_tilde * self.params['beta']
 
         return F_tilde
 
 
-    @staticmethod
-    def _q(sgn, x, x_half, phi):
-        """
-        Legg inn doc-string
-        sgn = fortegnet i regnestykket (+1 eller -1)
-        """
-        return 1/(1 + math.exp(sgn * phi * (x - x_half)))
 
-
-    @property
-    def fitness(self):
-        """
-        calculate fitness-condition based on age and weight
-        (Might use numpy.heaviside function)
-        Return "self.fitness"
-        """
-
-        q_plus = self._q(+1, self._age, self.params['a_half'], self.params['phi_age'])
-        q_minus = self._q(-1, self._weight, self.params['w_half'], self.params['phi_weight'])
-
-        if self._weight <= 0:
-            return 0
-        else:
-            return q_plus * q_minus
-
-
-
-    def decrease_weight_when_aging(self):
-        """
-        Funksjon som regner ut hvor mye vekten minker per år
-        eta*weight
-        self.weight -= self.weight*eta
-        """
-        self._weight -= self._weight * self.params['eta']
+    # def decrease_weight_when_aging(self):
+    #     """
+    #     Funksjon som regner ut hvor mye vekten minker per år
+    #     eta*weight
+    #     self.weight -= self.weight*eta
+    #     """
+    #     self.weight -= self.weight * self.params['eta']
 
     def aging(self):
         """
         After 1 year passed, each herbivore becomes 1 year older
         """
-        self._age += 1
-        self.decrease_weight_when_aging()
+        self.age += 1
+        self.weight -= self.weight * self.params['eta']
 
 
     def migration(self, geography):
@@ -165,26 +175,28 @@ class Herbivore:
 
         #probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
         #number_of_animals = Lowland.number_of_current_living_animals()
-        probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))# TODO: Må oppdateres til ny liste fra landscape.
+        probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
 
 
         r = random.uniform(0, 1)
 
         befruktning = r < probability # Sannsynligheten for at det skjer en befruktning
 
-        fertil = self._weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']) # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
+        fertil = self.weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']) # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
         
         # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__ når en ny herbivore opprettes.
 
         birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth']) # regner ut fødselsvekt.
 
-        maternal_health = self._weight > birth_weight * self.params['xi'] # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
+        maternal_health = self.weight > birth_weight * self.params['xi'] # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
+
 
         if all((befruktning, fertil, maternal_health)): # Om alle disse kriteriene stemmer vil det skje en fødsel.
             # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
             return True, birth_weight
 
         return None, None #Se kommentar under giving_birth. Forbedringspotensiale
+
 
 
 
@@ -198,9 +210,10 @@ class Herbivore:
         """
 
         p, birth_weight = self.probability_to_give_birth(number_of_animals)  # Kan ikke unpacke uten noen verdien
+
         if p:
             newborn = Herbivore(age = 0, weight = birth_weight)
-            
+
             # lose weight
             self._weight -= birth_weight * self.params['xi']
         
@@ -210,13 +223,13 @@ class Herbivore:
 
     def probability_of_death(self):
         """ Decides whether or not the animal dies """
+        starvation = self.weight <= 0
+        # Random death
         probability = self.params['omega'] * (1 - self.fitness)
         r = random.uniform(0, 1)
+        sickness = r < probability
 
-        if self._weight <= 0:
-            return True  # animal dies
-
-        return r < probability  # Returns True or False
+        return any((starvation, sickness))
 
 
 

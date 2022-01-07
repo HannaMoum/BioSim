@@ -30,8 +30,24 @@ class Lowland:
         """
         Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
         """
-        self.fodder = self.params['f_max']  # Initial amount of fodder
-        self.herb_pop = initial_pop
+        self._fodder = self.params['f_max']  # Initial amount of fodder
+        self._herb_pop = initial_pop
+
+    @property
+    def fodder(self):
+        return self._fodder
+    @fodder.setter
+    def fodder(self, value):
+        if value > self.params['f_max']:
+            raise ValueError('Value must be below f_max')
+        self._fodder = value
+
+    @property
+    def herb_pop(self):
+        return self._herb_pop
+    @herb_pop.setter
+    def herb_pop(self, value):
+        self._herb_pop = value
 
     def grassing(self):
         """
@@ -43,7 +59,7 @@ class Lowland:
             eaten = herbivore.eat(self.fodder)
             self.fodder -= eaten
 
-            if self.fodder == 0:
+            if self.fodder <= 0:
                 break
 
     def give_birth(self):
@@ -66,13 +82,16 @@ class Lowland:
         new_herbivores = [newborn for herbivore in self.herb_pop if
                           (newborn := herbivore.giving_birth(number_of_herbivores))]
         ## Replaced version
-        #new_herbivores =[]
-        #for herbivore in self.herb_pop:
-        #    newborn = herbivore.giving_birth(number_of_herbivores)
-        #    if newborn:  # Checks that newborn is not None
-        #        new_herbivores.append(newborn)
+        # new_herbivores =[]
+        # for herbivore in self.herb_pop:
+        #     newborn = herbivore.giving_birth(number_of_herbivores)
+        #
+        #     if newborn:  # Checks that newborn is not None
+        #         new_herbivores.append(newborn)
 
-        self.herb_pop += new_herbivores
+        if len(new_herbivores) > 0:
+            self.herb_pop += new_herbivores
+
 
     def migration(self):
         """
@@ -91,15 +110,15 @@ class Lowland:
         """
         Kill herbivores and adjust self.herb_pop to only contain the living
         """
-        #alive = [animal for animal in self.herb_pop if not animal.probability_of_death()]
-        #self.herb_pop = alive
-        def survivors(pop):
-            """
-            Return list of animals that do not die.
-            """
-            return [animal for animal in pop if not animal.probability_of_death()]
+        alive = [animal for animal in self.herb_pop if not animal.probability_of_death()]
+        self.herb_pop = alive
 
-        self.herb_pop = survivors(self.herb_pop)
+        # alive = []
+        # for animal in self.herb_pop:
+        #     if not animal.probability_of_death():
+        #         alive.append(animal)
+        #
+        # self.herb_pop = alive
 
     def regrowth(self):
         """
