@@ -13,7 +13,7 @@ def __init__(self, geography):
 
     self.geogr = geography
 
-
+""" 
 #Inside landscape:
     # Adjust input arguments to not exist.
     # Create add_animals method instead.
@@ -32,15 +32,18 @@ def __init__(self, geography):
 
     #Same goes for carnivores...
 
-    def add_animals(self, herb_population = None, carn_population=None): #dDecide if this should be one or two args
-        if not None:
-            pass # Noe i denne duren for å ikke appende None til listene
+    def add_animals(self, herb_population, carn_population): #dDecide if this should be one or two args
+        if len(herb_population) > 0:
+            pass # Noe i denne duren for å ikke appende tomme lister til listene
         self.herb_pop += herb_population
         self.carn_pop += carn_population
 
-
+"""
 
 def create_landscape(self, string_letter):
+    """
+    returns a certain coordinates landscape type based on the geography-string
+    ! Requires no input values --> Getters and setters must be created as shown above."""
     if string_letter == 'W':
          return Water()
     if string_letter == 'L':
@@ -79,21 +82,17 @@ def handle_initial_population():
             'age': 9, 'weight': 10.3}]}]
 
     herb_pop = []
-    carn_pop = []
-    ^ 1 kombi eller 2 separate lister
+    carn_pop = []                   <-- 1 kombi eller 2 separate lister
 
+    CODE:
     for element in ini_pop: (element består av loc og species)
-        place_in_location =  Hent ut location
+        location =  Hent ut location
 
         for animal in element['pop']:
             if *somehow check species
-            herb_pop.append(Herbivore(age, weight)) // same with carnivores
+            herb_pop.append(Herbivore(age, weight)) // same with carnivores #Appending to temporary lists
 
-        #landscape_of_correct_type = Species(age, weight) #Her på lanscape selv skille mellom ulike species
-
-        self.geogr[location].add_animals(herb_pop, carn_pop)
-
-
+        self.geogr[location].add_animals(herb_pop, carn_pop) #obs! kAN SENDE INN TOMME LISTER
 
     """
     pass
