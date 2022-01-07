@@ -1,5 +1,7 @@
 """ Class handling the geography of the island"""
 import textwrap
+from landscapes import Landscapes #Landscape is main class
+    # Do we automatically also import subclasses in this case? // Do manually?
 
 #class Island:
 
@@ -11,25 +13,58 @@ def __init__(self, geography):
 
     self.geogr = geography
 
-def letter_conversion():
-    """ Covert letter to landscape type"""
-    #conversion = {'L': Lowland} NO
+
+#Inside landscape:
+    # Adjust input arguments to not exist.
+    # Create add_animals method instead.
+    # todo: This code should be transferred to animals after branchmerges, possibly as a general method
+    # !!Does not apply to water. Raise error either in add_animals or the setters...
+    def __init__(self):
+        self.herb_pop = 0 #or None...
+        self.carn_pop = 0 # ------
+
+    @property
+    def herb_pop(self):
+        return self._herb_pop
+    @herb_pop.setter
+    def herb_pop(self, pop):
+        self._herb_pop = pop
+
+    #Same goes for carnivores...
+
+    def add_animals(self, herb_population = None, carn_population=None): #dDecide if this should be one or two args
+        if not None:
+            pass # Noe i denne duren for å ikke appende None til listene
+        self.herb_pop += herb_population
+        self.carn_pop += carn_population
+
+
+
+def create_landscape(self, string_letter):
+    if string_letter == 'W':
+         return Water()
+    if string_letter == 'L':
+         return Lowland()
+    if string_letter == 'H':
+         return Highland()
+    if string_letter == 'D':
+         return Desert()
     pass
 
-#INside landscape, create def create_lanscape(self, pop):
 
 def convert_geography_string_to_landscape_list(self):
     """
     WWW
-    WLW   == [ [W(), W(), W()], [W(), L(), W()], [W(), W(), W()] ] 2D array
+    WLW
     WWW
 
-    or convert til dict?
-    -> [[W, W, W], [W, L, W], [W, W, W]] (contains string)
+    convert til dict
+    -> list = [[W, W, W], [W, L, W], [W, W, W]] (contains string) ?. split string
     then
-    {(1,1): string2D_array[0][0]}
+    {(1,1): self.create_landscape(list[0][0])}
+    {(1,1): Water(), (1,2): Lowland(), ...}
 
-    return coordinate_map_with_landscapes
+    return coordinate_map_with_landscapes // update self.geogr
     """
     pass
 
@@ -41,9 +76,7 @@ def handle_initial_population():
     'pop': [{'species': 'Herbivore',
             'age': 10, 'weight': 12.5},
         {'species': 'Herbivore',
-            'age': 9, 'weight': 10.3},
-        {'species': 'Carnivore',
-            'age': 5, 'weight': 8.1}]}]
+            'age': 9, 'weight': 10.3}]}]
 
     herb_pop = []
     carn_pop = []
@@ -51,14 +84,16 @@ def handle_initial_population():
 
     for element in ini_pop: (element består av loc og species)
         place_in_location =  Hent ut location
+
         for animal in element['pop']:
             if *somehow check species
             herb_pop.append(Herbivore(age, weight)) // same with carnivores
 
         #landscape_of_correct_type = Species(age, weight) #Her på lanscape selv skille mellom ulike species
 
+        self.geogr[location].add_animals(herb_pop, carn_pop)
 
-        variabel = correct_landscape(ini_pop)
+
 
     """
     pass
@@ -92,6 +127,4 @@ ini_pop = [{'loc': (3,4),
 'age': 9, 'weight': 10.3},
 {'species': 'Carnivore',
 'age': 5, 'weight': 8.1}]}]
-
-
 
