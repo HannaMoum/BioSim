@@ -4,14 +4,18 @@ from biosim.animals import Herbivore
 from biosim.landscapes import Lowland
 
 # Creating initial population as list/dicts
-ini_herb_pop = [{'Species': 'Herbivore', 'age': 10, 'weight': 12.5},
-                {'Species': 'Herbivore', 'age': 11, 'weight': 10.3},
-                {'Species': 'Herbivore', 'age': 12, 'weight': 12.5},
-                {'Species': 'Herbivore', 'age': 13, 'weight': 10.3},
-                {'Species': 'Herbivore', 'age': 14, 'weight': 12.5},
-                {'Species': 'Herbivore', 'age': 15, 'weight': 10.3},
-                {'Species': 'Herbivore', 'age': 16, 'weight': 12.5},
-                {'Species': 'Herbivore', 'age': 17, 'weight': 10.3}]
+
+ini_herb_pop = [{'Species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(50)]
+
+
+                # {'Species': 'Herbivore', 'age': 11, 'weight': 10.3},
+                # {'Species': 'Herbivore', 'age': 12, 'weight': 12.5},
+                # {'Species': 'Herbivore', 'age': 13, 'weight': 10.3},
+                # {'Species': 'Herbivore', 'age': 14, 'weight': 12.5},
+                # {'Species': 'Herbivore', 'age': 15, 'weight': 10.3},
+                # {'Species': 'Herbivore', 'age': 16, 'weight': 12.5},
+                # {'Species': 'Herbivore', 'age': 17, 'weight': 10.3}]
+
 
 # Adjusting parameters
 # new_params_herbivore = {'omega': 0.7, 'gamma': 0.3}
