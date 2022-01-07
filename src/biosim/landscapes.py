@@ -61,7 +61,15 @@ class Lowland:
 
             if self.fodder <= 0:
                 break
+# ---------------------------------------------------------------------------------------------
+    def hunting(self):
+        """ Carnivores hunting
+        for carnivore in carnivor_populasjon:
+            for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness):
 
+        """
+        pass
+# ---------------------------------------------------------------------------------------------
     def give_birth(self):
         """
         Every herbivore tries to give birth.
