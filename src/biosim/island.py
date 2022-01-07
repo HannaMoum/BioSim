@@ -20,8 +20,8 @@ def __init__(self, geography):
     # todo: This code should be transferred to animals after branchmerges, possibly as a general method
     # !!Does not apply to water. Raise error either in add_animals or the setters...
     def __init__(self):
-        self.herb_pop = 0 #or None...
-        self.carn_pop = 0 # ------
+        self.herb_pop = [] #or None...
+        self.carn_pop = [] # ------
 
     @property
     def herb_pop(self):
@@ -106,6 +106,8 @@ def find_color(landscape):
 
 def plot_island():
     pass
+
+############# temporarily test area ###########
 geo = """\
             WWW
             WLW
