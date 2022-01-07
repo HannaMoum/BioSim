@@ -99,16 +99,16 @@ class Herbivore:
         calculate fitness-condition based on age and weight
         Return "self.fitness"
         """
+        # Maby q as function inside fitness function.
+
 
         if self.weight <= 0:
             return 0
         else:
-            return self.phi(self.age,
-                            self.weight,
-                            self.params['a_half'],
-                            self.params['w_half'],
-                            self.params['phi_age'],
-                            self.params['phi_weight'])
+            q_plus = _q(+1, self.age, self.params['a_half'], self.params['phi_age'])
+            q_minus = _q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+
+            return q_plus * q_minus
 
     @staticmethod
     def _q(sgn, x, x_half, phi):
@@ -118,12 +118,6 @@ class Herbivore:
         """
         return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 
-    @staticmethod
-    def phi(age, weight, a_half, w_half, phi_age, phi_weight):
-        q_plus = Herbivore._q(+1, age, a_half, phi_age)
-        q_minus = Herbivore._q(-1, weight, w_half, phi_weight)
-
-        return q_plus * q_minus
 
     def eat(self, food_available):
         """
