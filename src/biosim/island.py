@@ -114,7 +114,7 @@ class Island:
                 if *somehow check species
                 herb_pop.append(Herbivore(age, weight)) // same with carnivores #Appending to temporary lists
 
-            self.geogr[location].add_animals(herb_pop, carn_pop) #obs! kAN SENDE INN TOMME LISTER
+            coordinates[location].add_animals(herb_pop, carn_pop) #obs! kAN SENDE INN TOMME LISTER
 
         """
         ini_herbs = []
