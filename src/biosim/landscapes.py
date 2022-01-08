@@ -24,7 +24,7 @@ class Params:
     DeltaPhiMax: float = 10.0
 
 
-class Lowland:
+class Lowland():
     """
     Doc-strings
     """
@@ -206,6 +206,7 @@ class Lowland:
         Method to reset the amount of fodder by the end of the year
         """
         self.fodder = self.params['f_max']
+
 
 
 
