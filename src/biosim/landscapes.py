@@ -1,6 +1,7 @@
 """ Lanscape class with subclasses
 """
-from .animals import Animal
+# cannot import...?
+from .animals import Carnivore
 
 class Landscape:
 
@@ -39,24 +40,62 @@ class Landscape:
     def carn_pop(self, value):
         self._carn_pop = value
 
+    def grassing(self):
+        """
+        Function handling the animals eating in correct order
+        """
+        # Sort list, highest fitness first:
+        for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
+            herbivore.F_tilde = 0
+            eaten = herbivore.eat(self.fodder) # Her returneres måltid, dvs. det de har spist
+            self.fodder -= eaten
+
+            if self.fodder <= 0:
+                break
+
+
 class Lowland(Landscape):
+    """ Adopts:
+    __init__ (+getters and setters)
+    grassing()
+    """
     pass
 
 class Highland(Landscape):
+    """ Adopts:
+    __init__ (+getters and setters)
+    grassing()
+    """
     pass
 
 class Desert(Landscape):
+    """ Adopts:
+    __init__ (+getters and setters)
+
+    """
+    def grassing(self):
+        pass
+
     pass
 
 class Water(Landscape):
+    """ None of the above functions apply to Water.
+    1. Is it enough to set attributes to None or
+    2. Do we have to pass every method from Parent-class
 
+    Thoughts: If we dont pass, grassing() vil try to sort None -> Error
+    """
     def __init__(self):
         super().__init__() #What difference does this make?... Seems to do the same with and without (in our case)
         #self.fodder = None Må evt. justere fodder.setter i parent class
         self.herb_pop = None
         self.carn_pop = None
 
+    def grassing(self):
+        pass
+###############################
 a = Water()
+a.grassing()
 
 print(a._fodder)
 
