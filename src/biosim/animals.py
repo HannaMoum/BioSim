@@ -213,7 +213,6 @@ class Animal(ABC):
         return any((starvation, sickness))
 
 
-# class Herbivore(Animal):
 class Herbivore(Animal):
 
     params = {
