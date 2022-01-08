@@ -23,18 +23,37 @@ class Island:
 
         length_check = len(self._geogr[0])
         for element in self._geogr:
+
                 for letter in element: #symbol check
-                    if letter not in('W', 'L', 'H', 'D'):
-                        raise TypeError(f'{letter} is not a defined landscape.\n'
-                                        f'Defined landscapes are: \
-                        {[cls.__name__ for cls in Landscapes.__subclasses__()]} \
-                        respectively given by belonging capital letter.')
+                    if letter not in ('W', 'L', 'H', 'D'):
+                        raise TypeError(
+                            f'{letter} is not a defined landscape.\n'
+                            f'Defined landscapes are: \
+                            {[cls.__name__ for cls in Landscapes.__subclasses__()]} \
+                            respectively given by their belonging capital letter.')
 
             if len(element) != length_check:
                 raise ValueError ('All rows must have the same number of columns')
 
         return self._geogr # ['WWW', 'WLW', 'WWW']
 
+    @property
+    def map(self):
+        """
+        convert self.geogr to dictionary of coordinates
+            self.geogr = ['WWW', 'WLW', 'WWW']
+        to
+            {(1,1): Water(), (1,2): Lowland(), ...}
+
+        return self.map
+        """
+        self._map = {}
+
+        for row, string in enumerate(self.geogr):
+            for col, letter in enumerate(string):
+                self._map[(row + 1, col + 1)] = self.create_landscape(letter)
+                # +1 becuase we start from (1,1) not (0,0)
+        return self._map
 
 
     """ 
@@ -63,6 +82,9 @@ class Island:
             self.carn_pop += carn_population
     
     """
+
+    #def wordbook(self):
+        #all_landscapes = {'W': Water()}... Working on idea
 
     def create_landscape(self, string_letter):
         """
@@ -128,23 +150,12 @@ class Island:
 
         for dictionary in self.initial_pop:
             location = dictionary['loc']
+            landscape_variable = coordinates[location]
 
-            """ 
+
             animals_in_this_pos = dictionary['pop']
-            noe = add_animal(animals_in_this_pos)"""
+            noe = add_animal(animals_in_this_pos)
 
-
-            for animal in dictionary['pop']:
-                #animal = {species: H, age: _ , weight: _}
-                if animal['species'] == 'Herbivore':
-                    #TODO: Extend add_animal to do this job...
-                        #Then Island will not co    mmunicate with animals
-                    #age = animal['age']
-                    #weight = animal['weight']
-                    #ini_herbs.append(Herbivore(age, weight))
-                    # ! This communicates with animals which is two levels below in the hierarcy... correct?
-            # TODO: Raise error if species does not exist.
-            # Age and weight will be handled by animal class
             pass
 
         pass
