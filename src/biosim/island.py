@@ -11,7 +11,24 @@ def __init__(self, geography):
                Every row must contain the same amount of letters (same number of columns)
     """
 
-    self.geogr = geography
+    self._geogr = geography
+
+
+@property
+def geography(self):
+    self._geogr = textwrap.dedent(self._geogr) #Remove indents
+    self._geogr = self._geogr.split() # Result: ['WWW', 'WLW', 'WWW']
+
+    length_check = len(self._geogr[0])
+    for element in self._geogr:
+            for letter in element: #symbol check
+                if letter not in('W', 'L', 'H', 'D'):
+                    raise TypeError(f'{letter} is not a defined landscape. Use W, L, H or D.')
+        if len(element) != length_check:
+            raise ValueError ('All rows must have the same number of columns')
+    return self._geogr
+
+
 
 """ 
 #Inside landscape:
@@ -20,8 +37,8 @@ def __init__(self, geography):
     # todo: This code should be transferred to animals after branchmerges, possibly as a general method
     # !!Does not apply to water. Raise error either in add_animals or the setters...
     def __init__(self):
-        self.herb_pop = [] #or None...
-        self.carn_pop = [] # ------
+        self._herb_pop = [] #or None...
+        self._carn_pop = [] # ------
 
     @property
     def herb_pop(self):
@@ -32,9 +49,9 @@ def __init__(self, geography):
 
     #Same goes for carnivores...
 
-    def add_animals(self, herb_population, carn_population): #dDecide if this should be one or two args
+    def add_animals(self, herb_population, carn_population): #Decide if this should be one or two args
         if len(herb_population) > 0:
-            pass # Noe i denne duren for å ikke appende tomme lister til listene
+             # Noe i denne duren for å ikke appende tomme lister til listene
         self.herb_pop += herb_population
         self.carn_pop += carn_population
 
@@ -42,8 +59,8 @@ def __init__(self, geography):
 
 def create_landscape(self, string_letter):
     """
-    returns a certain coordinates landscape type based on the geography-string
-    ! Requires no input values --> Getters and setters must be created as shown above."""
+    returns a certain coordinate landscape type based on the geography-string
+    ! Landscape requires no input values --> Getters and setters must be created as shown above."""
     if string_letter == 'W':
          return Water()
     if string_letter == 'L':
@@ -69,6 +86,14 @@ def convert_geography_string_to_landscape_list(self):
 
     return coordinate_map_with_landscapes // update self.geogr
     """
+    coordniates = {}
+    self._geogr = textwrap.dedent(self._geogr) #Remove indents #MVE TO PROPERTY
+    geography_list = self._geogr.split()  # Result: ['WWW', 'WLW', 'WWW'] #MOVE TO PROPERTY
+        #Every element represents a row, and the position of the letter represents the column
+    rows = len(geography_list) #Attribue ?
+    columns = len(geography_list[0])
+    for element in geography_list:
+        coordinates[]
     pass
 
 def handle_initial_population():
