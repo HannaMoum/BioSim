@@ -29,8 +29,6 @@ class Lowland:
     Doc-strings
     """
 
-    # Vi må ha en tom liste med antall herbivores i ruta når vi starter. Denne oppdateres når dyr føder, og dør. (Samt migrerer).
-    # Dyrene som lages av klassen herbivore må legges til i denne lista.
     params = {
         'f_max': 800.0
     }
@@ -93,7 +91,7 @@ class Lowland:
 
             if self.fodder <= 0:
                 break
-# ---------------------------------------------------------------------------------------------
+
     @staticmethod
     def hunting_success(herb_fitness, carn_fitness, deltaphimax):
         """Probability to kill"""
@@ -143,14 +141,7 @@ class Lowland:
         (We might want to adjust the names, and the probability_to_give_birth/giving_birth in Herbivores class,
         for a better code)
 
-        1. Gå gjennom lista med dyrene
-        2. Bruker probability_to_give_birt for å sjekke om det blir født et barn.
-            2.1 Barnet fødes via metoden giving_birth. Her oppdateres også vekten til moren.
-            2.2 Barnet må legges til i lista over alle herbivores.
         """
-
-
-        # pop_size = len(population)
         population = self.herb_pop
         herb_babies = [newborn for individual in population if
                           (newborn := individual.giving_birth(len(population)))]
