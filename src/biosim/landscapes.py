@@ -2,7 +2,7 @@
 """
 # cannot import...?
 from .animals import Carnivore
-
+from itertools import chain
 
 # TODO: When finished check that all method names are correct when overriding
 class Landscape:
@@ -86,6 +86,15 @@ class Landscape:
         """ Create later"""
         pass
 
+    def aging(self):
+        """
+        All animals turn one year older and looses weight.
+        """
+
+        for animal in chain(self.herb_pop, self.carn_pop):
+            animal.age_and_weightloss()
+
+
 class Lowland(Landscape):
     """ Adopts:
     * __init__ (+getters and setters)
@@ -151,6 +160,9 @@ class Water(Landscape):
         pass
 
     def migration(self):
+        pass
+
+    def aging(self):
         pass
 
 
