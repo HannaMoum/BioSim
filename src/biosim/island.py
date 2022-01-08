@@ -84,7 +84,7 @@ class Island:
     #     return coordinates
 
 
-    def handle_initial_population(self):
+    def add_population(self):
         """
        Initial_population looks like:
 
@@ -93,35 +93,16 @@ class Island:
                 'age': 10, 'weight': 12.5},
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
-
-        herb_pop = []
-        carn_pop = []                   <-- 1 kombi eller 2 separate lister
-
-        CODE:
-        for element in ini_pop: (element består av loc og species)
-            location =  Hent ut location
-
-            for animal in element['pop']:
-                if *somehow check species
-                herb_pop.append(Herbivore(age, weight)) // same with carnivores #Appending to temporary lists
-
-            coordinates[location].add_animals(herb_pop, carn_pop) #obs! kAN SENDE INN TOMME LISTER
-
         """
-        ini_herbs = []
-        ini_carns = []
 
         for dictionary in self.initial_pop:
+
             location = dictionary['loc']
-            landscape_variable = coordinates[location]
+            landscape_object = self.map[location]
 
+            population = dictionary['pop']
+            landscape_object.add_animals(population)
 
-            animals_in_this_pos = dictionary['pop']
-            noe = add_animal(animals_in_this_pos)
-
-            pass
-
-        pass
 
     def find_color(self, landscape):
         #map_colours = {'L': 	RGB(152,251,152),
