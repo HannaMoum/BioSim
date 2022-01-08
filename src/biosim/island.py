@@ -26,12 +26,12 @@ class Island:
 
                 for letter in element: #symbol check
                     if letter not in ('W', 'L', 'H', 'D'):
-                        raise TypeError(
+                        raise ValueError(
                             f'{letter} is not a defined landscape.\n'
                             f'Defined landscapes are: \
                             {[cls.__name__ for cls in Landscapes.__subclasses__()]} \
                             respectively given by their belonging capital letter.')
-
+                #TODO: Control that the outer edges only consists of Water. Should be implemented as ValueError
             if len(element) != length_check:
                 raise ValueError ('All rows must have the same number of columns')
 
