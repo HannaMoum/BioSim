@@ -47,13 +47,13 @@ class Island:
 
         return self.map
         """
-        map = {}
+        island_map = {}
 
         for row, string in enumerate(self.geogr):
             for col, letter in enumerate(string):
-                map[(row + 1, col + 1)] = self.create_landscape(letter)
+                island_map[(row + 1, col + 1)] = self.create_landscape(letter)
                 # +1 becuase we start from (1,1) not (0,0)
-        return map
+        return island_map
 
 
     """ 
