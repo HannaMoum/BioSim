@@ -1,6 +1,6 @@
 """ Landscape class with subclasses
 """
-
+from .animals import Animal
 from .animals import Carnivore
 from itertools import chain
 from .animals import Herbivore
@@ -125,7 +125,10 @@ class Landscape:
              [{'species': 'Herbivore',
                 'age': 10, 'weight': 12.5},
             {'species': 'Herbivore',
-                'age': 9, 'weight': 10.3}]"""
+                'age': 9, 'weight': 10.3}]
+
+            Source url for finding all subclass names (read 08.01):
+            https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
 
         for animal in added_pop:
             # animal = {'species': H, 'age': _ , 'weight': _ }
@@ -134,15 +137,12 @@ class Landscape:
 
             if animal['species'] == 'Herbivore':
                 self.herb_pop += [Herbivore(age, weight)]
-            if animal['species'] == 'Carnivore':
+            elif animal['species'] == 'Carnivore':
                 self.carn_pop += [Carnivore(age, weight)]
+            else:
+                raise TypeError(f'{animal} is not a defined animal.\n'
+                                f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
 
-
-        # TODO: Raise error if species does not exist.
-        # Age and weight will be handled by animal class
-        # Should not be necessary to check len > 0
-        self.herb_pop += herb_pop
-        self.carn_pop += carn_pop
 
 class Lowland(Landscape):
     """ Adopts:
