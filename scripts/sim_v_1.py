@@ -6,8 +6,8 @@ from biosim.lowland import Lowland
 
 # Creating initial population as list/dicts
 
-ini_herb_pop = [{'Species': 'Herbivore', 'age': 5, 'weight': 20} for _ in range(50)]
-ini_carn_pop = [{'Species': 'Carnivore', 'age': 5, 'weight': 8} for _ in range(50)]
+ini_herb_pop = [{'Species': 'Herbivore', 'age': 5, 'weight': 6} for _ in range(10)]
+ini_carn_pop = [{'Species': 'Carnivore', 'age': 5, 'weight': 20} for _ in range(50)]
 
 
                 # {'Species': 'Herbivore', 'age': 11, 'weight': 10.3},
