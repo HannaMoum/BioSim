@@ -16,6 +16,8 @@ class Island:
 
     @property
     def geogr(self):
+        """ Source url to find all subclasses (read 08.01):
+        https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
         self._geogr = textwrap.dedent(self._geogr) #Remove indents
         self._geogr = self._geogr.split() # Result: ['WWW', 'WLW', 'WWW']
 
@@ -23,7 +25,11 @@ class Island:
         for element in self._geogr:
                 for letter in element: #symbol check
                     if letter not in('W', 'L', 'H', 'D'):
-                        raise TypeError(f'{letter} is not a defined landscape. Use W, L, H or D.')
+                        raise TypeError(f'{letter} is not a defined landscape.\n'
+                                        f'Defined landscapes are: \
+                        {[cls.__name__ for cls in Landscapes.__subclasses__()]} \
+                        respectively given by belonging capital letter.')
+
             if len(element) != length_check:
                 raise ValueError ('All rows must have the same number of columns')
 
@@ -123,14 +129,19 @@ class Island:
         for dictionary in self.initial_pop:
             location = dictionary['loc']
 
+            """ 
+            animals_in_this_pos = dictionary['pop']
+            noe = add_animal(animals_in_this_pos)"""
+
+
             for animal in dictionary['pop']:
                 #animal = {species: H, age: _ , weight: _}
                 if animal['species'] == 'Herbivore':
                     #TODO: Extend add_animal to do this job...
-                        #Then Island will not communicate with animals
-                    age = animal['age']
-                    weight = animal['weight']
-                    ini_herbs.append(Herbivore(age, weight))
+                        #Then Island will not co    mmunicate with animals
+                    #age = animal['age']
+                    #weight = animal['weight']
+                    #ini_herbs.append(Herbivore(age, weight))
                     # ! This communicates with animals which is two levels below in the hierarcy... correct?
             # TODO: Raise error if species does not exist.
             # Age and weight will be handled by animal class
