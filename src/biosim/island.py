@@ -47,13 +47,13 @@ class Island:
 
         return self.map
         """
-        self._map = {}
+        map = {}
 
         for row, string in enumerate(self.geogr):
             for col, letter in enumerate(string):
-                self._map[(row + 1, col + 1)] = self.create_landscape(letter)
+                map[(row + 1, col + 1)] = self.create_landscape(letter)
                 # +1 becuase we start from (1,1) not (0,0)
-        return self._map
+        return map
 
 
     """ 
@@ -101,24 +101,15 @@ class Island:
         pass
 
 
-    def convert_geography_to_coordinates(self):
-        """
-        convert self.geogr to dictionary of coordinates
-        self.geogr = ['WWW', 'WLW', 'WWW']
-        to
-        {(1,1): Water(), (1,2): Lowland(), ...}
-
-        return coordinate dictionary holding landscapes // update self.geogr ?
-        """
-        coordinates = {}
-
-        for row, string in enumerate(self.geogr):
-            for col, letter in enumerate(string):
-                coordinates[(row + 1, col + 1)] = self.create_landscape(letter)
-                # +1 becuase we start from (1,1) not (0,0)
-
-        return coordinates
-        pass
+    # def convert_geography_to_coordinates(self): #Created a property self.map instead
+    #     coordinates = {}
+    #
+    #     for row, string in enumerate(self.geogr):
+    #         for col, letter in enumerate(string):
+    #             coordinates[(row + 1, col + 1)] = self.create_landscape(letter)
+    #             # +1 becuase we start from (1,1) not (0,0)
+    #
+    #     return coordinates
 
 
     def handle_initial_population(self):
