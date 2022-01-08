@@ -3,8 +3,9 @@
 # cannot import...?
 from .animals import Carnivore
 
-class Landscape:
 
+# TODO: When finished check that all method names are correct when overriding
+class Landscape:
     params = {
         'f_max': None
     }
@@ -20,15 +21,17 @@ class Landscape:
     @property
     def fodder(self):
         return self._fodder
+
     @fodder.setter
     def fodder(self, value):
         if value > self.params['f_max']:
-            raise ValueError('Value must be below f_max') # Er dette et reelt tilfelle som kan oppstå?
+            raise ValueError('Value must be below f_max')  # Er dette et reelt tilfelle som kan oppstå?
         self._fodder = value
 
     @property
     def herb_pop(self):
         return self._herb_pop
+
     @herb_pop.setter
     def herb_pop(self, value):
         self._herb_pop = value
@@ -36,6 +39,7 @@ class Landscape:
     @property
     def carn_pop(self):
         return self._carn_pop
+
     @carn_pop.setter
     def carn_pop(self, value):
         self._carn_pop = value
@@ -47,36 +51,67 @@ class Landscape:
         # Sort list, highest fitness first:
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
             herbivore.F_tilde = 0
-            eaten = herbivore.eat(self.fodder) # Her returneres måltid, dvs. det de har spist
+            eaten = herbivore.eat(self.fodder)  # Her returneres måltid, dvs. det de har spist
             self.fodder -= eaten
 
             if self.fodder <= 0:
                 break
 
+    def hunting(self):
+        """ Add later"""
+        pass
+
+    def give_birth(self):
+        """
+        Every herbivore tries to give birth.
+        Expanding self.herb_pop with the new population after all animals have given birth.
+
+        (We might want to adjust the names, and the probability_to_give_birth/giving_birth in Herbivores class,
+        for a better code)
+
+        """
+
+        herb_babies = [newborn for individual in self.herb_pop if
+                       (newborn := individual.giving_birth(len(self.herb_pop)))]
+
+        carn_babies = [newborn for individual in self.carn_pop if
+                       (newborn := individual.giving_birth(len(self.carn_pop)))]
+
+        if len(herb_babies) > 0:  # TODO: Make absolutely sure this is necessary (again)
+            self.herb_pop += herb_babies
+        if len(carn_babies) > 0:
+            self.carn_pop += carn_babies
+
 
 class Lowland(Landscape):
     """ Adopts:
-    __init__ (+getters and setters)
-    grassing()
+    * __init__ (+getters and setters)
+    * grassing()
+    * hunting()
     """
     pass
 
+
 class Highland(Landscape):
     """ Adopts:
-    __init__ (+getters and setters)
-    grassing()
+    * __init__ (+getters and setters)
+    * grassing()
+    * hunting()
     """
     pass
+
 
 class Desert(Landscape):
     """ Adopts:
     __init__ (+getters and setters)
-
+    * hunting()
     """
+
     def grassing(self):
         pass
 
     pass
+
 
 class Water(Landscape):
     """ None of the above functions apply to Water.
@@ -84,19 +119,27 @@ class Water(Landscape):
     2. Do we have to pass every method from Parent-class
 
     Thoughts: If we dont pass, grassing() vil try to sort None -> Error
+
+    1. Do we call all functions for water classes during year cycle, or do we only cycle for the other classes?
+    2. If we only cycle for the other landscapes, we still need to make sure a user cannot explicitly run
+        f.ex. aging for water
     """
+
     def __init__(self):
-        super().__init__() #What difference does this make?... Seems to do the same with and without (in our case)
-        #self.fodder = None Må evt. justere fodder.setter i parent class
+        super().__init__()  # What difference does this make?... Seems to do the same with and without (in our case)
+        # self.fodder = None Må evt. justere fodder.setter i parent class
         self.herb_pop = None
         self.carn_pop = None
 
     def grassing(self):
         pass
+
+    def hunting(self):
+        pass
+
+
 ###############################
 a = Water()
 a.grassing()
 
 print(a._fodder)
-
-
