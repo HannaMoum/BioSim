@@ -47,13 +47,13 @@ class Lowland:
                 raise ValueError('Invalid value for parameter: ' + key)
             cls.params[key] = new_params[key]
 
-    def __init__(self, initial_herb_pop, initial_carn_pop):
+    def __init__(self):
         """
         Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
         """
         self._fodder = self.params['f_max']  # Initial amount of fodder
-        self._herb_pop = initial_herb_pop
-        self._carn_pop = initial_carn_pop
+        self._herb_pop = []
+        self._carn_pop = []
 
     @property
     def fodder(self):
