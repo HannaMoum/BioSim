@@ -88,6 +88,7 @@ class Lowland(Landscape):
     * __init__ (+getters and setters)
     * grassing()
     * hunting()
+    * give_birth()
     """
     pass
 
@@ -97,6 +98,7 @@ class Highland(Landscape):
     * __init__ (+getters and setters)
     * grassing()
     * hunting()
+    * give_birt()
     """
     pass
 
@@ -105,6 +107,7 @@ class Desert(Landscape):
     """ Adopts:
     __init__ (+getters and setters)
     * hunting()
+    * give_birt()
     """
 
     def grassing(self):
@@ -135,6 +138,9 @@ class Water(Landscape):
         pass
 
     def hunting(self):
+        pass
+
+    def give_birth(self):
         pass
 
 
