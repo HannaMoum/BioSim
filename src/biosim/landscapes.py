@@ -179,10 +179,10 @@ class Lowland:
         The herbivores turn one year older and looses weight.
         """
         for herbivore in self.herb_pop:
-            herbivore.aging()
+            herbivore.age_and_weightloss()
 
         for carnivore in self.carn_pop:
-            carnivore.aging()
+            carnivore.age_and_weightloss()
 
 
     def death(self):

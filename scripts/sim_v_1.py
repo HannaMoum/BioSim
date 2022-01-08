@@ -54,7 +54,7 @@ class Simulation:
         location.grassing()
         location.hunting()
         location.give_birth()
-        location.aging()
+        location.age_and_weightloss()
         location.death()
 
 

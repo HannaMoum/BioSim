@@ -82,7 +82,7 @@ def test_aging():
     a = Herbivore()
     num_years = 10
     for n in range(num_years):
-        a.aging()
+        a.age_and_weightloss()
     assert a.age == num_years + 1
 
 
