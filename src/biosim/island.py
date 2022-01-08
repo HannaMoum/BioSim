@@ -55,41 +55,13 @@ class Island:
                 # +1 becuase we start from (1,1) not (0,0)
         return island_map
 
-
-    """ 
-    #Inside landscape:
-        # Adjust input arguments to not exist.
-        # Create add_animals method instead.
-        # todo: This code should be transferred to animals after branchmerges, possibly as a general method
-        # !!Does not apply to water. Raise error either in add_animals or the setters...
-        def __init__(self):
-            self._herb_pop = [] #or None...
-            self._carn_pop = [] # ------
-    
-        @property
-        def herb_pop(self):
-            return self._herb_pop
-        @herb_pop.setter
-        def herb_pop(self, pop):
-            self._herb_pop = pop
-    
-        #Same goes for carnivores...
-    
-        def add_animals(self, herb_population, carn_population): #Decide if this should be one or two args
-            if len(herb_population) > 0:
-                 # Noe i denne duren for å ikke appende tomme lister til listene
-            self.herb_pop += herb_population
-            self.carn_pop += carn_population
-    
-    """
-
     #def wordbook(self):
         #all_landscapes = {'W': Water()}... Working on idea
 
     def create_landscape(self, string_letter):
         """
-        returns a certain coordinate landscape type based on the geography-string
-        ! Landscape requires no input values --> Getters and setters must be created as shown above."""
+        returns a certain coordinate landscape type based on the geography-string.
+        """
         if string_letter == 'W':
              return Water()
         if string_letter == 'L':
