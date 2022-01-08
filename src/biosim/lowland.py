@@ -1,6 +1,7 @@
 from .animals import Herbivore
 from .animals import Carnivore
 import random
+from itertools import chain
 
 from dataclasses import dataclass
 
@@ -181,11 +182,9 @@ class Lowland:
         """
         The herbivores turn one year older and looses weight.
         """
-        for herbivore in self.herb_pop:
-            herbivore.aging()
 
-        for carnivore in self.carn_pop:
-            carnivore.aging()
+        for animal in chain(self.herb_pop, self.carn_pop):
+            animal.age_and_weightloss()
 
 
     def death(self):
