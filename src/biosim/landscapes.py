@@ -109,6 +109,12 @@ class Landscape:
         #self.herb_pop = alive_herbs
         #self.carn_pop = alive_carns
 
+    def regrowth(self):
+        """
+        Method to reset the amount of fodder by the end of the year
+        """
+        self.fodder = self.params['f_max'] #TODO: Include parameters
+
 
 class Lowland(Landscape):
     """ Adopts:
@@ -118,6 +124,8 @@ class Lowland(Landscape):
     * give_birth()
     * migration()
     * aging
+    * death
+    * regrowth
     """
     pass
 
@@ -130,6 +138,8 @@ class Highland(Landscape):
     * give_birt()
     * migration()
     * aging
+    * death
+    * regrowth
     """
     pass
 
@@ -141,13 +151,17 @@ class Desert(Landscape):
     * give_birt()
     * migration()
     * aging
+    * death
     """
 
     def grassing(self):
-        """ No fodder available in the desert. """
+        """ No fodder available in the desert.
+         Should be faster than feeding herbivores with 0 fodder (or at all open the function)"""
         pass
 
-    pass
+    def regrowth(self):
+        """ No need to reset f_max to 0"""
+        pass
 
 
 class Water(Landscape):
@@ -183,6 +197,11 @@ class Water(Landscape):
     def aging(self):
         pass
 
+    def death(self):
+        pass
+
+    def regrowth(self):
+        pass
 
 ###############################
 a = Water()
