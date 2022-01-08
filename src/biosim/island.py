@@ -5,14 +5,14 @@ from landscapes import Landscapes #Landscape is main class
 
 class Island:
 
-    def __init__(self, geography):
+    def __init__(self, geography, initial_pop):
         """
         Geography: String consisting of the letters W, D, L, H representing landscapes.
                    Every row must contain the same amount of letters (same number of columns)
         """
-
         self._geogr = geography
-
+        ## Må mest sannsynlig ha en attribute for initial population
+        self.initial_pop = initial_pop
 
     @property
     def geogr(self):
@@ -75,17 +75,12 @@ class Island:
 
     def convert_geography_to_coordinates(self):
         """
-        WWW
-        WLW
-        WWW
-
-        convert til dict
-        -> list = [[W, W, W], [W, L, W], [W, W, W]] (contains string) ?. split string
-        then
-        {(1,1): self.create_landscape(list[0][0])}
+        convert self.geogr to dictionary of coordinates
+        self.geogr = ['WWW', 'WLW', 'WWW']
+        to
         {(1,1): Water(), (1,2): Lowland(), ...}
 
-        return coordinate_map_with_landscapes // update self.geogr
+        return coordinate dictionary holding landscapes // update self.geogr ?
         """
         coordinates = {}
 
@@ -95,9 +90,10 @@ class Island:
                 # +1 becuase we start from (1,1) not (0,0)
 
         return coordinates
+        pass
 
 
-    def handle_initial_population():
+    def handle_initial_population(self):
         """
        Initial_population looks like:
 
@@ -121,16 +117,33 @@ class Island:
             self.geogr[location].add_animals(herb_pop, carn_pop) #obs! kAN SENDE INN TOMME LISTER
 
         """
+        ini_herbs = []
+        ini_carns = []
+
+        for dictionary in self.initial_pop:
+            location = dictionary['loc']
+
+            for animal in dictionary['pop']:
+                #animal = {species: H, age: _ , weight: _}
+                if animal['species'] == 'Herbivore':
+                    age = animal['age']
+                    weight = animal['weight']
+                    ini_herbs.append(Herbivore(age, weight))
+                    # ! This communicates with animals which is two levels below in the hierarcy... correct?
+            # TODO: Raise error if species does not exist.
+            # Age and weight will be handled by animal class
+            pass
+
         pass
 
-    def find_color(landscape):
+    def find_color(self, landscape):
         #map_colours = {'L': 	RGB(152,251,152),
         #                'H': 	RGB(48,128,20),
         #                'D': 	RGB(255,236,139),
         #                W: RGB(0,104,139)}
         pass
 
-    def plot_island():
+    def plot_island(self):
         pass
 
 ############# temporarily test area ###########
