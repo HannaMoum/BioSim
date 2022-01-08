@@ -115,6 +115,12 @@ class Landscape:
         """
         self.fodder = self.params['f_max'] #TODO: Include parameters
 
+    def add_animal(self, herb_pop, carn_pop):
+        """ Function adding animals to landscape-object.
+            Adding animals will be done initially and optionally mid-sim during break."""
+        # Should not be necessary to check len > 0
+        self.herb_pop += herb_pop
+        self.carn_pop += carn_pop
 
 class Lowland(Landscape):
     """ Adopts:
@@ -126,6 +132,7 @@ class Lowland(Landscape):
     * aging
     * death
     * regrowth
+    * add_animal()
     """
     pass
 
@@ -140,6 +147,7 @@ class Highland(Landscape):
     * aging
     * death
     * regrowth
+    * add_animal()
     """
     pass
 
@@ -152,6 +160,7 @@ class Desert(Landscape):
     * migration()
     * aging
     * death
+    * add_animal()
     """
 
     def grassing(self):
@@ -203,6 +212,9 @@ class Water(Landscape):
     def regrowth(self):
         pass
 
+    def add_animal(self, herb_pop, carn_pop):
+        raise AttributeError('Cannot place animals in Water landscape')
+        # TODO: Figure out what correct error will be
 ###############################
 a = Water()
 a.grassing()
