@@ -24,7 +24,7 @@ class Params:
     DeltaPhiMax: float = 10.0
 
 
-class Lowland():
+class Lowland:
     """
     Doc-strings
     """
@@ -47,13 +47,13 @@ class Lowland():
                 raise ValueError('Invalid value for parameter: ' + key)
             cls.params[key] = new_params[key]
 
-    def __init__(self):
+    def __init__(self, initial_herb_pop, initial_carn_pop):
         """
         Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
         """
         self._fodder = self.params['f_max']  # Initial amount of fodder
-        self._herb_pop = []
-        self._carn_pop = []
+        self._herb_pop = initial_herb_pop
+        self._carn_pop = initial_carn_pop
 
     @property
     def fodder(self):
@@ -111,28 +111,31 @@ class Lowland():
         """ Carnivores hunting
         """
         # Randomize carn_population because they eat in random order
-        hunting_order = random.sample(self.carn_pop, len(self.carn_pop)) # Eventuelt random.shuffle
+        hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
+        # Bruker sample slik at vi får en ny liste. Ønsker ikke å endre på selve populasjons propertyen, det skal kun gjøres av setteren.
+        # Ønsker ikke å endre på selve lista.
+
         # Sorted list for herbivores based on fitness
         prey_order = sorted(self.herb_pop, key=lambda x: x.fitness)
-        killed_prey = []
 
         for hunter in hunting_order:
             hunter.F_tilde = 0
-            # Justere prey_order
             for prey in prey_order:
-                if hunter.hungry:
-                    if Lowland.hunting_success(prey.fitness,
-                                               hunter.fitness,
-                                               Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
-                        hunter.eat(prey.weight)
-                        killed_prey += prey
-            prey_order -= killed_prey
-                #else:
-                    #break # Stopper hvis ikke hunter er sulten
+                if prey.alive:
+                    print(prey.alive)
+                    if hunter.hungry:
+                        if Lowland.hunting_success(prey.fitness,
+                                                           hunter.fitness,
+                                                           Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
+                                    hunter.eat(prey.weight)
+                                    prey.alive = False
 
-        self.herb_pop = prey_order # Oppdaterer populasjonen til de som er igjen etter jakten
+        remaining_prey = []
+        for herbivore in prey_order:
+            if herbivore.alive:
+                remaining_prey.append(herbivore)
+        self.herb_pop = remaining_prey # Oppdaterer populasjonen til de som er igjen etter jakten
 
-# ---------------------------------------------------------------------------------------------
     def give_birth(self):
         """
         Every herbivore tries to give birth.
@@ -179,10 +182,10 @@ class Lowland():
         The herbivores turn one year older and looses weight.
         """
         for herbivore in self.herb_pop:
-            herbivore.age_and_weightloss()
+            herbivore.aging()
 
         for carnivore in self.carn_pop:
-            carnivore.age_and_weightloss()
+            carnivore.aging()
 
 
     def death(self):
@@ -206,7 +209,6 @@ class Lowland():
         Method to reset the amount of fodder by the end of the year
         """
         self.fodder = self.params['f_max']
-
 
 
 
