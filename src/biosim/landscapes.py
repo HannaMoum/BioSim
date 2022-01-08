@@ -94,6 +94,21 @@ class Landscape:
         for animal in chain(self.herb_pop, self.carn_pop):
             animal.age_and_weightloss()
 
+    def death(self):
+        """
+        Kill herbivores and adjust self.herb_pop to only contain the living
+        """
+        def alive(species):
+            return [individual for individual in species if not individual.probability_of_death()]
+
+        self.herb_pop = alive(self.herb_pop)
+        self.carn_pop = alive(self.herb_pop)
+
+        #alive_herbs = [animal for animal in self.herb_pop if not animal.probability_of_death()]
+        #alive_carns = [animal for animal in self.carn_pop if not animal.probability_of_death()]
+        #self.herb_pop = alive_herbs
+        #self.carn_pop = alive_carns
+
 
 class Lowland(Landscape):
     """ Adopts:
@@ -102,6 +117,7 @@ class Lowland(Landscape):
     * hunting()
     * give_birth()
     * migration()
+    * aging
     """
     pass
 
@@ -113,6 +129,7 @@ class Highland(Landscape):
     * hunting()
     * give_birt()
     * migration()
+    * aging
     """
     pass
 
@@ -123,6 +140,7 @@ class Desert(Landscape):
     * hunting()
     * give_birt()
     * migration()
+    * aging
     """
 
     def grassing(self):
