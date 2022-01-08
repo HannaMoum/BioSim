@@ -88,7 +88,7 @@ class Lowland:
         # Sort list, highest fitness first:
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
             herbivore.F_tilde = 0
-            eaten = herbivore.eat(self.fodder)
+            eaten = herbivore.eat(self.fodder) # Her returneres måltid, dvs. det de har spist
             self.fodder -= eaten
 
             if self.fodder <= 0:
@@ -96,6 +96,7 @@ class Lowland:
 # ---------------------------------------------------------------------------------------------
     @staticmethod
     def hunting_success(herb_fitness, carn_fitness, deltaphimax):
+        """Probability to kill"""
         r = random.uniform(0, 1)
         fitness_diff = (carn_fitness - herb_fitness)
 
@@ -112,19 +113,22 @@ class Lowland:
         """ Carnivores hunting
         """
         # Randomize carn_population because they eat in random order
-        hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
+        hunting_order = random.sample(self.carn_pop, len(self.carn_pop)) # Eventuelt random.shuffle
         # Sorted list for herbivores based on fitness
         prey_order = sorted(self.herb_pop, key=lambda x: x.fitness)
+        killed_prey = []
 
         for hunter in hunting_order:
             hunter.F_tilde = 0
-            for i, prey in enumerate(prey_order):
+            # Justere prey_order
+            for prey in prey_order:
                 if hunter.hungry:
                     if Lowland.hunting_success(prey.fitness,
                                                hunter.fitness,
                                                Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
                         hunter.eat(prey.weight)
-                        del(prey_order[i])
+                        killed_prey += prey
+            prey_order -= killed_prey
                 #else:
                     #break # Stopper hvis ikke hunter er sulten
 
