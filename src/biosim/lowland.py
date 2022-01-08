@@ -94,7 +94,7 @@ class Lowland:
                 break
 
     @staticmethod
-    def hunting_success(herb_fitness, carn_fitness, deltaphimax):
+    def hunting_success(herb_fitness, carn_fitness, deltaphimax): # Egen skap ved verden/landskapet ikke ved hver carnivore
         """Probability to kill"""
         r = random.uniform(0, 1)
         fitness_diff = (carn_fitness - herb_fitness)
@@ -123,7 +123,6 @@ class Lowland:
             hunter.F_tilde = 0
             for prey in prey_order:
                 if prey.alive:
-                    print(prey.alive)
                     if hunter.hungry:
                         if Lowland.hunting_success(prey.fitness,
                                                            hunter.fitness,
