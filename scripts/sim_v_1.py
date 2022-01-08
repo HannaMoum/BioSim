@@ -2,7 +2,7 @@
 """
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
-from biosim.landscapes import Lowland
+from biosim.lowland import Lowland
 
 # Creating initial population as list/dicts
 
@@ -54,7 +54,7 @@ class Simulation:
         location.grassing()
         location.hunting()
         location.give_birth()
-        location.aging()
+        location.age_and_weightloss()
         location.death()
 
 

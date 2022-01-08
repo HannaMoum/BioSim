@@ -148,7 +148,7 @@ class Animal(ABC):
         """Sjekker om dyret er sulten, mao. ønsker å spise"""
         return self.F_tilde < self.params['F']
 
-    def aging(self):
+    def age_and_weightloss(self):
         """
         After 1 year passed, each herbivore becomes 1 year older
         """
@@ -223,7 +223,6 @@ class Animal(ABC):
         return any((starvation, sickness))
 
 
-# class Herbivore(Animal):
 class Herbivore(Animal):
 
     params = {

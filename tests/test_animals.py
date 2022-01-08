@@ -1,6 +1,6 @@
 import pytest
 from biosim.animals import Herbivore
-from biosim.landscapes import Lowland
+from biosim.lowland import Lowland
 
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
@@ -82,7 +82,7 @@ def test_aging():
     a = Herbivore()
     num_years = 10
     for n in range(num_years):
-        a.aging()
+        a.age_and_weightloss()
     assert a.age == num_years + 1
 
 
