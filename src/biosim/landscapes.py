@@ -1,8 +1,10 @@
-""" Lanscape class with subclasses
+""" Landscape class with subclasses
 """
-# cannot import...?
+
 from .animals import Carnivore
 from itertools import chain
+from .animals import Herbivore
+#TODO: Importing does not work. Fix it
 
 # TODO: When finished check that all method names are correct when overriding
 class Landscape:
@@ -115,9 +117,29 @@ class Landscape:
         """
         self.fodder = self.params['f_max'] #TODO: Include parameters
 
-    def add_animal(self, herb_pop, carn_pop):
+    def add_animal(self, added_pop):
         """ Function adding animals to landscape-object.
-            Adding animals will be done initially and optionally mid-sim during break."""
+            Adding animals will be done initially and optionally mid-sim during break.
+
+            Input: List of dictionaries as in;
+             [{'species': 'Herbivore',
+                'age': 10, 'weight': 12.5},
+            {'species': 'Herbivore',
+                'age': 9, 'weight': 10.3}]"""
+
+        for animal in added_pop:
+            # animal = {'species': H, 'age': _ , 'weight': _ }
+            age = animal['age']
+            weight = animal['weight']
+
+            if animal['species'] == 'Herbivore':
+                self.herb_pop += [Herbivore(age, weight)]
+            if animal['species'] == 'Carnivore':
+                self.carn_pop += [Carnivore(age, weight)]
+
+
+        # TODO: Raise error if species does not exist.
+        # Age and weight will be handled by animal class
         # Should not be necessary to check len > 0
         self.herb_pop += herb_pop
         self.carn_pop += carn_pop
