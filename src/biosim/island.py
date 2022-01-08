@@ -126,6 +126,8 @@ class Island:
             for animal in dictionary['pop']:
                 #animal = {species: H, age: _ , weight: _}
                 if animal['species'] == 'Herbivore':
+                    #TODO: Extend add_animal to do this job...
+                        #Then Island will not communicate with animals
                     age = animal['age']
                     weight = animal['weight']
                     ini_herbs.append(Herbivore(age, weight))
