@@ -15,7 +15,7 @@ class Island:
 
 
     @property
-    def geography(self):
+    def geogr(self):
         self._geogr = textwrap.dedent(self._geogr) #Remove indents
         self._geogr = self._geogr.split() # Result: ['WWW', 'WLW', 'WWW']
 
@@ -26,7 +26,8 @@ class Island:
                         raise TypeError(f'{letter} is not a defined landscape. Use W, L, H or D.')
             if len(element) != length_check:
                 raise ValueError ('All rows must have the same number of columns')
-        return self._geogr
+
+        return self._geogr # ['WWW', 'WLW', 'WWW']
 
 
 
@@ -72,7 +73,7 @@ class Island:
         pass
 
 
-    def convert_geography_string_to_landscape_list(self):
+    def convert_geography_to_coordinates(self):
         """
         WWW
         WLW
@@ -86,15 +87,15 @@ class Island:
 
         return coordinate_map_with_landscapes // update self.geogr
         """
-        coordniates = {}
-        self._geogr = textwrap.dedent(self._geogr) #Remove indents #MVE TO PROPERTY
-        geography_list = self._geogr.split()  # Result: ['WWW', 'WLW', 'WWW'] #MOVE TO PROPERTY
-            #Every element represents a row, and the position of the letter represents the column
-        rows = len(geography_list) #Attribue ?
-        columns = len(geography_list[0])
-        for element in geography_list:
-            coordinates[]
-        pass
+        coordinates = {}
+
+        for row, string in enumerate(self.geogr):
+            for col, letter in enumerate(string):
+                coordinates[(row + 1, col + 1)] = self.create_landscape(letter)
+                # +1 becuase we start from (1,1) not (0,0)
+
+        return coordinates
+
 
     def handle_initial_population():
         """
