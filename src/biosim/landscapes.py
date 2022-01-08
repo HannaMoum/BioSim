@@ -111,28 +111,31 @@ class Lowland:
         """ Carnivores hunting
         """
         # Randomize carn_population because they eat in random order
-        hunting_order = random.sample(self.carn_pop, len(self.carn_pop)) # Eventuelt random.shuffle
+        hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
+        # Bruker sample slik at vi får en ny liste. Ønsker ikke å endre på selve populasjons propertyen, det skal kun gjøres av setteren.
+        # Ønsker ikke å endre på selve lista.
+
         # Sorted list for herbivores based on fitness
         prey_order = sorted(self.herb_pop, key=lambda x: x.fitness)
-        killed_prey = []
 
         for hunter in hunting_order:
             hunter.F_tilde = 0
-            # Justere prey_order
             for prey in prey_order:
-                if hunter.hungry:
-                    if Lowland.hunting_success(prey.fitness,
-                                               hunter.fitness,
-                                               Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
-                        hunter.eat(prey.weight)
-                        killed_prey += prey
-            prey_order -= killed_prey
-                #else:
-                    #break # Stopper hvis ikke hunter er sulten
+                if prey.alive:
+                    print(prey.alive)
+                    if hunter.hungry:
+                        if Lowland.hunting_success(prey.fitness,
+                                                           hunter.fitness,
+                                                           Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
+                                    hunter.eat(prey.weight)
+                                    prey.alive = False
 
-        self.herb_pop = prey_order # Oppdaterer populasjonen til de som er igjen etter jakten
+        remaining_prey = []
+        for herbivore in prey_order:
+            if herbivore.alive:
+                remaining_prey.append(herbivore)
+        self.herb_pop = remaining_prey # Oppdaterer populasjonen til de som er igjen etter jakten
 
-# ---------------------------------------------------------------------------------------------
     def give_birth(self):
         """
         Every herbivore tries to give birth.
