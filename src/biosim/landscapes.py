@@ -82,6 +82,9 @@ class Landscape:
         if len(carn_babies) > 0:
             self.carn_pop += carn_babies
 
+    def migration(self):
+        """ Create later"""
+        pass
 
 class Lowland(Landscape):
     """ Adopts:
@@ -89,6 +92,7 @@ class Lowland(Landscape):
     * grassing()
     * hunting()
     * give_birth()
+    * migration()
     """
     pass
 
@@ -99,6 +103,7 @@ class Highland(Landscape):
     * grassing()
     * hunting()
     * give_birt()
+    * migration()
     """
     pass
 
@@ -108,9 +113,11 @@ class Desert(Landscape):
     __init__ (+getters and setters)
     * hunting()
     * give_birt()
+    * migration()
     """
 
     def grassing(self):
+        """ No fodder available in the desert. """
         pass
 
     pass
@@ -141,6 +148,9 @@ class Water(Landscape):
         pass
 
     def give_birth(self):
+        pass
+
+    def migration(self):
         pass
 
 
