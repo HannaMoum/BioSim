@@ -47,6 +47,7 @@ class Animal(ABC):
             # Update params
             cls.params[key] = new_params[key]
 
+
     def __init__(self, age, weight):
         """Legg til doc-string."""
 
@@ -55,6 +56,15 @@ class Animal(ABC):
 
         # Property for mengde som dyret har spist
         self._F_tilde = 0
+
+        self._alive = True # Vurder å bruk denne i death også. Brukes kun ved hunting per nå.
+
+    @property
+    def alive(self):
+        return self._alive
+    @alive.setter
+    def alive(self, value):
+        self._alive = value
 
     @staticmethod
     def check_positive(value):
@@ -235,22 +245,6 @@ class Herbivore(Animal):
     """"
     Legg inn doc-string
     """
-    def eat(self, food_available):
-        """
-        Function that makes the animal eat. First step is to check if any fodder/food is available.
-        beta*F_tilde
-        F_tilde = det som blir spist
-        """
-        max_måltid = self.params['F'] - self.F_tilde  # Hvor mye plass det er i magen
-        if max_måltid < food_available:
-            måltid = max_måltid
-        else:
-            måltid = food_available
-
-        self.weight += måltid * self.params['beta']
-        self.F_tilde += måltid
-
-        return måltid
 
 
 
