@@ -2,7 +2,7 @@
 
 import math
 import random
-from abc import ABC, abstractmethod #Remove unless in use
+from abc import ABC, abstractmethod  # Remove unless in use
 
 
 class Animal:
@@ -25,6 +25,7 @@ class Animal:
         'F': None,
         'DeltaPhiMax': None
     }
+
     @classmethod
     def set_params(cls, new_params):
         """
@@ -53,7 +54,6 @@ class Animal:
 
             cls.params[key] = new_params[key]
 
-
     def __init__(self, age, weight):
         """Create Animal species with age and weight."""
 
@@ -78,6 +78,7 @@ class Animal:
     @property
     def age(self):
         return self._age
+
     @age.setter
     def age(self, value):
         self.check_integer(value)
@@ -88,6 +89,7 @@ class Animal:
     @property
     def weight(self):
         return self._weight
+
     @weight.setter
     def weight(self, value):
         self.check_positive(value)
@@ -98,6 +100,7 @@ class Animal:
     def F_tilde(self):
         """Amount of food eaten"""
         return self._F_tilde
+
     @F_tilde.setter
     def F_tilde(self, value):
         self._F_tilde = value
@@ -136,8 +139,6 @@ class Animal:
 
             return q_plus * q_minus
 
-
-
     def eat(self, food_available):
         """
         Function that makes the animal eat. First step is to check if any fodder/food is available.
@@ -153,14 +154,12 @@ class Animal:
             eaten = food_available
 
         self.weight += eaten * self.params['beta']
-        self.F_tilde += eaten # TODO: Is it possible to make this only an attribute for carnivores (F_tilde)
+        self.F_tilde += eaten  # TODO: Is it possible to make this only an attribute for carnivores (F_tilde)
 
         return eaten  # Only necessary for Herbivores
 
     def age_and_weightloss(self):
-        """
-        After 1 year passed, each herbivore becomes 1 year older
-        """
+        """Age animal by 1 year and loose weight."""
         self.age += 1
         self.weight -= self.weight * self.params['eta']
 
@@ -172,34 +171,38 @@ class Animal:
 
     def probability_to_give_birth(self, number_of_animals):
         """
-        Function giving the probability for giving birth
-        (number_of_herbivores is the number of herbivores before the breeding season starts)
-        N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
+        Decide an animals probability to give birth
+
+        Parameters
+        ----------
+        number_of_animals: Int
+            Number of animals of chosen species in one cell before breeding season starts.
+
+        Returns
+        -------
+        bool
+            True if animal gives birth
         """
 
-        # probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
-        # number_of_animals = Lowland.number_of_current_living_animals()
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
-
         r = random.uniform(0, 1)
 
-        befruktning = r < probability  # Sannsynligheten for at det skjer en befruktning
+        # Fertilization takes place
+        fertilization = r < probability
 
-        fertil = self.weight > self.params['zeta'] * (self.params['w_birth'] + self.params[
-            'sigma_birth'])  # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
+        # Checking weight
+        weight_check = self.weight > self.params['zeta'] * \
+                 (self.params['w_birth'] + self.params['sigma_birth'])
 
-        # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__ når en ny herbivore opprettes.
+        # Wight of newborn
+        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
-        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])  # regner ut fødselsvekt.
+        maternal_health = self.weight > birth_weight * self.params['xi']
 
-        maternal_health = self.weight > birth_weight * self.params[
-            'xi']  # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
-
-        if all((befruktning, fertil, maternal_health)):  # Om alle disse kriteriene stemmer vil det skje en fødsel.
-            # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
+        if all((fertilization, weight_check, maternal_health)):
             return True, birth_weight
 
-        return None, None  # Se kommentar under giving_birth. Forbedringspotensiale
+        return False, False  # TODO: Find prettier code
 
     def giving_birth(self, number_of_animals):
         """
@@ -233,7 +236,6 @@ class Animal:
 
 
 class Herbivore(Animal):
-
     params = {
         'w_birth': 8,
         'sigma_birth': 1.5,
@@ -253,7 +255,6 @@ class Herbivore(Animal):
     """"
     Legg inn doc-string
     """
-
 
 
 class Carnivore(Animal):
@@ -286,8 +287,8 @@ class Carnivore(Animal):
         fitness_diff = self.fitness - herb_fitness
 
         if self.fitness <= herb_fitness:
-            return False # More efficient?
-            #probability = 0
+            return False  # More efficient?
+            # probability = 0
         elif 0 < fitness_diff < self.params['DeltaPhiMax']:
             probability = fitness_diff / self.params['DeltaPhiMax']
             # TODO: Make parameters work again
