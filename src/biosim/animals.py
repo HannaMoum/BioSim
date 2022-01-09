@@ -283,5 +283,3 @@ class Carnivore(Animal):
             probability = 1
 
         return probability > r
-
-        pass
