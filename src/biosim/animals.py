@@ -65,11 +65,13 @@ class Animal:
 
     @staticmethod
     def check_positive(value):
+        """Commands a value to be positive or equal to zero."""
         if value < 0:
             raise ValueError('Value must be positive')
 
     @staticmethod
     def check_integer(value):
+        """Commands a value to be an integer type."""
         if not type(value) == int:
             raise ValueError('Value must be integer')
 
@@ -89,11 +91,12 @@ class Animal:
     @weight.setter
     def weight(self, value):
         self.check_positive(value)
+        # Må vi kanskje sjekke at dette er float/int eller blir det smør på flesk...
         self._weight = value
 
     @property
     def F_tilde(self):
-        """Eaten amount"""
+        """Amount of food eaten"""
         return self._F_tilde
     @F_tilde.setter
     def F_tilde(self, value):
@@ -102,26 +105,38 @@ class Animal:
     @property
     def fitness(self):
         """
-        calculate fitness-condition based on age and weight
-        Return "self.fitness"
+        Calculate an animal's fitness based on age and weight.
+
+        Returns
+        -------
+        Property: self.fitness
         """
-        # Maby q as function inside fitness function.
+
+        def q(sgn, x, x_half, phi):
+            """
+            Parameters
+            ----------
+            sgn: +1 or -1
+            x:
+            x_half:
+            phi:
+
+            Returns
+            -------
+            q:
+            """
+
+            return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 
         if self.weight <= 0:
             return 0
         else:
-            q_plus = Animal._q(+1, self.age, self.params['a_half'], self.params['phi_age'])
-            q_minus = Animal._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+            q_plus = q(+1, self.age, self.params['a_half'], self.params['phi_age'])
+            q_minus = q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
 
             return q_plus * q_minus
 
-    @staticmethod
-    def _q(sgn, x, x_half, phi):
-        """
-        Legg inn doc-string
-        sgn = fortegnet i regnestykket (+1 eller -1)
-        """
-        return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
+
 
     def eat(self, food_available):
         """
