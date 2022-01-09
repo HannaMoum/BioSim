@@ -61,39 +61,30 @@ class Landscape:
 
 
     def hunting(self):
-        """ Carnivores hunting IN PROGRESS
+        """ Carnivores hunting
         """
-        # Carnivores hunts in random order
         hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
-        # Bruker sample slik at vi får en ny liste. Ønsker ikke å endre på selve populasjons propertyen, det skal kun gjøres av setteren.
-        # Ønsker ikke å endre på selve lista.
-        # Men.. mindre effektivt å lagre ekstra liste. Endrer vi egt på propertyen...?
-
         prey_order = sorted(self.herb_pop, key=lambda x: x.fitness) #Sorting hebrivores
 
         for hunter in hunting_order:
-            hunter.F_tilde = 0 #TODO; Check better options
-            for prey in prey_order:
+            hunter.F_tilde = 0   #TODO; Check better options // change variable name
 
-                while hunter.hungry():
-                    if hunter.probability_to_kill(prey.fitness):
+            # Shortened this code into a list comprehension. Only disadvantage; cannot include break (I think)
+            # But much more eye-pleasing
+            survivors = [prey for prey in prey_order if hunter.hungry
+                         if not hunter.killing(prey.fitness, prey.weight)]
 
+            self.herb_pop = survivors
 
-
-                        #if Lowland.hunting_success(prey.fitness,
-                        #                           hunter.fitness,
-                        #                           Params.DeltaPhiMax):  # hunter.params['DeltaPhiMax']
-                            hunter.eat(prey.weight)
-                            prey.alive = False
-                #need to remove herbivores from its' population
-
-        remaining_prey = []
-        for herbivore in prey_order:
-            if herbivore.alive:
-                remaining_prey.append(herbivore)
-        self.herb_pop = remaining_prey  # Oppdaterer populasjonen til de som er igjen etter jakten
-
-        pass
+            # Nested code:
+            #survivors = []
+            # for prey in prey_order:
+            #     if hunter.hungry():
+            #         if not hunter.killing(prey.fitness, prey.weight):  #prey.weight = food_available
+            #             survivors.append(prey)
+            #             self.herb_pop = survivors
+            #     else:
+            #         break  # Moves to next hunter
 
     def give_birth(self):
         """
