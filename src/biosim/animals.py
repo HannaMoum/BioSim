@@ -65,13 +65,13 @@ class Animal:
 
     @staticmethod
     def check_positive(value):
-        """Commands a value to be positive or equal to zero."""
+        """Command a value to be positive or equal to zero."""
         if value < 0:
             raise ValueError('Value must be positive')
 
     @staticmethod
     def check_integer(value):
-        """Commands a value to be an integer type."""
+        """Command a value to be an integer type."""
         if not type(value) == int:
             raise ValueError('Value must be integer')
 
@@ -171,7 +171,7 @@ class Animal:
 
     def probability_to_give_birth(self, number_of_animals):
         """
-        Decide an animals probability to give birth
+        Decide an animals probability to give birth.
 
         Parameters
         ----------
@@ -206,28 +206,40 @@ class Animal:
 
     def giving_birth(self, number_of_animals):
         """
-        function handling the birth of a new herbivore.
-        Runs if probability_to_give_birth returns True
+        Animals give birth if necessary requirements are met.
 
-        ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
-        this year. (self.mother = False/True)!
+        Parameters
+        ----------
+        number_of_animals: Int
+            Number of animals of chosen species in one cell before breeding season starts.
+
+        Returns
+        -------
+        object
+            newborn animal if mother gives birth.
         """
 
-        p, birth_weight = self.probability_to_give_birth(number_of_animals)  # Kan ikke unpacke uten noen verdien
+        probability, birth_weight = self.probability_to_give_birth(number_of_animals)
 
-        if p:
-            newborn = Herbivore(age=0, weight=birth_weight)
-
-            # lose weight
+        if probability:
+            newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default?
+            # TODO: Fix this so it creates either a herbivore or a Carnivore
             self._weight -= birth_weight * self.params['xi']
 
             return newborn
+
         return None
 
     def probability_of_death(self):
-        """ Decides whether or not the animal dies """
+        """
+        Decide whether animal dies.
+        Returns
+        -------
+        bool
+            True if animal dies.
+        """
         starvation = self.weight <= 0
-        # Random death
+
         probability = self.params['omega'] * (1 - self.fitness)
         r = random.uniform(0, 1)
         sickness = r < probability
@@ -277,12 +289,20 @@ class Carnivore(Animal):
     }
 
     def hungry(self):
-        """Decides whether or not a carnivore is hungry
-        (If hungry, the carnivore is hungry, it will keep hunting)"""
+        """
+        Decide whether carnivore is hungry.
+
+        Returns
+        -------
+        bool
+            True of carnivore is hungry
+        """
+        # Could be included in probability_to_kill...
         return self.F_tilde < self.params['F']
 
     def probability_to_kill(self, herb_fitness):
         """ Deciding whether or not a carnivore will kill the current Herbivore it is hunting"""
+
         r = random.uniform(0, 1)
         fitness_diff = self.fitness - herb_fitness
 
