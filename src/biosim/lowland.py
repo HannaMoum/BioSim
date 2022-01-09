@@ -25,7 +25,7 @@ class Params:
     DeltaPhiMax: float = 10.0
 
 
-class Lowland:
+class Landscape:
     """
     Doc-strings
     """
@@ -33,6 +33,18 @@ class Lowland:
     params = {
         'f_max': 800.0
     }
+
+
+    def __init__(self, landscape_type):
+        """
+        Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
+        """
+        self._fodder = self.params['f_max']  # Initial amount of fodder
+        self._herb_pop = [Herbivore(80, 200)]
+        self._carn_pop = []
+        self._landscape_type = landscape_type
+
+
 
     @classmethod
     def set_params(cls, new_params):
@@ -48,13 +60,9 @@ class Lowland:
                 raise ValueError('Invalid value for parameter: ' + key)
             cls.params[key] = new_params[key]
 
-    def __init__(self, initial_herb_pop, initial_carn_pop):
-        """
-        Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
-        """
-        self._fodder = self.params['f_max']  # Initial amount of fodder
-        self._herb_pop = initial_herb_pop
-        self._carn_pop = initial_carn_pop
+    @property
+    def landscape_type(self):
+        return self._landscape_type
 
     @property
     def fodder(self):
@@ -78,6 +86,8 @@ class Lowland:
     @carn_pop.setter
     def carn_pop(self, value):
         self._carn_pop = value
+
+
 
 
     def grassing(self):
@@ -124,7 +134,7 @@ class Lowland:
             for prey in prey_order:
                 if prey.alive:
                     if hunter.hungry:
-                        if Lowland.hunting_success(prey.fitness,
+                        if Landscape.hunting_success(prey.fitness,
                                                            hunter.fitness,
                                                            Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
                                     hunter.eat(prey.weight)
@@ -208,6 +218,52 @@ class Lowland:
         """
         self.fodder = self.params['f_max']
 
+    def add_animal(self, added_pop):
+        """ Function adding animals to landscape-object.
+            Adding animals will be done initially and optionally mid-sim during break.
+
+            Input: List of dictionaries as in;
+             [{'species': 'Herbivore',
+                'age': 10, 'weight': 12.5},
+            {'species': 'Herbivore',
+                'age': 9, 'weight': 10.3}]
+
+            Source url for finding all subclass names (read 08.01):
+            https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
+
+        for animal in added_pop:
+            # animal = {'species': H, 'age': _ , 'weight': _ }
+            age = animal['age']
+            weight = animal['weight']
+
+            if animal['species'] == 'Herbivore':
+                self.herb_pop += [Herbivore(age, weight)]
+            elif animal['species'] == 'Carnivore':
+                self.carn_pop += [Carnivore(age, weight)]
+            else:
+                raise TypeError(f'{animal} is not a defined animal.\n'
+                                f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
+
+    def make_migration_list(self):
+        herb_staying = []
+        herb_leaving = []
+
+        for herbivore in self.herb_pop:
+            if herbivore.migration_direction() == (0,0):
+                herb_staying.append(herbivore)
+            else:
+                herb_leaving.append(herbivore)
+
+        carn_staying = []
+        carn_leaving = []
+
+        for carnivore in self.carn_pop:
+            if carnivore.migration_direction() == (0,0):
+                carn_staying.append(carnivore)
+            else:
+                carn_leaving.append(carnivore)
+
+        return herb_staying, herb_leaving, carn_staying, carn_leaving
 
 
 
