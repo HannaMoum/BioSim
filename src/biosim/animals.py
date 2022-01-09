@@ -283,3 +283,7 @@ class Carnivore(Animal):
             probability = 1
 
         return probability > r
+
+    def try_killing(self, herb_fitness, food_available):
+        if self.probability_to_kill(herb_fitness):
+            self.eat(food_available)
