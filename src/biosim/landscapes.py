@@ -1,6 +1,6 @@
 """ Landscape class with subclasses
 """
-from animals import Animal, Herbivore, Carnivore
+from .animals import Animal, Herbivore, Carnivore
 from itertools import chain
 import random
 
