@@ -102,9 +102,11 @@ class Landscape:
         carn_babies = [newborn for individual in self.carn_pop if
                        (newborn := individual.giving_birth(len(self.carn_pop)))]
 
-        if len(herb_babies) > 0:  # TODO: Make absolutely sure this is necessary (again)
+        #if len(herb_babies) > 0:  # TODO: Make absolutely sure this is necessary (again)
+        if herb_babies:  # Implementing PEP8 rules. Empty list are False
             self.herb_pop += herb_babies
-        if len(carn_babies) > 0:
+        #if len(carn_babies) > 0:
+        if carn_babies:
             self.carn_pop += carn_babies
 
     def migration(self):

@@ -72,7 +72,8 @@ class Animal:
     @staticmethod
     def check_integer(value):
         """Command a value to be an integer type."""
-        if not type(value) == int:
+        #if not type(value) == int:
+        if not isinstance(value, int):
             raise ValueError('Value must be integer')
 
     @property
