@@ -1,6 +1,6 @@
 """ Class handling the geography of the island"""
 import textwrap
-from lowland import Landscapes #Landscape is main class
+from .landscapes import Landscape, Lowland, Highland, Desert, Water #Landscape is main class
     # Do we automatically also import subclasses in this case? // Do manually?
 
 class Island:
