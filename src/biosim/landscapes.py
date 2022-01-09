@@ -63,10 +63,10 @@ class Landscape:
         """ Carnivores hunting
         """
         hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
-        prey_order = sorted(self.herb_pop, key=lambda x: x.fitness) #Sorting hebrivores
+        prey_order = sorted(self.herb_pop, key=lambda x: x.fitness)
 
         for hunter in hunting_order:
-            hunter.F_tilde = 0   #TODO; Check better options // change variable name
+            hunter.F_tilde = 0
 
             # Shortened this code into a list comprehension. Only disadvantage; cannot include break (I think)
             # But much more eye-pleasing

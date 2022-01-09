@@ -54,10 +54,8 @@ class Animal(ABC):
         self._age = age
         self._weight = weight
 
-        # Property for mengde som dyret har spist
+        # Property for mengde som dyret har spist. #TODO: Change name
         self._F_tilde = 0
-
-        #self._alive = True # Vurder å bruk denne i death også. Brukes kun ved hunting per nå.
 
     @property
     def alive(self):
@@ -133,15 +131,17 @@ class Animal(ABC):
         F_tilde = det som blir spist
         """
         wanted_food = self.params['F'] - self.F_tilde  # Hvor mye plass det er i magen
-        if wanted_food < food_available:
+        # Only necessary for Carnivores
+
+        if food_available >= wanted_food:
             eaten = wanted_food
         else:
             eaten = food_available
 
         self.weight += eaten * self.params['beta']
-        self.F_tilde += eaten
+        self.F_tilde += eaten # TODO: Is it possible to make this only an attribute for carnivores (F_tilde)
 
-        return eaten
+        return eaten  # Only necessary for Herbivores
 
     def age_and_weightloss(self):
         """
@@ -272,18 +272,19 @@ class Carnivore(Animal):
         fitness_diff = self.fitness - herb_fitness
 
         if self.fitness <= herb_fitness:
-            return False #More efficient?
+            return False # More efficient?
             #probability = 0
-
         elif 0 < fitness_diff < self.params['DeltaPhiMax']:
             probability = fitness_diff / self.params['DeltaPhiMax']
             # TODO: Make parameters work again
-
         else:
             probability = 1
 
         return probability > r
 
-    def try_killing(self, herb_fitness, food_available):
+    def killing(self, herb_fitness, herb_weight):
         if self.probability_to_kill(herb_fitness):
-            self.eat(food_available)
+            self.eat(herb_weight)  # self.F_tilde grows
+            return True
+        else:
+            return False
