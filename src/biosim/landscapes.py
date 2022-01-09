@@ -53,12 +53,11 @@ class Landscape:
         # Sort list, highest fitness first:
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
             herbivore.F_tilde = 0
-            eaten = herbivore.eat(self.fodder)  # Her returneres måltid, dvs. det de har spist
+            eaten = herbivore.eat(self.fodder)  # Returns the amount of food eaten
             self.fodder -= eaten
 
             if self.fodder <= 0:
                 break
-
 
     def hunting(self):
         """ Carnivores hunting
@@ -115,7 +114,6 @@ class Landscape:
         """
         All animals turn one year older and looses weight.
         """
-
         for animal in chain(self.herb_pop, self.carn_pop):
             animal.age_and_weightloss()
 
@@ -128,11 +126,6 @@ class Landscape:
 
         self.herb_pop = alive(self.herb_pop)
         self.carn_pop = alive(self.herb_pop)
-
-        #alive_herbs = [animal for animal in self.herb_pop if not animal.probability_of_death()]
-        #alive_carns = [animal for animal in self.carn_pop if not animal.probability_of_death()]
-        #self.herb_pop = alive_herbs
-        #self.carn_pop = alive_carns
 
     def regrowth(self):
         """
@@ -154,7 +147,6 @@ class Landscape:
             https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
 
         for animal in added_pop:
-            # animal = {'species': H, 'age': _ , 'weight': _ }
             age = animal['age']
             weight = animal['weight']
 
@@ -257,7 +249,7 @@ class Water(Landscape):
     def regrowth(self):
         pass
 
-    def add_animal(self, herb_pop, carn_pop):
+    def add_animal(self, added_pop):
         raise AttributeError('Cannot place animals in Water landscape')
         # TODO: Figure out what correct error will be
 ###############################
