@@ -57,7 +57,7 @@ class Animal(ABC):
         # Property for mengde som dyret har spist
         self._F_tilde = 0
 
-        self._alive = True # Vurder å bruk denne i death også. Brukes kun ved hunting per nå.
+        #self._alive = True # Vurder å bruk denne i death også. Brukes kun ved hunting per nå.
 
     @property
     def alive(self):
@@ -142,11 +142,6 @@ class Animal(ABC):
         self.F_tilde += måltid
 
         return måltid
-
-    @property
-    def hungry(self):
-        """Sjekker om dyret er sulten, mao. ønsker å spise"""
-        return self.F_tilde < self.params['F']
 
     def age_and_weightloss(self):
         """
@@ -265,6 +260,11 @@ class Carnivore(Animal):
         'F': 50.0,
         'DeltaPhiMax': 10.0
     }
+
+    def hungry(self):
+        """Decides whether or not a carnivore is hungry
+        (If hungry, the carnivore is hungry, it will keep hunting)"""
+        return self.F_tilde < self.params['F']
 
     def probability_to_kill(self, herb_fitness):
         """ Deciding whether or not a carnivore will kill the current Herbivore it is hunting"""
