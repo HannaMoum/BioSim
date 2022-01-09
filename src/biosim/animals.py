@@ -265,3 +265,23 @@ class Carnivore(Animal):
         'F': 50.0,
         'DeltaPhiMax': 10.0
     }
+
+    def probability_to_kill(self, herb_fitness):
+        """ Deciding whether or not a carnivore will kill the current Herbivore it is hunting"""
+        r = random.uniform(0, 1)
+        fitness_diff = self.fitness - herb_fitness
+
+        if self.fitness <= herb_fitness:
+            return False #More efficient?
+            #probability = 0
+
+        elif 0 < fitness_diff < self.params['DeltaPhiMax']:
+            probability = fitness_diff / self.params['DeltaPhiMax']
+            # TODO: Make parameters work again
+
+        else:
+            probability = 1
+
+        return probability > r
+
+        pass
