@@ -63,13 +63,6 @@ class Animal:
         # Property for mengde som dyret har spist. #TODO: Change name
         self._F_tilde = 0
 
-    @property
-    def alive(self):
-        return self._alive
-    @alive.setter
-    def alive(self, value):
-        self._alive = value
-
     @staticmethod
     def check_positive(value):
         if value < 0:
