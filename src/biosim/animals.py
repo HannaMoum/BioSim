@@ -30,24 +30,25 @@ class Animal:
 
         Parameters
         ----------
-        new_params : dict
+        new_params: dict
             Legal keys: ''
+            (Optional?)
 
         Raises
-        ------
+        -------
         ValueError, KeyError
         """
 
-        #  Checks if key in new_params exists in params
+        if not all(value >= 0 for value in new_params.values()):
+            raise ValueError('Invalid value for parameter: ' + key)
+
         for key in new_params:
             if key not in cls.params:
                 raise KeyError('Invalid parameter name: ' + key)
-            if not all(value >= 0 for value in new_params.values()):
-                raise ValueError('Invalid value for parameter: ' + key)
-            if key == 'eta':
-                if not 0 <= new_params['eta'] <= 1:
-                    raise ValueError('eta must be in [0, 1].')
-            # Update params
+
+            if key == 'eta' and not 0 <= new_params['eta'] <= 1:
+                raise ValueError('eta must be in interval [0, 1].')
+
             cls.params[key] = new_params[key]
 
 
