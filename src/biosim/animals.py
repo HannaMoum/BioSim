@@ -132,16 +132,16 @@ class Animal(ABC):
         beta*F_tilde
         F_tilde = det som blir spist
         """
-        max_måltid = self.params['F'] - self.F_tilde  # Hvor mye plass det er i magen
-        if max_måltid < food_available:
-            måltid = max_måltid
+        wanted_food = self.params['F'] - self.F_tilde  # Hvor mye plass det er i magen
+        if wanted_food < food_available:
+            eaten = wanted_food
         else:
-            måltid = food_available
+            eaten = food_available
 
-        self.weight += måltid * self.params['beta']
-        self.F_tilde += måltid
+        self.weight += eaten * self.params['beta']
+        self.F_tilde += eaten
 
-        return måltid
+        return eaten
 
     def age_and_weightloss(self):
         """
