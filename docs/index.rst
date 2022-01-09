@@ -5,7 +5,9 @@
 
 Welcome to Biosim's documentation!
 ======================================================
-This is a simulation of
+This is a model of the ecosystem on Rossumøya.
+
+The simulation consists of
    * an island
    * with several landscapes
    * containing populations of animalspecies
