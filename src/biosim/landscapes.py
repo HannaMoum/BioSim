@@ -1,11 +1,10 @@
 """ Landscape class with subclasses
 """
 from animals import Animal, Herbivore, Carnivore
-#from animals import Animal
-#from animals import Carnivore
 from itertools import chain
-#from animals import Herbivore
-#TODO: Importing does not work. Fix it
+import random
+
+#TODO: Relative importing does not work. Fix it
 
 # TODO: When finished check that all method names are correct when overriding
 class Landscape:
@@ -60,8 +59,35 @@ class Landscape:
             if self.fodder <= 0:
                 break
 
+
     def hunting(self):
-        """ Add later"""
+        """ Carnivores hunting IN PROGRESS
+        """
+        # Carnivores hunts in random order
+        hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
+        # Bruker sample slik at vi får en ny liste. Ønsker ikke å endre på selve populasjons propertyen, det skal kun gjøres av setteren.
+        # Ønsker ikke å endre på selve lista.
+        # Men.. mindre effektivt å lagre ekstra liste. Endrer vi egt på propertyen...?
+
+        prey_order = sorted(self.herb_pop, key=lambda x: x.fitness) #Sorting hebrivores
+
+        for hunter in hunting_order:
+            hunter.F_tilde = 0
+            for prey in prey_order:
+                if prey.alive:
+                    if hunter.hungry:
+                        if Lowland.hunting_success(prey.fitness,
+                                                   hunter.fitness,
+                                                   Params.DeltaPhiMax):  # hunter.params['DeltaPhiMax']
+                            hunter.eat(prey.weight)
+                            prey.alive = False
+
+        remaining_prey = []
+        for herbivore in prey_order:
+            if herbivore.alive:
+                remaining_prey.append(herbivore)
+        self.herb_pop = remaining_prey  # Oppdaterer populasjonen til de som er igjen etter jakten
+
         pass
 
     def give_birth(self):
