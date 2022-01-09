@@ -1,8 +1,11 @@
+""" Implements Animal model for subspecies."""
+
 import math
 import random
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod #Remove unless in use
 
-class Animal(ABC):
+
+class Animal:
     params = {
         'w_birth': None,
         'sigma_birth': None,
