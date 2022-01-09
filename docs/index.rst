@@ -14,7 +14,8 @@ This is a simulation of
    :maxdepth: 2
    :caption: Contents:
 
-
+   sim_and_island
+   landscapes_and_animals
 
 Indices and tables
 ==================
