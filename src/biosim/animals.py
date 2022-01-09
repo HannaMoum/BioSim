@@ -187,14 +187,11 @@ class Animal:
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
         r = random.uniform(0, 1)
 
-        # Fertilization takes place
         fertilization = r < probability
 
-        # Checking weight
         weight_check = self.weight > self.params['zeta'] * \
                  (self.params['w_birth'] + self.params['sigma_birth'])
 
-        # Wight of newborn
         birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
         maternal_health = self.weight > birth_weight * self.params['xi']
