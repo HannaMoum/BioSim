@@ -1,9 +1,10 @@
 """ Landscape class with subclasses
 """
-from .animals import Animal
-from .animals import Carnivore
+from animals import Animal, Herbivore, Carnivore
+#from animals import Animal
+#from animals import Carnivore
 from itertools import chain
-from .animals import Herbivore
+#from animals import Herbivore
 #TODO: Importing does not work. Fix it
 
 # TODO: When finished check that all method names are correct when overriding
