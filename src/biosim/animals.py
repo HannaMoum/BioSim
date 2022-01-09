@@ -6,6 +6,8 @@ from abc import ABC, abstractmethod #Remove unless in use
 
 
 class Animal:
+    """Animal with corresponding characteristics and traits for different species."""
+
     params = {
         'w_birth': None,
         'sigma_birth': None,
@@ -53,7 +55,7 @@ class Animal:
 
 
     def __init__(self, age, weight):
-        """Legg til doc-string."""
+        """Create Animal species with age and weight."""
 
         self._age = age
         self._weight = weight
