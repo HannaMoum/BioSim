@@ -72,15 +72,20 @@ class Landscape:
         prey_order = sorted(self.herb_pop, key=lambda x: x.fitness) #Sorting hebrivores
 
         for hunter in hunting_order:
-            hunter.F_tilde = 0
+            hunter.F_tilde = 0 #TODO; Check better options
             for prey in prey_order:
-                if prey.alive:
-                    if hunter.hungry:
-                        if Lowland.hunting_success(prey.fitness,
-                                                   hunter.fitness,
-                                                   Params.DeltaPhiMax):  # hunter.params['DeltaPhiMax']
+
+                while hunter.hungry():
+                    if hunter.probability_to_kill(prey.fitness):
+
+
+
+                        #if Lowland.hunting_success(prey.fitness,
+                        #                           hunter.fitness,
+                        #                           Params.DeltaPhiMax):  # hunter.params['DeltaPhiMax']
                             hunter.eat(prey.weight)
                             prey.alive = False
+                #need to remove herbivores from its' population
 
         remaining_prey = []
         for herbivore in prey_order:
