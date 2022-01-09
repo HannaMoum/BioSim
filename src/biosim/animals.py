@@ -1,4 +1,4 @@
-""" Implements Animal model for subspecies."""
+""" Implements Animal model used by subspecies."""
 
 import math
 import random
@@ -33,13 +33,18 @@ class Animal:
 
         Parameters
         ----------
-        new_params: dict
-            Legal keys: ''
-            (Optional?)
+        new_params: dict, optional
+            Legal keys: 'w_birth', 'sigma_birth', 'beta',
+                        'eta', 'a_half', 'phi_age', 'w_half',
+                        'phi_weight', 'mu', 'gamma', 'zeta',
+                        'xi', 'omega', 'F',' 'DeltaPhiMax'
 
         Raises
         -------
-        ValueError, KeyError
+        ValueError
+            Parameter value is negative
+        KeyError
+            Parameter key is not a Legal key
         """
 
         if not all(value >= 0 for value in new_params.values()):
@@ -55,8 +60,25 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, age, weight):
-        """Create Animal species with age and weight."""
+        """
+        Create Animal species with age and weight.
 
+        Parameters
+        ----------
+        age: int
+            Age of animal
+        weight: int or float
+            Weight of animal
+
+        Attributes
+        ----------
+        fitness
+        F_tilde
+
+        Returns
+        -------
+
+        """
         self._age = age
         self._weight = weight
 
