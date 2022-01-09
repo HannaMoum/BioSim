@@ -4,9 +4,10 @@ from animals import Animal, Herbivore, Carnivore
 from itertools import chain
 import random
 
-#TODO: Relative importing does not work. Fix it
-
+# TODO: Relative importing does not work. Fix it
 # TODO: When finished check that all method names are correct when overriding
+
+
 class Landscape:
     params = {
         'f_max': None
@@ -252,8 +253,5 @@ class Water(Landscape):
     def add_animal(self, added_pop):
         raise AttributeError('Cannot place animals in Water landscape')
         # TODO: Figure out what correct error will be
-###############################
-a = Water()
-a.grassing()
 
-print(a._fodder)
+
