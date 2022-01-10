@@ -391,7 +391,6 @@ class Carnivore(Animal):
         --------
         :py:meth:`.eat`: for eating procedure. Takes :math:`\mathtt{herb\_weight}` as input.
 
-
         Parameters
         ----------
         herb_fitness: `float`
@@ -401,11 +400,12 @@ class Carnivore(Animal):
 
         Returns
         -------
-
+        `bool`
+            True if carnivore kills, otherwise False.
         """
         if self.hungry():
             if self.probability_to_kill(herb_fitness):
-                self.eat(herb_weight)  # self.F_tilde grows
+                self.eat(herb_weight)
                 return True
             else:
                 return False
