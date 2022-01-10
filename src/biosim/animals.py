@@ -162,7 +162,7 @@ class Animal:
         """
         Animal gains weight from eating.
 
-        Animal will always eat until satisfied (parameter `F`) or eat **food_available**.
+        Animal will always eat until satisfied (parameter `F`) or eat :math:`\mathtt{food\_available}`.
         Weight increases by `Food eaten` :math:`* \\beta`.
 
         Parameters
@@ -217,7 +217,7 @@ class Animal:
         Returns
         -------
         birth_weight: `float` or `bool`
-            Return birth weight of animal if birth take place, otherwise return false.
+            Return birth weight of animal if birth take place, otherwise return False.
         """
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
         r = random.uniform(0, 1)
@@ -252,7 +252,7 @@ class Animal:
 
         Returns
         -------
-        newborn: `obj` or `None`
+        newborn: `obj` or None
             Class instance for the newborn animal if parent gives birth, otherwise None.
         """
         birth_weight = self.probability_to_give_birth(number_of_animals)
@@ -272,10 +272,17 @@ class Animal:
     def probability_of_death(self):
         """
         Decide whether animal dies.
+
+        Notes
+        -----
+        An animal dies:
+            #. from starvation if its' weight is zero
+            #. from sickness with probability :math:`\omega(1-\Phi)`
+
         Returns
         -------
-        bool
-            True if animal dies.
+        `bool`
+            True if animal dies, otherwise False.
         """
         starvation = self.weight <= 0
 
