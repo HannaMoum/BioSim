@@ -57,7 +57,7 @@ class Landscape:
 
 
     @classmethod
-    def set_params(cls, new_params): # TODO: Må endres
+    def set_params(cls, new_params):
         """
         Function to edit paramteres
         new_params: Dict
@@ -65,7 +65,6 @@ class Landscape:
         new_params = {'f_max': {'Highland': 200.0}}
         Landscape.set_params({'f_max': {'Highland': params['f_max']}})
         """
-        #Should this be run for every simulation? If so, params should be default...
         if 'f_max' in new_params:
             value_dict = new_params['f_max']
             if 'Highland' in value_dict:
