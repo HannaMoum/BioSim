@@ -163,7 +163,7 @@ class Animal:
         Animal gains weight from eating.
 
         Animal will always eat until satisfied (parameter `F`) or eat **food_available**.
-        Weight increase by `Food eaten` :math:`* \\beta`.
+        Weight increases by `Food eaten` :math:`* \\beta`.
 
         Parameters
         ----------
@@ -238,7 +238,10 @@ class Animal:
 
     def giving_birth(self, species, number_of_animals):
         """
-        Animals give birth if necessary requirements are met.
+        Animal gives birth and loses weight.
+
+        Animal gives birth if requirements from :py:meth:`.probability_to_give_birth` are met.
+        Weight decreases by newborn's weight :math:`* \\xi`
 
         Parameters
         ----------
@@ -249,10 +252,9 @@ class Animal:
 
         Returns
         -------
-        object
-            newborn animal if mother gives birth.
+        newborn: `obj` or `None`
+            Class instance for the newborn animal if parent gives birth, otherwise None.
         """
-
         birth_weight = self.probability_to_give_birth(number_of_animals)
 
         if birth_weight:
