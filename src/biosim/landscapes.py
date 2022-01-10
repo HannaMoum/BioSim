@@ -66,7 +66,13 @@ class Landscape:
         self._carn_pop = value
 
     def grassing(self):
-        """Feed all herbivores and adjust available fodder."""
+        """Feed all herbivores and adjust available fodder.
+
+        Notes
+        -----
+        Herbivores eat in order of fitness until everyone is satisfied
+        or no more fodder is available.
+        """
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
             herbivore.F_tilde = 0
             eaten = herbivore.eat(self.fodder)
@@ -76,7 +82,13 @@ class Landscape:
                 break
 
     def hunting(self):
-        """ Carnivores hunting
+        """Carnivores hunt herbivores.
+
+        Adjust population of herbivores.
+
+        See Also
+        --------
+        :py:meth:`.killing`, :py:meth:`.probability_to_kill`
         """
         hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
         prey_order = sorted(self.herb_pop, key=lambda x: x.fitness)
