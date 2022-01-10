@@ -11,6 +11,8 @@ import random
 class Landscape:
     """A landscape with corresponding characteristics and traits for different terrains.
 
+    Notes
+    ------
     Implemented terrains are: :py:class:`.Lowland`, :py:class:`.Highland`,
     :py:class:`.Desert` and :py:class:`.Water`. #Move to Sphinx doc(?)
 

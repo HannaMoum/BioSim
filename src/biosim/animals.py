@@ -8,6 +8,8 @@ from abc import ABC, abstractmethod  # Remove unless in use
 class Animal:
     """Animal with corresponding characteristics and traits for different species.
 
+    Notes
+    ------
     Implemented species are :py:class:`.Herbivore` and :py:class:`.Carnivore`. #Move to Sphinx doc(?)
 
     Parameters
