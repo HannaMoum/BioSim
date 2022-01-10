@@ -69,22 +69,16 @@ class Landscape:
         for hunter in hunting_order:
             hunter.F_tilde = 0
 
-            # Shortened this code into a list comprehension. Only disadvantage; cannot include break (I think)
-            # But much more eye-pleasing
-            survivors = [prey for prey in prey_order if hunter.hungry
-                         if not hunter.killing(prey.fitness, prey.weight)]
+            survivors = []
+            for prey in prey_order:
+                if hunter.hungry:  # Could add hungry inside killing method
+                    if not hunter.killing(prey.fitness, prey.weight):
+                        survivors.append(prey)
+                else:
+                    survivors.append(prey)
 
             self.herb_pop = survivors
 
-            # Nested code:
-            #survivors = []
-            # for prey in prey_order:
-            #     if hunter.hungry():
-            #         if not hunter.killing(prey.fitness, prey.weight):  #prey.weight = food_available
-            #             survivors.append(prey)
-            #             self.herb_pop = survivors
-            #     else:
-            #         break  # Moves to next hunter
 
     def give_birth(self):
         """
