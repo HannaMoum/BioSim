@@ -100,9 +100,9 @@ class Animal:
     @staticmethod
     def check_integer(value):
         """Command a value to be an integer type."""
-        #if not type(value) == int:
-        if not isinstance(value, int):
+        if not float(value).is_integer():  # Must convert to float to work for integers.
             raise ValueError('Value must be integer')
+            # Does not raise correct error if value cannot be converted to float
 
     @property
     def age(self):
@@ -348,6 +348,17 @@ class Carnivore(Animal):
         return probability > r
 
     def killing(self, herb_fitness, herb_weight):
+        """
+        Sentence
+        Parameters
+        ----------
+        herb_fitness:
+        herb_weight: float
+
+        Returns
+        -------
+
+        """
         if self.hungry():
             if self.probability_to_kill(herb_fitness):
                 self.eat(herb_weight)  # self.F_tilde grows
