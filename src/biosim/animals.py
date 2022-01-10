@@ -20,10 +20,6 @@ class Animal:
         The animal's weight.
     """
 
-    #In Docstring: Summarize behaviour, (list public mthods?)
-    # Should possibly list class-level variales here.
-    # We cover instance variables in __init__
-
     # dict: Parameter values for calculations
     params = {
         'w_birth': None,
@@ -42,7 +38,6 @@ class Animal:
         'F': None,
         'DeltaPhiMax': None
     }
-
 
     @classmethod
     def set_params(cls, new_params):
@@ -78,14 +73,9 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, age, weight):
-        """
-        Create Animal species with age and weight.
-        """
         self._age = age
         self._weight = weight
-
-        # Property for mengde som dyret har spist. #TODO: Change name
-        self._F_tilde = 0
+        self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
 
     @staticmethod
     def check_positive(value):
@@ -135,11 +125,29 @@ class Animal:
 
     @property
     def fitness(self):
-        """The animal's fitness (`float`, read-only)."""
+        """The animal's fitness (`float`, read-only).
+
+        Notes
+        ------
+        The fitness is calculated using formula:
+
+        .. math::
+            \Phi = \\begin{cases}
+                0  & w {\\leq} 0
+                \\\ q^+(a, a_{\\frac{1}{2}}, \phi_{age}) * \
+                    q^-(w, w_{\\frac{1}{2}},\phi_{weight}) & else
+            \\end{cases}
+
+        where a = age, w = weight and
+
+        .. math::
+            q^{\\pm}(x, x_{\\frac{1}{2}}, \phi) = \
+            {\\frac{1}{1+e^{\\pm\phi(x-x_{\\frac{1}{2}})}}}
+
+        For more information see :py:obj:`.params`. #TODO: Change when parameters are updated.
+        """
 
         def q(sgn, x, x_half, phi):
-            """Should this contain documentation?
-            """
             return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 
         if self.weight <= 0:
