@@ -190,7 +190,7 @@ class Animal:
     def age_and_weightloss(self):
         """Age animal by one year and lose weight.
 
-        Weight reduces by factor :math:`\\eta`.
+        Weight reduces by factor :math:`\eta`.
         """
         self.age += 1
         self.weight -= self.weight * self.params['eta']
@@ -207,7 +207,33 @@ class Animal:
 
         Notes
         ------
-        #todo: ADD NOTES AND PROBABILITY FORMULAS
+        The probability to give birth is
+
+        .. math::
+
+            min(1, \gamma * \Phi * (N-1)).
+
+        The probability is zero if:
+
+        .. math::
+
+             N &= 1
+
+             &or
+
+             w < \zeta(&w_{birth} + \sigma_{birth})
+
+        where
+        :math:`\Phi` is the animal's :py:attr:`.fitness`, :math:`w` the :py:attr:`.weight`,\
+         and N is :math:`\mathtt{numer\_of\_animals}`
+
+        At birth, the mother loses :math:`\\xi` times the birthweight of the baby.
+        If this is more than her own weight, no baby is born and mother's weight remain unchanged.
+
+        Gender plays no role in mating.
+        Each animal can give birth to at most one offspring every year.
+
+        For more information see :py:obj:`.params`. #TODO: Change when parameters are updated.
 
         Parameters
         ----------
@@ -241,7 +267,7 @@ class Animal:
         Animal gives birth and loses weight.
 
         Animal gives birth if requirements from :py:meth:`.probability_to_give_birth` are met.
-        Weight decreases by newborn's weight :math:`* \\xi`
+        Weight decreases by newborn's weight :math:`*\\xi`
 
         Parameters
         ----------
