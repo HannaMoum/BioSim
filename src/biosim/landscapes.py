@@ -133,11 +133,15 @@ class Landscape:
         pass
 
     def aging(self):
-        """
-        All animals turn one year older and looses weight.
+        """Age all animals by one year.
+
+        See Also
+        --------
+        :py:meth:`.age_and_weightloss`: Relationship
         """
         for animal in chain(self.herb_pop, self.carn_pop):
             animal.age_and_weightloss()
+
 
     def death(self):
         """
