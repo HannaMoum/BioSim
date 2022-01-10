@@ -382,11 +382,22 @@ class Carnivore(Animal):
 
     def killing(self, herb_fitness, herb_weight):
         """
-        Sentence
+        Carnivore kills herbivore and eats it.
+
+        Carnivore kills if requirements from :py:meth:`.probability_to_kill` are met,
+        and if carnivore is :py:meth:`.hungry`.
+
+        See Also
+        --------
+        :py:meth:`.eat`: for eating procedure. Takes :math:`\mathtt{herb\_weight}` as input.
+
+
         Parameters
         ----------
-        herb_fitness:
-        herb_weight: float
+        herb_fitness: `float`
+            Fitness of herbivore
+        herb_weight: `float`
+            Weight of herbivore
 
         Returns
         -------
