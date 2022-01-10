@@ -124,7 +124,7 @@ class Landscape:
 
         # TODO: Make absolutely sure this is necessary (again)
         if herb_babies:
-            self.herb_pop += herb_babie
+            self.herb_pop += herb_babies
         if carn_babies:
             self.carn_pop += carn_babies
 
