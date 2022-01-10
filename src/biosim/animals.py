@@ -203,7 +203,7 @@ class Animal:
 
     def probability_to_give_birth(self, number_of_animals):
         """
-        Calculate the animal's probability to give birth.
+        Decide the animal's probability to give birth.
 
         Notes
         ------
@@ -338,16 +338,34 @@ class Carnivore(Animal):
         """
         Decide whether carnivore is hungry.
 
+        Carnivore is satisfied when it has eaten amount `F` (parameter). #TODO: fix parameters
+
         Returns
         -------
-        bool
-            True of carnivore is hungry
+        `bool`
+            True if carnivore is hungry, False otherwise.
         """
         return self.F_tilde < self.params['F']
 
     def probability_to_kill(self, herb_fitness):
-        """ Deciding whether or not a carnivore will kill the current Herbivore it is hunting"""
+        """
+        Decide the carnivore's probability to kill a herbivore.
 
+        Notes
+        ------
+        #TODO: Equations
+
+        Parameters
+        ----------
+        herb_fitness: `float`
+            Fitness of the herbivore the carnivore is currently hunting.
+
+        Returns
+        -------
+        `bool`
+            True if the killing can take place, otherwise False.
+
+        """
         r = random.uniform(0, 1)
         fitness_diff = self.fitness - herb_fitness
 
