@@ -92,7 +92,7 @@ class Animal:
 
     @property
     def age(self):
-        """The animal's age (`int`)
+        """The animal's age (`int`).
 
         A whole, positive number."""
         return self._age
@@ -138,7 +138,7 @@ class Animal:
                     q^-(w, w_{\\frac{1}{2}},\phi_{weight}) & else
             \\end{cases}
 
-        where a = age, w = weight and
+        where a and w is the animal's age and weight respectively, and
 
         .. math::
             q^{\\pm}(x, x_{\\frac{1}{2}}, \phi) = \
@@ -160,11 +160,21 @@ class Animal:
 
     def eat(self, food_available):
         """
-        Function that makes the animal eat. First step is to check if any fodder/food is available.
-        beta*F_tilde
-        F_tilde = det som blir spist
+        Animal eats and gains weight.
+
+        Animal will always eat until satisfied (parameter `F`) or eat **food_available**.
+        Weight gain is calculated by food_eaten :math:`* \\beta`.
+
+        Parameters
+        ----------
+        food_available: `int` or `float`
+            Fodder in current terrain or weight of killed herbivore.
+        Returns
+        -------
+        `int` or `float`
+            Food eaten
         """
-        wanted_food = self.params['F'] - self.F_tilde  # Hvor mye plass det er i magen
+        wanted_food = self.params['F'] - self.F_tilde
         # Only necessary for Carnivores
 
         if food_available >= wanted_food:
