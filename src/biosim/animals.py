@@ -188,7 +188,10 @@ class Animal:
         return eaten  # Only necessary for Herbivores
 
     def age_and_weightloss(self):
-        """Age animal by 1 year and loose weight."""
+        """Age animal by 1 year and loose weight
+
+        Weight reduces by factor :math:`\\eta`.
+        """
         self.age += 1
         self.weight -= self.weight * self.params['eta']
 
