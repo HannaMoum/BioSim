@@ -110,25 +110,21 @@ class Landscape:
         self.herb_pop = prey_order
 
     def give_birth(self):
+        """For each animal giving birth, update population.
+
+        See Also
+        --------
+        :py:meth:`.giving_birth`, :py:meth:`.probability_to_give_birth`
         """
-        Every herbivore tries to give birth.
-        Expanding self.herb_pop with the new population after all animals have given birth.
-
-        (We might want to adjust the names, and the probability_to_give_birth/giving_birth in Herbivores class,
-        for a better code)
-
-        """
-
         herb_babies = [newborn for individual in self.herb_pop if
                        (newborn := individual.giving_birth('Herbivore', len(self.herb_pop)))]
 
         carn_babies = [newborn for individual in self.carn_pop if
                        (newborn := individual.giving_birth('Carnivore', len(self.carn_pop)))]
 
-        #if len(herb_babies) > 0:  # TODO: Make absolutely sure this is necessary (again)
-        if herb_babies:  # Implementing PEP8 rules. Empty list are False
-            self.herb_pop += herb_babies
-        #if len(carn_babies) > 0:
+        # TODO: Make absolutely sure this is necessary (again)
+        if herb_babies:
+            self.herb_pop += herb_babie
         if carn_babies:
             self.carn_pop += carn_babies
 
