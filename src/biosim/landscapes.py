@@ -144,8 +144,11 @@ class Landscape:
 
 
     def death(self):
-        """
-        Kill herbivores and adjust self.herb_pop to only contain the living
+        """Remove dying animals.
+
+        See Also
+        --------
+        :py:meth:`probability_of_death`
         """
         def alive(species):
             return [individual for individual in species if not individual.probability_of_death()]
