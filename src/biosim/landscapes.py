@@ -35,7 +35,7 @@ class Landscape:
 
     @property
     def herb_pop(self):
-        """Population of herbivores in current landscape (`list` of :py:class:`.Herbivore`)."""
+        """Population of herbivores in current landscape (`list` of :py:class:`.animals.Herbivore`)."""
         return self._herb_pop
 
     @herb_pop.setter
@@ -44,7 +44,7 @@ class Landscape:
 
     @property
     def carn_pop(self):
-        """Population of carnivores in current landscape (`list` of :py:class:`.Carnivore`)."""
+        """Population of carnivores in current landscape (`list` of :py:class:`.animals.Carnivore`)."""
         return self._carn_pop
 
     @carn_pop.setter
