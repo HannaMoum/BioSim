@@ -164,18 +164,23 @@ class Landscape:
         self.fodder = self.params['f_max'] #TODO: Include parameters
 
     def add_animal(self, added_pop):
-        """ Function adding animals to landscape-object.
-            Adding animals will be done initially and optionally mid-sim during break.
+        """Add animals to current location.
 
-            Input: List of dictionaries as in;
-             [{'species': 'Herbivore',
-                'age': 10, 'weight': 12.5},
-            {'species': 'Herbivore',
-                'age': 9, 'weight': 10.3}]
+        Parameters
+        ----------
+        added_pop: `list` of `dict`
+            Added population of chosen species in current location.
 
-            Source url for finding all subclass names (read 08.01):
-            https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
+        Raises
+        -------
+        TypeError
+            Added animal does not exist.
 
+        References
+        ----------
+        [1]_ https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name
+        (read 08.01)
+        """
         for animal in added_pop:
             age = animal['age']
             weight = animal['weight']
