@@ -1,6 +1,8 @@
 import textwrap
 from world import BioSim_param, BioSim, Graphics_param, Graphics
 import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
 if __name__ == '__main__':
     plt.ion()
@@ -20,20 +22,20 @@ if __name__ == '__main__':
                 WWWWWWWWWWWWWWWWWWWWW"""
     geogr = textwrap.dedent(geogr)
 
-    ini_herbs = [{'loc': (10, 10),
+    ini_herbs = [{'loc': (9, 9),
                 'pop': [{'species': 'Herbivore',
                 'age': 5,
                 'weight': 20}
                 for _ in range(150)]}]
 
-    ini_carns = [{'loc': (10, 10),
+    ini_carns = [{'loc': (9, 9),
                 'pop': [{'species': 'Carnivore',
                 'age': 5,
                 'weight': 20}
                 for _ in range(40)]}]
 
 
-    sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
+    sim = BioSim(island_map=geogr, ini_pop=ini_herbs+ini_carns,
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                 'age': {'max': 60.0, 'delta': 2},
@@ -43,25 +45,36 @@ if __name__ == '__main__':
 
     #print(sim.island_map)
     #print(graf.island_plot)
-    graf.plot_island_map()
+    #graf.plot_island_map()
 
 
     sim.simulate()
-    #print(sim.yearly_population)
-    #graf.plot_population_development(sim.yearly_population)
-    # print(len(sim.island_map_objects[9, 9].herb_pop), end = ' ')
-    # print(len(sim.island_map_objects[9, 9].carn_pop))
+
+    def size_herb_pop(location):
+        """Location er et landskaps-objekt i objekt-kartet, en rute. """
+        return len(location.herb_pop)
+
+    def size_carn_pop(location):
+        return len(location.carn_pop)
+
+    def make_property_map(fx):
+        property_map = np.empty(sim.island_map.shape, dtype=float)
+        vget_property = np.vectorize(fx)
+        property_map[:, :] = vget_property(sim.island_map_objects)
+        return property_map
+
+    herb_pop_map = make_property_map(size_herb_pop)
+    carn_pop_map = make_property_map(size_carn_pop)
 
 
-    #print(sim.island_map_objects[7,10].herb_pop[0].migration_direction())
-    location = sim.island_map_objects[9,9]
-    print(location.landscape_type)
-    print(location.herb_pop[-1].age)
-    print(location.herb_pop[-1].F_tilde)
-    location.fodder = 0
-    print(location.fodder)
-    location.regrowth()
-    print(location.fodder)
+
+    sns.heatmap(herb_pop_map, annot = True, cmap = 'Greens')
+    #sns.heatmap(carn_pop_map, annot = True, cmap = 'Reds')
+    plt.show()
+
+
+
+
 
 
 

@@ -24,8 +24,38 @@ class BioSim(BioSim_param):
         self._yearly_population = []
 
     @property
+    def island_map(self):
+        return self._island_map
+
+    @property
+    def island_map_objects(self):
+        return self._island_map_objects
+
+    @property
     def yearly_population(self):
         return self._yearly_population
+
+    def make_island_map(self, island_map):
+        """Lager kartet som inneholder bokstaver for hver landskapstype ut i fra den geogr-strengen som kommer inn"""
+        if self.validate_island_map(island_map): # Denne gir kun true enn så lenge.
+            island_map_list = list(island_map.split('\n')) # Lager en liste av geogr-strengen som kommer inn ved å splitte på new-line.
+            row, col = len(island_map_list), len(island_map_list[0]) # Antall rader = antall elementer i lista, antall kolonner = lengden av den første raden
+            _build_map = np.empty(shape=(row, col), dtype='str') # Lager tom np.array som skal fylles med bokstaver for hvert landskap
+
+            for row_index, row_string in enumerate(island_map_list): # Går gjennom hver rad
+                for col_index, codes_for_landscape_types in enumerate(row_string): # Går gjennom hver kolonne (elementene i raden)
+                    _build_map[row_index, col_index] = codes_for_landscape_types  # Leser bokstaven inn i riktig posisjon i arrayen.
+
+            return _build_map
+
+    def make_island_map_objects(self):
+        """Denne lager kartet med objekt referanser for hvert landskap basert på island_map"""
+        _island_map_objects = np.empty(self.island_map.shape, dtype='object')
+        vLandscape = np.vectorize(Landscape)
+        _island_map_objects[:,:] = vLandscape(self.island_map)
+
+        return _island_map_objects
+
 
     def add_to_yearly_population(self, value):
         self._yearly_population.append(value)
@@ -41,70 +71,88 @@ class BioSim(BioSim_param):
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landskapsobjekt = element.item()
+                current_row, current_col = it.multi_index
 
-                lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                if landskapsobjekt.landscape_type != 'W': # Sjekker at vi står på noe annet enn vann
-                    row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er
-                    if self.island_map[row-1, col] != 'W':
-                        lovlige_retninger.append((-1, 0))
-                    if self.island_map[row+1, col] != 'W':
-                        lovlige_retninger.append((1,0))
-                    if self.island_map[row, col-1] != 'W':
-                        lovlige_retninger.append((0, -1))
-                    if self.island_map[row, col+1] != 'W':
-                        lovlige_retninger.append((0, 1))
+                if landskapsobjekt.herb_pop !=[]:
+                    lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
+                    if landskapsobjekt.landscape_type != 'W': # Sjekker at vi står på noe annet enn vann
+                        row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er
+                        if self.island_map[row-1, col] != 'W':
+                            lovlige_retninger.append((-1, 0))
+                        if self.island_map[row+1, col] != 'W':
+                            lovlige_retninger.append((1,0))
+                        if self.island_map[row, col-1] != 'W':
+                            lovlige_retninger.append((0, -1))
+                        if self.island_map[row, col+1] != 'W':
+                            lovlige_retninger.append((0, 1))
 
-                moved = []
-                for herbivore in landskapsobjekt.herb_pop:
-                    new_row, new_col = herbivore.migration_direction()
-                    if (new_row, new_col) in lovlige_retninger:
-                        self.island_map_objects[new_row, new_col].herb_pop.append(herbivore)
-                        moved.append(herbivore)
-                        herbivore.has_migrated = True
+                    moved = []
+                    for herbivore in landskapsobjekt.herb_pop:
+                        if not herbivore.has_migrated:
+                            row_direction, col_direction = herbivore.migration_direction()
+                            if (row_direction, col_direction) in lovlige_retninger:
+                                new_row = current_row+row_direction
+                                new_col = current_col+col_direction
 
-                for herbivore in moved:
-                    landskapsobjekt.herb_pop.remove(herbivore)
+                                self.island_map_objects[new_row, new_col].herb_pop.append(herbivore)
 
+                                moved.append(herbivore)
+                                herbivore.has_migrated = True
 
-    def create_herb_list(self):
-        # Turning initial list of information into list of Herbivores
-        # NOW: Assuming we only have herbivores
-        herb_list = []
-        for animal in self.ini_pop:
-            if animal['species'] == 'Herbivore':
-                herb_list.append(Herbivore(animal['age'], animal['weight']))
-        return herb_list
+                    for herbivore in moved:
+                        landskapsobjekt.herb_pop.remove(herbivore)
 
+                if landskapsobjekt.carn_pop != []:
+                    lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
+                    if landskapsobjekt.landscape_type != 'W':  # Sjekker at vi står på noe annet enn vann
+                        row, col = it.multi_index  # Blir en tuple, med lokasjon på hvor vi er
+                        if self.island_map[row - 1, col] != 'W':
+                            lovlige_retninger.append((-1, 0))
+                        if self.island_map[row + 1, col] != 'W':
+                            lovlige_retninger.append((1, 0))
+                        if self.island_map[row, col - 1] != 'W':
+                            lovlige_retninger.append((0, -1))
+                        if self.island_map[row, col + 1] != 'W':
+                            lovlige_retninger.append((0, 1))
 
-    def simulate(self, num_years = 10, vis_years = 1):
-        # --------------------------------------------------------------
-        print(len(self.island_map_objects[9, 9].herb_pop), end=' ')
-        print(len(self.island_map_objects[9, 9].carn_pop))
-        # --------------------------------------------------------------
+                    moved = []
+                    for carnivore in landskapsobjekt.carn_pop:
+                        if not carnivore.has_migrated:
+                            row_direction, col_direction = carnivore.migration_direction()
 
+                            if (row_direction, col_direction) in lovlige_retninger:
+                                new_row = current_row + row_direction
+                                new_col = current_col + col_direction
+
+                                self.island_map_objects[new_row, new_col].carn_pop.append(carnivore)
+
+                                moved.append(carnivore)
+                                carnivore.has_migrated = True
+
+                    for carnivore in moved:
+                        landskapsobjekt.carn_pop.remove(carnivore)
+
+    def simulate(self, num_years = 50, vis_years = 1):
         for year in range(num_years):
-            # --------------------------------------------------------------
-            print(len(self.island_map_objects[9, 9].herb_pop), end=' ')
-            print(len(self.island_map_objects[9, 9].carn_pop))
-            # --------------------------------------------------------------
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     location = element.item()
                     if location.landscape_type in 'LH':
                         location.regrowth()
-                        #location.grassing()
+                        location.grassing()
                     if location.landscape_type in 'LHD':
+                        location.hunting()
                         pass
-                        #location.hunting()
-            #self.migration_preparation()
-            #self.migration()
+
+            self.migration_preparation()
+            self.migration()
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     location = element.item()
                     if location.landscape_type in 'LHD':
-                        #location.give_birth()
-                        #location.aging()
-                        #location.death()
+                        location.give_birth()
+                        location.aging()
+                        location.death()
                         self.add_to_yearly_population(len(location.herb_pop)) # Dette er bare en dumy property.
 
 
@@ -113,35 +161,7 @@ class BioSim(BioSim_param):
         # Raises value error if rules broken.
         # Returns True if all OK.
 
-    def make_island_map(self, island_map):
-        if self.validate_island_map(island_map):
-            island_map_list = list(island_map.split('\n'))
-            row, col = len(island_map_list), len(island_map_list[0])
-            _build_map = np.empty(shape=(row, col), dtype='str')
-
-            for row_index, row_string in enumerate(island_map_list):
-                for col_index, codes_for_landscape_types in enumerate(row_string):
-                    _build_map[row_index, col_index] = codes_for_landscape_types  # Leser bokstaven inn i riktig posisjon i arrayen.
-
-            return _build_map
-
-    @property
-    def island_map(self):
-        return self._island_map
-
-    def make_island_map_objects(self):
-        """Denne lager kartet med objekt referanser for hvert landskap basert på island_map"""
-        _island_map_objects = np.empty(self.island_map.shape, dtype='object')
-        vLandscape = np.vectorize(Landscape)
-        _island_map_objects[:,:] = vLandscape(self.island_map)
-
-        return _island_map_objects
-
-    @property
-    def island_map_objects(self):
-        return self._island_map_objects
-
-    def validate_init_population(ini_pop, landscape_map):
+    def validate_init_population(self, ini_pop):
         pass
 
     def init_population(self, ini_pop):

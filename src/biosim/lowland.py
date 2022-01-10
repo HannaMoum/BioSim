@@ -38,6 +38,8 @@ class Landscape:
         """
         self._landscape_type = landscape_type
 
+
+
         if self.landscape_type == 'H':
             self.f_max = self.params['f_max']['Highland']
         elif self.landscape_type == 'L':
@@ -92,8 +94,6 @@ class Landscape:
         self._carn_pop = value
 
 
-
-
     def grassing(self):
         """
         Function handling the animals eating in correct order
@@ -103,6 +103,8 @@ class Landscape:
             herbivore.F_tilde = 0
             eaten = herbivore.eat(self.fodder) # Her returneres måltid, dvs. det de har spist
             self.fodder -= eaten
+
+
 
             if self.fodder <= 0:
                 break
@@ -139,8 +141,8 @@ class Landscape:
                 if prey.alive:
                     if hunter.hungry:
                         if Landscape.hunting_success(prey.fitness,
-                                                           hunter.fitness,
-                                                           Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
+                                                            hunter.fitness,
+                                                            Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
                                     hunter.eat(prey.weight)
                                     prey.alive = False
 
@@ -206,6 +208,7 @@ class Landscape:
         """
         alive_herbs = [animal for animal in self.herb_pop if not animal.probability_of_death()]
         alive_carns = [animal for animal in self.carn_pop if not animal.probability_of_death()]
+
         self.herb_pop = alive_herbs
         self.carn_pop = alive_carns
 
