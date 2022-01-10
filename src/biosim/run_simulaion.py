@@ -41,14 +41,8 @@ if __name__ == '__main__':
                 'age': {'max': 60.0, 'delta': 2},
                 'weight': {'max': 60, 'delta': 2}},
                 )
-    graf = Graphics(sim.island_map)
 
-    #print(sim.island_map)
-    #print(graf.island_plot)
-    #graf.plot_island_map()
-
-
-    sim.simulate()
+    sim.simulate(num_years=30)
 
     def size_herb_pop(location):
         """Location er et landskaps-objekt i objekt-kartet, en rute. """
@@ -66,11 +60,19 @@ if __name__ == '__main__':
     herb_pop_map = make_property_map(size_herb_pop)
     carn_pop_map = make_property_map(size_carn_pop)
 
+    graf = Graphics(sim.island_map)
+    graf.plot_island_map()
 
 
-    sns.heatmap(herb_pop_map, annot = True, cmap = 'Greens')
-    #sns.heatmap(carn_pop_map, annot = True, cmap = 'Reds')
-    plt.show()
+    def show_herb_pop():
+        sns.heatmap(herb_pop_map, annot = True, cmap = 'Greens')
+        plt.show()
+    def show_carn_pop():
+        sns.heatmap(carn_pop_map, annot = True, cmap = 'Reds')
+        plt.show()
+
+    show_herb_pop()
+    show_carn_pop()
 
 
 

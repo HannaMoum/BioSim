@@ -21,7 +21,7 @@ class BioSim(BioSim_param):
         self._island_map = self.make_island_map(island_map)
         self._island_map_objects = self.make_island_map_objects()
         self._ini_pop = self.init_population(ini_pop)
-        self._yearly_population = []
+
 
     @property
     def island_map(self):
@@ -31,9 +31,6 @@ class BioSim(BioSim_param):
     def island_map_objects(self):
         return self._island_map_objects
 
-    @property
-    def yearly_population(self):
-        return self._yearly_population
 
     def make_island_map(self, island_map):
         """Lager kartet som inneholder bokstaver for hver landskapstype ut i fra den geogr-strengen som kommer inn"""
@@ -57,9 +54,6 @@ class BioSim(BioSim_param):
         return _island_map_objects
 
 
-    def add_to_yearly_population(self, value):
-        self._yearly_population.append(value)
-
     def migration_preparation(self):
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
@@ -75,15 +69,15 @@ class BioSim(BioSim_param):
 
                 if landskapsobjekt.herb_pop !=[]:
                     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                    if landskapsobjekt.landscape_type != 'W': # Sjekker at vi står på noe annet enn vann
+                    if landskapsobjekt.is_migratable: # Sjekker at vi står på noe annet enn vann
                         row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er
-                        if self.island_map[row-1, col] != 'W':
+                        if self.island_map_objects[row-1, col].is_migratable:
                             lovlige_retninger.append((-1, 0))
-                        if self.island_map[row+1, col] != 'W':
+                        if self.island_map_objects[row+1, col].is_migratable:
                             lovlige_retninger.append((1,0))
-                        if self.island_map[row, col-1] != 'W':
+                        if self.island_map_objects[row, col-1].is_migratable:
                             lovlige_retninger.append((0, -1))
-                        if self.island_map[row, col+1] != 'W':
+                        if self.island_map_objects[row, col+1].is_migratable:
                             lovlige_retninger.append((0, 1))
 
                     moved = []
@@ -104,15 +98,15 @@ class BioSim(BioSim_param):
 
                 if landskapsobjekt.carn_pop != []:
                     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                    if landskapsobjekt.landscape_type != 'W':  # Sjekker at vi står på noe annet enn vann
+                    if landskapsobjekt.is_migratable:  # Sjekker at vi står på noe annet enn vann
                         row, col = it.multi_index  # Blir en tuple, med lokasjon på hvor vi er
-                        if self.island_map[row - 1, col] != 'W':
+                        if self.island_map_objects[row - 1, col].is_migratable:
                             lovlige_retninger.append((-1, 0))
-                        if self.island_map[row + 1, col] != 'W':
+                        if self.island_map_objects[row + 1, col].is_migratable:
                             lovlige_retninger.append((1, 0))
-                        if self.island_map[row, col - 1] != 'W':
+                        if self.island_map_objects[row, col - 1].is_migratable:
                             lovlige_retninger.append((0, -1))
-                        if self.island_map[row, col + 1] != 'W':
+                        if self.island_map_objects[row, col + 1].is_migratable:
                             lovlige_retninger.append((0, 1))
 
                     moved = []
@@ -132,7 +126,7 @@ class BioSim(BioSim_param):
                     for carnivore in moved:
                         landskapsobjekt.carn_pop.remove(carnivore)
 
-    def simulate(self, num_years = 50, vis_years = 1):
+    def simulate(self, num_years = 10, vis_years = 1):
         for year in range(num_years):
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
@@ -142,7 +136,7 @@ class BioSim(BioSim_param):
                         location.grassing()
                     if location.landscape_type in 'LHD':
                         location.hunting()
-                        pass
+
 
             self.migration_preparation()
             self.migration()
@@ -153,7 +147,6 @@ class BioSim(BioSim_param):
                         location.give_birth()
                         location.aging()
                         location.death()
-                        self.add_to_yearly_population(len(location.herb_pop)) # Dette er bare en dumy property.
 
 
     def validate_island_map(self, island_map):

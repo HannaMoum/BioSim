@@ -29,7 +29,7 @@ class Landscape:
     """
     Doc-strings
     """
-    params = { 'f_max': {'Highland': 300.0,'Lowland': 800.0}}
+    params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
 
 
     def __init__(self, landscape_type):
@@ -38,6 +38,10 @@ class Landscape:
         """
         self._landscape_type = landscape_type
 
+        if landscape_type == 'W':
+            self._is_migratable = False
+        else:
+            self._is_migratable = True
 
 
         if self.landscape_type == 'H':
@@ -71,6 +75,10 @@ class Landscape:
         return self._landscape_type
 
     @property
+    def is_migratable(self):
+        return self._is_migratable
+
+    @property
     def fodder(self):
         return self._fodder
     @fodder.setter
@@ -93,7 +101,6 @@ class Landscape:
     def carn_pop(self, value):
         self._carn_pop = value
 
-
     def grassing(self):
         """
         Function handling the animals eating in correct order
@@ -103,8 +110,6 @@ class Landscape:
             herbivore.F_tilde = 0
             eaten = herbivore.eat(self.fodder) # Her returneres måltid, dvs. det de har spist
             self.fodder -= eaten
-
-
 
             if self.fodder <= 0:
                 break
@@ -175,24 +180,6 @@ class Landscape:
             self.carn_pop += carn_babies
 
 
-
-        ## Replaced version
-        # new_herbivores =[]
-        # for herbivore in self.herb_pop:
-        #     newborn = herbivore.giving_birth(number_of_herbivores)
-        #
-        #     if newborn:  # Checks that newborn is not None
-        #         new_herbivores.append(newborn)
-
-
-
-
-    def migration(self):
-        """
-        Herbivores migrating or staying put
-        """
-        pass
-
     def aging(self):
         """
         The herbivores turn one year older and looses weight.
@@ -212,12 +199,6 @@ class Landscape:
         self.herb_pop = alive_herbs
         self.carn_pop = alive_carns
 
-        # alive = []
-        # for animal in self.herb_pop:
-        #     if not animal.probability_of_death():
-        #         alive.append(animal)
-        #
-        # self.herb_pop = alive
 
     def regrowth(self):
         """
@@ -251,26 +232,7 @@ class Landscape:
                 raise TypeError(f'{animal} is not a defined animal.\n'
                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
 
-    def make_migration_list(self):
-        herb_staying = []
-        herb_leaving = []
 
-        for herbivore in self.herb_pop:
-            if herbivore.migration_direction() == (0,0):
-                herb_staying.append(herbivore)
-            else:
-                herb_leaving.append(herbivore)
-
-        carn_staying = []
-        carn_leaving = []
-
-        for carnivore in self.carn_pop:
-            if carnivore.migration_direction() == (0,0):
-                carn_staying.append(carnivore)
-            else:
-                carn_leaving.append(carnivore)
-
-        return herb_staying, herb_leaving, carn_staying, carn_leaving
 
 
 
