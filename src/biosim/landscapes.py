@@ -157,8 +157,9 @@ class Landscape:
         self.carn_pop = alive(self.herb_pop)
 
     def regrowth(self):
-        """
-        Method to reset the amount of fodder by the end of the year
+        """Reset available fodder in terrain to maximum.
+
+        Regrowth of fodder initially every year.
         """
         self.fodder = self.params['f_max'] #TODO: Include parameters
 
