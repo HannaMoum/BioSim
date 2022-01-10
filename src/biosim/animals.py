@@ -6,8 +6,13 @@ from abc import ABC, abstractmethod  # Remove unless in use
 
 
 class Animal:
-    """Animal with corresponding characteristics and traits for different species."""
+    """Animal with corresponding characteristics and traits for different species.
 
+    Subclasses of Animal are Herbivore and Carnivore.
+    """
+    #In Docstring: Summarize behaviour, (list public mthods?)
+    # Should possibly list class-level variales here.
+    # We cover instance variables in __init__
     params = {
         'w_birth': None,
         'sigma_birth': None,
@@ -72,11 +77,12 @@ class Animal:
 
         Attributes
         ----------
-        fitness
-        F_tilde
+        age:
+        weight:
 
         Returns
         -------
+
 
         """
         self._age = age
@@ -100,6 +106,8 @@ class Animal:
 
     @property
     def age(self):
+        """int: Doc-string here.
+        Describe notable behaviour for property.setter here"""
         return self._age
 
     @age.setter
@@ -111,6 +119,8 @@ class Animal:
 
     @property
     def weight(self):
+        """ float: Doc-string here.
+        Describe notable behaviour for property.setter here"""
         return self._weight
 
     @weight.setter
@@ -121,7 +131,8 @@ class Animal:
 
     @property
     def F_tilde(self):
-        """Amount of food eaten"""
+        """Amount of food eaten
+        Describe notable behaviour for property.setter here"""
         return self._F_tilde
 
     @F_tilde.setter
