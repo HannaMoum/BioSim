@@ -43,8 +43,7 @@ class Landscape:
 
     @fodder.setter
     def fodder(self, value):
-        if value > self.params['f_max']:
-            raise ValueError('Value must be below f_max')  # Er dette et reelt tilfelle som kan oppstå?
+        # TODO: Not raising an error here, but implement a def set_params with errorraise if negative value
         self._fodder = value
 
     @property
@@ -142,7 +141,6 @@ class Landscape:
         for animal in chain(self.herb_pop, self.carn_pop):
             animal.age_and_weightloss()
 
-
     def death(self):
         """Remove dying animals.
 
@@ -161,7 +159,7 @@ class Landscape:
 
         Regrowth of fodder initially every year.
         """
-        self.fodder = self.params['f_max'] #TODO: Include parameters
+        self.fodder = self.params['f_max']  # TODO: Include parameters
 
     def add_animal(self, added_pop):
         """Add animals to current location.
@@ -287,5 +285,3 @@ class Water(Landscape):
     def add_animal(self, added_pop):
         raise AttributeError('Cannot place animals in Water landscape')
         # TODO: Figure out what correct error will be
-
-
