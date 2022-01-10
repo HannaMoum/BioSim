@@ -76,9 +76,9 @@ class Landscape:
                         survivors.append(prey)
                 else:
                     survivors.append(prey)
+            prey_order = survivors
 
-            self.herb_pop = survivors
-
+        self.herb_pop = prey_order
 
     def give_birth(self):
         """
