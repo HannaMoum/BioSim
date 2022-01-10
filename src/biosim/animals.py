@@ -43,7 +43,7 @@ class Carnivore_params:
     mu: float = 0.4
 
 
-class Animal(ABC, Animal_params):
+class Animal(ABC):
     params = {
         'w_birth': None,
         'sigma_birth': None,
@@ -196,7 +196,7 @@ class Animal(ABC, Animal_params):
     @property
     def hungry(self):
         """Sjekker om dyret er sulten, mao. ønsker å spise"""
-        return self.F_tilde < self.F
+        return self.F_tilde < self.params['F']
 
     def age_and_weightloss(self):
         """
@@ -284,7 +284,7 @@ class Animal(ABC, Animal_params):
         return any((starvation, sickness))
 
 
-class Herbivore(Animal, Herbivore_params):
+class Herbivore(Animal):
 
     params = {
         'w_birth': 8,
@@ -308,7 +308,7 @@ class Herbivore(Animal, Herbivore_params):
 
 
 
-class Carnivore(Animal, Carnivore_params):
+class Carnivore(Animal):
     params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,

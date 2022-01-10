@@ -29,21 +29,25 @@ class Landscape:
     """
     Doc-strings
     """
-
-    params = {
-        'f_max': 800.0
-    }
+    params = { 'f_max': {'Highland': 300.0,'Lowland': 800.0}}
 
 
     def __init__(self, landscape_type):
         """
         Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
         """
-        self._fodder = self.params['f_max']  # Initial amount of fodder
-        self._herb_pop = [Herbivore(80, 200)]
-        self._carn_pop = []
         self._landscape_type = landscape_type
 
+        if self.landscape_type == 'H':
+            self.f_max = self.params['f_max']['Highland']
+        elif self.landscape_type == 'L':
+            self.f_max = self.params['f_max']['Lowland']
+        else:
+            self.f_max = 0
+
+        self._fodder = self.f_max  # Initial amount of fodder
+        self._herb_pop = []
+        self._carn_pop = []
 
 
     @classmethod
@@ -69,7 +73,7 @@ class Landscape:
         return self._fodder
     @fodder.setter
     def fodder(self, value):
-        if value > self.params['f_max']:
+        if value > self.f_max:
             raise ValueError('Value must be below f_max')
         self._fodder = value
 
@@ -216,7 +220,7 @@ class Landscape:
         """
         Method to reset the amount of fodder by the end of the year
         """
-        self.fodder = self.params['f_max']
+        self.fodder = self.f_max
 
     def add_animal(self, added_pop):
         """ Function adding animals to landscape-object.

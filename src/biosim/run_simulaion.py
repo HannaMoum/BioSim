@@ -32,10 +32,8 @@ if __name__ == '__main__':
                 'weight': 20}
                 for _ in range(40)]}]
 
-    ini_herb_pop = [{'species': 'Herbivore', 'age': 5, 'weight': 6} for _ in range(10)]
-    ini_carn_pop = [{'species': 'Carnivore', 'age': 5, 'weight': 20} for _ in range(50)]
 
-    sim = BioSim(island_map=geogr, ini_pop=ini_herbs+ini_carns,
+    sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                 'age': {'max': 60.0, 'delta': 2},
@@ -45,14 +43,28 @@ if __name__ == '__main__':
 
     #print(sim.island_map)
     #print(graf.island_plot)
-    #graf.plot_island_map()
+    graf.plot_island_map()
 
 
     sim.simulate()
     #print(sim.yearly_population)
     #graf.plot_population_development(sim.yearly_population)
-    print(sim.island_map_objects[7,10].herb_pop)
+    # print(len(sim.island_map_objects[9, 9].herb_pop), end = ' ')
+    # print(len(sim.island_map_objects[9, 9].carn_pop))
+
+
     #print(sim.island_map_objects[7,10].herb_pop[0].migration_direction())
+    location = sim.island_map_objects[9,9]
+    print(location.landscape_type)
+    print(location.herb_pop[-1].age)
+    print(location.herb_pop[-1].F_tilde)
+    location.fodder = 0
+    print(location.fodder)
+    location.regrowth()
+    print(location.fodder)
+
+
+
 
 
 

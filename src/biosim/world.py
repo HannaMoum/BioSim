@@ -20,7 +20,7 @@ class BioSim(BioSim_param):
                  log_file=None):
         self._island_map = self.make_island_map(island_map)
         self._island_map_objects = self.make_island_map_objects()
-        self.ini_pop = ini_pop
+        self._ini_pop = self.init_population(ini_pop)
         self._yearly_population = []
 
     @property
@@ -75,40 +75,37 @@ class BioSim(BioSim_param):
                 herb_list.append(Herbivore(animal['age'], animal['weight']))
         return herb_list
 
-    def cycle(self, location):
-        location.regrowth()
-        location.grassing()
-        location.hunting()
-        # Migration
-        location.give_birth()
-        location.aging()
-        location.death()
 
-    def simulate(self, num_years = 1, vis_years = 1):
-        # Husk oppsett som plasserer alle dyr ved initsiering
-        self.island_map_objects[7, 10].herb_pop = [Herbivore(10, 500)]
+    def simulate(self, num_years = 10, vis_years = 1):
+        # --------------------------------------------------------------
+        print(len(self.island_map_objects[9, 9].herb_pop), end=' ')
+        print(len(self.island_map_objects[9, 9].carn_pop))
+        # --------------------------------------------------------------
+
         for year in range(num_years):
+            # --------------------------------------------------------------
+            print(len(self.island_map_objects[9, 9].herb_pop), end=' ')
+            print(len(self.island_map_objects[9, 9].carn_pop))
+            # --------------------------------------------------------------
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     location = element.item()
                     if location.landscape_type in 'LH':
                         location.regrowth()
-                        location.grassing()
+                        #location.grassing()
                     if location.landscape_type in 'LHD':
-                        location.hunting()
-            self.migration_preparation()
-            self.migration()
+                        pass
+                        #location.hunting()
+            #self.migration_preparation()
+            #self.migration()
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     location = element.item()
                     if location.landscape_type in 'LHD':
-                        location.give_birth()
-                        location.aging()
+                        #location.give_birth()
+                        #location.aging()
                         #location.death()
                         self.add_to_yearly_population(len(location.herb_pop)) # Dette er bare en dumy property.
-
-
-                    #self.cycle(location)
 
 
     def validate_island_map(self, island_map):
@@ -143,6 +140,24 @@ class BioSim(BioSim_param):
     @property
     def island_map_objects(self):
         return self._island_map_objects
+
+    def validate_init_population(ini_pop, landscape_map):
+        pass
+
+    def init_population(self, ini_pop):
+        for sp_dict in ini_pop:
+            for key in sp_dict:
+                if key == 'loc':
+                    r, c = sp_dict[key]
+                    r -= 1
+                    c -= 1
+                    landscape = self.island_map_objects[r, c]
+                if key == 'pop':
+                    for animal in sp_dict[key]:
+                        if animal['species'] == 'Herbivore':
+                            landscape.herb_pop.append(Herbivore(animal['age'], animal['weight']))
+                        if animal['species'] == 'Carnivore':
+                            landscape.carn_pop.append(Carnivore(animal['age'], animal['weight']))
 
 
 
