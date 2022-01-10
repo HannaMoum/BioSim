@@ -205,6 +205,9 @@ class Animal:
         """
         Calculate the animal's probability to give birth.
 
+        Notes
+        ------
+        #todo: ADD NOTES AND PROBABILITY FORMULAS
 
         Parameters
         ----------
@@ -213,8 +216,8 @@ class Animal:
 
         Returns
         -------
-        `bool`
-            True if animal gives birth.
+        birth_weight: `float` or `bool`
+            Return birth weight of animal if birth take place, otherwise return false.
         """
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
         r = random.uniform(0, 1)
@@ -229,18 +232,20 @@ class Animal:
         maternal_health = self.weight > birth_weight * self.params['xi']
 
         if all((fertilization, weight_check, maternal_health)):
-            return True, birth_weight
+            return birth_weight
 
-        return False, False  # TODO: Find prettier code
+        return False
 
-    def giving_birth(self, number_of_animals):
+    def giving_birth(self, species, number_of_animals):
         """
         Animals give birth if necessary requirements are met.
 
         Parameters
         ----------
-        number_of_animals: Int
-            Number of animals of chosen species in one cell before breeding season starts.
+        species: `str`
+            Species giving birth.
+        number_of_animals: `int`
+            Number of same species in current terrain before breeding season.
 
         Returns
         -------
@@ -248,11 +253,14 @@ class Animal:
             newborn animal if mother gives birth.
         """
 
-        probability, birth_weight = self.probability_to_give_birth(number_of_animals)
+        birth_weight = self.probability_to_give_birth(number_of_animals)
 
-        if probability:
-            newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default?
-            # TODO: Fix this so it creates either a herbivore or a Carnivore
+        if birth_weight:
+            if species == 'Herbivore':
+                newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default?
+            if species == 'Carnivore':
+                newborn = Carnivore(0, birth_weight)
+            #TODO: Optimization possibilities
             self._weight -= birth_weight * self.params['xi']
 
             return newborn
