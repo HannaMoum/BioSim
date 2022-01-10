@@ -217,7 +217,7 @@ class Animal:
         Returns
         -------
         birth_weight: `float` or `bool`
-            Return birth weight of animal if birth take place, otherwise return False.
+            Birth weight of animal if birth takes place, otherwise False.
         """
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
         r = random.uniform(0, 1)
@@ -370,8 +370,8 @@ class Carnivore(Animal):
         fitness_diff = self.fitness - herb_fitness
 
         if self.fitness <= herb_fitness:
-            return False  # More efficient?
-            # probability = 0
+            return False
+
         elif 0 < fitness_diff < self.params['DeltaPhiMax']:
             probability = fitness_diff / self.params['DeltaPhiMax']
             # TODO: Make parameters work again
