@@ -188,7 +188,7 @@ class Animal:
         return eaten  # Only necessary for Herbivores
 
     def age_and_weightloss(self):
-        """Age animal by 1 year and loose weight
+        """Age animal by one year and lose weight.
 
         Weight reduces by factor :math:`\\eta`.
         """
@@ -203,19 +203,19 @@ class Animal:
 
     def probability_to_give_birth(self, number_of_animals):
         """
-        Decide an animals probability to give birth.
+        Calculate the animal's probability to give birth.
+
 
         Parameters
         ----------
-        number_of_animals: Int
-            Number of animals of chosen species in one cell before breeding season starts.
+        number_of_animals: `int`
+            Number of same species in current terrain before breeding season.
 
         Returns
         -------
-        bool
-            True if animal gives birth
+        `bool`
+            True if animal gives birth.
         """
-
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
         r = random.uniform(0, 1)
 
