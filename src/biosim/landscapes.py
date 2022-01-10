@@ -9,15 +9,27 @@ import random
 
 
 class Landscape:
-    """Landscape"""
+    """A landscape with corresponding characteristics and traits for different terrains.
+
+    Implemented terrains are: :py:class:`.Lowland`, :py:class:`.Highland`,
+    :py:class:`.Desert` and :py:class:`.Water`. #Move to Sphinx doc(?)
+
+    Attributes
+    ----------
+    fodder: `int` or `float`
+        Fodder available
+    herb_pop: `list` of :py:class:`.animals.Herbivore`.
+        Herbivore population
+    carn_pop: `list` of :py:class:`.animals.Carnivore`
+        Carnivore population
+    """
+
+    # dict: Parameter values for calculations
     params = {
         'f_max': None
     }
 
     def __init__(self):
-        """
-        Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
-        """
         self._fodder = self.params['f_max']  # Initial amount of fodder
         self._herb_pop = []
         self._carn_pop = []

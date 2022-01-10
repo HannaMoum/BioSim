@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod  # Remove unless in use
 class Animal:
     """Animal with corresponding characteristics and traits for different species.
 
-    Subclasses of Animal are Herbivore and Carnivore.
+    Implemented species are :py:class:`.Herbivore` and :py:class:`.Carnivore`. #Move to Sphinx doc(?)
 
     Parameters
     ----------
@@ -16,17 +16,13 @@ class Animal:
         The animal's age.
     weight: `float`
         The animal's weight.
-
-    Methods
-    -------
-    (setup:)
-    #colorspace(c='rgb')
-        #Represent the photo in the given colorspace.
-
     """
+
     #In Docstring: Summarize behaviour, (list public mthods?)
     # Should possibly list class-level variales here.
     # We cover instance variables in __init__
+
+    # dict: Parameter values for calculations
     params = {
         'w_birth': None,
         'sigma_birth': None,
@@ -44,7 +40,7 @@ class Animal:
         'F': None,
         'DeltaPhiMax': None
     }
-    """Parameters for subclasses(?)"""
+
 
     @classmethod
     def set_params(cls, new_params):
