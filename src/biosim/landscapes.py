@@ -66,13 +66,10 @@ class Landscape:
         self._carn_pop = value
 
     def grassing(self):
-        """
-        Function handling the animals eating in correct order
-        """
-        # Sort list, highest fitness first:
+        """Feed all herbivores and adjust available fodder."""
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
             herbivore.F_tilde = 0
-            eaten = herbivore.eat(self.fodder)  # Returns the amount of food eaten
+            eaten = herbivore.eat(self.fodder)
             self.fodder -= eaten
 
             if self.fodder <= 0:
