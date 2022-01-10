@@ -160,10 +160,10 @@ class Animal:
 
     def eat(self, food_available):
         """
-        Animal eats and gains weight.
+        Animal gains weight from eating.
 
         Animal will always eat until satisfied (parameter `F`) or eat **food_available**.
-        Weight gain is calculated by food_eaten :math:`* \\beta`.
+        Weight increase by `Food eaten` :math:`* \\beta`.
 
         Parameters
         ----------
