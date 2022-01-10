@@ -415,7 +415,7 @@ class Carnivore(Animal):
 
         See Also
         --------
-        :py:meth:`.eat`:
+        :py:meth:`.eat`
             for eating procedure. Takes :math:`\mathtt{herb\_weight}` as input.
 
         Parameters
