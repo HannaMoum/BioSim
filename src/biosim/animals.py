@@ -9,6 +9,20 @@ class Animal:
     """Animal with corresponding characteristics and traits for different species.
 
     Subclasses of Animal are Herbivore and Carnivore.
+
+    Parameters
+    ----------
+    age: `int`
+        The animal's age.
+    weight: `float`
+        The animal's weight.
+
+    Methods
+    -------
+    (setup:)
+    #colorspace(c='rgb')
+        #Represent the photo in the given colorspace.
+
     """
     #In Docstring: Summarize behaviour, (list public mthods?)
     # Should possibly list class-level variales here.
@@ -30,6 +44,7 @@ class Animal:
         'F': None,
         'DeltaPhiMax': None
     }
+    """Parameters for subclasses(?)"""
 
     @classmethod
     def set_params(cls, new_params):
@@ -67,23 +82,6 @@ class Animal:
     def __init__(self, age, weight):
         """
         Create Animal species with age and weight.
-
-        Parameters
-        ----------
-        age: int
-            Age of animal
-        weight: int or float
-            Weight of animal
-
-        Attributes
-        ----------
-        age:
-        weight:
-
-        Returns
-        -------
-
-
         """
         self._age = age
         self._weight = weight
@@ -106,21 +104,20 @@ class Animal:
 
     @property
     def age(self):
-        """int: Doc-string here.
-        Describe notable behaviour for property.setter here"""
+        """The animal's age (`int`)
+
+        A whole, positive number."""
         return self._age
 
     @age.setter
     def age(self, value):
         self.check_integer(value)
         self.check_positive(value)
-
         self._age = value
 
     @property
     def weight(self):
-        """ float: Doc-string here.
-        Describe notable behaviour for property.setter here"""
+        """The animal's weight (`int` or `float`)."""
         return self._weight
 
     @weight.setter
@@ -131,8 +128,7 @@ class Animal:
 
     @property
     def F_tilde(self):
-        """Amount of food eaten
-        Describe notable behaviour for property.setter here"""
+        """Food currently eaten this year (`int` or `float`)."""
         return self._F_tilde
 
     @F_tilde.setter
@@ -141,28 +137,11 @@ class Animal:
 
     @property
     def fitness(self):
-        """
-        Calculate an animal's fitness based on age and weight.
-
-        Returns
-        -------
-        Property: self.fitness
-        """
+        """The animal's fitness (`float`, read-only)."""
 
         def q(sgn, x, x_half, phi):
+            """Should this contain documentation?
             """
-            Parameters
-            ----------
-            sgn: +1 or -1
-            x:
-            x_half:
-            phi:
-
-            Returns
-            -------
-            q:
-            """
-
             return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 
         if self.weight <= 0:
