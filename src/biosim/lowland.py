@@ -57,18 +57,23 @@ class Landscape:
 
 
     @classmethod
-    def set_params(cls, new_params):
+    def set_params(cls, new_params): # TODO: Må endres
         """
         Function to edit paramteres
         new_params: Dict
+        params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
+        new_params = {'f_max': {'Highland': 200.0}}
+        Landscape.set_params({'f_max': {'Highland': params['f_max']}})
         """
         #Should this be run for every simulation? If so, params should be default...
-        for key, value in new_params.items():
-            if key not in cls.params:
-                raise KeyError('Invalid parameter name: ' + key)
-            if value < 0:
-                raise ValueError('Invalid value for parameter: ' + key)
-            cls.params[key] = new_params[key]
+        if 'f_max' in new_params:
+            value_dict = new_params['f_max']
+            if 'Highland' in value_dict:
+                cls.params = {'f_max': {'Highland': value_dict['Highland'], 'Lowland': cls.params['f_max']['Lowland']}}
+            if 'Lowland' in value_dict:
+                cls.params = {'f_max': {'Lowland': value_dict['Lowland'], 'Highland': cls.params['f_max']['Highland']}}
+
+
 
     @property
     def landscape_type(self):
@@ -206,31 +211,31 @@ class Landscape:
         """
         self.fodder = self.f_max
 
-    def add_animal(self, added_pop):
-        """ Function adding animals to landscape-object.
-            Adding animals will be done initially and optionally mid-sim during break.
-
-            Input: List of dictionaries as in;
-             [{'species': 'Herbivore',
-                'age': 10, 'weight': 12.5},
-            {'species': 'Herbivore',
-                'age': 9, 'weight': 10.3}]
-
-            Source url for finding all subclass names (read 08.01):
-            https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
-
-        for animal in added_pop:
-            # animal = {'species': H, 'age': _ , 'weight': _ }
-            age = animal['age']
-            weight = animal['weight']
-
-            if animal['species'] == 'Herbivore':
-                self.herb_pop += [Herbivore(age, weight)]
-            elif animal['species'] == 'Carnivore':
-                self.carn_pop += [Carnivore(age, weight)]
-            else:
-                raise TypeError(f'{animal} is not a defined animal.\n'
-                                f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
+    # def add_animal(self, added_pop):
+    #     """ Function adding animals to landscape-object.
+    #         Adding animals will be done initially and optionally mid-sim during break.
+    #
+    #         Input: List of dictionaries as in;
+    #          [{'species': 'Herbivore',
+    #             'age': 10, 'weight': 12.5},
+    #         {'species': 'Herbivore',
+    #             'age': 9, 'weight': 10.3}]
+    #
+    #         Source url for finding all subclass names (read 08.01):
+    #         https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
+    #
+    #     for animal in added_pop:
+    #         # animal = {'species': H, 'age': _ , 'weight': _ }
+    #         age = animal['age']
+    #         weight = animal['weight']
+    #
+    #         if animal['species'] == 'Herbivore':
+    #             self.herb_pop += [Herbivore(age, weight)]
+    #         elif animal['species'] == 'Carnivore':
+    #             self.carn_pop += [Carnivore(age, weight)]
+    #         else:
+    #             raise TypeError(f'{animal} is not a defined animal.\n'
+    #                             f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
 
 
 

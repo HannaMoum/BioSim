@@ -20,7 +20,7 @@ class BioSim(BioSim_param):
                  log_file=None):
         self._island_map = self.make_island_map(island_map)
         self._island_map_objects = self.make_island_map_objects()
-        self._ini_pop = self.init_population(ini_pop)
+        self._ini_pop = self.add_population(ini_pop)
 
 
     @property
@@ -52,6 +52,41 @@ class BioSim(BioSim_param):
         _island_map_objects[:,:] = vLandscape(self.island_map)
 
         return _island_map_objects
+
+    def set_animal_parameters(self, species, params):
+        """
+        Set parameters for animal species.
+
+        :param species: String, name of animal species
+        :param params: Dict with valid parameter specification for species
+        """
+        if species == 'Herbivore':
+            Herbivore.set_params(params)
+
+    def set_landscape_parameters(self, landscape, params):
+        """
+        Set parameters for landscape type.
+
+        :param landscape: String, code letter for landscape
+        :param params: Dict with valid parameter specification for landscape
+        """
+        if landscape == 'L':
+            Landscape.set_params({'f_max': {'Lowland': params['f_max']}})
+        elif landscape == 'H':
+            Landscape.set_params({'f_max': {'Highland': params['f_max']}})
+        else:
+            raise ValueError('Feil input')
+
+        # Oppdaterer alle eksisterende objekter.f_max. Denne settes normalt kun i __init__, og må oppdateres når klassevariabelen endres.
+        with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
+            for element in it:
+                landskapsobjekt = element.item()
+                if landskapsobjekt.landscape_type == 'H':
+                    landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Highland']
+                elif landskapsobjekt.landscape_type == 'L':
+                    landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Lowland']
+                else:
+                    landskapsobjekt.f_max = 0
 
 
     def migration_preparation(self):
@@ -157,8 +192,8 @@ class BioSim(BioSim_param):
     def validate_init_population(self, ini_pop):
         pass
 
-    def init_population(self, ini_pop):
-        for sp_dict in ini_pop:
+    def add_population(self, population):
+        for sp_dict in population:
             for key in sp_dict:
                 if key == 'loc':
                     r, c = sp_dict[key]
@@ -194,6 +229,7 @@ class Graphics_param:
 
 
 class Graphics(Graphics_param):
+    """Denne klassen skal spørre BioSim, om data og fremstille det grafisk"""
 
     def __init__(self, numpy_island_map):
         self._island_plot = self.make_plot_map(numpy_island_map)

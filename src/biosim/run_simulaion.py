@@ -35,6 +35,7 @@ if __name__ == '__main__':
                 for _ in range(40)]}]
 
 
+
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs+ini_carns,
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
@@ -43,6 +44,9 @@ if __name__ == '__main__':
                 )
 
     sim.simulate(num_years=30)
+
+    sim.set_landscape_parameters('L', {'f_max': 703})
+
 
     def size_herb_pop(location):
         """Location er et landskaps-objekt i objekt-kartet, en rute. """
