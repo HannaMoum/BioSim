@@ -317,7 +317,6 @@ class Carnivore(Animal):
         bool
             True of carnivore is hungry
         """
-        # Could be included in probability_to_kill...
         return self.F_tilde < self.params['F']
 
     def probability_to_kill(self, herb_fitness):
@@ -338,8 +337,11 @@ class Carnivore(Animal):
         return probability > r
 
     def killing(self, herb_fitness, herb_weight):
-        if self.probability_to_kill(herb_fitness):
-            self.eat(herb_weight)  # self.F_tilde grows
-            return True
+        if self.hungry():
+            if self.probability_to_kill(herb_fitness):
+                self.eat(herb_weight)  # self.F_tilde grows
+                return True
+            else:
+                return False
         else:
             return False

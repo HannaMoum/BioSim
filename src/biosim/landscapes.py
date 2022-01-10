@@ -71,9 +71,8 @@ class Landscape:
 
             survivors = []
             for prey in prey_order:
-                if hunter.hungry:  # Could add hungry inside killing method
-                    if not hunter.killing(prey.fitness, prey.weight):
-                        survivors.append(prey)
+                if not hunter.killing(prey.fitness, prey.weight):
+                    survivors.append(prey)
                 else:
                     survivors.append(prey)
             prey_order = survivors
