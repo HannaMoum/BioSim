@@ -107,7 +107,6 @@ class Animal(ABC):
     def has_migrated(self, bool):
         self._has_migrated = bool
 
-
     @staticmethod
     def check_positive(value):
         if value < 0:
@@ -184,12 +183,6 @@ class Animal(ABC):
         self.F_tilde += måltid
 
         return måltid
-
-    # todo: Remove when new hunting method is working
-    # @property
-    # def hungry(self):
-    #     """Sjekker om dyret er sulten, mao. ønsker å spise"""
-    #     return self.F_tilde < self.params['F']
 
     def age_and_weightloss(self):
         """
