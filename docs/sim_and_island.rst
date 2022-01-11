@@ -8,6 +8,6 @@ The simulation module
 
 The island module
 ---------------------
-.. automodule:: biosim.island
+.. automodule:: biosim.world
    :members:
 
