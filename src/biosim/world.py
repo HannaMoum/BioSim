@@ -13,6 +13,18 @@ class BioSim_param:
 
 
 class BioSim(BioSim_param):
+    """Island hosting landscapes with animals.
+
+        Parameters
+        ----------
+        island_map:
+        ini_pop: `list` of `dict`, optional
+
+
+        Attributes
+        ----------
+
+        """
 
     def __init__(self, island_map, ini_pop = None, seed = None,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
@@ -117,8 +129,8 @@ class BioSim(BioSim_param):
     def migration_preparation(self):
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
-                landskapsobjekt = element.item()
-                for animal in landskapsobjekt.herb_pop + landskapsobjekt.carn_pop:
+                landscape_obj = element.item()
+                for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
                     animal.has_migrated = False
 
     def migration(self):
