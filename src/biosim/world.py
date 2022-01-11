@@ -138,7 +138,7 @@ class BioSim(BioSim_param):
             for element in it:
                 landscape_obj = element.item()
                 #####
-                # landscape_obj.migration_prep()
+                landscape_obj.migration_preparation()
                 ###
                 current_row, current_col = it.multi_index
 
@@ -212,7 +212,7 @@ class BioSim(BioSim_param):
                     if location.landscape_type in 'LHD':
                         location.hunting()
 
-            self.migration_preparation()
+            #self.migration_preparation() # Included in the migration process
             self.migration()
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
