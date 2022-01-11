@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
 from biosim.lowland import Landscape
-
+import textwrap
 
 
 @dataclass
@@ -35,6 +35,7 @@ class BioSim(BioSim_param):
 
     def make_island_map(self, island_map):
         """Lager kartet som inneholder bokstaver for hver landskapstype ut i fra den geogr-strengen som kommer inn"""
+
         if self.validate_island_map(island_map): # Denne gir kun true enn så lenge.
             island_map_list = list(island_map.split('\n')) # Lager en liste av geogr-strengen som kommer inn ved å splitte på new-line.
             row, col = len(island_map_list), len(island_map_list[0]) # Antall rader = antall elementer i lista, antall kolonner = lengden av den første raden
@@ -185,9 +186,23 @@ class BioSim(BioSim_param):
                         location.aging()
                         location.death()
 
-
-
     def validate_island_map(self, island_map):
+        #map = textwrap.dedent(island_map)  # Should already be textwrapped
+        island_map = island_map.split()
+
+        length_check = len(island_map[0])
+        for element in island_map:
+
+            for letter in element: #symbol check
+                if letter not in 'WHLD':
+                    raise ValueError(
+                        f'{letter} is not a defined landscape.\n'
+                        f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
+                        'respectively given by their belonging capital letter.')
+            #TODO: Control that the outer edges only consists of Water. Should be implemented as ValueError
+            if len(element) != length_check:
+                raise ValueError ('Island map must contain an equal amount of columns')
+
         return True
         # Raises value error if rules broken.
         # Returns True if all OK.
