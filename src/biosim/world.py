@@ -126,22 +126,25 @@ class BioSim(BioSim_param):
                     landskapsobjekt.f_max = 0
 
 
-    def migration_preparation(self):
-        with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
-            for element in it:
-                landscape_obj = element.item()
-                for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
-                    animal.has_migrated = False
+    # def migration_preparation(self):
+    #     with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
+    #         for element in it:
+    #             landscape_obj = element.item()
+    #             for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
+    #                 animal.has_migrated = False
 
     def migration(self):
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
-                landskapsobjekt = element.item()
+                landscape_obj = element.item()
+                #####
+                # landscape_obj.migration_prep()
+                ###
                 current_row, current_col = it.multi_index
 
-                if landskapsobjekt.herb_pop:
+                if landscape_obj.herb_pop:
                     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                    if landskapsobjekt.is_migratable: # Sjekker at vi står på noe annet enn vann
+                    if landscape_obj.is_migratable: # Sjekker at vi står på noe annet enn vann
                         row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er -------------------------------------------------------
                         if self.island_map_objects[row-1, col].is_migratable:
                             lovlige_retninger.append((-1, 0))
@@ -153,7 +156,7 @@ class BioSim(BioSim_param):
                             lovlige_retninger.append((0, 1))
 
                     moved = []
-                    for herbivore in landskapsobjekt.herb_pop:
+                    for herbivore in landscape_obj.herb_pop:
                         if not herbivore.has_migrated:
                             row_direction, col_direction = herbivore.migration_direction()
                             if (row_direction, col_direction) in lovlige_retninger:
@@ -166,11 +169,11 @@ class BioSim(BioSim_param):
                                 herbivore.has_migrated = True
 
                     for herbivore in moved: # TODO: Kanskje dette kan gjøres uten for-løkke. Trekke fra hele moved på en gang
-                        landskapsobjekt.herb_pop.remove(herbivore)
+                        landscape_obj.herb_pop.remove(herbivore)
 
-                if landskapsobjekt.carn_pop:
+                if landscape_obj.carn_pop:
                     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                    if landskapsobjekt.is_migratable:  # Sjekker at vi står på noe annet enn vann
+                    if landscape_obj.is_migratable:  # Sjekker at vi står på noe annet enn vann
                         row, col = it.multi_index  # Blir en tuple, med lokasjon på hvor vi er
                         if self.island_map_objects[row - 1, col].is_migratable:
                             lovlige_retninger.append((-1, 0))
@@ -182,7 +185,7 @@ class BioSim(BioSim_param):
                             lovlige_retninger.append((0, 1))
 
                     moved = []
-                    for carnivore in landskapsobjekt.carn_pop:
+                    for carnivore in landscape_obj.carn_pop:
                         if not carnivore.has_migrated:
                             row_direction, col_direction = carnivore.migration_direction()
 
@@ -196,7 +199,7 @@ class BioSim(BioSim_param):
                                 carnivore.has_migrated = True
 
                     for carnivore in moved:
-                        landskapsobjekt.carn_pop.remove(carnivore)
+                        landscape_obj.carn_pop.remove(carnivore)
 
     def simulate(self, num_years = 10, vis_years = 1):
         for year in range(num_years):
