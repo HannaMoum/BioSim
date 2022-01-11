@@ -196,12 +196,11 @@ class Landscape:
         --------
         :py:meth:`probability_of_death`
         """
-        alive_herbs = [animal for animal in self.herb_pop if not animal.probability_of_death()]
-        alive_carns = [animal for animal in self.carn_pop if not animal.probability_of_death()]
+        def alive(species):
+            return [individual for individual in species if not individual.probability_of_death()]
 
-        self.herb_pop = alive_herbs
-        self.carn_pop = alive_carns
-
+        self.herb_pop = alive(self.herb_pop)
+        self.carn_pop = alive(self.carn_pop)
 
     def regrowth(self):
         """
