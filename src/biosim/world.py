@@ -192,16 +192,23 @@ class BioSim(BioSim_param):
 
         length_check = len(island_map[0])
         for element in island_map:
-
-            for letter in element: #symbol check
+            # Control all symbols
+            for letter in element:
                 if letter not in 'WHLD':
                     raise ValueError(
                         f'{letter} is not a defined landscape.\n'
                         f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
                         'respectively given by their belonging capital letter.')
-            #TODO: Control that the outer edges only consists of Water. Should be implemented as ValueError
+            # Control size
             if len(element) != length_check:
-                raise ValueError ('Island map must contain an equal amount of columns')
+                raise ValueError('Island map must contain an equal amount of columns')
+            # Control edges
+            if not (element[0] and element[-1]) == 'W':
+                raise ValueError('All outer edges must be of landscape Water')
+        # Control edges
+        if not (island_map[0] and island_map[-1]) == 'W' * length_check:
+            raise ValueError('All outer edges must be of landscape Water')
+
 
         return True
         # Raises value error if rules broken.
