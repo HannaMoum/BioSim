@@ -132,7 +132,7 @@ class Landscape:
         """
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
             herbivore.F_tilde = 0
-            eaten = herbivore.eat(self.fodder) # Her returneres måltid, dvs. det de har spist
+            eaten = herbivore.eat(self.fodder)
             self.fodder -= eaten
 
             if self.fodder <= 0:
