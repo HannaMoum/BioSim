@@ -24,6 +24,8 @@ class BioSim(BioSim_param):
             #TODO: Save ini_pop directly from input
             # Add_population returns nothing, it is an action of its' own
 
+        self.cube_population_herbs = np.empty(())
+
     @property
     def island_map(self):
         return self._island_map
@@ -175,7 +177,50 @@ class BioSim(BioSim_param):
                     for carnivore in moved:
                         landskapsobjekt.carn_pop.remove(carnivore)
 
+
+    def get_property_map(self, fx_map_type):
+        return self.__make_property_map(getattr(self, fx_map_type), self.island_map, self.island_map_objects)
+
+    def get_property_map_objects(self, fx_map_type):
+        return self.__make_property_map_objects(getattr(self, fx_map_type), self.island_map, self.island_map_objects)
+
+
+    #------------------------------------------------------------------------------------------------
+    # Factory for property_maps
+    def v_size_herb_pop(self, location:object):
+        """Location er et landskaps-objekt i objekt-kartet, en rute. """
+        return len(location.herb_pop)
+
+    def v_size_carn_pop(self, location:object):
+        return len(location.carn_pop)
+
+    def __make_property_map(self, fx:object, island_map:object, island_map_objects:object):
+        property_map = np.empty(island_map.shape, dtype=float)
+        vget_property = np.vectorize(fx)
+        property_map[:, :] = vget_property(island_map_objects)
+        return property_map
+
+    def v_herb_properties_objects(self, location:object):
+        if len(location.herb_pop) > 0:
+            population_list = location.herb_pop
+            liste = []
+            for animal in population_list:
+                liste.append((animal.age, animal.weight, animal.fitness))
+            return liste
+
+    def __make_property_map_objects(self, fx:object, island_map:object, island_map_objects:object):
+        property_map = np.empty(island_map.shape, dtype=object)
+        vget_property = np.vectorize(fx)
+        property_map[:, :] = vget_property(island_map_objects)
+        return property_map
+
+    #------------------------------------------------------------------------------------------------
+
+
+
     def simulate(self, num_years = 10, vis_years = 1):
+        yearly_pop_map = []
+
         for year in range(num_years):
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
@@ -195,6 +240,13 @@ class BioSim(BioSim_param):
                         location.give_birth()
                         location.aging()
                         location.death()
+
+            yearly_pop_map.append(self.get_property_map('v_size_herb_pop'))
+
+
+        self.cube_population_herbs = np.stack(yearly_pop_map)
+
+
 
     def validate_island_map(self, island_map_list):
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
