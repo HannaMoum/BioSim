@@ -194,22 +194,22 @@ class BioSim(BioSim_param):
     def validate_init_population(self, ini_pop):
         pass
 
-    def add_population(self, population):
-        """    ini_herbs = [{'loc': (9, 9),
-                'pop': [{'species': 'Herbivore',
-                'age': 5,
-                'weight': 20}
-                for _ in range(150)]}]"""
-        for sp_dict in population:
-            for key in sp_dict:
-                if key == 'loc':
-                    r, c = sp_dict[key]
-                    r -= 1
-                    c -= 1
-                    landscape = self.island_map_objects[r, c]
-                if key == 'pop':
-                    for animal in sp_dict[key]:
-                        if animal['species'] == 'Herbivore':
-                            landscape.herb_pop.append(Herbivore(animal['age'], animal['weight']))
-                        if animal['species'] == 'Carnivore':
-                            landscape.carn_pop.append(Carnivore(animal['age'], animal['weight']))
+    # def add_population(self, population):
+    #     """    ini_herbs = [{'loc': (9, 9),
+    #             'pop': [{'species': 'Herbivore',
+    #             'age': 5,
+    #             'weight': 20}
+    #             for _ in range(150)]}]"""
+    #     for sp_dict in population:
+    #         for key in sp_dict:
+    #             if key == 'loc':
+    #                 r, c = sp_dict[key]
+    #                 r -= 1
+    #                 c -= 1
+    #                 landscape = self.island_map_objects[r, c]
+    #             if key == 'pop':
+    #                 for animal in sp_dict[key]:
+    #                     if animal['species'] == 'Herbivore':
+    #                         landscape.herb_pop.append(Herbivore(animal['age'], animal['weight']))
+    #                     if animal['species'] == 'Carnivore':
+    #                         landscape.carn_pop.append(Carnivore(animal['age'], animal['weight']))
