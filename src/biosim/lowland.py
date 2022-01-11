@@ -133,7 +133,7 @@ class Landscape:
 
         return p > r
 
-    # TODO: Add hunting func from tidying here
+    # TODO: Added hunting func from tidying here. MAKE WORK
     def hunting(self):
         """Carnivores hunt herbivores.
 
@@ -161,33 +161,6 @@ class Landscape:
             # prey_order = survivors
 
         self.herb_pop = prey_order
-    # def hunting(self):
-    #     """ Carnivores hunting
-    #     """
-    #     # Randomize carn_population because they eat in random order
-    #     hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
-    #     # Bruker sample slik at vi får en ny liste. Ønsker ikke å endre på selve populasjons propertyen, det skal kun gjøres av setteren.
-    #     # Ønsker ikke å endre på selve lista.
-    #
-    #     # Sorted list for herbivores based on fitness
-    #     prey_order = sorted(self.herb_pop, key=lambda x: x.fitness)
-    #
-    #     for hunter in hunting_order:
-    #         hunter.F_tilde = 0
-    #         for prey in prey_order:
-    #             if prey.alive:
-    #                 if hunter.hungry:
-    #                     if Landscape.hunting_success(prey.fitness,
-    #                                                         hunter.fitness,
-    #                                                         Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
-    #                                 hunter.eat(prey.weight)
-    #                                 prey.alive = False
-    #
-    #     remaining_prey = []
-    #     for herbivore in prey_order:
-    #         if herbivore.alive:
-    #             remaining_prey.append(herbivore)
-    #     self.herb_pop = remaining_prey # Oppdaterer populasjonen til de som er igjen etter jakten
 
     def give_birth(self):
         """
