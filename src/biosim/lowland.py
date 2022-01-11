@@ -138,22 +138,6 @@ class Landscape:
             if self.fodder <= 0:
                 break
 
-    @staticmethod
-    def hunting_success(herb_fitness, carn_fitness, deltaphimax): # Egen skap ved verden/landskapet ikke ved hver carnivore
-        """Probability to kill"""
-        r = random.uniform(0, 1)
-        fitness_diff = (carn_fitness - herb_fitness)
-
-        if carn_fitness <= herb_fitness:
-            p = 0
-        elif 0 < fitness_diff < deltaphimax:
-            p = fitness_diff / deltaphimax
-        else:
-            p = 1
-
-        return p > r
-
-    # TODO: Added hunting func from tidying here. MAKE WORK
     def hunting(self):
         """Carnivores hunt herbivores.
 
