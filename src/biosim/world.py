@@ -126,12 +126,13 @@ class BioSim(BioSim_param):
                     landskapsobjekt.f_max = 0
 
 
-    # def migration_preparation(self):
-    #     with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
-    #         for element in it:
-    #             landscape_obj = element.item()
-    #             for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
-    #                 animal.has_migrated = False
+    def migration_preparation(self):
+        with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
+            for element in it:
+                landscape_obj = element.item()
+                landscape_obj.migration_preparation()
+                # for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
+                #     animal.has_migrated = False
 
     def migration(self):
         """."""
@@ -139,7 +140,7 @@ class BioSim(BioSim_param):
             for element in it:
                 landscape_obj = element.item()
                 #####
-                landscape_obj.migration_preparation() #BUG
+                #landscape_obj.migration_preparation() #BUG
                 ###
                 current_row, current_col = it.multi_index #TODO: Keep this but change names. Remove overlapping below
 
@@ -154,7 +155,7 @@ class BioSim(BioSim_param):
                                 if self.island_map_objects[new_row, new_col].is_migratable:
                                     self.island_map_objects[new_row, new_col]#.add_animals?
 
-                    return moved #list of every herb/carn that has moved
+                    #return moved #list of every herb/carn that has moved
                         pass
 
                 # if landscape_obj.is_migratable:
@@ -231,7 +232,7 @@ class BioSim(BioSim_param):
                     if location.landscape_type in 'LHD':
                         location.hunting()
 
-            #self.migration_preparation() # Included in the migration process
+            self.migration_preparation()
             self.migration()
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
