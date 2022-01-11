@@ -143,7 +143,9 @@ class BioSim(BioSim_param):
                 #current_row, current_col = it.multi_index
                 row, col = it.multi_index
 
-                #TODO: Look for opportunities to structure this better mtp. hierarcy
+                # TODO: Look for opportunities to structure this better mtp. hierarcy
+                #Possibilities; Split over several levels;
+                #retur verdi False hvis dyr ikke beveger seg? (Mulig bug å legge til og slette objekt identitet fra samme liste?)
                 def moving(landscape_population, current_row, current_col, species): #species = self.herb_pop or self.carn_pop
 
                     if landscape_population:

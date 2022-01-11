@@ -253,7 +253,7 @@ class Animal:
         if p > r: # True betyr at den vil flytte seg
             return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
         else:
-            return (0, 0) # Stå stille
+            return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
 
 
     def migration(self, geography):
