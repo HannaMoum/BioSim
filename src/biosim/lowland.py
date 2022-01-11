@@ -1,3 +1,4 @@
+from .animals import Animal
 from .animals import Herbivore
 from .animals import Carnivore
 import random
@@ -203,8 +204,9 @@ class Landscape:
         self.carn_pop = alive(self.carn_pop)
 
     def regrowth(self):
-        """
-        Method to reset the amount of fodder by the end of the year
+        """Reset available fodder in terrain to maximum.
+
+        Regrowth of fodder initially every year.
         """
         self.fodder = self.f_max
 
@@ -237,11 +239,3 @@ class Landscape:
             else:
                 raise TypeError(f'{animal} is not a defined animal.\n'
                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
-
-
-
-
-
-
-
-
