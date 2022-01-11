@@ -14,7 +14,7 @@ class Landscape:
     Notes
     ------
     Implemented terrains are: :py:class:`.Lowland`, :py:class:`.Highland`,
-    :py:class:`.Desert` and :py:class:`.Water`. #Move to Sphinx doc(?)
+    :py:class:`.Desert` and :py:class:`.Water`. #Move to Sphinx doc(?) #TODO: These are no longer subclasses
 
     Attributes
     ----------
