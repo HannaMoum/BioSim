@@ -172,11 +172,11 @@ class Landscape:
         """
         population = self.herb_pop
         herb_babies = [newborn for individual in population if
-                          (newborn := individual.giving_birth(len(population)))]
+                          (newborn := individual.giving_birth('Herbivore', len(population)))]
 
         population = self.carn_pop
         carn_babies = [newborn for individual in population if
-                       (newborn := individual.giving_birth(len(population)))]
+                       (newborn := individual.giving_birth('Carnivore', len(population)))]
 
         if len(herb_babies) > 0:
             self.herb_pop += herb_babies

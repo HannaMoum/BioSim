@@ -75,10 +75,10 @@ class Landscape:
         """
 
         herb_babies = [newborn for individual in self.herb_pop if
-                       (newborn := individual.giving_birth(len(self.herb_pop)))]
+                       (newborn := individual.giving_birth('Herbivore', len(self.herb_pop)))]
 
         carn_babies = [newborn for individual in self.carn_pop if
-                       (newborn := individual.giving_birth(len(self.carn_pop)))]
+                       (newborn := individual.giving_birth('Carnivore', len(self.carn_pop)))]
 
         if len(herb_babies) > 0:  # TODO: Make absolutely sure this is necessary (again)
             self.herb_pop += herb_babies

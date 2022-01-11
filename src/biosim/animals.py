@@ -249,23 +249,36 @@ class Animal(ABC):
 
         if all((befruktning, fertil, maternal_health)):  # Om alle disse kriteriene stemmer vil det skje en fødsel.
             # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
-            return True, birth_weight
+            return birth_weight
 
-        return None, None  # Se kommentar under giving_birth. Forbedringspotensiale
+        return None  # Se kommentar under giving_birth. Forbedringspotensiale
 
-    def giving_birth(self, number_of_animals): # TODO: Må oppdateres med carnivore
+    def giving_birth(self, species, number_of_animals):
         """
-        function handling the birth of a new herbivore.
-        Runs if probability_to_give_birth returns True
+        Animal gives birth and loses weight.
 
-        ! Create an attribute (or such) that keeps control of whether this Herbivore has given birth or not
-        this year. (self.mother = False/True)!
+        Animal gives birth if requirements from :py:meth:`.probability_to_give_birth` are met.
+        Weight decreases by newborn's weight :math:`*\\xi`
+
+        Parameters
+        ----------
+        species: `str`
+            Species giving birth.
+        number_of_animals: `int`
+            Number of same species in current terrain before breeding season.
+
+        Returns
+        -------
+        newborn: `obj` or None
+            Class instance for the newborn animal if parent gives birth, otherwise None.
         """
+        birth_weight = self.probability_to_give_birth(number_of_animals)  # Kan ikke unpacke uten noen verdien
 
-        p, birth_weight = self.probability_to_give_birth(number_of_animals)  # Kan ikke unpacke uten noen verdien
-
-        if p:
-            newborn = Herbivore(age=0, weight=birth_weight)
+        if birth_weight:
+            if species == 'Herbivore':
+                newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default?
+            if species == 'Carnivore':
+                newborn = Carnivore(0, birth_weight)
 
             # lose weight
             self._weight -= birth_weight * self.params['xi']
