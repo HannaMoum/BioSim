@@ -134,6 +134,33 @@ class Landscape:
         return p > r
 
     # TODO: Add hunting func from tidying here
+    def hunting(self):
+        """Carnivores hunt herbivores.
+
+        Adjust population of herbivores.
+
+        See Also
+        --------
+        :py:meth:`.killing`, :py:meth:`.probability_to_kill`
+        """
+        hunting_order = random.sample(self.carn_pop, len(self.carn_pop))
+        prey_order = sorted(self.herb_pop, key=lambda x: x.fitness)
+
+        for hunter in hunting_order:
+            hunter.F_tilde = 0
+
+            survivors = [prey for prey in prey_order if not hunter.killing(prey.fitness, prey.weight)]
+            prey_order = survivors
+
+            # Nested version:
+            # survivors = []
+            # for prey in prey_order:
+            #     if not hunter.killing(prey.fitness, prey.weight):
+            #         survivors.append(prey)
+
+            # prey_order = survivors
+
+        self.herb_pop = prey_order
     # def hunting(self):
     #     """ Carnivores hunting
     #     """
