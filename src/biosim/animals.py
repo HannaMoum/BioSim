@@ -246,21 +246,21 @@ class Animal:
         self.age += 1
         self.weight -= self.weight * self.params['eta']
 
-    def migration_direction(self):
-        """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
+    def probability_to_migrate(self):
         r = uniform(0, 1)
         p = self.fitness * self.params['mu']
-        if p > r: # True betyr at den vil flytte seg
-            return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
-        else:
-            return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
 
+        return all((p > r, not self.has_migrated))
 
-    def migration(self, geography):
-        """
-        Migrating-function
-        """
-        pass
+    # def migration_direction(self):
+    #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
+    #     r = uniform(0, 1)
+    #     p = self.fitness * self.params['mu']
+    #     if p > r: # True betyr at den vil flytte seg
+    #         return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
+    #     else:
+    #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
+
 
     def probability_to_give_birth(self, number_of_animals):
         """
