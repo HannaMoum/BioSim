@@ -1,7 +1,7 @@
 """ Implements Animal model used by subspecies."""
 
 import math
-import random, seed, choice, gauss, sample, uniform
+from random import seed, choice, gauss, sample, uniform
 from abc import ABC, abstractmethod  # Remove unless in use
 from dataclasses import dataclass, asdict
 
