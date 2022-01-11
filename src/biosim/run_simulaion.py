@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=30)
 
-    sim.set_landscape_parameters('L', {'f_max': 703})
+    sim.set_landscape_parameters('L', {'f_max': 800})
 
 
     def size_herb_pop(location):
@@ -63,6 +63,9 @@ if __name__ == '__main__':
 
     herb_pop_map = make_property_map(size_herb_pop)
     carn_pop_map = make_property_map(size_carn_pop)
+
+
+
 
     graf = Graphics(sim.island_map)
     graf.plot_island_map()

@@ -40,7 +40,7 @@ class BioSim(BioSim_param):
             _build_map = np.empty(shape=(row, col), dtype='str') # Lager tom np.array som skal fylles med bokstaver for hvert landskap
 
             for row_index, row_string in enumerate(island_map_list): # Går gjennom hver rad
-                for col_index, codes_for_landscape_types in enumerate(row_string): # Går gjennom hver kolonne (elementene i raden)
+                for col_index, codes_for_landscape_types in enumerate(row_string): # Går gjennom hver kolonne (elementene i raden). TODO: Unngå navn som overkjører hverandre
                     _build_map[row_index, col_index] = codes_for_landscape_types  # Leser bokstaven inn i riktig posisjon i arrayen.
 
             return _build_map
@@ -69,6 +69,7 @@ class BioSim(BioSim_param):
 
         :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape
+         params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
         """
         if landscape == 'L':
             Landscape.set_params({'f_max': {'Lowland': params['f_max']}})
@@ -78,6 +79,7 @@ class BioSim(BioSim_param):
             raise ValueError('Feil input')
 
         # Oppdaterer alle eksisterende objekter.f_max. Denne settes normalt kun i __init__, og må oppdateres når klassevariabelen endres.
+        # TODO: Sjekk om dette har tilbakevirkende kraft på instansene som allerede finnes.
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landskapsobjekt = element.item()
@@ -102,10 +104,10 @@ class BioSim(BioSim_param):
                 landskapsobjekt = element.item()
                 current_row, current_col = it.multi_index
 
-                if landskapsobjekt.herb_pop !=[]:
+                if landskapsobjekt.herb_pop:
                     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
                     if landskapsobjekt.is_migratable: # Sjekker at vi står på noe annet enn vann
-                        row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er
+                        row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er -------------------------------------------------------
                         if self.island_map_objects[row-1, col].is_migratable:
                             lovlige_retninger.append((-1, 0))
                         if self.island_map_objects[row+1, col].is_migratable:
@@ -128,10 +130,10 @@ class BioSim(BioSim_param):
                                 moved.append(herbivore)
                                 herbivore.has_migrated = True
 
-                    for herbivore in moved:
+                    for herbivore in moved: # TODO: Kanskje dette kan gjøres uten for-løkke. Trekke fra hele moved på en gang
                         landskapsobjekt.herb_pop.remove(herbivore)
 
-                if landskapsobjekt.carn_pop != []:
+                if landskapsobjekt.carn_pop:
                     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
                     if landskapsobjekt.is_migratable:  # Sjekker at vi står på noe annet enn vann
                         row, col = it.multi_index  # Blir en tuple, med lokasjon på hvor vi er
@@ -165,13 +167,12 @@ class BioSim(BioSim_param):
         for year in range(num_years):
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
-                    location = element.item()
+                    location = element.item() # Landskapsobjekt
                     if location.landscape_type in 'LH':
                         location.regrowth()
                         location.grassing()
                     if location.landscape_type in 'LHD':
                         location.hunting()
-
 
             self.migration_preparation()
             self.migration()
@@ -184,6 +185,7 @@ class BioSim(BioSim_param):
                         location.death()
 
 
+
     def validate_island_map(self, island_map):
         return True
         # Raises value error if rules broken.
@@ -193,6 +195,11 @@ class BioSim(BioSim_param):
         pass
 
     def add_population(self, population):
+        """    ini_herbs = [{'loc': (9, 9),
+                'pop': [{'species': 'Herbivore',
+                'age': 5,
+                'weight': 20}
+                for _ in range(150)]}]"""
         for sp_dict in population:
             for key in sp_dict:
                 if key == 'loc':

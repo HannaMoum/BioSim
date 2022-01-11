@@ -253,7 +253,7 @@ class Animal(ABC):
 
         return None, None  # Se kommentar under giving_birth. Forbedringspotensiale
 
-    def giving_birth(self, number_of_animals):
+    def giving_birth(self, number_of_animals): # TODO: Må oppdateres med carnivore
         """
         function handling the birth of a new herbivore.
         Runs if probability_to_give_birth returns True
