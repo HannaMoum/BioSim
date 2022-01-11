@@ -35,16 +35,20 @@ class BioSim(BioSim_param):
 
     def make_island_map(self, island_map):
         """
-        Mapping island with
+        Mapping island with respect to each landscape letter.
+
         Parameters
         ----------
-        island_map
+        island_map: `str`
+            Geography of island.
+
+            Made up by the letters 'W', 'D', 'L' and 'H' each representing a landscape.
 
         Returns
         -------
-
+        _build_map: `ndarray` of `str`
+            Array containing landscape letters in their respective positions.
         """
-        """Lager kartet som inneholder bokstaver for hver landskapstype ut i fra den geogr-strengen som kommer inn"""
         island_map_list = island_map.split()  # Oppretter liste, splitter ved default på new-line
 
         if self.validate_island_map(island_map_list):  # IMPLEMENTERT
