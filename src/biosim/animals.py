@@ -98,7 +98,7 @@ class Animal(ABC):
         # Property for mengde som dyret har spist
         self._F_tilde = 0
 
-        self._alive = True # Vurder å bruk denne i death også. Brukes kun ved hunting per nå.
+        #self._alive = True # Vurder å bruk denne i death også. Brukes kun ved hunting per nå.
         self._has_migrated = False
 
     @property
