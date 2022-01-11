@@ -390,7 +390,6 @@ class Carnivore(Animal):
         -------
         `bool`
             True if the killing can take place, otherwise False.
-
         """
         r = random.uniform(0, 1)
         fitness_diff = self.fitness - herb_fitness
@@ -407,8 +406,7 @@ class Carnivore(Animal):
         return probability > r
 
     def killing(self, herb_fitness, herb_weight):
-        """
-        Carnivore kills herbivore and eats it.
+        """Carnivore kills herbivore and eats it.
 
         Carnivore kills if requirements from :py:meth:`.probability_to_kill` are met,
         and if carnivore is :py:meth:`.hungry`.
