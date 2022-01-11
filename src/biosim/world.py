@@ -201,14 +201,13 @@ class BioSim(BioSim_param):
                         'respectively given by their belonging capital letter.')
             # Control size
             if len(element) != length_check:
-                raise ValueError('Island map must contain an equal amount of columns')
+                raise ValueError('Island map must contain an equal amount of columns.')
             # Control edges
             if not (element[0] and element[-1]) == 'W':
-                raise ValueError('All outer edges must be of landscape Water')
+                raise ValueError('All the islands` outer edges must be of landscape Water.')
         # Control edges
         if not (island_map[0] and island_map[-1]) == 'W' * length_check:
-            raise ValueError('All outer edges must be of landscape Water')
-
+            raise ValueError('All the islands` outer edges must be of landscape Water.')
 
         return True
         # Raises value error if rules broken.
