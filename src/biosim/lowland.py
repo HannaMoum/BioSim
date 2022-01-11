@@ -210,7 +210,7 @@ class Landscape:
         """
         self.fodder = self.f_max
 
-    # def add_animal(self, added_pop):
+    # def add_animal(self, added_pop): # TODO: Add population på verdens nivå må kalle må denne
     #     """ Function adding animals to landscape-object.
     #         Adding animals will be done initially and optionally mid-sim during break.
     #
