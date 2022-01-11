@@ -35,9 +35,9 @@ class BioSim(BioSim_param):
 
     def make_island_map(self, island_map):
         """Lager kartet som inneholder bokstaver for hver landskapstype ut i fra den geogr-strengen som kommer inn"""
+        island_map_list = island_map.split()  # Oppretter liste, splitter ved default på new-line
 
-        if self.validate_island_map(island_map): # Denne gir kun true enn så lenge.
-            island_map_list = list(island_map.split('\n')) # Lager en liste av geogr-strengen som kommer inn ved å splitte på new-line.
+        if self.validate_island_map(island_map_list):  # IMPLEMENTERT
             row, col = len(island_map_list), len(island_map_list[0]) # Antall rader = antall elementer i lista, antall kolonner = lengden av den første raden
             _build_map = np.empty(shape=(row, col), dtype='str') # Lager tom np.array som skal fylles med bokstaver for hvert landskap
 
@@ -186,12 +186,12 @@ class BioSim(BioSim_param):
                         location.aging()
                         location.death()
 
-    def validate_island_map(self, island_map):
+    def validate_island_map(self, island_map_list):
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
-        island_map = island_map.split()
+        #island_map = island_map.split() #Endret til input
 
-        length_check = len(island_map[0])
-        for element in island_map:
+        length_check = len(island_map_list[0])
+        for element in island_map_list:
             # Control all symbols
             for letter in element:
                 if letter not in 'WHLD':
@@ -206,7 +206,7 @@ class BioSim(BioSim_param):
             if not (element[0] and element[-1]) == 'W':
                 raise ValueError('All the islands` outer edges must be of landscape Water.')
         # Control edges
-        if not (island_map[0] and island_map[-1]) == 'W' * length_check:
+        if not (island_map_list[0] and island_map_list[-1]) == 'W' * length_check:
             raise ValueError('All the islands` outer edges must be of landscape Water.')
 
         return True
