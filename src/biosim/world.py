@@ -21,6 +21,8 @@ class BioSim(BioSim_param):
         self._island_map = self.make_island_map(island_map)
         self._island_map_objects = self.make_island_map_objects()
         self._ini_pop = self.add_population(ini_pop)
+        #self.ini_pop vbrukes ingen andre steder per nå.
+            #Mulig å kun lagre self.ini_pop direkte å bruke det i add_population method direkte
 
 
     @property
@@ -194,6 +196,28 @@ class BioSim(BioSim_param):
     def validate_init_population(self, ini_pop):
         pass
 
+    def add_population(self, population): #Sjekk ut hva bruken for
+        """
+       Initial_population looks like:
+
+        ini_pop = [{'loc': (3,4),
+        'pop': [{'species': 'Herbivore',
+                'age': 10, 'weight': 12.5},
+            {'species': 'Herbivore',
+                'age': 9, 'weight': 10.3}]}]
+        """
+
+        for dictionary in population:
+
+            r, c = dictionary['loc'] #Tuple
+            r -= 1  # Adjustments
+            c -= 1  # Adjustments. Checked.
+
+            landscape_object = self.island_map_objects[r, c]  # henter ut landskapsklasse
+
+            population = dictionary['pop']  # [{},{}]
+            landscape_object.add_animals(population)
+
     # def add_population(self, population):
     #     """    ini_herbs = [{'loc': (9, 9),
     #             'pop': [{'species': 'Herbivore',
@@ -202,11 +226,11 @@ class BioSim(BioSim_param):
     #             for _ in range(150)]}]"""
     #     for sp_dict in population:
     #         for key in sp_dict:
-    #             if key == 'loc':
-    #                 r, c = sp_dict[key]
-    #                 r -= 1
-    #                 c -= 1
-    #                 landscape = self.island_map_objects[r, c]
+    #             if key == 'loc': ###
+    #                 r, c = sp_dict[key] ###
+    #                 r -= 1 ##
+    #                 c -= 1 ##
+    #                 landscape = self.island_map_objects[r, c] ##
     #             if key == 'pop':
     #                 for animal in sp_dict[key]:
     #                     if animal['species'] == 'Herbivore':
