@@ -134,18 +134,37 @@ class BioSim(BioSim_param):
     #                 animal.has_migrated = False
 
     def migration(self):
+        """."""
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landscape_obj = element.item()
                 #####
-                landscape_obj.migration_preparation()
+                landscape_obj.migration_preparation() #BUG
                 ###
-                current_row, current_col = it.multi_index
+                current_row, current_col = it.multi_index #TODO: Keep this but change names. Remove overlapping below
+
+
+                def moving(object, species): #species = self.herb_pop or self.carn_pop #moving
+                    if object.species:
+                        for animal in object.species:
+                            if not animal.has_migrated:
+                                row_direction, col_direction = animal.migration_direction() #Returnerer tuple av hvor dyr vil flytte seg, evt.(0,0)
+                                new_row = current_row + row_direction
+                                new_col = current_col + col_direction
+                                if self.island_map_objects[new_row, new_col].is_migratable:
+                                    self.island_map_objects[new_row, new_col]#.add_animals?
+
+                    return moved #list of every herb/carn that has moved
+                        pass
+
+                # if landscape_obj.is_migratable:
+                    # moved_herbs = moving(landscape_obj, self.herb)
+                    # moved_carns = moving(landscape_obj, carn.herb)
 
                 if landscape_obj.herb_pop:
                     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                    if landscape_obj.is_migratable: # Sjekker at vi står på noe annet enn vann
-                        row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er -------------------------------------------------------
+                    if landscape_obj.is_migratable: # Sjekker at vi står på noe annet enn vann #TODO: Remove when assured we cannot add population to water
+                        row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er #TODO: Handled above
                         if self.island_map_objects[row-1, col].is_migratable:
                             lovlige_retninger.append((-1, 0))
                         if self.island_map_objects[row+1, col].is_migratable:
