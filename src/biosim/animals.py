@@ -340,3 +340,80 @@ class Carnivore(Animal):
         'F': 50.0,
         'DeltaPhiMax': 10.0
     }
+
+    def hungry(self):
+        """
+        Decide whether carnivore is hungry.
+
+        Carnivore is satisfied when it has eaten amount `F` (parameter). #TODO: fix parameters
+
+        Returns
+        -------
+        `bool`
+            True if carnivore is hungry, False otherwise.
+        """
+        return self.F_tilde < self.params['F']
+
+    def probability_to_kill(self, herb_fitness):
+        """
+        Decide the carnivore's probability to kill a herbivore.
+
+        Notes
+        ------
+        #TODO: Equations
+
+        Parameters
+        ----------
+        herb_fitness: `float`
+            Fitness of the herbivore the carnivore is currently hunting.
+
+        Returns
+        -------
+        `bool`
+            True if the killing can take place, otherwise False.
+        """
+        r = uniform(0, 1)
+        fitness_diff = self.fitness - herb_fitness
+
+        if self.fitness <= herb_fitness:
+            return False
+
+        elif 0 < fitness_diff < self.params['DeltaPhiMax']:
+            probability = fitness_diff / self.params['DeltaPhiMax']
+            # TODO: Make parameters work again
+        else:
+            probability = 1
+
+        return probability > r
+
+    def killing(self, herb_fitness, herb_weight):
+        """Carnivore kills herbivore and eats it.
+
+        Carnivore kills if requirements from :py:meth:`.probability_to_kill` are met,
+        and if carnivore is :py:meth:`.hungry`.
+
+        See Also
+        --------
+        :py:meth:`.eat`
+            for eating procedure. Takes :math:`\mathtt{herb\_weight}` as input.
+
+        Parameters
+        ----------
+        herb_fitness: `float`
+            Fitness of herbivore
+        herb_weight: `float`
+            Weight of herbivore
+
+        Returns
+        -------
+        `bool`
+            True if carnivore kills, otherwise False.
+        """
+        if self.hungry():
+            if self.probability_to_kill(herb_fitness):
+                self.eat(herb_weight)
+                return True
+            else:
+                return False
+        else:
+            return False
