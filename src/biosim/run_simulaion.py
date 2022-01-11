@@ -1,5 +1,6 @@
 import textwrap
-from world import BioSim_param, BioSim, Graphics_param, Graphics
+from world import BioSim_param, BioSim
+from graphics import Graphics, Graphics_param
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
