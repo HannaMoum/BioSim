@@ -34,6 +34,16 @@ class BioSim(BioSim_param):
 
 
     def make_island_map(self, island_map):
+        """
+        Mapping island with
+        Parameters
+        ----------
+        island_map
+
+        Returns
+        -------
+
+        """
         """Lager kartet som inneholder bokstaver for hver landskapstype ut i fra den geogr-strengen som kommer inn"""
         island_map_list = island_map.split()  # Oppretter liste, splitter ved default på new-line
 
