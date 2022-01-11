@@ -42,8 +42,8 @@ class BioSim(BioSim_param):
             _build_map = np.empty(shape=(row, col), dtype='str') # Lager tom np.array som skal fylles med bokstaver for hvert landskap
 
             for row_index, row_string in enumerate(island_map_list): # Går gjennom hver rad
-                for col_index, codes_for_landscape_types in enumerate(row_string): # Går gjennom hver kolonne (elementene i raden). TODO: Unngå navn som overkjører hverandre
-                    _build_map[row_index, col_index] = codes_for_landscape_types  # Leser bokstaven inn i riktig posisjon i arrayen.
+                for col_index, landscape_letter in enumerate(row_string): # Går gjennom hver kolonne (elementene i raden).
+                    _build_map[row_index, col_index] = landscape_letter  # Leser bokstaven inn i riktig posisjon i arrayen.
 
             return _build_map
 
