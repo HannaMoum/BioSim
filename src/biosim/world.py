@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
 from biosim.lowland import Landscape
+from biosim.animals import Animal
 import textwrap
 
 
@@ -130,7 +131,7 @@ class BioSim(BioSim_param):
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landscape_obj = element.item()
-                landscape_obj.migration_preparation()
+                landscape_obj.migration_prep()  # Better hierarcy
                 # for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
                 #     animal.has_migrated = False
 
