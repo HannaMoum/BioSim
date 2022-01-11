@@ -26,23 +26,34 @@ class Params:
 
 
 class Landscape:
+    """A landscape with corresponding characteristics and traits for different terrains.
+
+    Notes
+    ------
+    Implemented terrains are: :py:class:`.Lowland`, :py:class:`.Highland`,
+    :py:class:`.Desert` and :py:class:`.Water`. #Move to Sphinx doc(?)
+
+    Attributes
+    ----------
+    fodder: `int` or `float`
+        Fodder available
+    herb_pop: `list` of :py:class:`.animals.Herbivore`.
+        Herbivore population
+    carn_pop: `list` of :py:class:`.animals.Carnivore`
+        Carnivore population
+    #TODO: Add new attributes
     """
-    Doc-strings
-    """
+
+    # dict: Parameter values for calculations
     params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
 
-
     def __init__(self, landscape_type):
-        """
-        Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
-        """
         self._landscape_type = landscape_type
 
         if landscape_type == 'W':
             self._is_migratable = False
         else:
             self._is_migratable = True
-
 
         if self.landscape_type == 'H':
             self.f_max = self.params['f_max']['Highland']
@@ -58,8 +69,8 @@ class Landscape:
 
     @classmethod
     def set_params(cls, new_params):
-        """
-        Function to edit paramteres
+        """Set class parameters.
+        #TODO: Edit
         new_params: Dict
         params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
         new_params = {'f_max': {'Highland': 200.0}}
@@ -72,19 +83,21 @@ class Landscape:
             if 'Lowland' in value_dict:
                 cls.params = {'f_max': {'Lowland': value_dict['Lowland'], 'Highland': cls.params['f_max']['Highland']}}
 
-
-
     @property
     def landscape_type(self):
+        """TODO: Doc, read-only"""
         return self._landscape_type
 
     @property
     def is_migratable(self):
+        """TODO: Doc, read-only"""
         return self._is_migratable
 
     @property
     def fodder(self):
+        """Fodder available in current landscape (`int` or `float`)."""
         return self._fodder
+
     @fodder.setter
     def fodder(self, value):
         if value > self.f_max:
@@ -93,23 +106,30 @@ class Landscape:
 
     @property
     def herb_pop(self):
+        """Population of herbivores in current landscape (`list` of :py:class:`.animals.Herbivore`)."""
         return self._herb_pop
+
     @herb_pop.setter
     def herb_pop(self, value):
         self._herb_pop = value
 
     @property
     def carn_pop(self):
+        """Population of carnivores in current landscape (`list` of :py:class:`.animals.Carnivore`)."""
         return self._carn_pop
+
     @carn_pop.setter
     def carn_pop(self, value):
         self._carn_pop = value
 
     def grassing(self):
+        """Feed all herbivores and adjust available fodder.
+
+        Notes
+        -----
+        Herbivores eat in order of fitness until everyone is satisfied
+        or no more fodder is available.
         """
-        Function handling the animals eating in correct order
-        """
-        # Sort list, highest fitness first:
         for herbivore in sorted(self.herb_pop, key=lambda x: x.fitness, reverse=True):
             herbivore.F_tilde = 0
             eaten = herbivore.eat(self.fodder) # Her returneres måltid, dvs. det de har spist
