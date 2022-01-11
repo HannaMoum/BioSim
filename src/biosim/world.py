@@ -21,8 +21,9 @@ class BioSim(BioSim_param):
         self._island_map = self.make_island_map(island_map)
         self._island_map_objects = self.make_island_map_objects()
         self._ini_pop = self.add_population(ini_pop)
-        #self.ini_pop vbrukes ingen andre steder per nå.
-            #Mulig å kun lagre self.ini_pop direkte å bruke det i add_population method direkte
+            #self.ini_pop variabel brukes ingen andre steder per nå.
+            #Mulig å kun lagre self.ini_pop direkte og bruke det i add_population method direkte
+            #Handlingen add_pop som er viktig, returnerer ingenting
 
 
     @property
@@ -207,7 +208,7 @@ class BioSim(BioSim_param):
                 'age': 9, 'weight': 10.3}]}]
         """
 
-        for dictionary in population:
+        for dictionary in population: #kan kanskje bare bruke self.ini_pop
 
             r, c = dictionary['loc'] #Tuple
             r -= 1  # Adjustments
