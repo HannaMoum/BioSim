@@ -152,7 +152,7 @@ class Landscape:
             return [individual for individual in species if not individual.probability_of_death()]
 
         self.herb_pop = alive(self.herb_pop)
-        self.carn_pop = alive(self.herb_pop)
+        self.carn_pop = alive(self.carn_pop)
 
     def regrowth(self):
         """Reset available fodder in terrain to maximum.
