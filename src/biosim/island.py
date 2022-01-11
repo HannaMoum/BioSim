@@ -1,4 +1,5 @@
 """ Class handling the geography of the island"""
+# OUTDATED FILE, to be deleted
 import textwrap
 from .landscapes import Landscape, Lowland, Highland, Desert, Water #Landscape is main class
     # Do we automatically also import subclasses in this case? // Do manually?

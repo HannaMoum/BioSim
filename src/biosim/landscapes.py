@@ -3,7 +3,7 @@
 from .animals import Animal, Herbivore, Carnivore
 from itertools import chain
 import random
-
+# OUTDATED FILE, to be deleted
 # TODO: Relative importing does not work. Fix it
 # TODO: When finished check that all method names are correct when overriding
 
