@@ -180,6 +180,11 @@ class Landscape:
         if len(carn_babies) > 0:
             self.carn_pop += carn_babies
 
+    def migration_preparation(self):
+        """Prepare animal for migration."""
+        for animal in self.herb_pop + self.carn_pop:
+            animal.has_migrated = False
+
     def aging(self):
         """Age all animals by one year.
 
