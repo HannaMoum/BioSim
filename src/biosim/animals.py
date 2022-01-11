@@ -193,10 +193,11 @@ class Animal(ABC):
 
         return måltid
 
-    @property
-    def hungry(self):
-        """Sjekker om dyret er sulten, mao. ønsker å spise"""
-        return self.F_tilde < self.params['F']
+    # todo: Remove when new hunting method is working
+    # @property
+    # def hungry(self):
+    #     """Sjekker om dyret er sulten, mao. ønsker å spise"""
+    #     return self.F_tilde < self.params['F']
 
     def age_and_weightloss(self):
         """
