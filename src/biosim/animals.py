@@ -1,6 +1,8 @@
+""" Implements Animal model used by subspecies."""
+
 import math
-from random import random, seed, choice, gauss, sample, uniform
-from abc import ABC, abstractmethod
+import random, seed, choice, gauss, sample, uniform
+from abc import ABC, abstractmethod  # Remove unless in use
 from dataclasses import dataclass, asdict
 
 @dataclass
@@ -42,8 +44,26 @@ class Herbivore_params:
 class Carnivore_params:
     mu: float = 0.4
 
+class Animal:
+    """Animal with corresponding characteristics and traits for different species.
 
-class Animal(ABC):
+    Notes
+    ------
+    Implemented species are :py:class:`.Herbivore` and :py:class:`.Carnivore`. #Move to Sphinx doc(?)
+
+    Parameters
+    ----------
+    age: `int`
+        The animal's age.
+    weight: `float`
+        The animal's weight.
+
+    Attributes
+    ----------
+    TODO: Add new attributes
+    """
+
+    # dict: Parameter values for calculations
     params = {
         'w_birth': None,
         'sigma_birth': None,
@@ -61,6 +81,7 @@ class Animal(ABC):
         'F': None,
         'DeltaPhiMax': None
     }
+
     @classmethod
     def set_params(cls, new_params):
         """
@@ -68,36 +89,36 @@ class Animal(ABC):
 
         Parameters
         ----------
-        new_params : dict
-            Legal keys: ''
+        new_params: dict, optional
+            Legal keys: 'w_birth', 'sigma_birth', 'beta',
+                        'eta', 'a_half', 'phi_age', 'w_half',
+                        'phi_weight', 'mu', 'gamma', 'zeta',
+                        'xi', 'omega', 'F',' 'DeltaPhiMax'
 
         Raises
-        ------
-        ValueError, KeyError
+        -------
+        ValueError
+            Parameter value is negative
+        KeyError
+            Parameter key is not a Legal key
         """
 
-        #  Checks if key in new_params exists in params
+        if not all(value >= 0 for value in new_params.values()):
+            raise ValueError('Invalid value for parameter: ' + key)
+
         for key in new_params:
             if key not in cls.params:
                 raise KeyError('Invalid parameter name: ' + key)
-            if not all(value >= 0 for value in new_params.values()):
-                raise ValueError('Invalid value for parameter: ' + key)
-            if key == 'eta':
-                if not 0 <= new_params['eta'] <= 1:
-                    raise ValueError('eta must be in [0, 1].')
-            # Update params
+
+            if key == 'eta' and not 0 <= new_params['eta'] <= 1:
+                raise ValueError('eta must be in interval [0, 1].')
+
             cls.params[key] = new_params[key]
 
-
     def __init__(self, age, weight):
-        """Legg til doc-string."""
-
         self._age = age
         self._weight = weight
-
-        # Property for mengde som dyret har spist
-        self._F_tilde = 0
-
+        self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
         self._has_migrated = False
 
     @property
@@ -109,84 +130,118 @@ class Animal(ABC):
 
     @staticmethod
     def check_positive(value):
+        """Command a value to be positive or equal to zero."""
         if value < 0:
             raise ValueError('Value must be positive')
 
     @staticmethod
     def check_integer(value):
-        if not type(value) == int:
+        """Command a value to be an integer type."""
+        if not float(value).is_integer():  # Must convert to float to work for integers.
             raise ValueError('Value must be integer')
+            # Does not raise correct error if value cannot be converted to float
 
     @property
     def age(self):
+        """The animal's age (`int`).
+
+        A whole, positive number."""
         return self._age
+
     @age.setter
     def age(self, value):
         self.check_integer(value)
         self.check_positive(value)
-
         self._age = value
 
     @property
     def weight(self):
+        """The animal's weight (`int` or `float`)."""
         return self._weight
+
     @weight.setter
     def weight(self, value):
         self.check_positive(value)
+        # Må vi kanskje sjekke at dette er float/int eller blir det smør på flesk...
         self._weight = value
 
     @property
     def F_tilde(self):
-        """Eaten amount"""
+        """Food currently eaten this year (`int` or `float`)."""
         return self._F_tilde
+
     @F_tilde.setter
     def F_tilde(self, value):
         self._F_tilde = value
 
     @property
     def fitness(self):
+        """The animal's fitness (`float`, read-only).
+
+        Notes
+        ------
+        The fitness is calculated using formula:
+
+        .. math::
+            \Phi = \\begin{cases}
+                0  & w {\\leq} 0
+                \\\ q^+(a, a_{\\frac{1}{2}}, \phi_{age}) * \
+                    q^-(w, w_{\\frac{1}{2}},\phi_{weight}) & else
+            \\end{cases}
+
+        where a and w is the animal's age and weight respectively, and
+
+        .. math::
+            q^{\\pm}(x, x_{\\frac{1}{2}}, \phi) = \
+            {\\frac{1}{1+e^{\\pm\phi(x-x_{\\frac{1}{2}})}}}
+
+        For more information see :py:obj:`.params`. #TODO: Change when parameters are updated.
         """
-        calculate fitness-condition based on age and weight
-        Return "self.fitness"
-        """
-        # Maby q as function inside fitness function.
+
+        def q(sgn, x, x_half, phi):
+            return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 
         if self.weight <= 0:
             return 0
         else:
-            q_plus = Animal._q(+1, self.age, self.params['a_half'], self.params['phi_age'])
-            q_minus = Animal._q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
+            q_plus = q(+1, self.age, self.params['a_half'], self.params['phi_age'])
+            q_minus = q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
 
             return q_plus * q_minus
 
-    @staticmethod
-    def _q(sgn, x, x_half, phi):
-        """
-        Legg inn doc-string
-        sgn = fortegnet i regnestykket (+1 eller -1)
-        """
-        return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
-
     def eat(self, food_available):
         """
-        Function that makes the animal eat. First step is to check if any fodder/food is available.
-        beta*F_tilde
-        F_tilde = det som blir spist
+        Animal gains weight from eating.
+
+        Animal will always eat until satisfied (parameter `F`) or eat :math:`\mathtt{food\_available}`.
+        Weight increases by `Food eaten` :math:`* \\beta`.
+
+        Parameters
+        ----------
+        food_available: `int` or `float`
+            Fodder in current terrain or weight of killed herbivore.
+        Returns
+        -------
+        `int` or `float`
+            Food eaten
         """
-        max_måltid = self.params['F'] - self.F_tilde  # Hvor mye plass det er i magen
-        if max_måltid < food_available:
-            måltid = max_måltid
+        wanted_food = self.params['F'] - self.F_tilde
+        # Only necessary for Carnivores
+
+        if food_available >= wanted_food:
+            eaten = wanted_food
         else:
-            måltid = food_available
+            eaten = food_available
 
-        self.weight += måltid * self.params['beta']
-        self.F_tilde += måltid
+        self.weight += eaten * self.params['beta']
+        self.F_tilde += eaten  # TODO: Is it possible to make this only an attribute for carnivores (F_tilde)
 
-        return måltid
+        return eaten  # Only necessary for Herbivores
 
     def age_and_weightloss(self):
-        """
-        After 1 year passed, each herbivore becomes 1 year older
+        """Age animal by one year and lose weight.
+
+        Weight reduces by factor :math:`\eta`.
         """
         self.age += 1
         self.weight -= self.weight * self.params['eta']
@@ -201,7 +256,6 @@ class Animal(ABC):
             return (0, 0) # Stå stille
 
 
-
     def migration(self, geography):
         """
         Migrating-function
@@ -210,34 +264,65 @@ class Animal(ABC):
 
     def probability_to_give_birth(self, number_of_animals):
         """
-        Function giving the probability for giving birth
-        (number_of_herbivores is the number of herbivores before the breeding season starts)
-        N = number of herbivores. Dette må komme fra lowland klassen, som har oversikt over hvor mange dyr det er i cellen.
+        Decide the animal's probability to give birth.
+
+        Notes
+        ------
+        The probability to give birth is
+
+        .. math::
+
+            min(1, \gamma * \Phi * (N-1)).
+
+        The probability is zero if:
+
+        .. math::
+
+             N &= 1
+
+             &or
+
+             w < \zeta(&w_{birth} + \sigma_{birth})
+
+        where
+        :math:`\Phi` is the animal's :py:attr:`.fitness`, :math:`w` the :py:attr:`.weight`,\
+         and N is :math:`\mathtt{numer\_of\_animals}`
+
+        At birth, the mother loses :math:`\\xi` times the birthweight of the baby.
+        If this is more than her own weight, no baby is born and mother's weight remain unchanged.
+
+        Gender plays no role in mating.
+        Each animal can give birth to at most one offspring every year.
+        #TODO: Add description and implement new conditions
+
+        For more information see :py:obj:`.params`. #TODO: Change when parameters are updated.
+
+        Parameters
+        ----------
+        number_of_animals: `int`
+            Number of same species in current terrain before breeding season.
+
+        Returns
+        -------
+        birth_weight: `float` or `bool`
+            Birth weight of animal if birth takes place, otherwise False.
         """
-
-        # probability = min(1, self.params['gamma'] * self.fitness * (self.instance_count - 1))
-        # number_of_animals = Lowland.number_of_current_living_animals()
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
-
         r = uniform(0, 1)
 
-        befruktning = r < probability  # Sannsynligheten for at det skjer en befruktning
+        fertilization = r < probability
 
-        fertil = self.weight > self.params['zeta'] * (self.params['w_birth'] + self.params[
-            'sigma_birth'])  # Denne sannsynligheten ser på om populasjonen tenderer til å ha store barn.
+        weight_check = self.weight > self.params['zeta'] * \
+                 (self.params['w_birth'] + self.params['sigma_birth'])
 
-        # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__ når en ny herbivore opprettes.
+        birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])
 
-        birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])  # regner ut fødselsvekt.
+        maternal_health = self.weight > birth_weight * self.params['xi']
 
-        maternal_health = self.weight > birth_weight * self.params[
-            'xi']  # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
-
-        if all((befruktning, fertil, maternal_health)):  # Om alle disse kriteriene stemmer vil det skje en fødsel.
-            # Returnerer true for å angi at fødsel skjer, og birth_weight fordi denne brukes når en ny herbivore opprettes.
+        if all((fertilization, weight_check, maternal_health)):
             return birth_weight
 
-        return None  # Se kommentar under giving_birth. Forbedringspotensiale
+        return False
 
     def giving_birth(self, species, number_of_animals):
         """
@@ -245,7 +330,7 @@ class Animal(ABC):
 
         Animal gives birth if requirements from :py:meth:`.probability_to_give_birth` are met.
         Weight decreases by newborn's weight :math:`*\\xi`
-
+        
         Parameters
         ----------
         species: `str`
@@ -258,24 +343,38 @@ class Animal(ABC):
         newborn: `obj` or None
             Class instance for the newborn animal if parent gives birth, otherwise None.
         """
-        birth_weight = self.probability_to_give_birth(number_of_animals)  # Kan ikke unpacke uten noen verdien
+        birth_weight = self.probability_to_give_birth(number_of_animals)
 
         if birth_weight:
             if species == 'Herbivore':
-                newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default?
+                newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default? YES
             if species == 'Carnivore':
                 newborn = Carnivore(0, birth_weight)
 
-            # lose weight
+            #TODO: Optimization possibilities
             self._weight -= birth_weight * self.params['xi']
 
             return newborn
+
         return None
 
     def probability_of_death(self):
-        """ Decides whether or not the animal dies """
+        """
+        Decide whether animal dies.
+
+        Notes
+        -----
+        An animal dies:
+            #. from starvation if its' weight is zero
+            #. from sickness with probability :math:`\omega(1-\Phi)`
+
+        Returns
+        -------
+        `bool`
+            True if animal dies, otherwise False.
+        """
         starvation = self.weight <= 0
-        # Random death
+
         probability = self.params['omega'] * (1 - self.fitness)
         r = uniform(0, 1)
         sickness = r < probability
@@ -284,7 +383,6 @@ class Animal(ABC):
 
 
 class Herbivore(Animal):
-
     params = {
         'w_birth': 8,
         'sigma_birth': 1.5,
@@ -304,7 +402,6 @@ class Herbivore(Animal):
     """"
     Legg inn doc-string
     """
-
 
 
 class Carnivore(Animal):
