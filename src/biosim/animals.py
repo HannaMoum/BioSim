@@ -98,7 +98,6 @@ class Animal(ABC):
         # Property for mengde som dyret har spist
         self._F_tilde = 0
 
-        #self._alive = True # Vurder å bruk denne i death også. Brukes kun ved hunting per nå.
         self._has_migrated = False
 
     @property
@@ -108,13 +107,6 @@ class Animal(ABC):
     def has_migrated(self, bool):
         self._has_migrated = bool
 
-
-    @property
-    def alive(self):
-        return self._alive
-    @alive.setter
-    def alive(self, value):
-        self._alive = value
 
     @staticmethod
     def check_positive(value):
