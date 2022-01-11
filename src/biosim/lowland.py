@@ -190,8 +190,11 @@ class Landscape:
             animal.age_and_weightloss()
 
     def death(self):
-        """
-        Kill herbivores and adjust self.herb_pop to only contain the living
+        """Remove dying animals.
+
+        See Also
+        --------
+        :py:meth:`probability_of_death`
         """
         alive_herbs = [animal for animal in self.herb_pop if not animal.probability_of_death()]
         alive_carns = [animal for animal in self.carn_pop if not animal.probability_of_death()]
