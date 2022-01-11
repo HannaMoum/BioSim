@@ -25,43 +25,69 @@ class Params:
     DeltaPhiMax: float = 10.0
 
 
-class Lowland:
+class Landscape:
     """
     Doc-strings
     """
+    params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
 
-    params = {
-        'f_max': 800.0
-    }
+
+    def __init__(self, landscape_type):
+        """
+        Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
+        """
+        self._landscape_type = landscape_type
+
+        if landscape_type == 'W':
+            self._is_migratable = False
+        else:
+            self._is_migratable = True
+
+
+        if self.landscape_type == 'H':
+            self.f_max = self.params['f_max']['Highland']
+        elif self.landscape_type == 'L':
+            self.f_max = self.params['f_max']['Lowland']
+        else:
+            self.f_max = 0
+
+        self._fodder = self.f_max  # Initial amount of fodder
+        self._herb_pop = []
+        self._carn_pop = []
+
 
     @classmethod
     def set_params(cls, new_params):
         """
         Function to edit paramteres
         new_params: Dict
+        params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
+        new_params = {'f_max': {'Highland': 200.0}}
+        Landscape.set_params({'f_max': {'Highland': params['f_max']}})
         """
-        #Should this be run for every simulation? If so, params should be default...
-        for key, value in new_params.items():
-            if key not in cls.params:
-                raise KeyError('Invalid parameter name: ' + key)
-            if value < 0:
-                raise ValueError('Invalid value for parameter: ' + key)
-            cls.params[key] = new_params[key]
+        if 'f_max' in new_params:
+            value_dict = new_params['f_max']
+            if 'Highland' in value_dict:
+                cls.params = {'f_max': {'Highland': value_dict['Highland'], 'Lowland': cls.params['f_max']['Lowland']}}
+            if 'Lowland' in value_dict:
+                cls.params = {'f_max': {'Lowland': value_dict['Lowland'], 'Highland': cls.params['f_max']['Highland']}}
 
-    def __init__(self, initial_herb_pop, initial_carn_pop):
-        """
-        Initial_pop looks like [Herbivore_class, Herbivore_class, ...]
-        """
-        self._fodder = self.params['f_max']  # Initial amount of fodder
-        self._herb_pop = initial_herb_pop
-        self._carn_pop = initial_carn_pop
+
+
+    @property
+    def landscape_type(self):
+        return self._landscape_type
+
+    @property
+    def is_migratable(self):
+        return self._is_migratable
 
     @property
     def fodder(self):
         return self._fodder
     @fodder.setter
     def fodder(self, value):
-        if value > self.params['f_max']:
+        if value > self.f_max:
             raise ValueError('Value must be below f_max')
         self._fodder = value
 
@@ -78,7 +104,6 @@ class Lowland:
     @carn_pop.setter
     def carn_pop(self, value):
         self._carn_pop = value
-
 
     def grassing(self):
         """
@@ -124,9 +149,9 @@ class Lowland:
             for prey in prey_order:
                 if prey.alive:
                     if hunter.hungry:
-                        if Lowland.hunting_success(prey.fitness,
-                                                           hunter.fitness,
-                                                           Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
+                        if Landscape.hunting_success(prey.fitness,
+                                                            hunter.fitness,
+                                                            Params.DeltaPhiMax): # hunter.params['DeltaPhiMax']
                                     hunter.eat(prey.weight)
                                     prey.alive = False
 
@@ -159,24 +184,6 @@ class Lowland:
             self.carn_pop += carn_babies
 
 
-
-        ## Replaced version
-        # new_herbivores =[]
-        # for herbivore in self.herb_pop:
-        #     newborn = herbivore.giving_birth(number_of_herbivores)
-        #
-        #     if newborn:  # Checks that newborn is not None
-        #         new_herbivores.append(newborn)
-
-
-
-
-    def migration(self):
-        """
-        Herbivores migrating or staying put
-        """
-        pass
-
     def aging(self):
         """
         The herbivores turn one year older and looses weight.
@@ -192,21 +199,43 @@ class Lowland:
         """
         alive_herbs = [animal for animal in self.herb_pop if not animal.probability_of_death()]
         alive_carns = [animal for animal in self.carn_pop if not animal.probability_of_death()]
+
         self.herb_pop = alive_herbs
         self.carn_pop = alive_carns
 
-        # alive = []
-        # for animal in self.herb_pop:
-        #     if not animal.probability_of_death():
-        #         alive.append(animal)
-        #
-        # self.herb_pop = alive
 
     def regrowth(self):
         """
         Method to reset the amount of fodder by the end of the year
         """
-        self.fodder = self.params['f_max']
+        self.fodder = self.f_max
+
+    # def add_animal(self, added_pop):
+    #     """ Function adding animals to landscape-object.
+    #         Adding animals will be done initially and optionally mid-sim during break.
+    #
+    #         Input: List of dictionaries as in;
+    #          [{'species': 'Herbivore',
+    #             'age': 10, 'weight': 12.5},
+    #         {'species': 'Herbivore',
+    #             'age': 9, 'weight': 10.3}]
+    #
+    #         Source url for finding all subclass names (read 08.01):
+    #         https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
+    #
+    #     for animal in added_pop:
+    #         # animal = {'species': H, 'age': _ , 'weight': _ }
+    #         age = animal['age']
+    #         weight = animal['weight']
+    #
+    #         if animal['species'] == 'Herbivore':
+    #             self.herb_pop += [Herbivore(age, weight)]
+    #         elif animal['species'] == 'Carnivore':
+    #             self.carn_pop += [Carnivore(age, weight)]
+    #         else:
+    #             raise TypeError(f'{animal} is not a defined animal.\n'
+    #                             f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
+
 
 
 

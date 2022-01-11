@@ -1,6 +1,47 @@
 import math
-import random
+from random import random, seed, choice, gauss, sample, uniform
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, asdict
+
+@dataclass
+class Animal_params:
+    w_birth:        float
+    sigma_birth:    float
+    beta:           float
+    eta:            float
+    a_half:         float
+    phi_age:        float
+    w_half:         float
+    phi_weight:     float
+    mu:             float
+    gamma:          float
+    zeta:           float
+    xi:             float
+    omega:          float
+    F:              float
+
+
+@dataclass
+class Herbivore_params:
+    w_birth:        float = 8.0
+    sigma_birth:    float = 1.5
+    beta:           float = 0.9
+    eta:            float = 0.05
+    a_half:         float = 40.0
+    phi_age:        float = 0.6
+    w_half:         float = 10.0
+    phi_weight:     float = 0.1
+    mu:             float = 0.25
+    gamma:          float = 0.2
+    zeta:           float = 3.5
+    xi:             float = 1.2
+    omega:          float = 0.4
+    F:              float = 10.0
+
+@dataclass
+class Carnivore_params:
+    mu: float = 0.4
+
 
 class Animal(ABC):
     params = {
@@ -58,6 +99,15 @@ class Animal(ABC):
         self._F_tilde = 0
 
         self._alive = True # Vurder å bruk denne i death også. Brukes kun ved hunting per nå.
+        self._has_migrated = False
+
+    @property
+    def has_migrated(self):
+        return self._has_migrated
+    @has_migrated.setter
+    def has_migrated(self, bool):
+        self._has_migrated = bool
+
 
     @property
     def alive(self):
@@ -155,6 +205,17 @@ class Animal(ABC):
         self.age += 1
         self.weight -= self.weight * self.params['eta']
 
+    def migration_direction(self):
+        """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
+        r = uniform(0, 1)
+        p = self.fitness * self.params['mu']
+        if p > r: # True betyr at den vil flytte seg
+            return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
+        else:
+            return (0, 0) # Stå stille
+
+
+
     def migration(self, geography):
         """
         Migrating-function
@@ -172,7 +233,7 @@ class Animal(ABC):
         # number_of_animals = Lowland.number_of_current_living_animals()
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
 
-        r = random.uniform(0, 1)
+        r = uniform(0, 1)
 
         befruktning = r < probability  # Sannsynligheten for at det skjer en befruktning
 
@@ -181,7 +242,7 @@ class Animal(ABC):
 
         # Må regne ut birth_weight for å vite om det blir en fødsel. Birth_weight blir tatt videre til __init__ når en ny herbivore opprettes.
 
-        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])  # regner ut fødselsvekt.
+        birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])  # regner ut fødselsvekt.
 
         maternal_health = self.weight > birth_weight * self.params[
             'xi']  # Sjekker om moren sin vekt er mer enn det hun vil miste når hun føder.
@@ -192,7 +253,7 @@ class Animal(ABC):
 
         return None, None  # Se kommentar under giving_birth. Forbedringspotensiale
 
-    def giving_birth(self, number_of_animals):
+    def giving_birth(self, number_of_animals): # TODO: Må oppdateres med carnivore
         """
         function handling the birth of a new herbivore.
         Runs if probability_to_give_birth returns True
@@ -217,7 +278,7 @@ class Animal(ABC):
         starvation = self.weight <= 0
         # Random death
         probability = self.params['omega'] * (1 - self.fitness)
-        r = random.uniform(0, 1)
+        r = uniform(0, 1)
         sickness = r < probability
 
         return any((starvation, sickness))
