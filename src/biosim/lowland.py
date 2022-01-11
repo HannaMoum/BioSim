@@ -211,6 +211,36 @@ class Landscape:
         """
         self.fodder = self.f_max
 
+    def add_animal(self, added_pop):
+        """Add animals to current location.
+
+        Parameters
+        ----------
+        added_pop: `list` of `dict`
+            Added population of chosen species in current location.
+
+        Raises
+        -------
+        TypeError
+            Added animal does not exist.
+
+        References
+        ----------
+        [1]_ https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name
+        (read 08.01)
+        """
+        for animal in added_pop:
+            age = animal['age']
+            weight = animal['weight']
+
+            if animal['species'] == 'Herbivore':
+                self.herb_pop += [Herbivore(age, weight)]
+            elif animal['species'] == 'Carnivore':
+                self.carn_pop += [Carnivore(age, weight)]
+            else:
+                raise TypeError(f'{animal} is not a defined animal.\n'
+                                f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
+
     # def add_animal(self, added_pop): # TODO: Add population på verdens nivå må kalle må denne
     #     """ Function adding animals to landscape-object.
     #         Adding animals will be done initially and optionally mid-sim during break.
