@@ -156,14 +156,6 @@ class Landscape:
             survivors = [prey for prey in prey_order if not hunter.killing(prey.fitness, prey.weight)]
             prey_order = survivors
 
-            # Nested version:
-            # survivors = []
-            # for prey in prey_order:
-            #     if not hunter.killing(prey.fitness, prey.weight):
-            #         survivors.append(prey)
-
-            # prey_order = survivors
-
         self.herb_pop = prey_order
 
     def give_birth(self):
