@@ -1,9 +1,48 @@
 """ Implements Animal model used by subspecies."""
 
 import math
-import random
+import random, seed, choice, gauss, sample, uniform
 from abc import ABC, abstractmethod  # Remove unless in use
+from dataclasses import dataclass, asdict
 
+@dataclass
+class Animal_params:
+    w_birth:        float
+    sigma_birth:    float
+    beta:           float
+    eta:            float
+    a_half:         float
+    phi_age:        float
+    w_half:         float
+    phi_weight:     float
+    mu:             float
+    gamma:          float
+    zeta:           float
+    xi:             float
+    omega:          float
+    F:              float
+
+
+@dataclass
+class Herbivore_params:
+    w_birth:        float = 8.0
+    sigma_birth:    float = 1.5
+    beta:           float = 0.9
+    eta:            float = 0.05
+    a_half:         float = 40.0
+    phi_age:        float = 0.6
+    w_half:         float = 10.0
+    phi_weight:     float = 0.1
+    mu:             float = 0.25
+    gamma:          float = 0.2
+    zeta:           float = 3.5
+    xi:             float = 1.2
+    omega:          float = 0.4
+    F:              float = 10.0
+
+@dataclass
+class Carnivore_params:
+    mu: float = 0.4
 
 class Animal:
     """Animal with corresponding characteristics and traits for different species.
@@ -18,6 +57,10 @@ class Animal:
         The animal's age.
     weight: `float`
         The animal's weight.
+
+    Attributes
+    ----------
+    TODO: Add new attributes
     """
 
     # dict: Parameter values for calculations
@@ -76,6 +119,14 @@ class Animal:
         self._age = age
         self._weight = weight
         self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
+        self._has_migrated = False
+
+    @property
+    def has_migrated(self):
+        return self._has_migrated
+    @has_migrated.setter
+    def has_migrated(self, bool):
+        self._has_migrated = bool
 
     @staticmethod
     def check_positive(value):
@@ -195,6 +246,16 @@ class Animal:
         self.age += 1
         self.weight -= self.weight * self.params['eta']
 
+    def migration_direction(self):
+        """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
+        r = uniform(0, 1)
+        p = self.fitness * self.params['mu']
+        if p > r: # True betyr at den vil flytte seg
+            return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
+        else:
+            return (0, 0) # Stå stille
+
+
     def migration(self, geography):
         """
         Migrating-function
@@ -232,6 +293,7 @@ class Animal:
 
         Gender plays no role in mating.
         Each animal can give birth to at most one offspring every year.
+        #TODO: Add description and implement new conditions
 
         For more information see :py:obj:`.params`. #TODO: Change when parameters are updated.
 
@@ -246,14 +308,14 @@ class Animal:
             Birth weight of animal if birth takes place, otherwise False.
         """
         probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
-        r = random.uniform(0, 1)
+        r = uniform(0, 1)
 
         fertilization = r < probability
 
         weight_check = self.weight > self.params['zeta'] * \
                  (self.params['w_birth'] + self.params['sigma_birth'])
 
-        birth_weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+        birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])
 
         maternal_health = self.weight > birth_weight * self.params['xi']
 
@@ -268,7 +330,7 @@ class Animal:
 
         Animal gives birth if requirements from :py:meth:`.probability_to_give_birth` are met.
         Weight decreases by newborn's weight :math:`*\\xi`
-
+        
         Parameters
         ----------
         species: `str`
@@ -285,9 +347,10 @@ class Animal:
 
         if birth_weight:
             if species == 'Herbivore':
-                newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default?
+                newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default? YES
             if species == 'Carnivore':
                 newborn = Carnivore(0, birth_weight)
+
             #TODO: Optimization possibilities
             self._weight -= birth_weight * self.params['xi']
 
@@ -313,7 +376,7 @@ class Animal:
         starvation = self.weight <= 0
 
         probability = self.params['omega'] * (1 - self.fitness)
-        r = random.uniform(0, 1)
+        r = uniform(0, 1)
         sickness = r < probability
 
         return any((starvation, sickness))
@@ -391,7 +454,7 @@ class Carnivore(Animal):
         `bool`
             True if the killing can take place, otherwise False.
         """
-        r = random.uniform(0, 1)
+        r = uniform(0, 1)
         fitness_diff = self.fitness - herb_fitness
 
         if self.fitness <= herb_fitness:
