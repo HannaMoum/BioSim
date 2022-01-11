@@ -140,87 +140,95 @@ class BioSim(BioSim_param):
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landscape_obj = element.item()
-                #####
-                #landscape_obj.migration_preparation() #BUG
-                ###
-                current_row, current_col = it.multi_index #TODO: Keep this but change names. Remove overlapping below
+                #current_row, current_col = it.multi_index
+                row, col = it.multi_index
 
+                #TODO: Look for opportunities to structure this better mtp. hierarcy
+                def moving(landscape_population, current_row, current_col, species): #species = self.herb_pop or self.carn_pop
 
-                def moving(object, species): #species = self.herb_pop or self.carn_pop #moving
-                    if object.species:
-                        for animal in object.species:
+                    if landscape_population:
+                        moved = []
+                        for animal in landscape_population:
                             if not animal.has_migrated:
                                 row_direction, col_direction = animal.migration_direction() #Returnerer tuple av hvor dyr vil flytte seg, evt.(0,0)
                                 new_row = current_row + row_direction
                                 new_col = current_col + col_direction
+
                                 if self.island_map_objects[new_row, new_col].is_migratable:
-                                    self.island_map_objects[new_row, new_col]#.add_animals?
 
-                    #return moved #list of every herb/carn that has moved
-                        pass
+                                    if species == 'Herbivore':
+                                        self.island_map_objects[new_row, new_col].herb_pop.append(animal)
+                                    if species == 'Carnivore':
+                                        self.island_map_objects[new_row, new_col].carn_pop.append(animal)
 
-                # if landscape_obj.is_migratable:
-                    # moved_herbs = moving(landscape_obj, self.herb)
-                    # moved_carns = moving(landscape_obj, carn.herb)
+                                    moved.append(animal)
+                                    animal.has_migrated = True
 
-                if landscape_obj.herb_pop:
-                    lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                    if landscape_obj.is_migratable: # Sjekker at vi står på noe annet enn vann #TODO: Remove when assured we cannot add population to water
-                        row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er #TODO: Handled above
-                        if self.island_map_objects[row-1, col].is_migratable:
-                            lovlige_retninger.append((-1, 0))
-                        if self.island_map_objects[row+1, col].is_migratable:
-                            lovlige_retninger.append((1,0))
-                        if self.island_map_objects[row, col-1].is_migratable:
-                            lovlige_retninger.append((0, -1))
-                        if self.island_map_objects[row, col+1].is_migratable:
-                            lovlige_retninger.append((0, 1))
+                        for migrated_animal in moved:
+                            landscape_population.remove(migrated_animal)
 
-                    moved = []
-                    for herbivore in landscape_obj.herb_pop:
-                        if not herbivore.has_migrated:
-                            row_direction, col_direction = herbivore.migration_direction()
-                            if (row_direction, col_direction) in lovlige_retninger:
-                                new_row = current_row+row_direction
-                                new_col = current_col+col_direction
+                if landscape_obj.is_migratable:
+                    moving(landscape_obj.herb_pop, row, col, 'Herbivore')
+                    moving(landscape_obj.carn_pop, row, col, 'Carnivore')
 
-                                self.island_map_objects[new_row, new_col].herb_pop.append(herbivore)
-
-                                moved.append(herbivore)
-                                herbivore.has_migrated = True
-
-                    for herbivore in moved: # TODO: Kanskje dette kan gjøres uten for-løkke. Trekke fra hele moved på en gang
-                        landscape_obj.herb_pop.remove(herbivore)
-
-                if landscape_obj.carn_pop:
-                    lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                    if landscape_obj.is_migratable:  # Sjekker at vi står på noe annet enn vann
-                        row, col = it.multi_index  # Blir en tuple, med lokasjon på hvor vi er
-                        if self.island_map_objects[row - 1, col].is_migratable:
-                            lovlige_retninger.append((-1, 0))
-                        if self.island_map_objects[row + 1, col].is_migratable:
-                            lovlige_retninger.append((1, 0))
-                        if self.island_map_objects[row, col - 1].is_migratable:
-                            lovlige_retninger.append((0, -1))
-                        if self.island_map_objects[row, col + 1].is_migratable:
-                            lovlige_retninger.append((0, 1))
-
-                    moved = []
-                    for carnivore in landscape_obj.carn_pop:
-                        if not carnivore.has_migrated:
-                            row_direction, col_direction = carnivore.migration_direction()
-
-                            if (row_direction, col_direction) in lovlige_retninger:
-                                new_row = current_row + row_direction
-                                new_col = current_col + col_direction
-
-                                self.island_map_objects[new_row, new_col].carn_pop.append(carnivore)
-
-                                moved.append(carnivore)
-                                carnivore.has_migrated = True
-
-                    for carnivore in moved:
-                        landscape_obj.carn_pop.remove(carnivore)
+                # if landscape_obj.herb_pop:
+                #     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
+                #     if landscape_obj.is_migratable: # Sjekker at vi står på noe annet enn vann #TODO: Remove when assured we cannot add population to water
+                #         row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er #TODO: Handled above
+                #         if self.island_map_objects[row-1, col].is_migratable:
+                #             lovlige_retninger.append((-1, 0))
+                #         if self.island_map_objects[row+1, col].is_migratable:
+                #             lovlige_retninger.append((1,0))
+                #         if self.island_map_objects[row, col-1].is_migratable:
+                #             lovlige_retninger.append((0, -1))
+                #         if self.island_map_objects[row, col+1].is_migratable:
+                #             lovlige_retninger.append((0, 1))
+                #
+                #     moved = []
+                #     for herbivore in landscape_obj.herb_pop: #
+                #         if not herbivore.has_migrated: #
+                #             row_direction, col_direction = herbivore.migration_direction() #
+                #             if (row_direction, col_direction) in lovlige_retninger: #
+                #                 new_row = current_row+row_direction #
+                #                 new_col = current_col+col_direction #
+                #
+                #                 self.island_map_objects[new_row, new_col].herb_pop.append(herbivore) #
+                #
+                #                 moved.append(herbivore)#
+                #                 herbivore.has_migrated = True #
+                #
+                #     for herbivore in moved:
+                #         landscape_obj.herb_pop.remove(herbivore)
+                #
+                # if landscape_obj.carn_pop:
+                #     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
+                #     if landscape_obj.is_migratable:  # Sjekker at vi står på noe annet enn vann
+                #         row, col = it.multi_index  # Blir en tuple, med lokasjon på hvor vi er
+                #         if self.island_map_objects[row - 1, col].is_migratable:
+                #             lovlige_retninger.append((-1, 0))
+                #         if self.island_map_objects[row + 1, col].is_migratable:
+                #             lovlige_retninger.append((1, 0))
+                #         if self.island_map_objects[row, col - 1].is_migratable:
+                #             lovlige_retninger.append((0, -1))
+                #         if self.island_map_objects[row, col + 1].is_migratable:
+                #             lovlige_retninger.append((0, 1))
+                #
+                #     moved = []
+                #     for carnivore in landscape_obj.carn_pop:
+                #         if not carnivore.has_migrated:
+                #             row_direction, col_direction = carnivore.migration_direction()
+                #
+                #             if (row_direction, col_direction) in lovlige_retninger:
+                #                 new_row = current_row + row_direction
+                #                 new_col = current_col + col_direction
+                #
+                #                 self.island_map_objects[new_row, new_col].carn_pop.append(carnivore)
+                #
+                #                 moved.append(carnivore)
+                #                 carnivore.has_migrated = True
+                #
+                #     for carnivore in moved:
+                #         landscape_obj.carn_pop.remove(carnivore)
 
     def simulate(self, num_years = 10, vis_years = 1):
         for year in range(num_years):
