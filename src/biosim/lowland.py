@@ -211,7 +211,7 @@ class Landscape:
         """
         self.fodder = self.f_max
 
-    def add_animal(self, added_pop):
+    def add_animals(self, added_pop):
         """Add animals to current location.
 
         Parameters
@@ -241,31 +241,6 @@ class Landscape:
                 raise TypeError(f'{animal} is not a defined animal.\n'
                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
 
-    # def add_animal(self, added_pop): # TODO: Add population på verdens nivå må kalle må denne
-    #     """ Function adding animals to landscape-object.
-    #         Adding animals will be done initially and optionally mid-sim during break.
-    #
-    #         Input: List of dictionaries as in;
-    #          [{'species': 'Herbivore',
-    #             'age': 10, 'weight': 12.5},
-    #         {'species': 'Herbivore',
-    #             'age': 9, 'weight': 10.3}]
-    #
-    #         Source url for finding all subclass names (read 08.01):
-    #         https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name"""
-    #
-    #     for animal in added_pop:
-    #         # animal = {'species': H, 'age': _ , 'weight': _ }
-    #         age = animal['age']
-    #         weight = animal['weight']
-    #
-    #         if animal['species'] == 'Herbivore':
-    #             self.herb_pop += [Herbivore(age, weight)]
-    #         elif animal['species'] == 'Carnivore':
-    #             self.carn_pop += [Carnivore(age, weight)]
-    #         else:
-    #             raise TypeError(f'{animal} is not a defined animal.\n'
-    #                             f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
 
 
 
