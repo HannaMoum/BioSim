@@ -9,7 +9,7 @@ from biosim.lowland import Landscape
 @dataclass
 class BioSim_param:
     seed: int = None
-    codes_for_landscape_types: str = 'WLHD'
+    codes_for_landscape_types: str = 'WLHD' #Brukes denne?
 
 
 class BioSim(BioSim_param):
@@ -21,10 +21,8 @@ class BioSim(BioSim_param):
         self._island_map = self.make_island_map(island_map)
         self._island_map_objects = self.make_island_map_objects()
         self._ini_pop = self.add_population(ini_pop)
-            #self.ini_pop variabel brukes ingen andre steder per nå.
-            #Mulig å kun lagre self.ini_pop direkte og bruke det i add_population method direkte
-            #Handlingen add_pop som er viktig, returnerer ingenting
-
+            #TODO: Save ini_pop directly from input
+            # Add_population returns nothing, it is an action of its' own
 
     @property
     def island_map(self):
