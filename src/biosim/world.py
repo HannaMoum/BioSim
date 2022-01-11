@@ -62,10 +62,17 @@ class BioSim(BioSim_param):
             return _build_map
 
     def make_island_map_objects(self):
-        """Denne lager kartet med objekt referanser for hvert landskap basert på island_map"""
+        """
+        Mapping island with landscape objects.
+
+        Returns
+        -------
+        _island_map_objects: `ndarray` of `obj`
+            Array containing landscape objects in their respective positions.
+        """
         _island_map_objects = np.empty(self.island_map.shape, dtype='object')
         vLandscape = np.vectorize(Landscape)
-        _island_map_objects[:,:] = vLandscape(self.island_map)
+        _island_map_objects[:, :] = vLandscape(self.island_map)
 
         return _island_map_objects
 
