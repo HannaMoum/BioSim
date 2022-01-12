@@ -34,6 +34,7 @@ class BioSim(BioSim_param):
         self._island_map = self.make_island_map(island_map)
         self._island_map_objects = self.make_island_map_objects()
         self._ini_pop = self.add_population(ini_pop)
+        #self._ini_pop = ini_pop
             #TODO: Save ini_pop directly from input
             # Add_population returns nothing, it is an action of its' own
 
@@ -201,7 +202,7 @@ class BioSim(BioSim_param):
                 # if landscape_obj.is_migratable:
                 #     moving(landscape_obj.herb_pop, row, col, 'Herbivore')
                 #     moving(landscape_obj.carn_pop, row, col, 'Carnivore')
-
+                    ###################
                 # if landscape_obj.herb_pop:
                 #     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
                 #     if landscape_obj.is_migratable: # Sjekker at vi står på noe annet enn vann #TODO: Remove when assured we cannot add population to water
@@ -262,6 +263,7 @@ class BioSim(BioSim_param):
                 #         landscape_obj.carn_pop.remove(carnivore)
 
     def simulate(self, num_years = 10, vis_years = 1):
+        #add population her (?): add_population(self.ini_pop)
         for year in range(num_years):
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:

@@ -260,6 +260,7 @@ class Landscape:
         [1]_ https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name
         (read 08.01)
         """
+        #TODO: DO not add animals for water landscape
         for animal in added_pop:
             age = animal['age']
             weight = animal['weight']
