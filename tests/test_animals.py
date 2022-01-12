@@ -1,5 +1,6 @@
 """Tests for animal class, concerning both herbivores and carnivores."""
 import pytest
+import random
 from biosim.animals import Herbivore, Carnivore
 from biosim.lowland import Landscape
 
@@ -45,14 +46,11 @@ def test_animal_create_age(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_animal_create_age_wrong(species):
+@pytest.mark.parametrize('wrong_age', [-1, 5.6, 'age'])
+def test_animal_create_age_wrong(species, wrong_age):
     """Test control of age input if made wrong."""
-    negative_age = -1
-    float_age = 5.6
-    string_age = 'age'
-
     with pytest.raises(ValueError):
-        all([species(12.5, negative_age), species(12.5, float_age), species(12.5, string_age)])
+        species(12.5, wrong_age)
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -98,28 +96,47 @@ def test_zero_fitness(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_quarter_fitness(species):
-    """Test fitness-formula."""
+def test_fitness_attribute_change(species):
+    """Test fitness-formula.
+
+    If age and weight is equal to parameter values a_half and w_half respectively,
+     expected fitness is 1/4 exactly."""
     age = species.params['a_half']
     weight = species.params['w_half']
 
     assert species(weight, age).fitness == 1/4
 
 
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_fitness_parameter_change(species):
+    """Test fitness-formula.
+
+    If phi_age and phi_weight is set to 0, expected fitness is 1/4 exactly
+    (independently of age and weight)."""
+    species.set_params({'phi_age': 0, 'phi_weight': 0})
+    age = random.randint(0, 100)
+    weight = random.uniform(0, 100)
+    assert species(weight, age).fitness == 1/4
 
 
-#@pytest.mark.skip('Not finished')
-def test_eat():
-    """ Test weightgain when eating"""
-    herbivore = Herbivore(10, 12.5)
-    initial_weight = herbivore._weight
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+#@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_eat_unlimlited(species):
+    """ Test weight gain when eating until satisfied."""
+    # TODO: Look into whether test f_max > F...
+    animal = species(12.5, 10)
+    initial_weight = animal.weight
 
-    food_available = Lowland.params['f_max']
-    herbivore.eat(food_available)
-    final_weight = herbivore._weight
-    weight_gain = Herbivore.params['F'] * Herbivore.params['beta']
+    satisfying_amount = species.params['F']
+    animal.eat(satisfying_amount)
+    weight_gain = satisfying_amount * species.params['beta']
+    assert animal.weight == initial_weight + weight_gain
 
-    assert initial_weight + weight_gain == final_weight
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_eat_limited(species):
+    pass
 
 
 @pytest.mark.skip('Not finished')
