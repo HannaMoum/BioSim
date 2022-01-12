@@ -37,12 +37,15 @@ def test_parameter_control(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_animal_create_age(species):
-    """Test initial age of animal."""
-    newborn = species(5)
-    animal_int = species(weight=12.5, age=10)
-    animal_float = species(weight=12.5, age=10.0)
-    assert all((newborn.age == 0, animal_int.age == 10, animal_float.age == 10.0))
+@pytest.mark.parametrize('age', [0, 10, 10.0])
+def test_animal_create_age(species, age):
+    """Test input age of animal."""
+    assert species(12.5, age).age == age
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_animal_default_age(species):
+    """Test default age value for newborns."""
+    assert species(weight=12.5).age == 0
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
