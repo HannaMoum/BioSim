@@ -106,15 +106,15 @@ class Animal:
             Parameter key is not a Legal key
         """
 
-        if not all(value >= 0 for value in new_params.values()):
-            raise ValueError('Invalid value for parameter: ' + key)
-
-        for key in new_params:
+        for key, value in new_params.items():
             if key not in cls.params:
                 raise KeyError('Invalid parameter name: ' + key)
 
+            if not value >= 0:
+                raise ValueError('Invalid value for parameter: ' + key)
+
             if key == 'eta' and not 0 <= new_params['eta'] <= 1:
-                raise ValueError('eta must be in interval [0, 1].')
+                raise ValueError('parameter eta must be within range [0, 1].')
 
             cls.params[key] = new_params[key]
 
