@@ -6,6 +6,7 @@ from random import seed, choice, gauss, sample, uniform
 from abc import ABC, abstractmethod  # Remove unless in use
 from dataclasses import dataclass, asdict
 
+
 # #TODO: Remove dataclasses if not in use
 # @dataclass
 # class Animal_params:
@@ -123,12 +124,13 @@ class Animal:
     def __init__(self, weight, age=0):
         self.weight = weight
         self.age = age
-        self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
+        self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
         self._has_migrated = False
 
     @property
     def has_migrated(self):
         return self._has_migrated
+
     @has_migrated.setter
     def has_migrated(self, bool):
         self._has_migrated = bool
@@ -141,7 +143,7 @@ class Animal:
         return self._age
 
     @age.setter
-    def age(self, value):
+    def age(self, value):  # TODO: Age and weight conditions should be in island??
         if not float(value).is_integer() or not isinstance(value, (int, float)):
             raise ValueError('Age must be a whole number')
 
@@ -258,7 +260,6 @@ class Animal:
     #     else:
     #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
 
-
     def probability_to_give_birth(self, number_of_animals):
         """
         Decide the animal's probability to give birth.
@@ -310,7 +311,7 @@ class Animal:
         fertilization = r < probability
 
         weight_check = self.weight > self.params['zeta'] * \
-                 (self.params['w_birth'] + self.params['sigma_birth'])
+                       (self.params['w_birth'] + self.params['sigma_birth'])
 
         birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])
 
@@ -348,7 +349,7 @@ class Animal:
             if species == 'Carnivore':
                 newborn = Carnivore(birth_weight)
 
-            #TODO: Optimization possibilities
+            # TODO: Optimization possibilities
             self._weight -= birth_weight * self.params['xi']
 
             return newborn
@@ -380,7 +381,6 @@ class Animal:
 
 
 class Herbivore(Animal):
-
     default_params = {
         'w_birth': 8.0,
         'sigma_birth': 1.5,
@@ -404,7 +404,6 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
-
     default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,
