@@ -125,7 +125,7 @@ def test_fitness_parameter_change(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_eat_unlimited(species):
-    """Test correct weight gain when the amount of food available exceeds the animal's hunger."""
+    """Test correct weight gain when the amount of food available exceeds that of the animal's hunger."""
     animal_1 = species(12.5, 10)
     animal_2 = species(12.5, 10)
     initial_weight = animal_1.weight
@@ -136,18 +136,26 @@ def test_eat_unlimited(species):
     animal_1.eat(satisfying_amount_1) and animal_2.eat(satisfying_amount_2)
     weight_gain = species.params['F'] * species.params['beta']
 
-    assert all((animal_1.weight == weight_gain + initial_weight, animal_1.weight == animal_2.weight))
+    assert all((animal_1.weight == initial_weight + weight_gain, animal_1.weight == animal_2.weight))
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_eat_limited(species):
+    """Test correct weight gain when the amount of food available subceeds that of the animal's hunger."""
     animal = species(12.5, 10)
     initial_weight = animal.weight
 
     limited_food = species.params['F'] - species.params['F']*0.5  # Make sure we have a positive value
     animal.eat(limited_food)
-    #initial_weight =
-    pass
+    weight_gain = limited_food * species.params['beta']
+    assert animal.weight == initial_weight + weight_gain
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_eat_F_tilde_grow(species):
+    """Test correct growth of attribute F_tilde."""
+    pass #assume now "eaten" is correct
+
 
 @pytest.mark.skip('Not finished')
 def test_decrease_weight_when_aging():
