@@ -42,6 +42,7 @@ def test_animal_create_age(species, age):
     """Test input age of animal."""
     assert species(12.5, age).age == age
 
+
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_animal_default_age(species):
     """Test default age value for newborns."""
@@ -123,24 +124,30 @@ def test_fitness_parameter_change(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-#@pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_eat_unlimlited(species):
-    """ Test weight gain when eating until satisfied."""
-    # TODO: Look into whether test f_max > F...
-    animal = species(12.5, 10)
-    initial_weight = animal.weight
+def test_eat_unlimited(species):
+    """Test correct weight gain when the amount of food available exceeds the animal's hunger."""
+    animal_1 = species(12.5, 10)
+    animal_2 = species(12.5, 10)
+    initial_weight = animal_1.weight
 
-    satisfying_amount = species.params['F']
-    animal.eat(satisfying_amount)
-    weight_gain = satisfying_amount * species.params['beta']
-    assert animal.weight == initial_weight + weight_gain
+    satisfying_amount_1 = species.params['F']
+    satisfying_amount_2 = species.params['F']*2
 
+    animal_1.eat(satisfying_amount_1) and animal_2.eat(satisfying_amount_2)
+    weight_gain = species.params['F'] * species.params['beta']
+
+    assert all((animal_1.weight == weight_gain + initial_weight, animal_1.weight == animal_2.weight))
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_eat_limited(species):
-    pass
+    animal = species(12.5, 10)
+    initial_weight = animal.weight
 
+    limited_food = species.params['F'] - species.params['F']*0.5  # Make sure we have a positive value
+    animal.eat(limited_food)
+    #initial_weight =
+    pass
 
 @pytest.mark.skip('Not finished')
 def test_decrease_weight_when_aging():
