@@ -6,13 +6,13 @@ from biosim.lowland import Landscape
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
 
+
 @pytest.fixture(autouse=True) #Combine with parameterization?
 def reset_params_default():
     """Reset parameters to default after test has run."""
     yield
     Herbivore.set_params(Herbivore.default_params)
     Carnivore.set_params(Carnivore.default_params)
-
 
 # @pytest.fixture(autouse=True)
 # def create_animals(self):
@@ -27,13 +27,32 @@ def test_set_params(species):
     species.set_params({'beta': 1.2, 'omega': 0.2})
     assert all([species.params['beta'] == 1.2, species.params['omega'] == 0.2])
 
+
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_parameter_control(species):
+    """Test that only legal parameters and values are allowed."""
     with pytest.raises(ValueError):
-        all([species.set_params({'beta': -0.2}), species.set_params({'eta': 1.2})])
+        all([species.set_params({'beta': -0.2}), species.set_params({'eta': 1.2}), species.set_params({'alpha': 0.5})])
 
 
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_animal_create_age(species):
+    """Test initial age of animal."""
+    newborn = species(5)
+    animal = species(weight=12.5, age=10)
+    assert all((newborn.age == 0, animal.age == 10))
 
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_animal_create_weight(species):
+    """Test initial weight of animal."""
+    animal = species(weight=12.5, age=10)
+    assert animal.weight == 12.5
+
+# self._age = age
+# self._weight = weight
+# self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
+# self._has_migrated = False
 #@pytest.mark.skip('Not finished')
 def test_num_herbis():
     x = Herbivore.instance_count  # Sjekker status i klassen
