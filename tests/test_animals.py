@@ -192,11 +192,27 @@ def test_migration_probability(mocker, species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_birth_prob_one_animal(species):
-    """Test no birth takes place if only one animal is present."""
+def test_birth_prob_fertilization(mocker, species):
+    """Deterministic test: no birth takes place if only one animal is present."""
+    #mocker.patch('random.uniform', return_value=0)  # TODO: Why isn't this working
     animal = species(12.5, 10)
     num_animals = 1
-    assert not animal.probability_to_give_birth(num_animals)
+    for _ in range(50):
+        assert not animal.probability_to_give_birth(num_animals)
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_birth_prob_weight(mocker, species):
+    """Deterministic test: no birth takes place if weight_check fails.
+    Weight_check will always fail if zeta >= weight,
+    and w_birth + sigma_birth >= 1 (by default).
+    """
+    weight = 15
+    species.set_params({'zeta': 15})
+    animal = species(weight, 20)
+    for _ in range(100):
+        assert not animal.probability_to_give_birth(300)
+
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_probability_to_give_birth(species):
