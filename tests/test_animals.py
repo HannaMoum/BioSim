@@ -183,6 +183,7 @@ def test_decrease_weight_when_aging(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_migration_probability(mocker, species):
+    """Test that all animals will migrate if probability is always true...(?)"""
     mocker.patch('random.uniform', return_value=0) #TODO: Why isn't this working
     for _ in range(20):
         age = random.randint(0, 80)
@@ -190,14 +191,21 @@ def test_migration_probability(mocker, species):
         assert species(age, weight).probability_to_migrate()
 
 
-# r = uniform(0, 1)
-# p = self.fitness * self.params['mu']
-#
-# return all((p > r, not self.has_migrated))
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_birth_prob_one_animal(species):
+    """Test no birth takes place if only one animal is present."""
+    animal = species(12.5, 10)
+    num_animals = 1
+    assert not animal.probability_to_give_birth(num_animals)
 
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_probability_to_give_birth(species):
+    """Test animal giving birth if all requirements are fullfilled
+    Must also test birth weight...
+    xi = 0: assures maternal health
+    zeta = 0: assures weight check"""
 
-@pytest.mark.skip('Not finished')
-def test_probability_to_give_birth():
+    species.set_params({'xi': 0, 'zeta': 0})
     pass
 
 @pytest.mark.skip('Not finished')
