@@ -121,7 +121,7 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, weight, age=0):
-        self._weight = weight
+        self.weight = weight
         self.age = age
         self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
         self._has_migrated = False
