@@ -1,9 +1,11 @@
 import numpy as np
+import random
 from dataclasses import dataclass
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
 from biosim.lowland import Landscape
-import textwrap
+
+
 
 
 @dataclass
@@ -18,6 +20,8 @@ class BioSim(BioSim_param):
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
+
+        random.seed(seed)
         self._island_map = self.make_island_map(island_map)
         self._island_map_objects = self.make_island_map_objects()
         self._ini_pop = self.add_population(ini_pop)
@@ -30,6 +34,7 @@ class BioSim(BioSim_param):
         self.cube_properties_carns = np.empty(())
         self.cubelist_properties_herbs = []
         self.cubelist_properties_carns = []
+
     @property
     def island_map(self):
         return self._island_map
