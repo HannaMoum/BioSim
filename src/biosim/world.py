@@ -23,9 +23,13 @@ class BioSim(BioSim_param):
         self._ini_pop = self.add_population(ini_pop)
             #TODO: Save ini_pop directly from input
             # Add_population returns nothing, it is an action of its' own
-
+        self._num_years = 0 # Duration of sim
         self.cube_population_herbs = np.empty(())
-
+        self.cube_population_carns = np.empty(())
+        self.cube_properties_herbs = np.empty(())
+        self.cube_properties_carns = np.empty(())
+        self.cubelist_properties_herbs = []
+        self.cubelist_properties_carns = []
     @property
     def island_map(self):
         return self._island_map
@@ -34,6 +38,19 @@ class BioSim(BioSim_param):
     def island_map_objects(self):
         return self._island_map_objects
 
+    def get_yearly_herb_count(self):
+        kube =  self.cube_population_herbs
+        serie = kube.sum(-1).sum(-1)
+        # TODO: Do validation
+        assert len(serie) == self._num_years
+        return serie
+
+    def get_yearly_carn_count(self):
+        kube =  self.cube_population_carns
+        serie = kube.sum(-1).sum(-1)
+        # TODO: Do validation
+        assert len(serie) == self._num_years
+        return serie
 
     def make_island_map(self, island_map):
         """
@@ -184,7 +201,6 @@ class BioSim(BioSim_param):
     def get_property_map_objects(self, fx_map_type):
         return self.__make_property_map_objects(getattr(self, fx_map_type), self.island_map, self.island_map_objects)
 
-
     #------------------------------------------------------------------------------------------------
     # Factory for property_maps
     def v_size_herb_pop(self, location:object):
@@ -201,12 +217,21 @@ class BioSim(BioSim_param):
         return property_map
 
     def v_herb_properties_objects(self, location:object):
-        if len(location.herb_pop) > 0:
-            population_list = location.herb_pop
+        population_list = location.herb_pop
+        if len(population_list) > 0:
             liste = []
             for animal in population_list:
                 liste.append((animal.age, animal.weight, animal.fitness))
             return liste
+
+    def v_carn_properties_objects(self, location:object):
+        population_list = location.carn_pop
+        if len(population_list) > 0:
+            liste = []
+            for animal in population_list:
+                liste.append((animal.age, animal.weight, animal.fitness))
+            return liste
+
 
     def __make_property_map_objects(self, fx:object, island_map:object, island_map_objects:object):
         property_map = np.empty(island_map.shape, dtype=object)
@@ -216,12 +241,14 @@ class BioSim(BioSim_param):
 
     #------------------------------------------------------------------------------------------------
 
-
-
     def simulate(self, num_years = 10, vis_years = 1):
-        yearly_pop_map = []
+        self._num_years = num_years
+        yearly_pop_map_herbs = []
+        yearly_pop_map_carns = []
+        yearly_property_map_herbs = []
+        yearly_property_map_carns = []
 
-        for year in range(num_years):
+        for year in range(self._num_years):
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     location = element.item() # Landskapsobjekt
@@ -241,10 +268,46 @@ class BioSim(BioSim_param):
                         location.aging()
                         location.death()
 
-            yearly_pop_map.append(self.get_property_map('v_size_herb_pop'))
+            # Data for every year
+            yearly_pop_map_herbs.append(self.get_property_map('v_size_herb_pop'))
+            yearly_pop_map_carns.append(self.get_property_map('v_size_carn_pop'))
+
+            yearly_herb_objects_map = self.get_property_map_objects('v_herb_properties_objects')
+            yearly_property_map_herbs.append(yearly_herb_objects_map)
+
+            yearly_carn_objects_map = self.get_property_map_objects('v_carn_properties_objects')
+            yearly_property_map_carns.append(yearly_carn_objects_map)
+
+            acc_list_herb = []
+            with np.nditer(yearly_herb_objects_map, flags=['multi_index', 'refs_ok']) as it:
+                for element in it:
+                    list_on_location = element.item()
+                    if type(list_on_location) == list:
+                        acc_list_herb += list_on_location
+            yearly_herbivore_property_array = np.asarray(acc_list_herb)
+            self.cubelist_properties_herbs.append(yearly_herbivore_property_array)
 
 
-        self.cube_population_herbs = np.stack(yearly_pop_map)
+            acc_list_carn = []
+            with np.nditer(yearly_carn_objects_map, flags=['multi_index', 'refs_ok']) as it:
+                for element in it:
+                    list_on_location = element.item()
+                    if type(list_on_location) == list:
+                        acc_list_carn += list_on_location
+            yearly_carnivore_property_array = np.asarray(acc_list_carn)
+            self.cubelist_properties_carns.append(yearly_carnivore_property_array)
+
+
+
+        # Data at end of simulation
+        # TODO: Add evaluation. Check shape and size. Raises valueerror
+        self.cube_population_herbs = np.stack(yearly_pop_map_herbs)
+        self.cube_population_carns = np.stack(yearly_pop_map_carns)
+
+        self.cube_properties_herbs = np.stack(yearly_property_map_herbs)
+        self.cube_properties_carns = np.stack(yearly_property_map_carns)
+
+
 
 
 

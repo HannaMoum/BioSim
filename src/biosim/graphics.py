@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 import numpy as np
 from dataclasses import dataclass
+from world import BioSim
+import seaborn as sns
 
 @dataclass
 class Graphics_param:
@@ -24,6 +26,8 @@ class Graphics(Graphics_param):
     def __init__(self, numpy_island_map):
         self._island_plot = self.make_plot_map(numpy_island_map)
 
+
+
     @property
     def island_plot(self):
         return self._island_plot
@@ -45,8 +49,10 @@ class Graphics(Graphics_param):
             colormap = colors.ListedColormap(['blue', 'darkgreen', 'lightgreen', 'yellow']) # Skal dette være en input
             fig, ax = plt.subplots(figsize=(col / scale, row / scale))
             ax.imshow(plot_map, cmap=colormap, extent=[1, col + 1, row + 1, 1])
-            ax.set_xticks(list(range(1, col + 1)))
-            ax.set_yticks(list(range(1, row + 1)))
+            ax.set_xticks(range(1, col + 1))
+            ax.set_yticks(range(1, row + 1))
+            ax.set_xticklabels(range(1, col + 1))
+            ax.set_yticklabels(range(1, row + 1))
             plt.show()
 
         return ax # Returnerer grafen
@@ -55,10 +61,103 @@ class Graphics(Graphics_param):
         with plt.style.context('seaborn-whitegrid'): # Konfigurerbar? Skal dette være en input?
             fig, ax = plt.subplots()
             ax.plot(yearly_population_size)
-            plt.show()
+            #plt.show()
+
+    def plotting_population_count(self, herb_data:object, carn_data: object, ax: object):
+        """Data er np array, med en sum per år i simuleringen"""
+        with plt.style.context('default'):
+            #fig, ax = plt.subplots()
+            ax.plot(herb_data, linestyle = 'dashed', color = 'green', label='herbs')
+            ax.plot(carn_data, color = 'red', label = 'carns')
+            ax.set_title('Population size', loc='left')
+            ax.set_xlabel('Years')
+            ax.set_ylabel('Number of animals')
+            leg = ax.legend(loc='center left')
+            #plt.show()
+            # fig.savefig('Test_plot.pdf')
+            return ax
+
+    def plot_heatmap(self, data: object, species: str, ax, year: int = -1):
+        if species == 'herbivore':
+            title = 'Herbivore distribution'
+            cmap = 'Greens'
+        elif species == 'carnivore':
+            title = 'Carnivore distribution'
+            cmap = 'Reds'
+        else:
+            raise ValueError('Feil')
+        with plt.style.context('default'):
+            ax = sns.heatmap(data[year, :, :], annot=True, cmap=cmap, ax = ax)
+            ax.set_title(title)
+            ax.set_xticklabels(range(1, data.shape[2] + 1))
+            ax.set_yticklabels(range(1, data.shape[1] + 1))
+
+            #plt.show()
+            return ax
+
+    def plot_histogram(self, hist_herb_data:object, hist_carn_data:object, ax_age, ax_weight, ax_fitness, year: int = -1)-> object:
+        """
+        Parameters
+        ----------
+        herb_data
+        carn_data
+        year
+
+        Returns
+        -------
+        ax
+        """
+        colors = ['green', 'red']
+        age, weight, fitness = (0, 1, 2)
+        max_age, delta_age = (60, 2) #TODO: Skal leses inn som parametere når BioSim objektet instansieres
+        max_weight, delta_weight = (60, 2)
+        max_fitness, delta_fitness = (1, 0.05)
+
+        #fig, ax = plt.subplots(nrows=3, ncols=1, figsize = (12, 18))
+        yearly_herb_data = hist_herb_data[year]
+        yearly_carn_data = hist_carn_data[year]
 
 
-    def plot_panel(self):
-        pass
-        # Skal plotte det ferdige panelet, med de ulike plottene i en figur (grid).
-        # En fig med mange axes.
+        # Age
+        ax_age.set_title('Age')
+        ax_age.hist([yearly_herb_data[:, 0],yearly_carn_data[:,0]], bins=int(max_age/delta_age),
+                     range=(0,max_age), histtype= 'step', stacked=False, fill=False, color=colors, label=['Herbivore', 'Carnivore'])
+        leg = ax_age.legend()
+
+        # Weight
+        ax_weight.set_title('Weight')
+        ax_weight.hist([yearly_herb_data[:, 1], yearly_carn_data[:, 1]], bins=int(max_weight / delta_weight),
+                     range=(0, max_weight), histtype='step', stacked=False, fill=False, color=colors)
+
+        # Fitness
+        ax_fitness.set_title('Fitness')
+        ax_fitness.hist([yearly_herb_data[:, 2], yearly_carn_data[:, 2]], bins=int(max_fitness / delta_fitness),
+                        range=(0, max_fitness), histtype='step', stacked=False, fill=False, color=colors)
+
+        plt.show()
+        return ax_age, ax_weight, ax_fitness
+
+
+
+    def show_panel(self, herb_data:object, carn_data: object, data: object, species: str, hist_herb_data, hist_carn_data, year = -1): #TODO: Gjør ferdig panel
+        # TODO: Lag data objekt i biosim, som pakker alle dataene inn i f.eks. en dict. Da kan man sende hele dicten inn i her
+        fig = plt.figure(figsize=(12,18))
+        if year == -1:
+            year_title = len(herb_data)
+        else:
+            year_title = year
+        fig.suptitle(str(f'Year: {year_title}'), fontsize=16, x=0.5, y=0.95)  # Bytt år
+        grid = plt.GridSpec(16,16, wspace = 0.1, hspace=1)
+        population_size_ax = plt.subplot(grid[0:3, 0:3])
+        age_property_ax = plt.subplot(grid[5:8, 0:3])
+        weight_property_ax = plt.subplot(grid[5:8, 6:9])
+        fitness_property_ax = plt.subplot(grid[5:8, 12:15])
+        heatmap_herbs_ax = plt.subplot(grid[8:, 0:])
+
+        self.plotting_population_count(herb_data, carn_data, population_size_ax)
+        self.plot_histogram(hist_herb_data, hist_carn_data, age_property_ax, weight_property_ax, fitness_property_ax, year)
+        self.plot_heatmap(data, species, heatmap_herbs_ax)
+        plt.show()
+
+
+

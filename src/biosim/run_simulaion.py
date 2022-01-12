@@ -2,11 +2,12 @@ import textwrap
 from world import BioSim_param, BioSim
 from graphics import Graphics, Graphics_param
 import matplotlib.pyplot as plt
+plt.show()
 import numpy as np
 import seaborn as sns
 
 if __name__ == '__main__':
-    plt.ion()
+    #plt.ion()
     geogr = """\
                 WWWWWWWWWWWWWWWWWWWWW
                 WWWWWWWWHWWWWLLLLLLLW
@@ -44,84 +45,44 @@ if __name__ == '__main__':
                 'weight': {'max': 60, 'delta': 2}},
                 )
 
-    sim.simulate(num_years=50)
+    sim.simulate(num_years=10)
 
     sim.set_landscape_parameters('L', {'f_max': 800})
 
-    herb_pop_map = sim.get_property_map('v_size_herb_pop')
-    kube = sim.cube_population_herbs
-    #kube_last_year = kube[-1, :, :]
-
-    #herb_property_map = sim.get_property_map_objects('v_herb_properties_objects')
-    #samlet_liste = []
-    #with np.nditer(herb_property_map, flags=['multi_index', 'refs_ok']) as it:
-    #    for element in it:
-    #        lista = element.item()
-    #        if type(lista) == list:
-    #            samlet_liste += lista
-    #herbivore_property_array = np.asarray(samlet_liste)
-
-    #fig, ax = plt.subplots(2)
-    #ax[0].hist(herbivore_property_array[:, 0])
-    #ax[1].hist(herbivore_property_array[:, 1])
+    #herb_pop_map = sim.get_property_map('v_size_herb_pop')
 
     #plt.show()
     #print(herbivore_property_array[:, 1])
 
 
-    herb_count = kube.sum(-1).sum(-1)
-    #print(herb_count)
-    def plotting_herb_count():
-        fig,ax = plt.subplots()
-        ax.plot(herb_count, label = 'herbs')
-        #ax.plot(carn_count, label = 'carns')
-        ax.set_title('Population size', loc = 'left')
-        ax.set_xlabel('Years')
-        ax.set_ylabel('Number of herbs')
-        leg = ax.legend(loc = 'center left')
-        plt.show()
-        #fig.savefig('Test_plot.pdf')
-        return ax
 
-
-
-
-    # def size_herb_pop(location):
-    #     """Location er et landskaps-objekt i objekt-kartet, en rute. """
-    #     return len(location.herb_pop)
-    #
-    def size_carn_pop(location):
-        return len(location.carn_pop)
-    #
-    def make_property_map(fx):
-        property_map = np.empty(sim.island_map.shape, dtype=float)
-        vget_property = np.vectorize(fx)
-        property_map[:, :] = vget_property(sim.island_map_objects)
-        return property_map
-
-    #herb_pop_map = make_property_map(size_herb_pop)
-    carn_pop_map = make_property_map(size_carn_pop)
-
-
+    # Plotter kartet over øya
     graf = Graphics(sim.island_map)
+    """
     graf.plot_island_map()
 
+    # Plotter begge populasjoner på samme ax
+    herb_count = sim.get_yearly_herb_count()
+    carn_count = sim.get_yearly_carn_count()
+    graf.plotting_population_count(herb_count, carn_count)
 
-    def show_herb_pop(year):
-         sns.heatmap(kube[year, :, :], annot = True, cmap = 'Greens')
-         plt.show()
-    def show_carn_pop():
-        sns.heatmap(carn_pop_map, annot = True, cmap = 'Reds')
-        plt.show()
+    kube1 = sim.cube_population_herbs
+    kube2 = sim.cube_population_carns
+    graf.plot_heatmap(kube1, species='herbivore')
+    graf.plot_heatmap(kube2, species='carnivore')
+    #plt.show()
+    
+    herb_data = sim.cubelist_properties_herbs
+    carn_data = sim.cubelist_properties_carns
 
-    #for year in range(30):
-    show_herb_pop(29)
-    show_carn_pop()
-    plotting_herb_count()
-
-
-
-
+    graf.plot_histogram(herb_data, carn_data)
+    """
+    herb_count = sim.get_yearly_herb_count()
+    carn_count = sim.get_yearly_carn_count()
+    kube1 = sim.cube_population_herbs
+    herb_data = sim.cubelist_properties_herbs
+    carn_data = sim.cubelist_properties_carns
+    graf.show_panel(herb_count,carn_count, kube1,'herbivore', herb_data, carn_data)
 
 
 
