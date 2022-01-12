@@ -133,31 +133,21 @@ class Animal:
     def has_migrated(self, bool):
         self._has_migrated = bool
 
-    @staticmethod
-    def check_positive(value):
-        """Command a value to be positive or equal to zero."""
-        if value < 0:
-            raise ValueError('Value must be positive')
-
-    @staticmethod
-    def check_whole_number(value):
-        """Command a value to be a whole number."""
-        if not float(value).is_integer():
-            raise ValueError('Age must be a whole number')
-        elif not isinstance(value, (int, float)):
-            raise ValueError('Age must be a whole number')
-
     @property
     def age(self):
-        """The animal's age (`int`).
+        """The animal's age (`int` or `float`).
 
         A whole, positive number."""
         return self._age
 
     @age.setter
     def age(self, value):
-        self.check_whole_number(value)
-        self.check_positive(value)
+        if not float(value).is_integer() or not isinstance(value, (int, float)):
+            raise ValueError('Age must be a whole number')
+
+        elif value < 0:
+            raise ValueError('Age must be a positive number')
+
         self._age = value
 
     @property
@@ -167,8 +157,9 @@ class Animal:
 
     @weight.setter
     def weight(self, value):
-        self.check_positive(value)
-        # Må vi kanskje sjekke at dette er float/int eller blir det smør på flesk...
+        if not isinstance(value, (int, float)) or value < 0:
+            raise ValueError('Weight must be a positive number')
+
         self._weight = value
 
     @property
