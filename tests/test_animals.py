@@ -90,7 +90,22 @@ def test_animal_create_has_migrated(species):
     """Test that has_migrated attribute is set to False when animal is created."""
     assert not species(12.5, 10).has_migrated
 
-def test_fitness('species'):
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_zero_fitness(species):
+    """Test fitness for animal with no weight."""
+    assert species(0, 10).fitness == 0
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_quarter_fitness(species):
+    """Test fitness-formula."""
+    age = species.params['a_half']
+    weight = species.params['w_half']
+
+    assert species(weight, age).fitness == 1/4
+
+
 
 
 #@pytest.mark.skip('Not finished')
