@@ -7,7 +7,7 @@ import numpy as np
 import seaborn as sns
 
 if __name__ == '__main__':
-    #plt.ion()
+    #plt.ion() Når du har skrudd av denne vil ikke figur-viduet dette sammen med en gang
     geogr = """\
                 WWWWWWWWWWWWWWWWWWWWW
                 WWWWWWWWHWWWWLLLLLLLW
@@ -58,25 +58,25 @@ if __name__ == '__main__':
 
     # Plotter kartet over øya
     graf = Graphics(sim.island_map)
-    """
-    graf.plot_island_map()
 
+    graf.plot_island_map()
+    """
     # Plotter begge populasjoner på samme ax
     herb_count = sim.get_yearly_herb_count()
     carn_count = sim.get_yearly_carn_count()
     graf.plotting_population_count(herb_count, carn_count)
-
+    """
     kube1 = sim.cube_population_herbs
     kube2 = sim.cube_population_carns
     graf.plot_heatmap(kube1, species='herbivore')
     graf.plot_heatmap(kube2, species='carnivore')
     #plt.show()
     
-    herb_data = sim.cubelist_properties_herbs
+    """herb_data = sim.cubelist_properties_herbs
     carn_data = sim.cubelist_properties_carns
 
-    graf.plot_histogram(herb_data, carn_data)
-    """
+    graf.plot_histogram(herb_data, carn_data)"""
+
     herb_count = sim.get_yearly_herb_count()
     carn_count = sim.get_yearly_carn_count()
     kube1 = sim.cube_population_herbs

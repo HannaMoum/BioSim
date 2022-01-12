@@ -77,7 +77,8 @@ class Graphics(Graphics_param):
             # fig.savefig('Test_plot.pdf')
             return ax
 
-    def plot_heatmap(self, data: object, species: str, ax, year: int = -1):
+    def plot_heatmap(self, data: object, species: str, ax = None, year: int = -1):
+        fig, ax = plt.subplots() # Midlertidig siden heatmap ikke vil inn i panelet.
         if species == 'herbivore':
             title = 'Herbivore distribution'
             cmap = 'Greens'
@@ -92,7 +93,7 @@ class Graphics(Graphics_param):
             ax.set_xticklabels(range(1, data.shape[2] + 1))
             ax.set_yticklabels(range(1, data.shape[1] + 1))
 
-            #plt.show()
+            plt.show()
             return ax
 
     def plot_histogram(self, hist_herb_data:object, hist_carn_data:object, ax_age, ax_weight, ax_fitness, year: int = -1)-> object:
@@ -152,11 +153,11 @@ class Graphics(Graphics_param):
         age_property_ax = plt.subplot(grid[5:8, 0:3])
         weight_property_ax = plt.subplot(grid[5:8, 6:9])
         fitness_property_ax = plt.subplot(grid[5:8, 12:15])
-        heatmap_herbs_ax = plt.subplot(grid[8:, 0:])
+        #heatmap_herbs_ax = plt.subplot(grid[8:, 0:])
 
         self.plotting_population_count(herb_data, carn_data, population_size_ax)
         self.plot_histogram(hist_herb_data, hist_carn_data, age_property_ax, weight_property_ax, fitness_property_ax, year)
-        self.plot_heatmap(data, species, heatmap_herbs_ax)
+        #self.plot_heatmap(data, species, heatmap_herbs_ax)
         plt.show()
 
 
