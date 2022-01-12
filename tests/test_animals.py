@@ -84,44 +84,14 @@ def test_privacy_F_tilde(species):
     animal.F_tilde = eat_amount #TODO: We can change F_tilde anywhere... Should all getters and setters be _F_tilde?
     pass
 
+
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_animal_create_has_migrated(species):
     """Test that has_migrated attribute is set to False when animal is created."""
     assert not species(12.5, 10).has_migrated
 
-# self._age = age
-# self._weight = weight
-# self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
-# self._has_migrated = False
-#@pytest.mark.skip('Not finished')
-def test_num_herbis():
-    x = Herbivore.instance_count  # Sjekker status i klassen
-    assert x == Herbivore.num_herbis()  # kaller funksjonen
+def test_fitness('species'):
 
-
-#@pytest.mark.skip('Not finished')
-def test_init_class_variables():
-    x = Herbivore.instance_count
-    a = Herbivore()
-    assert Herbivore.instance_count == x + 1
-
-#@pytest.mark.skip('Not finished')
-
-    #assert a.__dict__ == {'_age': 0, '_weight': None, 'loc': None}
-
-#@pytest.mark.skip('Not finished')
-def test_animal_create():
-    """
-    Test that a new animal has age 0.
-    """
-    a = Herbivore(2, 10)
-    assert a._age == 2
-    assert a._weight == 10
-
-
-@pytest.mark.skip('Not finished')
-def test_find_birthweight():
-    pass
 
 #@pytest.mark.skip('Not finished')
 def test_eat():
@@ -136,14 +106,6 @@ def test_eat():
 
     assert initial_weight + weight_gain == final_weight
 
-
-@pytest.mark.skip('Not finished')
-def test__q():
-    assert _q()
-
-@pytest.mark.skip('Not finished')
-def test_fitness():
-    pass
 
 @pytest.mark.skip('Not finished')
 def test_decrease_weight_when_aging():
