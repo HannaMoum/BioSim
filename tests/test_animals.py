@@ -6,29 +6,33 @@ from biosim.lowland import Landscape
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
 
-#@pytest.fixture(autouse=True)
-def create_animals():
-    """Create herb and carn."""
-    hebr = Herbivore(10, 12.5)
-    carn = Carnivore(9, 10.5)
-    pass
-
-def test_set_params():
-    """Test optional change of default parameters."""
-    #Herbivore.set_params({'beta': 1.2, 'omega': 0.2})
-    print(Herbivore.params)
-    Herbivore.set_params(Herbivore.params)
-    print(Herbivore.params)
-    assert Herbivore.params
-
-
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def reset_params_default():
     #nothing. Hebr or Carn, not Animal
     yield
-    Herbivore.set_params(Herbivore.params)
-    Carnivore.set_params(Carnivore.params)
-    pass
+    Herbivore.set_params(Herbivore.default_params)
+    Carnivore.set_params(Carnivore.default_params)
+
+
+# @pytest.fixture(autouse=True)
+# def create_animals(self):
+#     """Create herb and carn."""
+#     herb = Herbivore(10, 12.5)
+#     carn = Carnivore(9, 10.5)
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_set_params(species):
+    """Test optional change of default parameters."""
+    species.set_params({'beta': 1.2, 'omega': 0.2})
+    assert all([species.params['beta'] == 1.2, species.params['omega'] == 0.2])
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_parameter_control(species):
+    with pytest.raises(ValueError):
+        all([species.set_params({'beta': -0.2}), species.set_params({'eta': 1.2})])
+
+
 
 #@pytest.mark.skip('Not finished')
 def test_num_herbis():
