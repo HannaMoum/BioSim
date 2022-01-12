@@ -138,9 +138,9 @@ class Animal:
             raise ValueError('Value must be positive')
 
     @staticmethod
-    def check_integer(value):
+    def check_whole_number(value):
         """Command a value to be an integer type."""
-        if not float(value).is_integer():  # Must convert to float to work for integers.
+        if not float(value).is_integer():
             raise ValueError('Value must be integer')
             # Does not raise correct error if value cannot be converted to float
 
@@ -153,7 +153,7 @@ class Animal:
 
     @age.setter
     def age(self, value):
-        self.check_integer(value)
+        self.check_whole_number(value)
         self.check_positive(value)
         self._age = value
 
