@@ -46,7 +46,7 @@ def test_animal_create_age(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_animal_create_age_wrong(species):
-    """Test control of input age."""
+    """Test control of age input if made wrong."""
     negative_age = -1
     float_age = 5.6
     string_age = 'age'
@@ -60,6 +60,15 @@ def test_animal_create_weight(species):
     """Test initial weight of animal."""
     animal = species(weight=12.5, age=10)
     assert animal.weight == 12.5
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_animal_create_weight_wrong(species):
+    """Test control of weight input if made wrong."""
+    with pytest.raises(ValueError):
+        all([species(weight=-12.5, age=10), species(weight='weight', age=10)])
+
+
 
 # self._age = age
 # self._weight = weight
