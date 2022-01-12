@@ -69,12 +69,20 @@ def test_animal_create_weight_wrong(species):
         all([species(weight=-12.5, age=10), species(weight='weight', age=10)])
 
 
-@pytest.mark.parametrize('species', [Herbivore, Carnivore]) #
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_F_tilde_initial(species): #TODO: Change name when F-tilde changes name
     """Validate initial value of F-tilde and its' possibility to change."""
     animal = species(12.5, 10)
     eat_amount = 5
     assert all([animal.F_tilde == 0, animal.F_tilde + eat_amount == eat_amount])
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_privacy_F_tilde(species):
+    animal = species(12.5, 10)
+    eat_amount = 5
+    animal.F_tilde = eat_amount #TODO: We can change F_tilde anywhere... Should all getters and setters be _F_tilde?
+    pass
 
 # self._age = age
 # self._weight = weight
