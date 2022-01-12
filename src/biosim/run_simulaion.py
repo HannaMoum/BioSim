@@ -47,6 +47,7 @@ if __name__ == '__main__':
     sim.simulate(num_years=30)
 
     sim.set_landscape_parameters('L', {'f_max': 800})
+    sim.set_animal_parameters('Herbivore', {'omega': 0.2})
 
 
     def size_herb_pop(location):

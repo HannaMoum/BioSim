@@ -64,23 +64,24 @@ class Animal:
     """
 
     # dict: Parameter values for calculations
-    params = {
-        'w_birth': None,
-        'sigma_birth': None,
-        'beta': None,
-        'eta': None,
-        'a_half': None,
-        'phi_age': None,
-        'w_half': None,
-        'phi_weight': None,
-        'mu': None,
-        'gamma': None,
-        'zeta': None,
-        'xi': None,
-        'omega': None,
-        'F': None,
-        'DeltaPhiMax': None
-    }
+    # TODO: Figure out if this is necessary
+    # params = {
+    #     'w_birth': None,
+    #     'sigma_birth': None,
+    #     'beta': None,
+    #     'eta': None,
+    #     'a_half': None,
+    #     'phi_age': None,
+    #     'w_half': None,
+    #     'phi_weight': None,
+    #     'mu': None,
+    #     'gamma': None,
+    #     'zeta': None,
+    #     'xi': None,
+    #     'omega': None,
+    #     'F': None,
+    #     'DeltaPhiMax': None
+    # }
 
     @classmethod
     def set_params(cls, new_params):
