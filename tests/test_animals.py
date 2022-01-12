@@ -7,7 +7,6 @@ from biosim.lowland import Landscape
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
 
-
 @pytest.fixture(autouse=True) #Combine with parameterization?
 def reset_params_default():
     """Reset parameters to default after test has run."""
@@ -182,6 +181,19 @@ def test_decrease_weight_when_aging(species):
         animal.age_and_weightloss()
         assert animal.weight == new_weight
 
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_migration_probability(mocker, species):
+    mocker.patch('random.uniform', return_value=0) #TODO: Why isn't this working
+    for _ in range(20):
+        age = random.randint(0, 80)
+        weight = random.randint(0, 20)  # Must avoid using random.uniform
+        assert species(age, weight).probability_to_migrate()
+
+
+# r = uniform(0, 1)
+# p = self.fitness * self.params['mu']
+#
+# return all((p > r, not self.has_migrated))
 
 
 @pytest.mark.skip('Not finished')
