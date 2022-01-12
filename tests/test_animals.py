@@ -152,26 +152,36 @@ def test_eat_limited(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_eat_F_tilde_grow(species):
+def test_eat_F_tilde_grow(species): #TODO: Edit name when F_tilde changes
     """Test correct growth of attribute F_tilde when animals eat."""
     animal = species(12.5, 10)
     available_food = random.uniform(0, 100)
     eaten = animal.eat(available_food)
     assert animal.F_tilde == eaten
 
+#No testing for wanted_food = param F - F_tilde...
 
 
-@pytest.mark.skip('Not finished')
-def test_decrease_weight_when_aging():
-    pass
-
-@pytest.mark.skip('Not finished')
-def test_aging():
-    a = Herbivore()
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_aging(species):
+    """Deterministic test: Age must increase by one each year.""" #OBS! Dette er det samme som Plesser har...
+    animal = species(12.5)
     num_years = 10
     for n in range(num_years):
-        a.age_and_weightloss()
-    assert a.age == num_years + 1
+        animal.age_and_weightloss()
+        assert animal.age == n + 1
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_decrease_weight_when_aging(species):
+    """Deterministic test: Weight must decrease by a factor of eta every year."""
+    animal = species(12.5)
+    num_years = 10
+    for n in range(num_years):
+        new_weight = animal.weight - animal.weight*species.params['eta']
+        animal.age_and_weightloss()
+        assert animal.weight == new_weight
+
 
 
 @pytest.mark.skip('Not finished')
