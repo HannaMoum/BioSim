@@ -54,8 +54,10 @@ class Animal:
 
     Parameters
     ----------
-    age: `int`
+    age: `int` or `float`
         The animal's age.
+
+        Must be a whole number.
     weight: `float`
         The animal's weight.
 
@@ -119,8 +121,8 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, weight, age=0):
-        self._age = age
         self._weight = weight
+        self.age = age
         self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
         self._has_migrated = False
 
@@ -139,10 +141,11 @@ class Animal:
 
     @staticmethod
     def check_whole_number(value):
-        """Command a value to be an integer type."""
+        """Command a value to be a whole number."""
         if not float(value).is_integer():
-            raise ValueError('Value must be integer')
-            # Does not raise correct error if value cannot be converted to float
+            raise ValueError('Age must be a whole number')
+        elif not isinstance(value, (int, float)):
+            raise ValueError('Age must be a whole number')
 
     @property
     def age(self):
