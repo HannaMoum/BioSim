@@ -70,7 +70,7 @@ def test_animal_create_weight_wrong(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_F_tilde_initial(species): #TODO: Change name when F-tilde changes name
+def test_animal_create_F_tilde(species): #TODO: Change name when F-tilde changes name
     """Validate initial value of F-tilde and its' possibility to change."""
     animal = species(12.5, 10)
     eat_amount = 5
@@ -83,6 +83,11 @@ def test_privacy_F_tilde(species):
     eat_amount = 5
     animal.F_tilde = eat_amount #TODO: We can change F_tilde anywhere... Should all getters and setters be _F_tilde?
     pass
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_animal_create_has_migrated(species):
+    """Test that has_migrated attribute is set to False when animal is created."""
+    assert not species(12.5, 10).has_migrated
 
 # self._age = age
 # self._weight = weight
