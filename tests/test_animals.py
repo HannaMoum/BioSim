@@ -6,9 +6,9 @@ from biosim.lowland import Landscape
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True) #Combine with parameterization?
 def reset_params_default():
-    #nothing. Hebr or Carn, not Animal
+    """Reset parameters to default after test has run."""
     yield
     Herbivore.set_params(Herbivore.default_params)
     Carnivore.set_params(Carnivore.default_params)
