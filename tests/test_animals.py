@@ -1,6 +1,7 @@
 """Tests for animal class, concerning both herbivores and carnivores."""
 import pytest
 import random
+from statsmodels.stats.weightstats import ztest
 from biosim.animals import Herbivore, Carnivore
 from biosim.lowland import Landscape
 
@@ -190,6 +191,7 @@ def test_migration_probability(mocker, species):
         weight = random.randint(0, 20)  # Must avoid using random.uniform
         assert species(age, weight).probability_to_migrate()
 
+#TODO: Make better by making sure two out of tree probability factors passes, but not the last...
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_prob_fertilization(mocker, species):
@@ -213,13 +215,28 @@ def test_birth_prob_weight(mocker, species):
     for _ in range(100):
         assert not animal.probability_to_give_birth(300)
 
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_gauss_dist_ztest(species):
+    """Test that the mean of an amount values drawn from a gaussian distribution is within
+    that gaussian distribution with a given mean and variance.
+    The p_value gives the probability to observe a value at least as far from the mean
+    as x if x follows the assumed distribution.
+    We compare the p_value to a predefined acceptance limit alpha, and pass the test if p > a."""
+    #TODO: En og en verdi eller liste av data?
+    alpha = 0.01
+    #birth_weight = random.gauss(species.params['w_birth'], species.params['sigma_birth'])
+    babies = [random.gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(200)]
+    test_stat, p_value = ztest(babies, value=species.params['w_birth'])
+
+    assert p_value > 0.01
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_probability_to_give_birth(species):
-    """Test animal giving birth if all requirements are fullfilled
+    """Test animal giving birth if all requirements are fulfilled
     Must also test birth weight...
     xi = 0: assures maternal health
-    zeta = 0: assures weight check"""
+    zeta = 0: assures weight check
+    """
 
     species.set_params({'xi': 0, 'zeta': 0})
     pass
