@@ -1,48 +1,49 @@
 """ Implements Animal model used by subspecies."""
 
 import math
+from copy import deepcopy
 from random import seed, choice, gauss, sample, uniform
 from abc import ABC, abstractmethod  # Remove unless in use
 from dataclasses import dataclass, asdict
 
-@dataclass
-class Animal_params:
-    w_birth:        float
-    sigma_birth:    float
-    beta:           float
-    eta:            float
-    a_half:         float
-    phi_age:        float
-    w_half:         float
-    phi_weight:     float
-    mu:             float
-    gamma:          float
-    zeta:           float
-    xi:             float
-    omega:          float
-    F:              float
-
-
-@dataclass
-class Herbivore_params:
-    w_birth:        float = 8.0
-    sigma_birth:    float = 1.5
-    beta:           float = 0.9
-    eta:            float = 0.05
-    a_half:         float = 40.0
-    phi_age:        float = 0.6
-    w_half:         float = 10.0
-    phi_weight:     float = 0.1
-    mu:             float = 0.25
-    gamma:          float = 0.2
-    zeta:           float = 3.5
-    xi:             float = 1.2
-    omega:          float = 0.4
-    F:              float = 10.0
-
-@dataclass
-class Carnivore_params:
-    mu: float = 0.4
+# #TODO: Remove dataclasses if not in use
+# @dataclass
+# class Animal_params:
+#     w_birth:        float
+#     sigma_birth:    float
+#     beta:           float
+#     eta:            float
+#     a_half:         float
+#     phi_age:        float
+#     w_half:         float
+#     phi_weight:     float
+#     mu:             float
+#     gamma:          float
+#     zeta:           float
+#     xi:             float
+#     omega:          float
+#     F:              float
+#
+# @dataclass
+# class Herbivore_params:
+#     w_birth:        float = 8.0
+#     sigma_birth:    float = 1.5
+#     beta:           float = 0.9
+#     eta:            float = 0.05
+#     a_half:         float = 40.0
+#     phi_age:        float = 0.6
+#     w_half:         float = 10.0
+#     phi_weight:     float = 0.1
+#     mu:             float = 0.25
+#     gamma:          float = 0.2
+#     zeta:           float = 3.5
+#     xi:             float = 1.2
+#     omega:          float = 0.4
+#     F:              float = 10.0
+#
+# @dataclass
+# class Carnivore_params:
+#     mu: float = 0.4
 
 class Animal:
     """Animal with corresponding characteristics and traits for different species.
@@ -64,23 +65,24 @@ class Animal:
     """
 
     # dict: Parameter values for calculations
-    # TODO: Figure out if this is necessary
+    # w_birth = (8.0, 6.0)
+    # # TODO: Figure out if this is necessary
     # params = {
-    #     'w_birth': None,
-    #     'sigma_birth': None,
-    #     'beta': None,
-    #     'eta': None,
-    #     'a_half': None,
-    #     'phi_age': None,
-    #     'w_half': None,
-    #     'phi_weight': None,
-    #     'mu': None,
-    #     'gamma': None,
-    #     'zeta': None,
-    #     'xi': None,
-    #     'omega': None,
-    #     'F': None,
-    #     'DeltaPhiMax': None
+    #     'w_birth': w_birth,
+    #     'sigma_birth': sigma_birth,
+    #     'beta': beta,
+    #     'eta': eta,
+    #     'a_half': a_half,
+    #     'phi_age': phi_age,
+    #     'w_half': w_half,
+    #     'phi_weight': phi_weight,
+    #     'mu': mu,
+    #     'gamma': gamma,
+    #     'zeta': zeta,
+    #     'xi': xi,
+    #     'omega': omega,
+    #     'F': F,
+    #     'DeltaPhiMax': DeltaPhiMax
     # }
 
     @classmethod
@@ -384,8 +386,9 @@ class Animal:
 
 
 class Herbivore(Animal):
-    params = {
-        'w_birth': 8,
+
+    default_params = {
+        'w_birth': 8.0,
         'sigma_birth': 1.5,
         'beta': 0.9,
         'eta': 0.05,
@@ -400,13 +403,15 @@ class Herbivore(Animal):
         'omega': 0.4,
         'F': 10.0
     }
+    params = deepcopy(default_params)
     """"
     Legg inn doc-string
     """
 
 
 class Carnivore(Animal):
-    params = {
+
+    default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,
         'beta': 0.75,
@@ -423,6 +428,7 @@ class Carnivore(Animal):
         'F': 50.0,
         'DeltaPhiMax': 10.0
     }
+    params = deepcopy(default_params)
 
     def hungry(self):
         """

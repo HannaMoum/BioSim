@@ -1,25 +1,34 @@
+"""Tests for animal class, concerning both herbivores and carnivores."""
 import pytest
-from biosim.animals import Herbivore
-from biosim.lowland import Lowland
+from biosim.animals import Herbivore, Carnivore
+from biosim.lowland import Landscape
 
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
 
-@pytest.mark.skip('Not finished')
-def test_set_params():
+#@pytest.fixture(autouse=True)
+def create_animals():
+    """Create herb and carn."""
+    hebr = Herbivore(10, 12.5)
+    carn = Carnivore(9, 10.5)
     pass
-    # old
-    # new
-    # Sammenlign etter å ha kjørt prossedyren
 
-#@pytest.mark.skip('Not finished')
-def test_count_new_herbi():
-    x = Herbivore.instance_count # Sjekker status i klassen
-    Herbivore.count_new_herbi() # kaller prossedyren
-    assert Herbivore.instance_count == x + 1 # Sjekker om tellevariabel har økt
-    # Tilbakestilling
-    Herbivore.instance_count = x
+def test_set_params():
+    """Test optional change of default parameters."""
+    #Herbivore.set_params({'beta': 1.2, 'omega': 0.2})
+    print(Herbivore.params)
+    Herbivore.set_params(Herbivore.params)
+    print(Herbivore.params)
+    assert Herbivore.params
 
+
+@pytest.fixture
+def reset_params_default():
+    #nothing. Hebr or Carn, not Animal
+    yield
+    Herbivore.set_params(Herbivore.params)
+    Carnivore.set_params(Carnivore.params)
+    pass
 
 #@pytest.mark.skip('Not finished')
 def test_num_herbis():
