@@ -118,7 +118,7 @@ class Animal:
 
             cls.params[key] = new_params[key]
 
-    def __init__(self, age, weight):
+    def __init__(self, weight, age=0):
         self._age = age
         self._weight = weight
         self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
@@ -350,9 +350,9 @@ class Animal:
 
         if birth_weight:
             if species == 'Herbivore':
-                newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default? YES
+                newborn = Herbivore(birth_weight)  # TODO: Should 0 be default? YES
             if species == 'Carnivore':
-                newborn = Carnivore(0, birth_weight)
+                newborn = Carnivore(birth_weight)
 
             #TODO: Optimization possibilities
             self._weight -= birth_weight * self.params['xi']

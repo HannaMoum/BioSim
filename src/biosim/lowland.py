@@ -266,9 +266,9 @@ class Landscape:
             weight = animal['weight']
 
             if animal['species'] == 'Herbivore':
-                self.herb_pop += [Herbivore(age, weight)]
+                self.herb_pop += [Herbivore(weight, age)]
             elif animal['species'] == 'Carnivore':
-                self.carn_pop += [Carnivore(age, weight)]
+                self.carn_pop += [Carnivore(weight, age)]
             else:
                 raise TypeError(f'{animal} is not a defined animal.\n'
                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
