@@ -217,18 +217,17 @@ def test_birth_prob_weight(mocker, species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_gauss_dist_ztest(species):
-    """Test that the mean of an amount values drawn from a gaussian distribution is within
-    that gaussian distribution with a given mean and variance.
-    The p_value gives the probability to observe a value at least as far from the mean
-    as x if x follows the assumed distribution.
+    """Test that the mean of an amount values drawn from a (gaussian?) distribution is within
+    a gaussian distribution with a given mean and variance.
+    Ztest returns a p_value which gives the probability to observe a value a distance or further
+    away from the mean, if that value follows the assumed distribution.
     We compare the p_value to a predefined acceptance limit alpha, and pass the test if p > a."""
-    #TODO: En og en verdi eller liste av data?
-    alpha = 0.01
-    #birth_weight = random.gauss(species.params['w_birth'], species.params['sigma_birth'])
+    #TODO: Ztest takes a list, but should we look at individual weights at a time?
+    alpha = 0.001
     babies = [random.gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(200)]
     test_stat, p_value = ztest(babies, value=species.params['w_birth'])
 
-    assert p_value > 0.01
+    assert p_value > alpha
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_probability_to_give_birth(species):
