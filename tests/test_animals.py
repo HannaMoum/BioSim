@@ -39,8 +39,20 @@ def test_parameter_control(species):
 def test_animal_create_age(species):
     """Test initial age of animal."""
     newborn = species(5)
-    animal = species(weight=12.5, age=10)
-    assert all((newborn.age == 0, animal.age == 10))
+    animal_int = species(weight=12.5, age=10)
+    animal_float = species(weight=12.5, age=10.0)
+    assert all((newborn.age == 0, animal_int.age == 10, animal_float.age == 10.0))
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_animal_create_age_wrong(species):
+    """Test control of input age."""
+    negative_age = -1
+    float_age = 5.6
+    string_age = 'age'
+
+    with pytest.raises(ValueError):
+        all([species(12.5, negative_age), species(12.5, float_age), species(12.5, string_age)])
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
