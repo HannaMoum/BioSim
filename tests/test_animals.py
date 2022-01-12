@@ -153,8 +153,12 @@ def test_eat_limited(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_eat_F_tilde_grow(species):
-    """Test correct growth of attribute F_tilde."""
-    pass #assume now "eaten" is correct
+    """Test correct growth of attribute F_tilde when animals eat."""
+    animal = species(12.5, 10)
+    available_food = random.uniform(0, 100)
+    eaten = animal.eat(available_food)
+    assert animal.F_tilde == eaten
+
 
 
 @pytest.mark.skip('Not finished')
