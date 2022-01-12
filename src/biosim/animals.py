@@ -314,10 +314,11 @@ class Animal:
                        (self.params['w_birth'] + self.params['sigma_birth'])
 
         birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])
+        miscarriage = birth_weight < 0
 
         maternal_health = self.weight > birth_weight * self.params['xi']
 
-        if all((fertilization, weight_check, maternal_health)):
+        if all((fertilization, weight_check, maternal_health, not miscarriage)):
             return birth_weight
 
         return False
