@@ -28,8 +28,7 @@ class Animal:
     TODO: Add new attributes
     """
 
-    # dict: Parameter values for calculations
-
+    # dict:Parameter values
     #TODO: Figure out if this is necessary; Doesnt create confusion...?
     params = {
         'w_birth': None,
@@ -342,6 +341,7 @@ class Animal:
 
 
 class Herbivore(Animal):
+    # Default parameter values for Herbivore
     default_params = {
         'w_birth': 8.0,
         'sigma_birth': 1.5,
@@ -359,12 +359,10 @@ class Herbivore(Animal):
         'F': 10.0
     }
     params = deepcopy(default_params)
-    """"
-    Legg inn doc-string
-    """
 
 
 class Carnivore(Animal):
+    # Default parameter values for Carnivore
     default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,
