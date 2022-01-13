@@ -12,6 +12,7 @@ def reset_params_default():
     yield
     Landscape.set_params(Landscape._default_params)
 
+
 @pytest.mark.parametrize('terrain, value', [('Highland', 200.0), ('Lowland', 400.0)])
 def test_set_single_params(terrain, value):
     """Test optional change of default parameters, singles."""
@@ -75,7 +76,7 @@ def test_inital_population(terrain):
 
 
 ### TODO: Is any of this valuable? HOW TO AVOID ADDING ANIMALS TO WATER
-@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')]) #TODO: Not water here!
+@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])  # TODO: Not water here!
 def test_grassing_fodder_adjustment(terrain_letter, terrain):
     """Test fodder adjustment when grassing in Lowland and Highland while there are still fodder available.
     #Fitness rangering: H(12.5, 10), H(half), H(0)"""
@@ -94,8 +95,9 @@ def test_grassing_break_statement(terrain_letter, terrain):
     # TODO: How?
     pass
 
+
 def test_correct_eating_order():
-    """Test correct eating order.""" #TODO: Denne referer ikke til koden. Hvordan gjøre dette?
+    """Test correct eating order."""  # TODO: Denne referer ikke til koden. Hvordan gjøre dette?
     first_eater = Herbivore(12.5, 10)
     second_eater = Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])
     third_eater = Herbivore(0, 3)
@@ -105,7 +107,8 @@ def test_correct_eating_order():
 
     assert sorted_herbivores == [first_eater, second_eater, third_eater]
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D']) #! No water
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_hunting_no_carnivores(terrain):
     """Test for sorted updated herbivore population with the same amount of herbivores,
     when no carnivores are present."""
@@ -121,7 +124,7 @@ def test_hunting_no_carnivores(terrain):
     assert location_cell.herb_pop == [first_prey, second_prey, third_prey]
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D']) #! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_hunting_no_killing(terrain):
     """Test for steady herbivore population, if no killing takes place.
     Parameter adjustments assures no killing (no hungry carnivores)."""
@@ -130,7 +133,7 @@ def test_hunting_no_killing(terrain):
     preys = [Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half']),
              Herbivore(12.5, 10), Herbivore(0, 3)]
     hunters = [Carnivore(Carnivore.params['w_half'], Carnivore.params['a_half']),
-             Carnivore(12.5, 10), Carnivore(0, 3)]
+               Carnivore(12.5, 10), Carnivore(0, 3)]
 
     location_cell = Landscape(terrain)
     location_cell.herb_pop += preys
@@ -139,3 +142,19 @@ def test_hunting_no_killing(terrain):
 
     assert len(preys) == len(location_cell.herb_pop)
 
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+def test_hunting_only_killing(terrain):
+    """Test for no herbivore population if all are killed during hunt."""
+    Carnivore.set_params({'DeltaPhiMax': 0})
+    preys = [Herbivore(0.1, 50) for _ in range(3)]
+
+    hunters = [Carnivore(Carnivore.params['w_half'], Carnivore.params['a_half'])]
+    #Only need on ehunter for this...
+
+    location_cell = Landscape(terrain)
+    location_cell.herb_pop += preys
+    location_cell.carn_pop += hunters
+    location_cell.hunting()
+
+    assert not location_cell.herb_pop
