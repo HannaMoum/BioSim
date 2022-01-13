@@ -184,7 +184,7 @@ def test_decrease_weight_when_aging(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_migration_probability(mocker, species):
-    """Test that all animals will migrate if the probability is always bigger than a random drawn number"""
+    """Use mocked uniform to test that all animals will migrate under correct circumstances"""
     mocker.patch('biosim.animals.uniform', return_value=0)
     for _ in range(20):
         assert species(12.5, 10).probability_to_migrate()
@@ -235,7 +235,7 @@ def test_birth_prob_matchmaking(mocker, species):
 
     xi = 0: assures maternal health
     zeta = 0: assures puberty
-    num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocker ('random.uniform) return 1:
+    num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocked uniform return 1:
      assures no match_probability
     sigma_birth = 0.2 (small enough to assure no miscarriages)
     """
@@ -261,7 +261,7 @@ def test_birth_prob_fertilization(species):
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_prob_puberty(mocker, species):
     """Deterministic test: no birth takes place if all requirements but reached_puberty are fulfilled.
-
+    Used mocked uniform
     xi = 0: assures maternal health
     zeta = weight/sigma_birth,  when 0 < sigma_birth < 1 and w_birth = anything (but negative)
     num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocker ('random.uniform) return 1:
@@ -380,3 +380,16 @@ def test_death_probability_survive(mocker, species):
     mocker.patch('biosim.animals.uniform', return_value=1)
     healthy_animal = species(12.5, 10)
     assert not healthy_animal.probability_of_death()
+
+
+def test_hungry():
+    """Test that carnivore is hungry by default."""
+    carn = Carnivore(12.5, 10)
+    assert all((carn.F_tilde < Carnivore.params['F'], carn.hungry))
+
+
+def test_not_hungry():
+    """Test that carnivore is not hungry when."""
+    carn = Carnivore(12.5, 10)
+    carn.F_tilde = Carnivore.params['F']
+    assert not carn.hungry()
