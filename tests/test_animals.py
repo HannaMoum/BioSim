@@ -239,7 +239,7 @@ def test_birth_prob_matchmaking(mocker, species):
      assures no match_probability
     sigma_birth = 0.2 (small enough to assure no miscarriages)
     """
-    mocker.patch('random.uniform', return_value=0) #TODO: Fix mocker
+    mocker.patch('biosim.animals.uniform', return_value=1)
     species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
     age = species.params['a_half']
     weight = species.params['w_half']
@@ -250,7 +250,7 @@ def test_birth_prob_matchmaking(mocker, species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_birth_prob_fertilization(mocker, species):
+def test_birth_prob_fertilization(species):
     """Deterministic test: No birth can take place if only one animal is present."""
     animal = species(12.5, 10)
     num_animals = 1
@@ -268,7 +268,7 @@ def test_birth_prob_puberty(mocker, species):
      assures no match_probability
     sigma_birth = 0.2 (small enough to assure no miscarriages)
     """
-    mocker.patch('random.uniform', return_value=0) #TODO: Fix mocker
+    mocker.patch('biosim.animals.uniform', return_value=0)
     age = species.params['a_half']
     weight = species.params['w_half']
     species.set_params({'xi': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
@@ -299,7 +299,8 @@ def test_birth_prob_maternal_health(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_prob_miscarriage(species):
-    """Statistical test: testing that miscarriage is directly connected to birth_weight.
+    """Statistical test: testing that miscarriage is directly connected to birth_weight
+    trough the gaussian distribution.
 
     w_birth = 0 and sigma_birth as any positive value assures 50% of births are miscarriages.
     We pass the test if this statement holds by ± 10% due to:
