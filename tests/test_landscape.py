@@ -74,11 +74,40 @@ def test_inital_population(terrain):
     assert not all([Landscape(terrain).herb_pop, Landscape(terrain).carn_pop])
 
 
+### TODO: Is any of this valuable?
+@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')]) #TODO: Not water here!
+def test_grassing_fodder_adjustment(terrain_letter, terrain):
+    """Test fodder adjustment when grassing in Lowland and Highland while there are still fodder available.
+    #Fitness rangering: H(12.5, 10), H(half), H(0)"""
+    herbivores = [Herbivore(12.5, 10), Herbivore(0, 3),
+                  Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])]
+
+    location_cell = Landscape(terrain_letter)
+    location_cell.herb_pop += herbivores
+    location_cell.grassing()
+
+    assert location_cell.fodder < Landscape.params['f_max'][terrain]
 
 
+@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland'), ('D', 'Desert')])
+def test_grassing_break_statement(terrain_letter, terrain):
+    # TODO: How?
+    pass
+
+def test_correct_eating_order():
+    """Test correct eating order.""" #TODO: Denne referer ikke til koden. Hvordan gjøre dette?
+    first_eater = Herbivore(12.5, 10)
+    second_eater = Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])
+    third_eater = Herbivore(0, 3)
+
+    herbivores = [second_eater, third_eater, first_eater]
+    sorted_herbivores = [herbivore for herbivore in sorted(herbivores, key=lambda x: x.fitness, reverse=True)]
+
+    assert sorted_herbivores == [first_eater, second_eater, third_eater]
 
 
-def test_grassing():
+@pytest.mark.skip
+def test_grassing_no():
     """
     Test they are eating in correct order (test sorting-funtion) #How?...
     Test for weightgain after eating? #SHOULD BE TESTED IN test_eat, transferred
@@ -111,5 +140,5 @@ def test_grassing():
     # for herbivore_i, herbivore_f in zip(initial, final):
     #
     #     assert herbivore_i._weight + gain == herbivore_f._weight
-    #pass
+    pass
 
