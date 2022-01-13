@@ -80,9 +80,11 @@ class BioSim(BioSim_param):
         """Validates the ini_pop input, and check that it follow the rules"""
         return True
 
-    def get_yearly_herb_count(self):
-        """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå."""
+    def get_yearly_herb_count(self)-> object:
+        """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
+        Returnerer en np array.shape(1,) 1D"""
         kube =  self.cube_population_herbs
+        # kube.sum(rad_dimensjonen).sum(kolonne_dimensjonen) = array med en sum (scalar) per år.
         serie = kube.sum(-1).sum(-1)
         # TODO: Do validation
         assert len(serie) == self._num_years
@@ -159,11 +161,11 @@ class BioSim(BioSim_param):
                         new_col = current_col + c
 
                         if self.island.object_map[new_row, new_col].is_migratable:
-
-                            if species == 'Herbivore':
-                                self.island.object_map[new_row, new_col].herb_pop.append(animal) #Still not good...
-                            if species == 'Carnivore':
-                                self.island.object_map[new_row, new_col].carn_pop.append(animal)
+                            self.island.object_map[new_row, new_col].population.append(animal)
+                            # if species == 'Herbivore':
+                            #     self.island.object_map[new_row, new_col].herb_pop.append(animal) #Still not good...
+                            # if species == 'Carnivore':
+                            #     self.island.object_map[new_row, new_col].carn_pop.append(animal)
 
                             moved.append(animal)
 
@@ -171,8 +173,9 @@ class BioSim(BioSim_param):
                         landscape_pop.remove(migrated_animal)
 
                 if landscape_obj.is_migratable:
-                    method_2(landscape_obj.herb_pop, migrate_herbs, row, col, 'Herbivore')
-                    method_2(landscape_obj.carn_pop, migrate_carns, row, col, 'Carnivore')
+                    method_2(landscape_obj.population, {**migrate_herbs, **migrate_carns}, row, col, 'dummy')
+                    # method_2(landscape_obj.herb_pop, migrate_herbs, row, col, 'Herbivore')
+                    # method_2(landscape_obj.carn_pop, migrate_carns, row, col, 'Carnivore')
 
 
 
