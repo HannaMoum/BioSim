@@ -295,8 +295,8 @@ def test_birth_prob_maternal_health(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_birth_prob_miscarriage(mocker, species):
-    """Statistical test: no birth takes place if miscarriae takes place a an assumed amount of times.
+def test_birth_prob_miscarriage(species):
+    """Statistical test: testing that miscarriage is directly connected to birth_weight.
 
     w_birth = 0 and sigma_birth as any positive value assures 50% of births are miscarriages.
     We pass the test if this statement holds by ± 10% due to:
@@ -313,10 +313,21 @@ def test_birth_prob_miscarriage(mocker, species):
     assert lower_limit < len(newborns)/len(negative_newborns) < upper_limit
 
 
+@pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
+def test_giving_birth(species_obj, species_str):
+    """"Test correct return value if animal gives birth.
 
-@pytest.mark.skip('Not finished')
-def test_giving_birth():
-    pass
+    Test use the same parameter values as in test probability_to_give_birth to assure birth takes place."""
+    species_obj.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
+    age = species_obj.params['a_half']
+    weight = species_obj.params['w_half']
+    num_animals = 10
+    animal = species_obj(weight, age)
+
+    newborn = animal.giving_birth(species_str, num_animals)
+    assert all((newborn, type(newborn) == species_obj))
+
+
 
 @pytest.mark.skip('Not finished')
 def test_death():
