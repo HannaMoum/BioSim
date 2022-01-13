@@ -33,6 +33,7 @@ class Graphics(Graphics_param):
         return self._island_plot
 
     def make_plot_map(self, numpy_island_map):
+        """Lager numpy array (kartet) som brukes for å plotte verdenskartet."""
         island_map_plot = np.copy(numpy_island_map) # Lager intern kopi, for å unngå å ødelegge opprinnelig array. Hadde bare blitt et view om man ikke hadde gjort det.
         vcode_landscape = np.vectorize(self.code_landscape) # Vektoriserer funksjonen. Funksjonen kan da benyttes celle for celle i arrayen (eller et utvalg av arrayen).
         island_map_plot[:, :] = vcode_landscape(island_map_plot) # Bruker den vektoriserte funksjonen element for element i slicen som er laget (her alle celler).
@@ -42,6 +43,7 @@ class Graphics(Graphics_param):
         # Returnerer np array med verdiene 0 til 3, som kan brukes til plotting.
 
     def plot_island_map(self, plot_map=None, scale = 3):
+        """Plotter verdenskartet"""
         if plot_map == None:
             plot_map = self.island_plot
         row, col = plot_map.shape
@@ -64,6 +66,7 @@ class Graphics(Graphics_param):
             #plt.show()
 
     def plotting_population_count(self, herb_data:object, carn_data: object, ax: object):
+        """Brukes til å plotte population size over tid"""
         """Data er np array, med en sum per år i simuleringen"""
         with plt.style.context('default'):
             #fig, ax = plt.subplots()
@@ -78,6 +81,7 @@ class Graphics(Graphics_param):
             return ax
 
     def plot_heatmap(self, data: object, species: str, ax = None, year: int = -1):
+        """Plotter heatmap"""
         fig, ax = plt.subplots() # Midlertidig siden heatmap ikke vil inn i panelet.
         if species == 'herbivore':
             title = 'Herbivore distribution'
@@ -98,15 +102,6 @@ class Graphics(Graphics_param):
 
     def plot_histogram(self, hist_herb_data:object, hist_carn_data:object, ax_age, ax_weight, ax_fitness, year: int = -1)-> object:
         """
-        Parameters
-        ----------
-        herb_data
-        carn_data
-        year
-
-        Returns
-        -------
-        ax
         """
         colors = ['green', 'red']
         age, weight, fitness = (0, 1, 2)

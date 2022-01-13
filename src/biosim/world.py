@@ -30,14 +30,16 @@ class BioSim(BioSim_param):
         self._ini_pop = self.add_population(ini_pop)
             #TODO: Save ini_pop directly from input
             # Add_population returns nothing, it is an action of its' own
+
         # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
         self._num_years = 0 # Duration of sim
         self.cube_population_herbs = np.empty(())
         self.cube_population_carns = np.empty(())
-        self.cube_properties_herbs = np.empty(())
-        self.cube_properties_carns = np.empty(())
         self.cubelist_properties_herbs = []
         self.cubelist_properties_carns = []
+
+        # self.cube_properties_herbs = np.empty(())
+        # self.cube_properties_carns = np.empty(())
 
     @property
     def island_map(self):
@@ -325,9 +327,6 @@ class BioSim(BioSim_param):
         # Disse brukes ikke akkurat nå, men ikke slett!
         #self.cube_properties_herbs = np.stack(yearly_property_map_herbs)
         #self.cube_properties_carns = np.stack(yearly_property_map_carns)
-
-
-
 
 
     def validate_island_map(self, island_map_list):
