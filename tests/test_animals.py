@@ -328,9 +328,17 @@ def test_giving_birth_true(species_obj, species_str):
     num_animals = 10
     animal = species_obj(weight, age)
 
-    newborn = animal.giving_birth(species_str, num_animals)
-    assert all((newborn, type(newborn) == species_obj))
+    for _ in range(20):
+        newborn = animal.giving_birth(species_str, num_animals)
+        assert all((newborn, type(newborn) == species_obj))
 
+@pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
+def test_giving_birth_false(species_obj, species_str):
+    """"Test correct return value if animal does not gives birth.
+    Let animal be alone in landscape to assure no birth takes place."""
+    animal = species_obj(12.5, 10)
+    newborn = animal.giving_birth(species_str, 1)
+    assert not newborn
 
 
 
