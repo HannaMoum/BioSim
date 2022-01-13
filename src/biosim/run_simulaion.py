@@ -2,11 +2,13 @@ import textwrap
 from world import BioSim_param, BioSim
 from graphics import Graphics, Graphics_param
 import matplotlib.pyplot as plt
+
+plt.show()
 import numpy as np
 import seaborn as sns
 
 if __name__ == '__main__':
-    plt.ion()
+    # plt.ion() Når du har skrudd av denne vil ikke figur-viduet dette sammen med en gang
     geogr = """\
                 WWWWWWWWWWWWWWWWWWWWW
                 WWWWWWWWHWWWWLLLLLLLW
@@ -24,71 +26,57 @@ if __name__ == '__main__':
     geogr = textwrap.dedent(geogr)
 
     ini_herbs = [{'loc': (9, 9),
-                'pop': [{'species': 'Herbivore',
-                'age': 5,
-                'weight': 20}
-                for _ in range(150)]}]
+                  'pop': [{'species': 'Herbivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(150)]}]
 
     ini_carns = [{'loc': (9, 9),
-                'pop': [{'species': 'Carnivore',
-                'age': 5,
-                'weight': 20}
-                for _ in range(40)]}]
+                  'pop': [{'species': 'Carnivore',
+                           'age': 5,
+                           'weight': 20}
+                          for _ in range(40)]}]
 
-
-
-    sim = BioSim(island_map=geogr, ini_pop=ini_herbs+ini_carns,
+    sim = BioSim(island_map=geogr, ini_pop=ini_herbs + ini_carns,
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
-                'age': {'max': 60.0, 'delta': 2},
-                'weight': {'max': 60, 'delta': 2}},
-                )
+                             'age': {'max': 60.0, 'delta': 2},
+                             'weight': {'max': 60, 'delta': 2}},
+                 )
 
-    sim.simulate(num_years=30)
+    sim.simulate(num_years=10)
 
     sim.set_landscape_parameters('L', {'f_max': 800})
-    sim.set_animal_parameters('Herbivore', {'omega': 0.2})
 
+    # herb_pop_map = sim.get_property_map('v_size_herb_pop')
 
-    def size_herb_pop(location):
-        """Location er et landskaps-objekt i objekt-kartet, en rute. """
-        return len(location.herb_pop)
+    # plt.show()
+    # print(herbivore_property_array[:, 1])
 
-    def size_carn_pop(location):
-        return len(location.carn_pop)
-
-    def make_property_map(fx):
-        property_map = np.empty(sim.island_map.shape, dtype=float)
-        vget_property = np.vectorize(fx)
-        property_map[:, :] = vget_property(sim.island_map_objects)
-        return property_map
-
-    herb_pop_map = make_property_map(size_herb_pop)
-    carn_pop_map = make_property_map(size_carn_pop)
-
-
-
-
+    # Plotter kartet over øya
     graf = Graphics(sim.island_map)
+
     graf.plot_island_map()
+    """
+    # Plotter begge populasjoner på samme ax
+    herb_count = sim.get_yearly_herb_count()
+    carn_count = sim.get_yearly_carn_count()
+    graf.plotting_population_count(herb_count, carn_count)
+    """
+    kube1 = sim.cube_population_herbs
+    kube2 = sim.cube_population_carns
+    graf.plot_heatmap(kube1, species='herbivore')
+    graf.plot_heatmap(kube2, species='carnivore')
+    # plt.show()
 
+    """herb_data = sim.cubelist_properties_herbs
+    carn_data = sim.cubelist_properties_carns
 
-    def show_herb_pop():
-        sns.heatmap(herb_pop_map, annot = True, cmap = 'Greens')
-        plt.show()
-    def show_carn_pop():
-        sns.heatmap(carn_pop_map, annot = True, cmap = 'Reds')
-        plt.show()
+    graf.plot_histogram(herb_data, carn_data)"""
 
-    show_herb_pop()
-    show_carn_pop()
-
-
-
-
-
-
-
-
-
-
+    herb_count = sim.get_yearly_herb_count()
+    carn_count = sim.get_yearly_carn_count()
+    kube1 = sim.cube_population_herbs
+    herb_data = sim.cubelist_properties_herbs
+    carn_data = sim.cubelist_properties_carns
+    graf.show_panel(herb_count, carn_count, kube1, 'herbivore', herb_data, carn_data)

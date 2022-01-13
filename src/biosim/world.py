@@ -27,24 +27,57 @@ class BioSim(BioSim_param):
 
         """
 
-    def __init__(self, island_map, ini_pop = None, seed = None,
+    def __init__(self, island_map, ini_pop=None, seed=None,
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
+
+        random.seed(seed)
+        # Tar i mot verdens-kartet
         self._island_map = self.make_island_map(island_map)
+        # Lager objekt-kart av verdenskartet.
         self._island_map_objects = self.make_island_map_objects()
+        # Setter ut initiell populasjon
         self._ini_pop = self.add_population(ini_pop)
-        #self._ini_pop = ini_pop
-            #TODO: Save ini_pop directly from input
-            # Add_population returns nothing, it is an action of its' own
+        # TODO: Save ini_pop directly from input
+        # Add_population returns nothing, it is an action of its' own
+
+        # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
+        self._num_years = 0  # Duration of sim
+        self.cube_population_herbs = np.empty(())
+        self.cube_population_carns = np.empty(())
+        self.cubelist_properties_herbs = []
+        self.cubelist_properties_carns = []
+
+        # self.cube_properties_herbs = np.empty(())
+        # self.cube_properties_carns = np.empty(())
 
     @property
     def island_map(self):
+        """Base map. Det initsielle verdenskartet."""
         return self._island_map
 
     @property
     def island_map_objects(self):
+        """Dette kartet inneholder referanser til landskapsobjekter.
+        Det er en transformering av island_map. Kart med landskapsobjekter."""
         return self._island_map_objects
+
+    def get_yearly_herb_count(self):
+        """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå."""
+        kube =  self.cube_population_herbs
+        serie = kube.sum(-1).sum(-1)
+        # TODO: Do validation
+        assert len(serie) == self._num_years
+        return serie
+
+    def get_yearly_carn_count(self):
+        """Dette er en datagenererings-metode for å finne ut hvor mange carnivores som finnes i verden akk nå."""
+        kube =  self.cube_population_carns
+        serie = kube.sum(-1).sum(-1)
+        # TODO: Do validation
+        assert len(serie) == self._num_years
+        return serie
 
 
     def make_island_map(self, island_map):
@@ -66,14 +99,19 @@ class BioSim(BioSim_param):
         island_map_list = island_map.split()  # Oppretter liste, splitter ved default på new-line
 
         if self.validate_island_map(island_map_list):  # IMPLEMENTERT
-            row, col = len(island_map_list), len(island_map_list[0]) # Antall rader = antall elementer i lista, antall kolonner = lengden av den første raden
-            _build_map = np.empty(shape=(row, col), dtype='str') # Lager tom np.array som skal fylles med bokstaver for hvert landskap
+            row, col = len(island_map_list), len(island_map_list[
+                                                     0])  # Antall rader = antall elementer i lista, antall kolonner = lengden av den første raden
+            _build_map = np.empty(shape=(row, col),
+                                  dtype='str')  # Lager tom np.array som skal fylles med bokstaver for hvert landskap
 
-            for row_index, row_string in enumerate(island_map_list): # Går gjennom hver rad
-                for col_index, landscape_letter in enumerate(row_string): # Går gjennom hver kolonne (elementene i raden).
-                    _build_map[row_index, col_index] = landscape_letter  # Leser bokstaven inn i riktig posisjon i arrayen.
+            for row_index, row_string in enumerate(island_map_list):  # Går gjennom hver rad
+                for col_index, landscape_letter in enumerate(
+                        row_string):  # Går gjennom hver kolonne (elementene i raden).
+                    _build_map[
+                        row_index, col_index] = landscape_letter  # Leser bokstaven inn i riktig posisjon i arrayen.
 
             return _build_map
+
 
     def make_island_map_objects(self):
         """
@@ -262,9 +300,67 @@ class BioSim(BioSim_param):
                 #     for carnivore in moved:
                 #         landscape_obj.carn_pop.remove(carnivore)
 
+    def get_property_map(self, fx_map_type):
+        """
+        Brukergrensesnittet som gjør at man kan skrive inn hvilken type informasjon som fabrikke nskal benytte seg av.
+        Forteller fabrikken hvilken funksjon man vil bruke.
+        getattr slår opp i klassen og ser om vi har en tilsvarende funksjon i klassen som samsvarer med navnet på den funksjonen vi putter inn.
+        dir(BioSim)
+        Om funksjonen ligger i klassen så sender den tilbake en referanse til funksjonsobjektet.
+        """
+        return self.__make_property_map(getattr(self, fx_map_type), self.island_map, self.island_map_objects)
+
+    def get_property_map_objects(self, fx_map_type):
+        return self.__make_property_map_objects(getattr(self, fx_map_type), self.island_map, self.island_map_objects)
+
+    # ------------------------------------------------------------------------------------------------
+    # Factory for property_maps
+    def v_size_herb_pop(self, location: object):
+        """Population sizer for herbivores at given location. """
+        return len(location.herb_pop)
+
+    def v_size_carn_pop(self, location: object):
+        """Population sizer for carnivores at given location."""
+        return len(location.carn_pop)
+
+    def __make_property_map(self, fx: object, island_map: object, island_map_objects: object):
+        property_map = np.empty(island_map.shape, dtype=float)
+        vget_property = np.vectorize(fx)
+        property_map[:, :] = vget_property(island_map_objects)
+        return property_map
+
+    def v_herb_properties_objects(self, location: object):
+        population_list = location.herb_pop
+        if len(population_list) > 0:
+            liste = []
+            for animal in population_list:
+                liste.append((animal.age, animal.weight, animal.fitness))
+            return liste
+
+    def v_carn_properties_objects(self, location: object):
+        population_list = location.carn_pop
+        if len(population_list) > 0:
+            liste = []
+            for animal in population_list:
+                liste.append((animal.age, animal.weight, animal.fitness))
+            return liste
+
+    def __make_property_map_objects(self, fx: object, island_map: object, island_map_objects: object):
+        property_map = np.empty(island_map.shape, dtype=object)
+        vget_property = np.vectorize(fx)
+        property_map[:, :] = vget_property(island_map_objects)
+        return property_map
+
+    # ------------------------------------------------------------------------------------------------
+
     def simulate(self, num_years = 10, vis_years = 1):
-        #add population her (?): add_population(self.ini_pop)
-        for year in range(num_years):
+        self._num_years = num_years # Trenger num_years utenfor simulate metoden. Brukes i get_yearly_carn_count og get_yearly_herb_count
+        yearly_pop_map_herbs = []
+        yearly_pop_map_carns = []
+        yearly_property_map_herbs = []
+        yearly_property_map_carns = []
+
+        for year in range(self._num_years):
             with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     location = element.item() # Landskapsobjekt
@@ -283,6 +379,52 @@ class BioSim(BioSim_param):
                         location.give_birth()
                         location.aging()
                         location.death()
+            #-------------------------------------------------------------------------------------
+            # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
+
+            # Herbivore populasjonsstørrelse for alle lokasjoner per år
+            yearly_pop_map_herbs.append(self.get_property_map('v_size_herb_pop'))
+            # Carnivore populasjonsstørrelse for alle lokasjoner per år
+            yearly_pop_map_carns.append(self.get_property_map('v_size_carn_pop'))
+
+            #---------------------------------------------------------------------
+
+            yearly_herb_objects_map = self.get_property_map_objects('v_herb_properties_objects')
+            # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
+            # Måtte derfor skrive egen akkumulerings funksjon som legger sammen alle populasjonslistene på landskapene på øya, til en liste med alle dyr på øya.
+            acc_list_herb = []
+            with np.nditer(yearly_herb_objects_map, flags=['multi_index', 'refs_ok']) as it:
+                for element in it:
+                    list_on_location = element.item()
+                    if type(list_on_location) == list:
+                        acc_list_herb += list_on_location
+            yearly_herbivore_property_array = np.asarray(acc_list_herb)
+            self.cubelist_properties_herbs.append(yearly_herbivore_property_array)
+            # Brukes ikke nå, men ikke slett!
+            #yearly_property_map_herbs.append(yearly_herb_objects_map)
+
+            yearly_carn_objects_map = self.get_property_map_objects('v_carn_properties_objects')
+            acc_list_carn = []
+            with np.nditer(yearly_carn_objects_map, flags=['multi_index', 'refs_ok']) as it:
+                for element in it:
+                    list_on_location = element.item()
+                    if type(list_on_location) == list:
+                        acc_list_carn += list_on_location
+            yearly_carnivore_property_array = np.asarray(acc_list_carn)
+            self.cubelist_properties_carns.append(yearly_carnivore_property_array)
+            # Brukes ikke nå, men ikke slett!
+            #yearly_property_map_carns.append(yearly_carn_objects_map)
+
+
+        # Data at end of simulation
+        # TODO: Add evaluation. Check shape and size. Raises valueerror
+        self.cube_population_herbs = np.stack(yearly_pop_map_herbs)
+        self.cube_population_carns = np.stack(yearly_pop_map_carns)
+
+        # Disse brukes ikke akkurat nå, men ikke slett!
+        #self.cube_properties_herbs = np.stack(yearly_property_map_herbs)
+        #self.cube_properties_carns = np.stack(yearly_property_map_carns)
+
 
     def validate_island_map(self, island_map_list):
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
