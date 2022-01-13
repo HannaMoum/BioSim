@@ -342,7 +342,7 @@ class Animal:
 
 class Herbivore(Animal):
     # Default parameter values for Herbivore
-    default_params = {
+    _default_params = {
         'w_birth': 8.0,
         'sigma_birth': 1.5,
         'beta': 0.9,
@@ -358,12 +358,12 @@ class Herbivore(Animal):
         'omega': 0.4,
         'F': 10.0
     }
-    params = deepcopy(default_params)
+    params = deepcopy(_default_params)
 
 
 class Carnivore(Animal):
     # Default parameter values for Carnivore
-    default_params = {
+    _default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,
         'beta': 0.75,
@@ -380,7 +380,7 @@ class Carnivore(Animal):
         'F': 50.0,
         'DeltaPhiMax': 10.0
     }
-    params = deepcopy(default_params)
+    params = deepcopy(_default_params)
 
     def hungry(self):
         """
