@@ -344,14 +344,13 @@ class Animal:
         """
         birth_weight = self.probability_to_give_birth(number_of_animals)
 
-        if birth_weight:
+        if birth_weight: # TODO: Optimization possibilities
             if species == 'Herbivore':
-                newborn = Herbivore(birth_weight)  # TODO: Should 0 be default? YES
+                newborn = Herbivore(birth_weight)
             if species == 'Carnivore':
                 newborn = Carnivore(birth_weight)
 
-            # TODO: Optimization possibilities
-            self._weight -= birth_weight * self.params['xi']
+            self.weight -= birth_weight * self.params['xi']
 
             return newborn
 
