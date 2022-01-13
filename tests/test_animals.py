@@ -1,6 +1,6 @@
 """Tests for animal class, concerning both herbivores and carnivores."""
 import pytest
-import random
+from random import uniform, randint, gauss
 from statsmodels.stats.weightstats import ztest
 from biosim.animals import Herbivore, Carnivore
 from biosim.lowland import Landscape
@@ -119,9 +119,7 @@ def test_fitness_parameter_change(species):
     If phi_age and phi_weight is set to 0, expected fitness is 1/4 exactly
     (independently of age and weight)."""
     species.set_params({'phi_age': 0, 'phi_weight': 0})
-    age = random.randint(0, 100)
-    weight = random.uniform(0, 100)
-    assert species(weight, age).fitness == 1/4
+    assert species(12.5, 10).fitness == 1/4
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -156,7 +154,7 @@ def test_eat_limited(species):
 def test_eat_F_tilde_grow(species): #TODO: Edit name when F_tilde changes
     """Test correct growth of attribute F_tilde when animals eat."""
     animal = species(12.5, 10)
-    available_food = random.uniform(0, 100)
+    available_food = 100
     eaten = animal.eat(available_food)
     assert animal.F_tilde == eaten
 
@@ -183,14 +181,13 @@ def test_decrease_weight_when_aging(species):
         animal.age_and_weightloss()
         assert animal.weight == new_weight
 
+
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_migration_probability(mocker, species):
     """Test that all animals will migrate if probability is always true...(?)"""
-    mocker.patch('random.uniform', return_value=0) #TODO: Why isn't this working
+    mocker.patch('biosim.animals.uniform', return_value=0) #TODO: Why isn't this working #Importere hele uniform fungerer (i animals og test)
     for _ in range(20):
-        age = random.randint(0, 80)
-        weight = random.randint(0, 20)  # Must avoid using random.uniform
-        assert species(age, weight).probability_to_migrate()
+        assert species(12.5, 10).probability_to_migrate()
 
 
 
@@ -203,10 +200,11 @@ def test_birth_ztest(species):
     We compare the p_value to a predefined acceptance limit alpha, and pass the test if p > a."""
     #TODO: Ztest takes a list. Should I use gauss directly or returned newborn weights from mainmethod?
     alpha = 0.001
-    babies = [random.gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(200)]
-    test_stat, p_value = ztest(babies, value=species.params['w_birth'])
+    newborn_weights = [gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(200)]
+    test_stat, p_value = ztest(newborn_weights, value=species.params['w_birth'])
 
     assert p_value > alpha
+
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_probability_to_give_birth(species):
@@ -305,7 +303,7 @@ def test_birth_prob_miscarriage(species):
     """
     species.set_params({'sigma_birth': 0.2, 'w_birth': 0})
 
-    newborns = [random.gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(500)]
+    newborns = [gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(500)]
     negative_newborns = [newborn for newborn in newborns if newborn < 0]
     lower_limit = 1.90
     upper_limit = 2.10
@@ -314,7 +312,7 @@ def test_birth_prob_miscarriage(species):
 
 
 @pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
-def test_giving_birth(species_obj, species_str):
+def test_giving_birth_true(species_obj, species_str):
     """"Test correct return value if animal gives birth.
 
     Test use the same parameter values as in test probability_to_give_birth to assure birth takes place."""
@@ -326,6 +324,7 @@ def test_giving_birth(species_obj, species_str):
 
     newborn = animal.giving_birth(species_str, num_animals)
     assert all((newborn, type(newborn) == species_obj))
+
 
 
 
