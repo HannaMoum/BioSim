@@ -24,10 +24,18 @@ def test_set_params(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_parameter_control(species):
+def test_parameter_valueerror(species):
     """Test that only legal parameters and values are allowed."""
     with pytest.raises(ValueError):
-        all([species.set_params({'beta': -0.2}), species.set_params({'eta': 1.2}), species.set_params({'alpha': 0.5})])
+        all([species.set_params({'beta': -0.2}), species.set_params({'eta': 1.2})])
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+@pytest.mark.parametrize('key', ['alpha', 'Beta'])
+def test_parameter_keyerror(species, key):
+    """Test that illegal parameter keys raises KeyError."""
+    with pytest.raises(KeyError):
+        species.set_params({key: 0.5})
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -128,7 +136,7 @@ def test_eat_unlimited(species):
     animal_1.eat(satisfying_amount_1) and animal_2.eat(satisfying_amount_2)
     weight_gain = species.params['F'] * species.params['beta']
 
-    assert all((animal_1.weight == initial_weight + weight_gain, animal_1.weight == animal_2.weight))
+    assert all([animal_1.weight == initial_weight + weight_gain, animal_1.weight == animal_2.weight])
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -323,7 +331,7 @@ def test_giving_birth_true(species_obj, species_str):
 
     for _ in range(20):
         newborn = animal.giving_birth(species_str, num_animals)
-        assert all((newborn, type(newborn) == species_obj))
+        assert all([newborn, type(newborn) == species_obj])
 
 
 @pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
@@ -378,7 +386,7 @@ def test_death_probability_survive(mocker, species):
 def test_hungry():
     """Test that carnivore is hungry by default."""
     carn = Carnivore(12.5, 10)
-    assert all((carn.F_tilde < Carnivore.params['F'], carn.hungry))
+    assert all([carn.F_tilde < Carnivore.params['F'], carn.hungry])
 
 
 def test_not_hungry():
@@ -400,7 +408,7 @@ def test_killing_probability_fitness_equal():
     """Test that a kill can not take place if a carnviore's and a herbivore's fitnesses are equal."""
     carn = Carnivore(Carnivore.params['w_half'], Carnivore.params['a_half'])
     herb = Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])
-    assert not all((carn.probability_to_give_birth(herb.fitness), carn.fitness == herb.fitness))
+    assert not all([carn.probability_to_give_birth(herb.fitness), carn.fitness == herb.fitness])
 
 
 @pytest.mark.parametrize('DeltaPhiMax', [12.5, 0])
