@@ -1,5 +1,4 @@
 import pytest
-from biosim.lowland import Lowland
 from biosim.animals import Herbivore
 from biosim.lowland import Landscape
 
@@ -7,44 +6,32 @@ from biosim.lowland import Landscape
 SEED = 12345678  # random seed for tests
 
 
-@pytest.fixture(autouse=True) #Combine with parameterization?
+@pytest.fixture(autouse=True)
 def reset_params_default():
     """Reset parameters to default after test has run."""
     yield
-    Landscape.set_params(Landscape.default_params)
-
-
-
-@pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_set_params(species):
-    """Test optional change of default parameters."""
-    species.set_params({'beta': 1.2, 'omega': 0.2})
-    assert all([species.params['beta'] == 1.2, species.params['omega'] == 0.2])
-###########
-
-
-
-
-
+    Landscape.set_params(Landscape._default_params)
 
 
 def test_set_params():
-    """ Testing change of parameter default value (f_max)
-        Testing raise of error if wrongful params have been given"""
-    #Split in severeal? Keep as one?...
-    wanted_param = {'f_max': 600}
-    wrongful_param = {'f_min': 600}
-    wrongful_value = {'f_max': -600}
+    """Test optional change of default parameters."""
+    Landscape.set_params({'f_max': {'Highland': 200.0}})
+    assert Landscape.params['f_max']['Highland'] == 200
 
-    Lowland.set_params(wanted_param)
-    new_param = Lowland.params['f_max']
-    assert wanted_param['f_max'] == new_param
 
-    with pytest.raises(KeyError):
-        Lowland.set_params(wrongful_param)
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
+def test_init_landscape_type(terrain):
+    """Test correct save of input value to Landscape class."""
+    assert Landscape(terrain).landscape_type == terrain
 
-    with pytest.raises(ValueError):
-        Lowland.set_params(wrongful_value)
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
+def test_init_is_migratable(terrain):
+    """Test that correct terrains are migratable."""
+    assert Landscape(terrain).is_migratable
+
+def test_init_is_not_migratable():
+    """Test that water is not migratable."""
+    assert not Landscape('W').is_migratable
 
 def test_init_fodder():
     pass
