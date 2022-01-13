@@ -74,18 +74,24 @@ class Landscape:
     @classmethod
     def set_params(cls, new_params):
         """Set class parameters.
+
+        Parameters
+        ----------
+        new_params: `dict`, optional
+            Legal keys: 'f_max'
         #TODO: Edit
-        new_params: Dict
         params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
-        new_params = {'f_max': {'Highland': 200.0}}
+        Input vil se slik ut fra word: new_params = {'f_max': {'Highland': 200.0}}
         Landscape.set_params({'f_max': {'Highland': params['f_max']}})
         """
         if 'f_max' in new_params:
-            value_dict = new_params['f_max']
-            if 'Highland' in value_dict:
-                cls.params = {'f_max': {'Highland': value_dict['Highland'], 'Lowland': cls.params['f_max']['Lowland']}}
-            if 'Lowland' in value_dict:
-                cls.params = {'f_max': {'Lowland': value_dict['Lowland'], 'Highland': cls.params['f_max']['Highland']}}
+            param_dict = new_params['f_max']
+            if 'Highland' in param_dict:
+                cls.params['f_max']['Highland'] = param_dict['Highland']
+                #cls.params = {'f_max': {'Highland': param_dict['Highland'], 'Lowland': cls.params['f_max']['Lowland']}}
+            if 'Lowland' in param_dict:
+                cls.params['f_max']['Lowland'] = param_dict['Lowland']
+                #cls.params = {'f_max': {'Lowland': param_dict['Lowland'], 'Highland': cls.params['f_max']['Highland']}}
 
     @property
     def landscape_type(self):
