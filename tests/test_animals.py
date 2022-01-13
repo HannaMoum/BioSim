@@ -275,6 +275,26 @@ def test_birth_prob_puberty(mocker, species):
     for _ in range(100):
         assert not species(weight, age).probability_to_give_birth(num_animals)
 
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_birth_prob_maternal_health(species):
+    """Deterministic test: no birth takes place if all requirements but maternal health are fulfilled.
+
+    xi = 0: assures maternal health
+    zeta = 0: assures puberty
+    num_animals = any positive number >= 8, gamma = 0.5 and fitness = 1/4: Assures match_probability
+    sigma_birth = 0.2 (small enough to assure no miscarriages)
+    """
+    # TODO: Make this test. (Now just a copy)
+    species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
+    age = species.params['a_half']
+    weight = species.params['w_half']
+    num_animals = 10
+
+    for _ in range(100):
+        assert species(weight, age).probability_to_give_birth(num_animals)
+
+
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_prob_miscarriage(mocker, species):
     """Statistical test: no birth takes place if miscarriae takes place a an assumed amount of times.
@@ -292,7 +312,6 @@ def test_birth_prob_miscarriage(mocker, species):
     upper_limit = 2.10
 
     assert lower_limit < len(newborns)/len(negative_newborns) < upper_limit
-
 
 
 
