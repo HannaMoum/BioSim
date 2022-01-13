@@ -393,3 +393,34 @@ def test_not_hungry():
     carn = Carnivore(12.5, 10)
     carn.F_tilde = Carnivore.params['F']
     assert not carn.hungry()
+
+
+def test_killing_probability_fitness_less():
+    """Test that a kill will not take place if a herbviore's fitness
+    is bigger than the carnivore's fitness."""
+    herb = Herbivore(12.5, 10)
+    carn = Carnivore(0, 10)
+    assert not carn.probability_to_give_birth(herb.fitness)
+
+
+def test_killing_probability_fitness_equal():
+    """Test that a kill will not take place if a carnviore's and a herbivore's fitnesses are equal."""
+    carn = Carnivore(Carnivore.params['w_half'], Carnivore.params['a_half'])
+    herb = Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])
+    assert not all((carn.probability_to_give_birth(herb.fitness), carn.fitness == herb.fitness))
+
+
+@pytest.mark.parametrize('DeltaPhiMax', [12.5, 0])
+def test_killing_probability_true(mocker, DeltaPhiMax):
+    """Use mocked uniform to test that killing should happen when the carnivore's fitness
+    exceeds that of the herbivore, for a DeltaPhiMax both bigger and smaller than
+    their fitness difference."""
+    mocker.patch('biosim.animals.uniform', return_value=0)
+    Carnivore.set_params({'DeltaPhiMax': DeltaPhiMax})
+    carn = Carnivore(12.5, 10)
+    herb_fitness = carn.fitness * 0.5
+    assert carn.probability_to_kill(herb_fitness)
+
+
+
+
