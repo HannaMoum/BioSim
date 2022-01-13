@@ -1,8 +1,7 @@
 import textwrap
 from world import BioSim_param, BioSim
-#from graphics import Graphics, Graphics_param
 import matplotlib.pyplot as plt
-from graphich2 import Graphics
+from graphics import Graphics
 
 plt.show()
 import numpy as np
