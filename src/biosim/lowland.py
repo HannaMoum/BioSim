@@ -33,8 +33,7 @@ class Landscape:
 
     Notes
     ------
-    Implemented terrains are: :py:class:`.Lowland`, :py:class:`.Highland`,
-    :py:class:`.Desert` and :py:class:`.Water`. #Move to Sphinx doc(?)
+    Implemented terrains are 'Lowland', 'Highland', 'Desert', 'Water'.
 
     Attributes
     ----------
@@ -119,7 +118,7 @@ class Landscape:
     @fodder.setter
     def fodder(self, value):
         if value > self.f_max:
-            raise ValueError('Value must be below f_max')
+            raise ValueError('Value must be below f_max') #TODO: remove this. Not created test either
         self._fodder = value
 
     @property
@@ -137,7 +136,7 @@ class Landscape:
         return self._carn_pop
 
     @carn_pop.setter
-    def carn_pop(self, value):
+    def carn_pop(self, value): #TODO: Check that location is not water here?
         self._carn_pop = value
 
     def grassing(self):
@@ -277,7 +276,7 @@ class Landscape:
         [1]_ https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name
         (read 08.01)
         """
-        #TODO: DO not add animals for water landscape
+        #TODO: DO not add animals for water landscape. Check in island
         for animal in added_pop:
             age = animal['age']
             weight = animal['weight']
