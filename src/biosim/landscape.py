@@ -235,7 +235,6 @@ class Landscape:
         return migrating_herbs, migrating_carns
 
 
-
     def aging(self):
         """Age all animals by one year.
 

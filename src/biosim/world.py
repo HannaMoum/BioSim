@@ -1,6 +1,7 @@
 import numpy as np
 from landscape import Landscape
 from animals import Animal, Herbivore, Carnivore
+from random import choice
 
 class World:
 
@@ -52,7 +53,7 @@ class World:
 
     def _make_migrate_map(self)-> object:
         """Make migration map (np bool)."""
-        self._migrate_map = self._base_map != 'W'
+        return self._base_map != 'W'
 
     def _make_object_map(self)->object:
         """
@@ -159,7 +160,41 @@ class World:
             return liste
     ###################################################################################################################
 
+    def do_migration(self):
+        global_migrated_animals = []
+        with np.nditer(self.object_map, flags=['multi_index', 'refs_ok']) as it:
+            for grid_cell in it:
+                current_loaction = grid_cell.item()
 
+                if len(current_loaction.population) > 0:
+                    local_migrated_animals = []
+                    for animal in current_loaction.population:
+                        if animal not in global_migrated_animals:
+
+                            migrate_to_location = self._get_migrate_to_location(animal, it.multi_index)
+
+                            if migrate_to_location:
+                                migrate_to_location.population.append(animal)
+                                local_migrated_animals.append(animal)
+
+                    for animal in local_migrated_animals:
+                        current_loaction.population.remove(animal)
+
+                    global_migrated_animals += local_migrated_animals
+
+    def _get_migrate_to_location(self, animal:object, location_coordinates: tuple)-> object:
+        r, c = location_coordinates
+        view = self.migrate_map[r - 1:r + 2, c - 1:c + 2]
+
+        if animal.probability_to_migrate():
+            direction = choice('NSEW')
+            mask = np.array([[False, direction == 'N', False],
+                             [direction == 'W', False, direction == 'E'],
+                             [False, direction == 'S', False]])
+
+            destination_location = self.object_map[r - 1:r + 2, c - 1:c + 2][view & mask]
+            if destination_location.size > 0:
+                return destination_location.item() # Returnerer landskapsobjektet dyret skal migrere til (om dyret skal migrere)
 
 
 

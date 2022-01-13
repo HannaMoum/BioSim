@@ -45,7 +45,7 @@ if __name__ == '__main__':
                              'weight': {'max': 60, 'delta': 2}},
                  )
 
-    sim.simulate(num_years=20)
+    sim.simulate(num_years=100)
 
     sim.set_landscape_parameters('L', {'f_max': 800})
 
@@ -86,12 +86,12 @@ if __name__ == '__main__':
     #graf.make_grid(10)
 
     dash = Graphics(sim.island.base_map)
-    #fig=dash.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data, year=10)
+    #fig=dash.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data, year=99)
     #dash.make_movie()
 
     # TODO: Bildene blir liggende i C:/temp/figs, og filmene blir liggende i C:/temp. Folderne må finnes på disk fra før, slik det er nå.
-    dash.make_from_files(kube1, kube2, herb_count, carn_count, herb_data, carn_data)
-    dash.make_movie(kube1, kube2, herb_count, carn_count, herb_data, carn_data)
+    # dash.make_from_files(kube1, kube2, herb_count, carn_count, herb_data, carn_data, 29)
+    #dash.make_movie(kube1, kube2, herb_count, carn_count, herb_data, carn_data, 20)
     # dash.make_grid(year=5)
     # dash.make_movie()
     #dash.make_from_files()

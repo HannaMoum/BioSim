@@ -248,8 +248,8 @@ class Animal:
     def probability_to_migrate(self):
         r = uniform(0, 1)
         p = self.fitness * self.params['mu']
-
-        return all((p > r, not self.has_migrated))
+        return p>r
+        # return all((p > r, not self.has_migrated))
 
     # def migration_direction(self):
     #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
