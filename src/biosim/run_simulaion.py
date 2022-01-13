@@ -1,5 +1,5 @@
 import textwrap
-from biosim import BioSim_param, BioSim
+from biosim_klasse import BioSim_param, BioSim
 import matplotlib.pyplot as plt
 from graphics import Graphics
 
@@ -8,7 +8,7 @@ import numpy as np
 import seaborn as sns
 
 if __name__ == '__main__':
-    # plt.ion() Når du har skrudd av denne vil ikke figur-viduet dette sammen med en gang
+    plt.ion() #Når du har skrudd av denne vil ikke figur-viduet dette sammen med en gang
     geogr = """\
                 WWWWWWWWWWWWWWWWWWWWW
                 WWWWWWWWHWWWWLLLLLLLW
@@ -85,6 +85,13 @@ if __name__ == '__main__':
     #graf.make_grid(10)
 
     dash = Graphics(sim.island_map)
-    fig=dash.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data, year=10)
+    #fig=dash.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data, year=10)
     #dash.make_movie()
+
+    # TODO: Bildene blir liggende i C:/temp/figs, og filmene blir liggende i C:/temp. Folderne må finnes på disk fra før, slik det er nå.
+    dash.make_from_files(kube1, kube2, herb_count, carn_count, herb_data, carn_data)
+    dash.make_movie(kube1, kube2, herb_count, carn_count, herb_data, carn_data)
+    # dash.make_grid(year=5)
+    # dash.make_movie()
+    #dash.make_from_files()
     plt.show()
