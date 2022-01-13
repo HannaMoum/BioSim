@@ -59,7 +59,6 @@ class Graphics(Graphics_param):
 
     def plot_heatmap(self, data: object, species: str, ax, square = True, year: int = -1):
         """Plotter heatmap"""
-        #fig, ax = plt.subplots() # Midlertidig siden heatmap ikke vil inn i panelet.
         if species == 'herbivore':
             title = 'Herbivore distribution'
             cmap = 'Greens'
@@ -145,9 +144,9 @@ class Graphics(Graphics_param):
         pop_ax = plt.subplot(grid[4:10, 0:5])
         self.plotting_population_count(herb_data, carn_data, pop_ax)
 
-        fitness_ax = plt.subplot(grid[4:6, 5:13])
         age_ax = plt.subplot(grid[6:8, 5:13])
         weight_ax = plt.subplot(grid[8:10, 5:13])
+        fitness_ax = plt.subplot(grid[4:6, 5:13])
         self.plot_histogram(hist_herb_data, hist_carn_data, age_ax, weight_ax, fitness_ax)
 
 

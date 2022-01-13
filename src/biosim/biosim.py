@@ -3,7 +3,7 @@ import random
 from dataclasses import dataclass
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
-from biosim.lowland import Landscape
+from biosim.landscape import Landscape
 
 
 

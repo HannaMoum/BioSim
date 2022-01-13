@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 import numpy as np
 from dataclasses import dataclass
-from world import BioSim
+from biosim import BioSim
 import seaborn as sns
 
 @dataclass

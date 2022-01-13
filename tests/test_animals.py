@@ -3,7 +3,7 @@ import pytest
 import random
 from statsmodels.stats.weightstats import ztest
 from biosim.animals import Herbivore, Carnivore
-from biosim.lowland import Landscape
+from biosim.landscape import Landscape
 
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests

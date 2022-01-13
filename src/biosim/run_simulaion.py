@@ -1,5 +1,5 @@
 import textwrap
-from world import BioSim_param, BioSim
+from biosim import BioSim_param, BioSim
 import matplotlib.pyplot as plt
 from graphics import Graphics
 

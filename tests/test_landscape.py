@@ -1,5 +1,5 @@
 import pytest
-from biosim.lowland import Lowland
+from biosim.landscape import Lowland
 from biosim.animals import Herbivore
 
 #  Overall parameters for probabilistic tests

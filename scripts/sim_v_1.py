@@ -2,7 +2,7 @@
 """
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
-from biosim.lowland import Lowland
+from biosim.landscape import Lowland
 
 # Creating initial population as list/dicts
 
