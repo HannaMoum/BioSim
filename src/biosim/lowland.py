@@ -92,7 +92,7 @@ class Landscape:
 
     @property
     def landscape_type(self):
-        """TODO: Doc, read-only"""
+        """The object's landscape type ({'L', 'H', 'D', 'W'}, read-only)."""
         return self._landscape_type
 
     @property
