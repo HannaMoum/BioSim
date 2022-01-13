@@ -1,15 +1,22 @@
+import os
+from dataclasses import dataclass
+
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
-import numpy as np
-from dataclasses import dataclass
 import seaborn as sns
+
+#pip install moviepy. Må pip installeres i environmentet du jobber i
+from moviepy.editor import VideoClip
+from moviepy.video.io.bindings import mplfig_to_npimage
+import moviepy.video.io.ImageSequenceClip
 
 @dataclass
 class Graphics_param:
     codes_for_landscape_types: str = 'WLHD'
 
     def code_landscape(self, value): # Finn mer beskrivende funksjonsnavn
-        # Funksjonen må oppdateres med å sjekke at input value er lovlig.
+        # TODO: Funksjonen må oppdateres med å sjekke at input value er lovlig.
         plot_values_for_landscape_types = '0123'
         # Vurder å ha de som parametere, sånn at de kan brukes globalt
         if value in self.codes_for_landscape_types:
@@ -76,13 +83,13 @@ class Graphics(Graphics_param):
             #plt.show()
             return ax
 
-    def plotting_population_count(self, herb_data: object, carn_data: object, ax: object):
+    def plotting_population_count(self, herb_data: object, carn_data: object, ax: object, year):
         """Brukes til å plotte population size over tid"""
         """Data er np array, med en sum per år i simuleringen"""
         with plt.style.context('default'):
             # fig, ax = plt.subplots()
-            ax.plot(herb_data, linestyle='dashed', color='green', label='herbs')
-            ax.plot(carn_data, color='red', label='carns')
+            ax.plot(herb_data[0:year], linestyle='dashed', color='green', label='herbs')
+            ax.plot(carn_data[0:year], color='red', label='carns')
             ax.set_title('Population size', loc='left')
             ax.set_xlabel('Years')
             ax.set_ylabel('Number of animals')
@@ -136,27 +143,46 @@ class Graphics(Graphics_param):
         self.plot_island_map(map_ax)
 
         herb_heatax = plt.subplot(grid[0:3, 4:9])
-        self.plot_heatmap(data_heat_herb, 'herbivore', herb_heatax)
+        self.plot_heatmap(data_heat_herb, 'herbivore', herb_heatax, year = year)
 
         carn_heatax = plt.subplot(grid[0:3, 9:14])
-        self.plot_heatmap(data_heat_carn, 'carnivore', carn_heatax)
+        self.plot_heatmap(data_heat_carn, 'carnivore', carn_heatax, year = year)
 
         pop_ax = plt.subplot(grid[4:10, 0:5])
-        self.plotting_population_count(herb_data, carn_data, pop_ax)
+        self.plotting_population_count(herb_data, carn_data, pop_ax, year = year)
 
         age_ax = plt.subplot(grid[6:8, 5:13])
         weight_ax = plt.subplot(grid[8:10, 5:13])
         fitness_ax = plt.subplot(grid[4:6, 5:13])
-        self.plot_histogram(hist_herb_data, hist_carn_data, age_ax, weight_ax, fitness_ax)
+        self.plot_histogram(hist_herb_data, hist_carn_data, age_ax, weight_ax, fitness_ax, year)
 
 
         return fig
 
-    def make_movie(self, filename='BioSim'):
-        def make_frame(year):
-            fig = dash.make_grid(year)
-            return mplfig_to_npimage(fig)
+    def make_movie(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
+        def make_frame(year_frame):
+            fig = self.make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
+            return mplfig_to_npimage(fig) # Tar fig-en og lager til numpy-image som kan brukes videre.
 
-        animation = VideoClip(make_frame, duration=self.__year)
-        animation.write_gif(filename + '.gif', fps=1)
-        # animation.write_videofile(filename+'.mp4', fps=1)
+        animation = VideoClip(make_frame, duration=year_-1) # VideoClip får returen fra make_frame, som er en numpy-image. Duration er lengden på videoen.
+        # animation.write_gif(filename + '.gif', fps=1)
+        animation.write_videofile('C:/temp/direkte_video' + '.mp4', fps=1) # fps er antall bilder per sekund
+
+    def make_from_files(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
+        format = 'png'
+
+        def make_frame(year_frame):
+            fig = self.make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
+            fig.savefig(f'C:/temp/figs/{year_frame:05d}.{format}', format=format)
+
+        for year in range(year_):
+            make_frame(year)
+
+        fps = 1
+        image_folder = 'C:/temp/figs'
+        image_files = [os.path.join(image_folder, img)
+                       for img in os.listdir(image_folder)
+                       if img.endswith(".png")]# Lager en liste over alle filene
+        image_files.sort()
+        clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps) # Går gjennom et og et bilde og bygger opp video-kuben.
+        clip.write_videofile('C:/temp/video_fra_bilder.mp4') # Lager det om til en videofil.
