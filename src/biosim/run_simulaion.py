@@ -2,6 +2,7 @@ import textwrap
 from world import BioSim_param, BioSim
 from graphics import Graphics, Graphics_param
 import matplotlib.pyplot as plt
+from biosim.lowland import Landscape
 
 plt.show()
 import numpy as np
@@ -44,9 +45,10 @@ if __name__ == '__main__':
                              'weight': {'max': 60, 'delta': 2}},
                  )
 
+    sim.set_landscape_parameters('L', {'f_max': 700})
     sim.simulate(num_years=10)
 
-    sim.set_landscape_parameters('L', {'f_max': 800})
+
 
     # herb_pop_map = sim.get_property_map('v_size_herb_pop')
 
