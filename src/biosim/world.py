@@ -137,6 +137,7 @@ class BioSim(BioSim_param):
         """
         if species == 'Herbivore':
             Herbivore.set_params(params)
+        #TODO: Fix, and raise errors here, not in animals. Adjust animals + animal_tests
 
     def set_landscape_parameters(self, landscape, params):
         """
@@ -146,25 +147,13 @@ class BioSim(BioSim_param):
         :param params: Dict with valid parameter specification for landscape
          params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
         """
+        # Denne oppdaterer alle ruter samtidig (set_params er klassemetode)
         if landscape == 'L':
             Landscape.set_params({'f_max': {'Lowland': params['f_max']}})
         elif landscape == 'H':
             Landscape.set_params({'f_max': {'Highland': params['f_max']}})
         else:
-            raise ValueError('Feil input')
-
-        # Oppdaterer alle eksisterende objekter.f_max. Denne settes normalt kun i __init__, og må oppdateres når klassevariabelen endres.
-        # TODO: Sjekk om dette har tilbakevirkende kraft på instansene som allerede finnes.
-        with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
-            for element in it:
-                landskapsobjekt = element.item()
-                if landskapsobjekt.landscape_type == 'H':
-                    landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Highland']
-                elif landskapsobjekt.landscape_type == 'L':
-                    landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Lowland']
-                else:
-                    landskapsobjekt.f_max = 0
-
+            raise ValueError('Feil input') #TODO: Error message her
 
     def migration_preparation(self):
         with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:

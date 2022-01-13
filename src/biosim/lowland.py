@@ -48,7 +48,7 @@ class Landscape:
     """
 
     # dict: Parameter values for calculations
-    _default_params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
+    _default_params = {'f_max': {'Highland': 300.0, 'Lowland': 800.0}}
     params = deepcopy(_default_params)
 
     def __init__(self, landscape_type):
@@ -59,17 +59,11 @@ class Landscape:
         else:
             self._is_migratable = True
 
-        if self.landscape_type == 'H':
-            self.f_max = self.params['f_max']['Highland']
-        elif self.landscape_type == 'L':
-            self.f_max = self.params['f_max']['Lowland']
-        else:
-            self.f_max = 0
+        self._f_max = None
 
-        self._fodder = self.f_max  # Initial amount of fodder
+        self.fodder = self.f_max  # Initial amount of fodder
         self._herb_pop = []
         self._carn_pop = []
-
 
     @classmethod
     def set_params(cls, new_params):
@@ -88,15 +82,24 @@ class Landscape:
             param_dict = new_params['f_max']
             if 'Highland' in param_dict:
                 cls.params['f_max']['Highland'] = param_dict['Highland']
-                #cls.params = {'f_max': {'Highland': param_dict['Highland'], 'Lowland': cls.params['f_max']['Lowland']}}
             if 'Lowland' in param_dict:
                 cls.params['f_max']['Lowland'] = param_dict['Lowland']
-                #cls.params = {'f_max': {'Lowland': param_dict['Lowland'], 'Highland': cls.params['f_max']['Highland']}}
 
     @property
     def landscape_type(self):
         """TODO: Doc, read-only"""
         return self._landscape_type
+
+    @property
+    def f_max(self):
+        if self.landscape_type == 'H':
+            self._f_max = self.params['f_max']['Highland']
+        elif self.landscape_type == 'L':
+            self._f_max = self.params['f_max']['Lowland']
+        else:
+            self._f_max = 0
+
+        return self._f_max
 
     @property
     def is_migratable(self):

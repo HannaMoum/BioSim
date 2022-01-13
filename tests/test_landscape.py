@@ -6,6 +6,28 @@ from biosim.lowland import Landscape
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
 
+
+@pytest.fixture(autouse=True) #Combine with parameterization?
+def reset_params_default():
+    """Reset parameters to default after test has run."""
+    yield
+    Landscape.set_params(Landscape.default_params)
+
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_set_params(species):
+    """Test optional change of default parameters."""
+    species.set_params({'beta': 1.2, 'omega': 0.2})
+    assert all([species.params['beta'] == 1.2, species.params['omega'] == 0.2])
+###########
+
+
+
+
+
+
+
 def test_set_params():
     """ Testing change of parameter default value (f_max)
         Testing raise of error if wrongful params have been given"""
