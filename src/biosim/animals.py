@@ -1,48 +1,50 @@
 """ Implements Animal model used by subspecies."""
 
 import math
+from copy import deepcopy
 from random import seed, choice, gauss, sample, uniform
 from abc import ABC, abstractmethod  # Remove unless in use
 from dataclasses import dataclass, asdict
 
-@dataclass
-class Animal_params:
-    w_birth:        float
-    sigma_birth:    float
-    beta:           float
-    eta:            float
-    a_half:         float
-    phi_age:        float
-    w_half:         float
-    phi_weight:     float
-    mu:             float
-    gamma:          float
-    zeta:           float
-    xi:             float
-    omega:          float
-    F:              float
 
-
-@dataclass
-class Herbivore_params:
-    w_birth:        float = 8.0
-    sigma_birth:    float = 1.5
-    beta:           float = 0.9
-    eta:            float = 0.05
-    a_half:         float = 40.0
-    phi_age:        float = 0.6
-    w_half:         float = 10.0
-    phi_weight:     float = 0.1
-    mu:             float = 0.25
-    gamma:          float = 0.2
-    zeta:           float = 3.5
-    xi:             float = 1.2
-    omega:          float = 0.4
-    F:              float = 10.0
-
-@dataclass
-class Carnivore_params:
-    mu: float = 0.4
+# #TODO: Remove dataclasses if not in use
+# @dataclass
+# class Animal_params:
+#     w_birth:        float
+#     sigma_birth:    float
+#     beta:           float
+#     eta:            float
+#     a_half:         float
+#     phi_age:        float
+#     w_half:         float
+#     phi_weight:     float
+#     mu:             float
+#     gamma:          float
+#     zeta:           float
+#     xi:             float
+#     omega:          float
+#     F:              float
+#
+# @dataclass
+# class Herbivore_params:
+#     w_birth:        float = 8.0
+#     sigma_birth:    float = 1.5
+#     beta:           float = 0.9
+#     eta:            float = 0.05
+#     a_half:         float = 40.0
+#     phi_age:        float = 0.6
+#     w_half:         float = 10.0
+#     phi_weight:     float = 0.1
+#     mu:             float = 0.25
+#     gamma:          float = 0.2
+#     zeta:           float = 3.5
+#     xi:             float = 1.2
+#     omega:          float = 0.4
+#     F:              float = 10.0
+#
+# @dataclass
+# class Carnivore_params:
+#     mu: float = 0.4
 
 class Animal:
     """Animal with corresponding characteristics and traits for different species.
@@ -53,8 +55,10 @@ class Animal:
 
     Parameters
     ----------
-    age: `int`
+    age: `int` or `float`
         The animal's age.
+
+        Must be a whole number.
     weight: `float`
         The animal's weight.
 
@@ -64,23 +68,25 @@ class Animal:
     """
 
     # dict: Parameter values for calculations
-    params = {
-        'w_birth': None,
-        'sigma_birth': None,
-        'beta': None,
-        'eta': None,
-        'a_half': None,
-        'phi_age': None,
-        'w_half': None,
-        'phi_weight': None,
-        'mu': None,
-        'gamma': None,
-        'zeta': None,
-        'xi': None,
-        'omega': None,
-        'F': None,
-        'DeltaPhiMax': None
-    }
+    # w_birth = (8.0, 6.0)
+    # # TODO: Figure out if this is necessary
+    # params = {
+    #     'w_birth': w_birth,
+    #     'sigma_birth': sigma_birth,
+    #     'beta': beta,
+    #     'eta': eta,
+    #     'a_half': a_half,
+    #     'phi_age': phi_age,
+    #     'w_half': w_half,
+    #     'phi_weight': phi_weight,
+    #     'mu': mu,
+    #     'gamma': gamma,
+    #     'zeta': zeta,
+    #     'xi': xi,
+    #     'omega': omega,
+    #     'F': F,
+    #     'DeltaPhiMax': DeltaPhiMax
+    # }
 
     @classmethod
     def set_params(cls, new_params):
@@ -103,55 +109,47 @@ class Animal:
             Parameter key is not a Legal key
         """
 
-        if not all(value >= 0 for value in new_params.values()):
-            raise ValueError('Invalid value for parameter: ' + key)
-
-        for key in new_params:
+        for key, value in new_params.items():
             if key not in cls.params:
                 raise KeyError('Invalid parameter name: ' + key)
 
+            if not value >= 0:
+                raise ValueError('Invalid value for parameter: ' + key)
+
             if key == 'eta' and not 0 <= new_params['eta'] <= 1:
-                raise ValueError('eta must be in interval [0, 1].')
+                raise ValueError('parameter eta must be within range [0, 1].')
 
             cls.params[key] = new_params[key]
 
-    def __init__(self, age, weight):
-        self._age = age
-        self._weight = weight
-        self._F_tilde = 0 #TODO: Change name of F_tilde to eaten
+    def __init__(self, weight, age=0):
+        self.weight = weight
+        self.age = age
+        self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
         self._has_migrated = False
 
     @property
     def has_migrated(self):
         return self._has_migrated
+
     @has_migrated.setter
     def has_migrated(self, bool):
         self._has_migrated = bool
 
-    @staticmethod
-    def check_positive(value):
-        """Command a value to be positive or equal to zero."""
-        if value < 0:
-            raise ValueError('Value must be positive')
-
-    @staticmethod
-    def check_integer(value):
-        """Command a value to be an integer type."""
-        if not float(value).is_integer():  # Must convert to float to work for integers.
-            raise ValueError('Value must be integer')
-            # Does not raise correct error if value cannot be converted to float
-
     @property
     def age(self):
-        """The animal's age (`int`).
+        """The animal's age (`int` or `float`).
 
         A whole, positive number."""
         return self._age
 
     @age.setter
-    def age(self, value):
-        self.check_integer(value)
-        self.check_positive(value)
+    def age(self, value):  # TODO: Age and weight conditions should be in island??
+        if not float(value).is_integer() or not isinstance(value, (int, float)):
+            raise ValueError('Age must be a whole number')
+
+        elif value < 0:
+            raise ValueError('Age must be a positive number')
+
         self._age = value
 
     @property
@@ -161,8 +159,9 @@ class Animal:
 
     @weight.setter
     def weight(self, value):
-        self.check_positive(value)
-        # Må vi kanskje sjekke at dette er float/int eller blir det smør på flesk...
+        if not isinstance(value, (int, float)) or value < 0:
+            raise ValueError('Weight must be a positive number')
+
         self._weight = value
 
     @property
@@ -246,21 +245,20 @@ class Animal:
         self.age += 1
         self.weight -= self.weight * self.params['eta']
 
-    def migration_direction(self):
-        """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
+    def probability_to_migrate(self):
         r = uniform(0, 1)
         p = self.fitness * self.params['mu']
-        if p > r: # True betyr at den vil flytte seg
-            return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
-        else:
-            return (0, 0) # Stå stille
 
+        return all((p > r, not self.has_migrated))
 
-    def migration(self, geography):
-        """
-        Migrating-function
-        """
-        pass
+    # def migration_direction(self):
+    #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
+    #     r = uniform(0, 1)
+    #     p = self.fitness * self.params['mu']
+    #     if p > r: # True betyr at den vil flytte seg
+    #         return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
+    #     else:
+    #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
 
     def probability_to_give_birth(self, number_of_animals):
         """
@@ -307,19 +305,20 @@ class Animal:
         birth_weight: `float` or `bool`
             Birth weight of animal if birth takes place, otherwise False.
         """
-        probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
+        match_probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
         r = uniform(0, 1)
 
-        fertilization = r < probability
+        fertilization = r < match_probability
 
-        weight_check = self.weight > self.params['zeta'] * \
-                 (self.params['w_birth'] + self.params['sigma_birth'])
+        reached_puberty = self.weight > self.params['zeta'] * \
+                       (self.params['w_birth'] + self.params['sigma_birth'])
 
         birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])
+        miscarriage = birth_weight < 0
 
         maternal_health = self.weight > birth_weight * self.params['xi']
 
-        if all((fertilization, weight_check, maternal_health)):
+        if all((fertilization, reached_puberty, maternal_health, not miscarriage)):
             return birth_weight
 
         return False
@@ -347,11 +346,11 @@ class Animal:
 
         if birth_weight:
             if species == 'Herbivore':
-                newborn = Herbivore(0, birth_weight)  # TODO: Should 0 be default? YES
+                newborn = Herbivore(birth_weight)  # TODO: Should 0 be default? YES
             if species == 'Carnivore':
-                newborn = Carnivore(0, birth_weight)
+                newborn = Carnivore(birth_weight)
 
-            #TODO: Optimization possibilities
+            # TODO: Optimization possibilities
             self._weight -= birth_weight * self.params['xi']
 
             return newborn
@@ -383,8 +382,8 @@ class Animal:
 
 
 class Herbivore(Animal):
-    params = {
-        'w_birth': 8,
+    default_params = {
+        'w_birth': 8.0,
         'sigma_birth': 1.5,
         'beta': 0.9,
         'eta': 0.05,
@@ -399,13 +398,14 @@ class Herbivore(Animal):
         'omega': 0.4,
         'F': 10.0
     }
+    params = deepcopy(default_params)
     """"
     Legg inn doc-string
     """
 
 
 class Carnivore(Animal):
-    params = {
+    default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,
         'beta': 0.75,
@@ -422,6 +422,7 @@ class Carnivore(Animal):
         'F': 50.0,
         'DeltaPhiMax': 10.0
     }
+    params = deepcopy(default_params)
 
     def hungry(self):
         """
