@@ -45,6 +45,11 @@ class Landscape:
     carn_pop: `list` of :py:class:`.animals.Carnivore`
         Carnivore population
     #TODO: Add new attributes
+
+    Parameters
+    ----------
+    landscape_type: {'L', 'H', 'D', 'W'}
+        Terrain describing the landscape cell
     """
 
     # dict: Parameter values for calculations
