@@ -1,7 +1,8 @@
 import textwrap
 from world import BioSim_param, BioSim
-from graphics import Graphics, Graphics_param
+#from graphics import Graphics, Graphics_param
 import matplotlib.pyplot as plt
+from graphich2 import Graphics
 
 plt.show()
 import numpy as np
@@ -44,7 +45,7 @@ if __name__ == '__main__':
                              'weight': {'max': 60, 'delta': 2}},
                  )
 
-    sim.simulate(num_years=10)
+    sim.simulate(num_years=20)
 
     sim.set_landscape_parameters('L', {'f_max': 800})
 
@@ -56,7 +57,7 @@ if __name__ == '__main__':
     # Plotter kartet over øya
     graf = Graphics(sim.island_map)
 
-    graf.plot_island_map()
+    #graf.plot_island_map()
     """
     # Plotter begge populasjoner på samme ax
     herb_count = sim.get_yearly_herb_count()
@@ -65,8 +66,8 @@ if __name__ == '__main__':
     """
     kube1 = sim.cube_population_herbs
     kube2 = sim.cube_population_carns
-    graf.plot_heatmap(kube1, species='herbivore')
-    graf.plot_heatmap(kube2, species='carnivore')
+    #graf.plot_heatmap(kube1, species='herbivore')
+    #graf.plot_heatmap(kube2, species='carnivore')
     # plt.show()
 
     """herb_data = sim.cubelist_properties_herbs
@@ -77,6 +78,14 @@ if __name__ == '__main__':
     herb_count = sim.get_yearly_herb_count()
     carn_count = sim.get_yearly_carn_count()
     kube1 = sim.cube_population_herbs
+    kube2 = sim.cube_population_carns
     herb_data = sim.cubelist_properties_herbs
     carn_data = sim.cubelist_properties_carns
-    graf.show_panel(herb_count, carn_count, kube1, 'herbivore', herb_data, carn_data)
+    #graf.show_panel(herb_count, carn_count, kube1, 'herbivore', herb_data, carn_data)
+
+    #graf.make_grid(10)
+
+    dash = Graphics(sim.island_map)
+    fig=dash.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data, year=10)
+    #dash.make_movie()
+    plt.show()
