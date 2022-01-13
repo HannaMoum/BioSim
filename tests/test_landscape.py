@@ -61,9 +61,21 @@ def test_initial_fodder(terrain):
     location_cell = Landscape(terrain)
     assert location_cell.fodder == location_cell.f_max
 
+
+@pytest.mark.parametrize('terrain', ['L', 'W', 'D', 'W'])
+def test_initial_population_type(terrain):
+    """Test that initial population type is a list."""
+    assert all([type(Landscape(terrain).herb_pop) == list, type(Landscape(terrain).carn_pop) == list])
+
+
 @pytest.mark.parametrize('terrain', ['L', 'W', 'D', 'W'])
 def test_inital_population(terrain):
+    """Test for no initial population. An emtpy list returns False"""
     assert not all([Landscape(terrain).herb_pop, Landscape(terrain).carn_pop])
+
+
+
+
 
 
 def test_grassing():
