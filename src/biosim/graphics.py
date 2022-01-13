@@ -11,6 +11,8 @@ from moviepy.editor import VideoClip
 from moviepy.video.io.bindings import mplfig_to_npimage
 import moviepy.video.io.ImageSequenceClip
 
+from datetime import datetime
+
 @dataclass
 class Graphics_param:
     codes_for_landscape_types: str = 'WLHD'
@@ -173,6 +175,7 @@ class Graphics(Graphics_param):
 
         def make_frame(year_frame):
             fig = self.make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
+
             fig.savefig(f'C:/temp/figs/{year_frame:05d}.{format}', format=format)
 
         for year in range(year_):
@@ -184,5 +187,7 @@ class Graphics(Graphics_param):
                        for img in os.listdir(image_folder)
                        if img.endswith(".png")]# Lager en liste over alle filene
         image_files.sort()
+
+        filename = 'C:/temp/video_fra_bilder.mp4'
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps) # Går gjennom et og et bilde og bygger opp video-kuben.
-        clip.write_videofile('C:/temp/video_fra_bilder.mp4') # Lager det om til en videofil.
+        clip.write_videofile(filename) # Lager det om til en videofil.

@@ -4,12 +4,12 @@ from dataclasses import dataclass
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
 from biosim.landscape import Landscape
+from world import World
 
 
 
 @dataclass
 class BioSim_param:
-    seed: int = None
     codes_for_landscape_types: str = 'WLHD' #Brukes denne?
 
 
@@ -32,15 +32,11 @@ class BioSim(BioSim_param):
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
 
-        random.seed(seed)
-        # Tar i mot verdens-kartet
-        self._island_map = self.make_island_map(island_map)
-        # Lager objekt-kart av verdenskartet.
-        self._island_map_objects = self.make_island_map_objects()
-        # Setter ut initiell populasjon
-        self._ini_pop = self.add_population(ini_pop)
-        # TODO: Save ini_pop directly from input
-        # Add_population returns nothing, it is an action of its' own
+        random.seed(seed) # Påvirker potensielt andre script som kjører. Vurder å lage egen Random-instans, slik at BioSIm kan eie sitt eget random seed.
+
+        if all((self._validate_island_map(island_map),
+               self._validate_ini_pop(ini_pop))):
+            self.island = World(island_map, ini_pop)
 
         # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
         self._num_years = 0  # Duration of sim
@@ -52,16 +48,37 @@ class BioSim(BioSim_param):
         # self.cube_properties_herbs = np.empty(())
         # self.cube_properties_carns = np.empty(())
 
-    @property
-    def island_map(self):
-        """Base map. Det initsielle verdenskartet."""
-        return self._island_map
+    def _validate_island_map(self, island_map:str)->bool:
+        #map = textwrap.dedent(island_map)  # Should already be textwrapped
+        island_map_list = island_map.split(sep='\n') #Endret til input
 
-    @property
-    def island_map_objects(self):
-        """Dette kartet inneholder referanser til landskapsobjekter.
-        Det er en transformering av island_map. Kart med landskapsobjekter."""
-        return self._island_map_objects
+        length_check = len(island_map_list[0])
+        for element in island_map_list:
+            # Control all symbols
+            for letter in element:
+                if letter not in 'WHLD':
+                    raise ValueError(
+                        f'{letter} is not a defined landscape.\n'
+                        f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
+                        'respectively given by their belonging capital letter.')
+            # Control size
+            if len(element) != length_check:
+                raise ValueError('Island map must contain an equal amount of columns.')
+            # Control edges
+            if not (element[0] and element[-1]) == 'W':
+                raise ValueError('All the islands` outer edges must be of landscape Water.')
+        # Control edges
+        if not (island_map_list[0] and island_map_list[-1]) == 'W' * length_check:
+            raise ValueError('All the islands` outer edges must be of landscape Water.')
+
+        return True
+        # Raises value error if rules broken.
+        # Returns True if all OK.
+
+    def _validate_ini_pop(self, ini_pop:dict)-> bool:
+        # TODO: Lag en valideringsrutine
+        """Validates the ini_pop input, and check that it follow the rules"""
+        return True
 
     def get_yearly_herb_count(self):
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå."""
@@ -79,56 +96,7 @@ class BioSim(BioSim_param):
         assert len(serie) == self._num_years
         return serie
 
-
-    def make_island_map(self, island_map):
-        """
-        Mapping island with respect to each landscape letter.
-
-        Parameters
-        ----------
-        island_map: `str`
-            Geography of island.
-
-            Made up by the letters 'W', 'D', 'L' and 'H' each representing a landscape.
-
-        Returns
-        -------
-        _build_map: `ndarray` of `str`
-            Array containing landscape letters in their respective positions.
-        """
-        island_map_list = island_map.split()  # Oppretter liste, splitter ved default på new-line
-
-        if self.validate_island_map(island_map_list):  # IMPLEMENTERT
-            row, col = len(island_map_list), len(island_map_list[
-                                                     0])  # Antall rader = antall elementer i lista, antall kolonner = lengden av den første raden
-            _build_map = np.empty(shape=(row, col),
-                                  dtype='str')  # Lager tom np.array som skal fylles med bokstaver for hvert landskap
-
-            for row_index, row_string in enumerate(island_map_list):  # Går gjennom hver rad
-                for col_index, landscape_letter in enumerate(
-                        row_string):  # Går gjennom hver kolonne (elementene i raden).
-                    _build_map[
-                        row_index, col_index] = landscape_letter  # Leser bokstaven inn i riktig posisjon i arrayen.
-
-            return _build_map
-
-
-    def make_island_map_objects(self):
-        """
-        Mapping island with landscape objects.
-
-        Returns
-        -------
-        _island_map_objects: `ndarray` of `obj`
-            Array containing landscape objects in their respective positions.
-        """
-        _island_map_objects = np.empty(self.island_map.shape, dtype='object')
-        vLandscape = np.vectorize(Landscape)
-        _island_map_objects[:, :] = vLandscape(self.island_map)
-
-        return _island_map_objects
-
-    def set_animal_parameters(self, species, params):
+    def set_animal_parameters(self, species:str, params:dict): # TODO: må oppdatere for carnivore også
         """
         Set parameters for animal species.
 
@@ -138,7 +106,7 @@ class BioSim(BioSim_param):
         if species == 'Herbivore':
             Herbivore.set_params(params)
 
-    def set_landscape_parameters(self, landscape, params):
+    def set_landscape_parameters(self, landscape:str, params:dict):
         """
         Set parameters for landscape type.
 
@@ -155,7 +123,7 @@ class BioSim(BioSim_param):
 
         # Oppdaterer alle eksisterende objekter.f_max. Denne settes normalt kun i __init__, og må oppdateres når klassevariabelen endres.
         # TODO: Sjekk om dette har tilbakevirkende kraft på instansene som allerede finnes.
-        with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
+        with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landskapsobjekt = element.item()
                 if landskapsobjekt.landscape_type == 'H':
@@ -165,9 +133,8 @@ class BioSim(BioSim_param):
                 else:
                     landskapsobjekt.f_max = 0
 
-
     def migration_preparation(self):
-        with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
+        with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landscape_obj = element.item()
                 landscape_obj.migration_prep()  # Better hierarcy
@@ -176,7 +143,7 @@ class BioSim(BioSim_param):
 
     def migration(self):
         """."""
-        with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
+        with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landscape_obj = element.item()
                 #current_row, current_col = it.multi_index
@@ -191,12 +158,12 @@ class BioSim(BioSim_param):
                         new_row = current_row + r
                         new_col = current_col + c
 
-                        if self.island_map_objects[new_row, new_col].is_migratable:
+                        if self.island.object_map[new_row, new_col].is_migratable:
 
                             if species == 'Herbivore':
-                                self.island_map_objects[new_row, new_col].herb_pop.append(animal) #Still not good...
+                                self.island.object_map[new_row, new_col].herb_pop.append(animal) #Still not good...
                             if species == 'Carnivore':
-                                self.island_map_objects[new_row, new_col].carn_pop.append(animal)
+                                self.island.object_map[new_row, new_col].carn_pop.append(animal)
 
                             moved.append(animal)
 
@@ -300,96 +267,44 @@ class BioSim(BioSim_param):
                 #     for carnivore in moved:
                 #         landscape_obj.carn_pop.remove(carnivore)
 
-    def get_property_map(self, fx_map_type):
-        """
-        Brukergrensesnittet som gjør at man kan skrive inn hvilken type informasjon som fabrikke nskal benytte seg av.
-        Forteller fabrikken hvilken funksjon man vil bruke.
-        getattr slår opp i klassen og ser om vi har en tilsvarende funksjon i klassen som samsvarer med navnet på den funksjonen vi putter inn.
-        dir(BioSim)
-        Om funksjonen ligger i klassen så sender den tilbake en referanse til funksjonsobjektet.
-        """
-        return self.__make_property_map(getattr(self, fx_map_type), self.island_map, self.island_map_objects)
 
-    def get_property_map_objects(self, fx_map_type):
-        return self.__make_property_map_objects(getattr(self, fx_map_type), self.island_map, self.island_map_objects)
-
-    # ------------------------------------------------------------------------------------------------
-    # Factory for property_maps
-    def v_size_herb_pop(self, location: object):
-        """Population sizer for herbivores at given location. """
-        return len(location.herb_pop)
-
-    def v_size_carn_pop(self, location: object):
-        """Population sizer for carnivores at given location."""
-        return len(location.carn_pop)
-
-    def __make_property_map(self, fx: object, island_map: object, island_map_objects: object):
-        property_map = np.empty(island_map.shape, dtype=float)
-        vget_property = np.vectorize(fx)
-        property_map[:, :] = vget_property(island_map_objects)
-        return property_map
-
-    def v_herb_properties_objects(self, location: object):
-        population_list = location.herb_pop
-        if len(population_list) > 0:
-            liste = []
-            for animal in population_list:
-                liste.append((animal.age, animal.weight, animal.fitness))
-            return liste
-
-    def v_carn_properties_objects(self, location: object):
-        population_list = location.carn_pop
-        if len(population_list) > 0:
-            liste = []
-            for animal in population_list:
-                liste.append((animal.age, animal.weight, animal.fitness))
-            return liste
-
-    def __make_property_map_objects(self, fx: object, island_map: object, island_map_objects: object):
-        property_map = np.empty(island_map.shape, dtype=object)
-        vget_property = np.vectorize(fx)
-        property_map[:, :] = vget_property(island_map_objects)
-        return property_map
-
-    # ------------------------------------------------------------------------------------------------
-
-    def simulate(self, num_years = 10, vis_years = 1):
+    def simulate(self, num_years:int = 10):
         self._num_years = num_years # Trenger num_years utenfor simulate metoden. Brukes i get_yearly_carn_count og get_yearly_herb_count
         yearly_pop_map_herbs = []
         yearly_pop_map_carns = []
-        yearly_property_map_herbs = []
-        yearly_property_map_carns = []
+        #yearly_property_map_herbs = []
+        #yearly_property_map_carns = []
 
         for year in range(self._num_years):
-            with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
+            with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
-                    location = element.item() # Landskapsobjekt
-                    if location.landscape_type in 'LH':
-                        location.regrowth()
-                        location.grassing()
-                    if location.landscape_type in 'LHD':
-                        location.hunting()
+                    landscape = element.item()
+                    if landscape.landscape_type in 'LH':
+                        landscape.regrowth()
+                        landscape.grassing()
+                    if landscape.landscape_type in 'LHD':
+                        landscape.hunting()
 
             self.migration_preparation()
             self.migration()
-            with np.nditer(self.island_map_objects, flags=['multi_index', 'refs_ok']) as it:
+            with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
-                    location = element.item()
-                    if location.landscape_type in 'LHD':
-                        location.give_birth()
-                        location.aging()
-                        location.death()
+                    landscape = element.item()
+                    if landscape.landscape_type in 'LHD':
+                        landscape.give_birth()
+                        landscape.aging()
+                        landscape.death()
             #-------------------------------------------------------------------------------------
             # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
 
             # Herbivore populasjonsstørrelse for alle lokasjoner per år
-            yearly_pop_map_herbs.append(self.get_property_map('v_size_herb_pop'))
+            yearly_pop_map_herbs.append(self.island.get_property_map('v_size_herb_pop'))
             # Carnivore populasjonsstørrelse for alle lokasjoner per år
-            yearly_pop_map_carns.append(self.get_property_map('v_size_carn_pop'))
+            yearly_pop_map_carns.append(self.island.get_property_map('v_size_carn_pop'))
 
             #---------------------------------------------------------------------
 
-            yearly_herb_objects_map = self.get_property_map_objects('v_herb_properties_objects')
+            yearly_herb_objects_map = self.island.get_property_map_objects('v_herb_properties_objects')
             # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
             # Måtte derfor skrive egen akkumulerings funksjon som legger sammen alle populasjonslistene på landskapene på øya, til en liste med alle dyr på øya.
             acc_list_herb = []
@@ -403,7 +318,7 @@ class BioSim(BioSim_param):
             # Brukes ikke nå, men ikke slett!
             #yearly_property_map_herbs.append(yearly_herb_objects_map)
 
-            yearly_carn_objects_map = self.get_property_map_objects('v_carn_properties_objects')
+            yearly_carn_objects_map = self.island.get_property_map_objects('v_carn_properties_objects')
             acc_list_carn = []
             with np.nditer(yearly_carn_objects_map, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
@@ -425,40 +340,10 @@ class BioSim(BioSim_param):
         #self.cube_properties_herbs = np.stack(yearly_property_map_herbs)
         #self.cube_properties_carns = np.stack(yearly_property_map_carns)
 
-
-    def validate_island_map(self, island_map_list):
-        #map = textwrap.dedent(island_map)  # Should already be textwrapped
-        #island_map = island_map.split() #Endret til input
-
-        length_check = len(island_map_list[0])
-        for element in island_map_list:
-            # Control all symbols
-            for letter in element:
-                if letter not in 'WHLD':
-                    raise ValueError(
-                        f'{letter} is not a defined landscape.\n'
-                        f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
-                        'respectively given by their belonging capital letter.')
-            # Control size
-            if len(element) != length_check:
-                raise ValueError('Island map must contain an equal amount of columns.')
-            # Control edges
-            if not (element[0] and element[-1]) == 'W':
-                raise ValueError('All the islands` outer edges must be of landscape Water.')
-        # Control edges
-        if not (island_map_list[0] and island_map_list[-1]) == 'W' * length_check:
-            raise ValueError('All the islands` outer edges must be of landscape Water.')
-
-        return True
-        # Raises value error if rules broken.
-        # Returns True if all OK.
-
-    def validate_init_population(self, ini_pop):
-        pass
-
-    def add_population(self, population): #Sjekk ut hva bruken for
-        """
-       Initial_population looks like:
+    def add_population(self, population:dict):
+        """Validates input dict befor sending calling add_population method in
+        the world class
+        Initial_population looks like:
 
         ini_pop = [{'loc': (3,4),
         'pop': [{'species': 'Herbivore',
@@ -466,15 +351,4 @@ class BioSim(BioSim_param):
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
         """
-
-        for dictionary in population: #kan kanskje bare bruke self.ini_pop
-
-            r, c = dictionary['loc'] #Tuple
-            r -= 1  # Adjustments
-            c -= 1  # Adjustments. Checked.
-
-            landscape_object = self.island_map_objects[r, c]  # henter ut landskapsklasse
-
-            population = dictionary['pop']  # [{},{}]
-            landscape_object.add_animals(population)
-
+        pass

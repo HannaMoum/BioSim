@@ -1,6 +1,6 @@
-from .animals import Animal
-from .animals import Herbivore
-from .animals import Carnivore
+from animals import Animal
+from animals import Herbivore
+from animals import Carnivore
 from random import random, choice, sample
 from itertools import chain
 

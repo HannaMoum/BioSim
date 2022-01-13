@@ -1,7 +1,8 @@
 import textwrap
-from biosim_klasse import BioSim_param, BioSim
+from biosim_klasse import BioSim
 import matplotlib.pyplot as plt
 from graphics import Graphics
+
 
 plt.show()
 import numpy as np
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     # print(herbivore_property_array[:, 1])
 
     # Plotter kartet over øya
-    graf = Graphics(sim.island_map)
+    graf = Graphics(sim.island.base_map)
 
     #graf.plot_island_map()
     """
@@ -84,7 +85,7 @@ if __name__ == '__main__':
 
     #graf.make_grid(10)
 
-    dash = Graphics(sim.island_map)
+    dash = Graphics(sim.island.base_map)
     #fig=dash.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data, year=10)
     #dash.make_movie()
 
