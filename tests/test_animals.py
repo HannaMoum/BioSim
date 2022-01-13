@@ -366,7 +366,7 @@ def test_giving_birth_false(species_obj, species_str):
     newborn = animal.giving_birth(species_str, 1)
     assert not newborn
 
-#####
+
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_death_probability_binomial(species):
     """Binomal test: Test the statistical significance of deviation from an animal's probability to die
