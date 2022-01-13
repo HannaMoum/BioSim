@@ -15,6 +15,7 @@ def reset_params_default():
     Herbivore.set_params(Herbivore.default_params)
     Carnivore.set_params(Carnivore.default_params)
 
+
 # @pytest.fixture(autouse=True)
 # def create_animals(self):
 #     """Create herb and carn."""
@@ -191,38 +192,16 @@ def test_migration_probability(mocker, species):
         weight = random.randint(0, 20)  # Must avoid using random.uniform
         assert species(age, weight).probability_to_migrate()
 
-#TODO: Make better by making sure two out of tree probability factors passes, but not the last...
-
-@pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_birth_prob_fertilization(mocker, species):
-    """Deterministic test: no birth takes place if only one animal is present."""
-    #mocker.patch('random.uniform', return_value=0)  # TODO: Why isn't this working
-    animal = species(12.5, 10)
-    num_animals = 1
-    for _ in range(50):
-        assert not animal.probability_to_give_birth(num_animals)
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_birth_prob_weight(mocker, species):
-    """Deterministic test: no birth takes place if weight_check fails.
-    Weight_check will always fail if zeta >= weight,
-    and w_birth + sigma_birth >= 1 (by default).
-    """
-    weight = 15
-    species.set_params({'zeta': 15})
-    animal = species(weight, 20)
-    for _ in range(100):
-        assert not animal.probability_to_give_birth(300)
-
-@pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_gauss_dist_ztest(species):
+def test_birth_ztest(species):
     """Test that the mean of an amount values drawn from a (gaussian?) distribution is within
     a gaussian distribution with a given mean and variance.
     Ztest returns a p_value which gives the probability to observe a value a distance or further
     away from the mean, if that value follows the assumed distribution.
     We compare the p_value to a predefined acceptance limit alpha, and pass the test if p > a."""
-    #TODO: Ztest takes a list, but should we look at individual weights at a time?
+    #TODO: Ztest takes a list. Should I use gauss directly or returned newborn weights from mainmethod?
     alpha = 0.001
     babies = [random.gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(200)]
     test_stat, p_value = ztest(babies, value=species.params['w_birth'])
@@ -232,13 +211,90 @@ def test_gauss_dist_ztest(species):
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_probability_to_give_birth(species):
     """Test animal giving birth if all requirements are fulfilled
-    Must also test birth weight...
-    xi = 0: assures maternal health
-    zeta = 0: assures weight check
-    """
 
-    species.set_params({'xi': 0, 'zeta': 0})
-    pass
+    xi = 0: assures maternal health
+    zeta = 0: assures puberty
+    num_animals = any positive number >= 8, gamma = 0.5 and fitness = 1/4: Assures match_probability
+    sigma_birth = 0.2 (small enough to assure no miscarriages)
+    """
+    species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
+    age = species.params['a_half']
+    weight = species.params['w_half']
+    num_animals = 10
+
+    for _ in range(100):
+        assert species(weight, age).probability_to_give_birth(num_animals)
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_birth_prob_matchmaking(mocker, species):
+    """Deterministic test: No birth takes place if all requirements but matchmaking are fulfilled.
+
+    xi = 0: assures maternal health
+    zeta = 0: assures puberty
+    num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocker ('random.uniform) return 1:
+     assures no match_probability
+    sigma_birth = 0.2 (small enough to assure no miscarriages)
+    """
+    mocker.patch('random.uniform', return_value=0) #TODO: Fix mocker
+    species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
+    age = species.params['a_half']
+    weight = species.params['w_half']
+    num_animals = 7
+
+    for _ in range(100):
+        assert not species(weight, age).probability_to_give_birth(num_animals)
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_birth_prob_fertilization(mocker, species):
+    """Deterministic test: No birth can take place if only one animal is present."""
+    animal = species(12.5, 10)
+    num_animals = 1
+    for _ in range(50):
+        assert not animal.probability_to_give_birth(num_animals)
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_birth_prob_puberty(mocker, species):
+    """Deterministic test: no birth takes place if all requirements but reached_puberty are fulfilled.
+
+    xi = 0: assures maternal health
+    zeta = weight/sigma_birth,  when 0 < sigma_birth < 1 and w_birth = anything (but negative)
+    num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocker ('random.uniform) return 1:
+     assures no match_probability
+    sigma_birth = 0.2 (small enough to assure no miscarriages)
+    """
+    mocker.patch('random.uniform', return_value=0) #TODO: Fix mocker
+    age = species.params['a_half']
+    weight = species.params['w_half']
+    species.set_params({'xi': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
+    species.set_params({'zeta': weight/species.params['sigma_birth']})
+    num_animals = 10
+
+    for _ in range(100):
+        assert not species(weight, age).probability_to_give_birth(num_animals)
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_birth_prob_miscarriage(mocker, species):
+    """Statistical test: no birth takes place if miscarriae takes place a an assumed amount of times.
+
+    w_birth = 0 and sigma_birth as any positive value assures 50% of births are miscarriages.
+    We pass the test if this statement holds by ± 10% due to:
+        1. We can only calculate with whole numbers
+        2. If by chance a baby is born at exact weight 0, it will count as a positive birth.
+    """
+    species.set_params({'sigma_birth': 0.2, 'w_birth': 0})
+
+    newborns = [random.gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(500)]
+    negative_newborns = [newborn for newborn in newborns if newborn < 0]
+    lower_limit = 1.90
+    upper_limit = 2.10
+
+    assert lower_limit < len(newborns)/len(negative_newborns) < upper_limit
+
+
+
 
 @pytest.mark.skip('Not finished')
 def test_giving_birth():
