@@ -2,6 +2,7 @@
 import pytest
 from random import uniform, randint, gauss
 from statsmodels.stats.weightstats import ztest
+from scipy.stats import binom_test
 from biosim.animals import Herbivore, Carnivore
 from biosim.lowland import Landscape
 
@@ -24,10 +25,17 @@ def test_set_params(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_parameter_valueerror(species):
-    """Test that only legal parameters and values are allowed."""
+def test_parameter_valueerror_negative(species):
+    """Test that only positive values are allowed for parameters."""
     with pytest.raises(ValueError):
-        all([species.set_params({'beta': -0.2}), species.set_params({'eta': 1.2})])
+        all([species.set_params({'beta': -0.2}), species.set_params({'omega': -5})])
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_parameter_valueerror_eta(species):
+    """Test that only correct values of eta are allowed."""
+    with pytest.raises(ValueError):
+        all([species.set_params({'eta': 1.2}), species.set_params({'eta': -0.1}),
+             not species.set_params({'eta': 0.5})])
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -297,7 +305,7 @@ def test_birth_prob_maternal_health(species):
     for _ in range(100):
         assert not species(weight, age).probability_to_give_birth(num_animals)
 
-
+#Oveflødig?? Kan faktisk feile...
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_prob_miscarriage(species):
     """Statistical test: testing that miscarriage is directly connected to birth_weight
@@ -357,6 +365,21 @@ def test_giving_birth_false(species_obj, species_str):
     animal = species_obj(12.5, 10)
     newborn = animal.giving_birth(species_str, 1)
     assert not newborn
+
+#####
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_death_probability_binomial(species):
+    """Binomal test: Test the statistical significance of deviation from an animal's probability to die
+    (if weight grater than zero), of the observed deaths.
+    Using scipy.stats bionom_test to find the p_value, and deciding upon a 5% level of significance."""
+    alpha = 0.05 #Level of significance we demand for the probability to not be biased
+    animal = species(12.5, 10)
+    num_tests = 200
+    n = sum(animal.probability_of_death() for _ in range(num_tests)) #Observed death cases
+
+    probability = species.params['omega'] * (1 - animal.fitness)
+    p_value = binom_test(n, num_tests, probability, alternative='two-sided')
+    assert p_value > alpha
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
