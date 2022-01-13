@@ -61,7 +61,7 @@ class Landscape:
 
         self._f_max = None
 
-        self.fodder = self.f_max  # Initial amount of fodder
+        self._fodder = self.f_max  # Initial amount of fodder
         self._herb_pop = []
         self._carn_pop = []
 
