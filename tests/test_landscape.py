@@ -12,11 +12,18 @@ def reset_params_default():
     yield
     Landscape.set_params(Landscape._default_params)
 
+@pytest.mark.parametrize('terrain, value', [('Highland', 200.0), ('Lowland', 400.0)])
+def test_set_single_params(terrain, value):
+    """Test optional change of default parameters, singles."""
+    Landscape.set_params({'f_max': {terrain: value}})
+    assert Landscape.params['f_max'][terrain] == value
 
-def test_set_params():
-    """Test optional change of default parameters."""
-    Landscape.set_params({'f_max': {'Highland': 200.0}})
-    assert Landscape.params['f_max']['Highland'] == 200
+
+def test_set_all_params():
+    """Test optional change of default parameters, multiple."""
+    new_params = {'f_max': {'Highland': 200.0, 'Lowland': 400.0}}
+    Landscape.set_params(new_params)
+    assert Landscape.params == new_params
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
@@ -24,14 +31,23 @@ def test_init_landscape_type(terrain):
     """Test correct save of input value to Landscape class."""
     assert Landscape(terrain).landscape_type == terrain
 
+
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_init_is_migratable(terrain):
     """Test that correct terrains are migratable."""
     assert Landscape(terrain).is_migratable
 
+
 def test_init_is_not_migratable():
     """Test that water is not migratable."""
     assert not Landscape('W').is_migratable
+
+@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
+def test_init_f_max(terrain_letter, terrain):
+    """Test that f_max for lowland and highland are correct parameter values."""
+    Landscape.set_params({})
+    assert Landscape(terrain_letter).f_max == Landscape.params['f_max'][terrain]
+
 
 def test_init_fodder():
     pass
