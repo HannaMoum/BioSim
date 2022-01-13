@@ -360,16 +360,23 @@ def test_giving_birth_false(species_obj, species_str):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_death_probability_starved(mocker, species):
-    """Test that animal always dies if starved."""
+    """Use mocked uniform to test animal death if starved, but not sick."""
     mocker.patch('biosim.animals.uniform', return_value=1)
     starved_animal = species(0, 10)
-    for _ in range(20): #Necessary with for loop?
-        assert starved_animal.probability_of_death()
+    assert starved_animal.probability_of_death()
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_death_probability_sick(mocker, species):
+    """Use mocked uniform to test animal death if sick, but not starved."""
     mocker.patch('biosim.animals.uniform', return_value=0)
     sick_animal = species(12.5, 10)
-    for _ in range(20):
-        assert sick_animal.probability_of_death()
+    assert sick_animal.probability_of_death()
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_death_probability_survive(mocker, species):
+    """Use mocked uniform to test that animal does not die under correct circumstances."""
+    mocker.patch('biosim.animals.uniform', return_value=1)
+    healthy_animal = species(12.5, 10)
+    assert not healthy_animal.probability_of_death()
