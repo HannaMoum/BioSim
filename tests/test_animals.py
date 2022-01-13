@@ -412,7 +412,7 @@ def test_killing_probability_fitness_equal():
 
 @pytest.mark.parametrize('DeltaPhiMax', [12.5, 0])
 def test_killing_probability_true(mocker, DeltaPhiMax):
-    """Use mocked uniform to test that killing should happen when the carnivore's fitness
+    """Use mocked uniform to test that killing will happen when the carnivore's fitness
     exceeds that of the herbivore, for a DeltaPhiMax both bigger and smaller than
     their fitness difference."""
     mocker.patch('biosim.animals.uniform', return_value=0)
@@ -420,6 +420,17 @@ def test_killing_probability_true(mocker, DeltaPhiMax):
     carn = Carnivore(12.5, 10)
     herb_fitness = carn.fitness * 0.5
     assert carn.probability_to_kill(herb_fitness)
+
+@pytest.mark.parametrize('DeltaPhiMax', [12.5, 0])
+def test_killing_probability_false(mocker, DeltaPhiMax):
+    """Use mocked uniform to test that killing will not happen even if the carnivore's fitness
+    exceeds that of the herbivore, for a DeltaPhiMax both bigger and smaller than their fitness
+    difference."""
+    mocker.patch('biosim.animals.uniform', return_value=1)
+    Carnivore.set_params({'DeltaPhiMax': DeltaPhiMax})
+    carn = Carnivore(12.5, 10)
+    herb_fitness = carn.fitness * 0.5
+    assert not carn.probability_to_kill(herb_fitness)
 
 
 
