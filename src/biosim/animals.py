@@ -382,6 +382,8 @@ class Animal:
 
 
 class Herbivore(Animal):
+    species = 'Herbivore'
+
     default_params = {
         'w_birth': 8.0,
         'sigma_birth': 1.5,
@@ -405,6 +407,9 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
+
+    species = 'Carnivore'
+
     default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,
