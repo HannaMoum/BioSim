@@ -55,11 +55,16 @@ def test_init_f_max_zero(terrain):
     assert Landscape(terrain).f_max == 0
 
 
-def test_init_fodder():
-    pass
+@pytest.mark.parametrize('terrain', ['L', 'W', 'D', 'W'])
+def test_initial_fodder(terrain):
+    """Test that initial amount of fodder is equal to f_max."""
+    location_cell = Landscape(terrain)
+    assert location_cell.fodder == location_cell.f_max
 
-def test_init_herb_pop():
-    pass
+@pytest.mark.parametrize('terrain', ['L', 'W', 'D', 'W'])
+def test_inital_population(terrain):
+    assert not all([Landscape(terrain).herb_pop, Landscape(terrain).carn_pop])
+
 
 def test_grassing():
     """
