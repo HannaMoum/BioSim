@@ -42,11 +42,17 @@ def test_init_is_not_migratable():
     """Test that water is not migratable."""
     assert not Landscape('W').is_migratable
 
+
 @pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
-def test_init_f_max(terrain_letter, terrain):
+def test_init_f_max_grass(terrain_letter, terrain):
     """Test that f_max for lowland and highland are correct parameter values."""
-    Landscape.set_params({})
     assert Landscape(terrain_letter).f_max == Landscape.params['f_max'][terrain]
+
+
+@pytest.mark.parametrize('terrain', ['D', 'W'])
+def test_init_f_max_zero(terrain):
+    """Test that f_max for desert and water are equal to zero only."""
+    assert Landscape(terrain).f_max == 0
 
 
 def test_init_fodder():
