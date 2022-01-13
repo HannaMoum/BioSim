@@ -332,6 +332,23 @@ def test_giving_birth_true(species_obj, species_str):
         newborn = animal.giving_birth(species_str, num_animals)
         assert all((newborn, type(newborn) == species_obj))
 
+
+@pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
+def test_giving_birth_weight(species_obj, species_str):
+    """Test weight loss if animal gives birth.
+    Adjust parameters to assure birth."""
+    species_obj.set_params({'xi': 0.0001, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
+    age = species_obj.params['a_half']
+    weight = species_obj.params['w_half']
+    num_animals = 10
+    animal = species_obj(weight, age)
+
+    for _ in range(20):
+        initial_weight = animal.weight
+        animal.giving_birth(species_str, num_animals)
+        assert animal.weight < initial_weight
+
+
 @pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
 def test_giving_birth_false(species_obj, species_str):
     """"Test correct return value if animal does not gives birth.
