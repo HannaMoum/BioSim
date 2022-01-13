@@ -305,12 +305,12 @@ class Animal:
         birth_weight: `float` or `bool`
             Birth weight of animal if birth takes place, otherwise False.
         """
-        probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
+        match_probability = min(1, self.params['gamma'] * self.fitness * (number_of_animals - 1))
         r = uniform(0, 1)
 
-        fertilization = r < probability
+        fertilization = r < match_probability
 
-        weight_check = self.weight > self.params['zeta'] * \
+        reached_puberty = self.weight > self.params['zeta'] * \
                        (self.params['w_birth'] + self.params['sigma_birth'])
 
         birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])
@@ -318,7 +318,7 @@ class Animal:
 
         maternal_health = self.weight > birth_weight * self.params['xi']
 
-        if all((fertilization, weight_check, maternal_health, not miscarriage)):
+        if all((fertilization, reached_puberty, maternal_health, not miscarriage)):
             return birth_weight
 
         return False
