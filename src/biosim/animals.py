@@ -55,7 +55,7 @@ class Animal:
 
         Parameters
         ----------
-        new_params: dict, optional
+        new_params: `dict`, optional
             Legal keys: 'w_birth', 'sigma_birth', 'beta',
                         'eta', 'a_half', 'phi_age', 'w_half',
                         'phi_weight', 'mu', 'gamma', 'zeta',
