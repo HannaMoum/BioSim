@@ -184,26 +184,10 @@ def test_decrease_weight_when_aging(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_migration_probability(mocker, species):
-    """Test that all animals will migrate if probability is always true...(?)"""
-    mocker.patch('biosim.animals.uniform', return_value=0) #TODO: Why isn't this working #Importere hele uniform fungerer (i animals og test)
+    """Test that all animals will migrate if the probability is always bigger than a random drawn number"""
+    mocker.patch('biosim.animals.uniform', return_value=0)
     for _ in range(20):
         assert species(12.5, 10).probability_to_migrate()
-
-
-
-@pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_birth_ztest(species):
-    """Test that the mean of an amount values drawn from a (gaussian?) distribution is within
-    a gaussian distribution with a given mean and variance.
-    Ztest returns a p_value which gives the probability to observe a value a distance or further
-    away from the mean, if that value follows the assumed distribution.
-    We compare the p_value to a predefined acceptance limit alpha, and pass the test if p > a."""
-    #TODO: Ztest takes a list. Should I use gauss directly or returned newborn weights from mainmethod?
-    alpha = 0.001
-    newborn_weights = [gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(200)]
-    test_stat, p_value = ztest(newborn_weights, value=species.params['w_birth'])
-
-    assert p_value > alpha
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -222,6 +206,27 @@ def test_probability_to_give_birth(species):
 
     for _ in range(100):
         assert species(weight, age).probability_to_give_birth(num_animals)
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_birth_ztest(species):
+    """Test that the mean of all birth weights drawn from probability_to_give_birth is within
+    a gaussian distribution with a given mean and variance.
+    Ztest returns a p_value which gives the probability to observe a value a distance or further
+    away from the mean, if that value follows the assumed distribution.
+    We compare the p_value to a predefined acceptance limit alpha, and pass the test if p > a.
+
+    Test edits parameters to assure all babies are born."""
+    species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
+    age = species.params['a_half']
+    weight = species.params['w_half']
+    num_animals = 10
+    animal = species(weight, age)
+
+    alpha = 0.001
+    newborn_weights = [animal.probability_to_give_birth(num_animals) for _ in range(200)]
+    test_stat, p_value = ztest(newborn_weights, value=species.params['w_birth'])
+
+    assert p_value > alpha
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
