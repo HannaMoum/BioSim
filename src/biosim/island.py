@@ -1,4 +1,4 @@
-from biosim.biosim import BioSim
+from biosim_klasse import BioSim
 
 class Island:
 
