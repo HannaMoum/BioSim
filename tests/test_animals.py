@@ -13,8 +13,8 @@ SEED = 12345678  # random seed for tests
 def reset_params_default():
     """Reset parameters to default after test has run."""
     yield
-    Herbivore.set_params(Herbivore.default_params)
-    Carnivore.set_params(Carnivore.default_params)
+    Herbivore.set_params(Herbivore._default_params)
+    Carnivore.set_params(Carnivore._default_params)
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
