@@ -421,7 +421,6 @@ class Carnivore(Animal):
 
         elif 0 < fitness_diff < self.params['DeltaPhiMax']:
             probability = fitness_diff / self.params['DeltaPhiMax']
-            # TODO: Make parameters work again
         else:
             probability = 1
 
