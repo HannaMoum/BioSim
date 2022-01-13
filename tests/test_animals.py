@@ -16,13 +16,6 @@ def reset_params_default():
     Carnivore.set_params(Carnivore.default_params)
 
 
-# @pytest.fixture(autouse=True)
-# def create_animals(self):
-#     """Create herb and carn."""
-#     herb = Herbivore(10, 12.5)
-#     carn = Carnivore(9, 10.5)
-
-
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_set_params(species):
     """Test optional change of default parameters."""
