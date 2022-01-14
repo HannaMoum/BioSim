@@ -99,6 +99,7 @@ class World:
         """Dette kartet inneholder referanser til landskapsobjekter.
         Det er en transformering av island_map. Kart med landskapsobjekter."""
         return self._object_map
+
     ###################################################################################################################
     # Data-objekter. Data som kan brukes til analyse, plotting.
     # Data per tidsenhet. Dataene inneholder nåværende status til world.

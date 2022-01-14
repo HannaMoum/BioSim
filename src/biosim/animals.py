@@ -127,7 +127,7 @@ class Animal:
         self._id = next(self.id_iter)
         self._weight = weight
         self._age = age
-        self._fitness = 0 #kjør funksjon for å beregne fitness
+        #self._fitness = 0 #kjør funksjon for å beregne fitness
         self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
         self._has_migrated = False
 

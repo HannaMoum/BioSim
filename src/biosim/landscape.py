@@ -250,7 +250,7 @@ class Landscape:
         # self.population = alive(self.population)
         population = self.population
         survivors = [animal for animal in population if not animal.dies()]
-        die = [animal for animal in population if animal.dies()]
+        #die = [animal for animal in population if animal.dies()]
 
         self.population = survivors
 
