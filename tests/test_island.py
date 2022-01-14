@@ -44,11 +44,13 @@ def test_invalid_map_str(geogr):
     with pytest.raises(ValueError):
         World(geogr_wrapped)
 
+
 @pytest.mark.skip
 def test_valid_map_str(geogr_str):
     """Test no ValuErrors are risen when valid map string are given."""
     assert all ([World(geogr_str),
                  World(geogr_str)._make_base_map(geogr_str)])
+
 
 @pytest.mark.skip
 def test_base_map(geogr_str):
@@ -59,6 +61,7 @@ def test_base_map(geogr_str):
     assert all([World(geogr_str)._make_base_map(geogr_str) == base_map,
                 World(geogr_str).base_map == base_map,])
 
+
 @pytest.mark.skip
 def test_migrate_map(geogr_str):
     """Test correct creation and attribute save of migrate_map."""
@@ -68,12 +71,14 @@ def test_migrate_map(geogr_str):
     assert all([World(geogr_str)._make_migrate_map() == migrate_map,
                 World(geogr_str).migrate_map == migrate_map])
 
+
 @pytest.mark.skip
 def test_object_map_save(geogr_str):
     """Test correct attribute save from making an object map."""
     object_map_creation = World(geogr_str)._make_object_map()
     object_map_attribute = World(geogr_str).object_map
     assert object_map_creation == object_map_attribute #Not sure this will work...
+
 
 @pytest.mark.skip
 def test_object_map_type(geogr_str):
@@ -82,8 +87,4 @@ def test_object_map_type(geogr_str):
     for letter, reference in (geogr_str, island.object_map):
         assert reference.landscape_type == letter
 
-@pytest.mark.skip
-def test_create_base_map():
-    island = World(geogr)
-    #World.base_map ==
 
