@@ -68,7 +68,14 @@ class Animal:
     def __init__(self, weight, age=0):
         self.id = next(self.id_iter)
         self.weight = weight
+        ##
+        if not float(age).is_integer() or not isinstance(age, (int, float)):
+            raise ValueError('Age must be a whole number')
+        elif age < 0:
+            raise ValueError('Age must be a positive number')
+
         self.age = age
+        ##
         self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
         self._has_migrated = False
 
@@ -88,13 +95,7 @@ class Animal:
         return self._age
 
     @age.setter
-    def age(self, value):  # TODO: Age and weight conditions should be in island??
-        if not float(value).is_integer() or not isinstance(value, (int, float)):
-            raise ValueError('Age must be a whole number')
-
-        elif value < 0:
-            raise ValueError('Age must be a positive number')
-
+    def age(self, value):
         self._age = value
 
     @property
