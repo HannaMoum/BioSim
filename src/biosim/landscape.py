@@ -35,20 +35,11 @@ class Landscape:
 
     def __init__(self, landscape_type: str):
         self._landscape_type = landscape_type
-
-        # if landscape_type == 'W':
-        #     self._is_migratable = False
-        # else:
-        #     self._is_migratable = True
-
         self._f_max = None
-
-        self._fodder = self.f_max  # Initial amount of fodder
+        self._fodder = self.f_max
         self._population = []
         self._herbivores = []
         self._carnivores = []
-        # self._herb_pop = []
-        # self._carn_pop = []
         self._herbivores_number = 0
         self._carnivores_number = 0
 
