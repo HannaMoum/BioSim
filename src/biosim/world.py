@@ -2,6 +2,7 @@ import numpy as np
 from landscape import Landscape
 from random import choice
 
+
 class World:
 
     def __init__(self, island_map, ini_pop):
@@ -18,18 +19,60 @@ class World:
         self._base_map = self._make_base_map(island_map)
         self._migrate_map = self._make_migrate_map()
         self._object_map = self._make_object_map()
-        self._ini_pop = self.add_population(ini_pop)
+        self._ini_pop = ini_pop
+        self.add_population(ini_pop) #Restructure this. Method has to be called
         # TODO: Save ini_pop directly from input
         # Add_population returns nothing, it is an action of its' own
 
+    @property
+    def base_map(self):
+        """Base map. Det initsielle verdenskartet."""
+        return self._base_map
 
+    @property
+    def migrate_map(self):
+        """Migration map. Gives True/False if movement on to location is allowed"""
+        return self._migrate_map
+
+    @property
+    def object_map(self):
+        """Dette kartet inneholder referanser til landskapsobjekter.
+        Det er en transformering av island_map. Kart med landskapsobjekter."""
+        return self._object_map
+
+###############
+    def _validate_island_map(self, island_map_list:list) -> bool:
+        # Should already be textwrapped
+
+        length_check = len(island_map_list[0])
+        for element in island_map_list:
+
+            for letter in element:
+                if letter not in 'WHLD':
+                    raise ValueError(
+                        f'{letter} is not a defined landscape.\n'
+                        f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
+                        'respectively given by their belonging capital letter.')
+
+            if len(element) != length_check:
+                raise ValueError('Island map must contain an equal amount of columns.')
+
+            if not (element[0] and element[-1]) == 'W':
+                raise ValueError('All the islands` outer edges must be of landscape Water.')
+
+        if not (island_map_list[0] and island_map_list[-1]) == 'W' * length_check:
+            raise ValueError('All the islands` outer edges must be of landscape Water.')
+
+        return True
+
+###########
     def _make_base_map(self, input_map: str)-> object:
         """
         Mapping island with respect to each landscape letter.
 
         Parameters
         ----------
-        island_map: `str`
+        input_map: `str`
             Geography of island.
 
             Made up by the letters 'W', 'D', 'L' and 'H' each representing a landscape.
@@ -41,14 +84,17 @@ class World:
             Array containing landscape letters in their respective positions.
         """
 
-        map_list = input_map.split(sep='\n')
+        map_list = input_map.split()
+        self._validate_island_map(map_list)  # Validerer her, inne i øya selv
         row, col = len(map_list), len(map_list[0])
 
         build_map = np.empty(shape=(row, col), dtype='str')
         for row_index, row_string in enumerate(map_list):
             for col_index, landscape_letter in enumerate(row_string):
                 build_map[row_index, col_index] = landscape_letter
+
         return build_map
+
 
     def _make_migrate_map(self)     -> object:
         """Make migration map (np bool)."""
@@ -82,21 +128,7 @@ class World:
             population = dictionary['pop']  # [{},{}]
             landscape_object.add_animals(population)
 
-    @property
-    def base_map(self):
-        """Base map. Det initsielle verdenskartet."""
-        return self._base_map
 
-    @property
-    def migrate_map(self):
-        """Migration map. Gives True/False if movement on to location is allowed"""
-        return self._migrate_map
-
-    @property
-    def object_map(self):
-        """Dette kartet inneholder referanser til landskapsobjekter.
-        Det er en transformering av island_map. Kart med landskapsobjekter."""
-        return self._object_map
     ###################################################################################################################
     # Data-objekter. Data som kan brukes til analyse, plotting.
     # Data per tidsenhet. Dataene inneholder nåværende status til world.
