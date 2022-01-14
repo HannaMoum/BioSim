@@ -162,7 +162,6 @@ class Landscape:
         herbivores = self.herbivores  # TODO: Skriv self.herbivores rett inn i sorted()
         prey_order = sorted(herbivores, key=lambda x: x.fitness)
 
-        survivors = []
         for hunter in hunting_order:
             hunter.F_tilde = 0
 
