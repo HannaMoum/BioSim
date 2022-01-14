@@ -124,11 +124,11 @@ class World:
     # Parameter-funksjoner som kan brukes i fabrikken
     def v_size_herb_pop(self, location: object)->int:
         """Population sizer for herbivores at given location. """
-        return len(location.herbivores)
+        return location.herbivores_number
 
     def v_size_carn_pop(self, location: object)->int:
         """Population sizer for carnivores at given location."""
-        return len(location.carnivores)
+        return location.carnivores_number
 
     # ----------------------------------------------------------------------------------------------------------------
     # Her kommer det ut en np.array med objekter, som f.eks. inneholder hele landskapsobjektet

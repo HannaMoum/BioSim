@@ -299,6 +299,7 @@ class BioSim(BioSim_param):
                         landscape.give_birth()
                         landscape.aging()
                         landscape.do_death()
+
             #-------------------------------------------------------------------------------------
             # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
 
@@ -335,7 +336,8 @@ class BioSim(BioSim_param):
             # Brukes ikke nå, men ikke slett!
             #yearly_property_map_carns.append(yearly_carn_objects_map)
 
-            print('\\r',f'Year:{current_year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '\n')
+            print('\r',f'Year:{current_year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '')
+
 
         # Data at end of simulation
         # TODO: Add evaluation. Check shape and size. Raises valueerror

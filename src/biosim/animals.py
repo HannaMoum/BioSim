@@ -124,9 +124,10 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, weight, age=0):
-        self.id = next(self.id_iter)
-        self.weight = weight
-        self.age = age
+        self._id = next(self.id_iter)
+        self._weight = weight
+        self._age = age
+        self._fitness = 0 #kjør funksjon for å beregne fitness
         self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
         self._has_migrated = False
 
@@ -147,6 +148,7 @@ class Animal:
 
     @age.setter
     def age(self, value):  # TODO: Age and weight conditions should be in island??
+        # kjør funksjon for å beregne fitness
         if not float(value).is_integer() or not isinstance(value, (int, float)):
             raise ValueError('Age must be a whole number')
 
@@ -162,6 +164,7 @@ class Animal:
 
     @weight.setter
     def weight(self, value):
+        # kjør funksjon for å beregne fitness
         if not isinstance(value, (int, float)) or value < 0:
             raise ValueError('Weight must be a positive number')
 
@@ -201,7 +204,7 @@ class Animal:
         """
 
         def q(sgn, x, x_half, phi):
-            return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
+            return (1 / (1 + math.exp(sgn * phi * (x - x_half))))
 
         if self.weight <= 0:
             return 0
@@ -209,7 +212,8 @@ class Animal:
             q_plus = q(+1, self.age, self.params['a_half'], self.params['phi_age'])
             q_minus = q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
 
-            return q_plus * q_minus
+            fitness = q_plus * q_minus
+            return fitness
 
     def eat(self, food_available):
         """
@@ -253,15 +257,6 @@ class Animal:
         p = self.fitness * self.params['mu']
         return p>r
         # return all((p > r, not self.has_migrated))
-
-    # def migration_direction(self):
-    #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
-    #     r = uniform(0, 1)
-    #     p = self.fitness * self.params['mu']
-    #     if p > r: # True betyr at den vil flytte seg
-    #         return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
-    #     else:
-    #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
 
     def probability_to_give_birth(self, number_of_animals):
         """
@@ -354,7 +349,6 @@ class Animal:
 
             # TODO: Optimization possibilities
             self.weight -= birth_weight * self.params['xi']
-
             return newborn
 
         return None
@@ -473,7 +467,6 @@ class Carnivore(Animal):
             # TODO: Make parameters work again
         else:
             probability = 1
-
         return probability > r
 
     def killing(self, herb_fitness, herb_weight):
