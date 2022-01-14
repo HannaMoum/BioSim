@@ -100,34 +100,35 @@ class Landscape:
     @population.setter
     def population(self, value):
         population_set = set(value)
+        # TODO: Duplicate control Should be removed. This is only valuable for bugsearch
         contains_duplicates = len(value) != len(population_set)
         if not contains_duplicates:
             self._population = value
-            self._herbivores = [animal for animal in value if animal.species == 'Herbivore']  # Flytt til herbivores
-            self._carnivores = [animal for animal in value if animal.species == 'Carnivore']
-            self._herbivores_number = len(self._herbivores)
-            self._carnivores_number = len(self._carnivores)
         else:
             raise ValueError('Population list can not contain duplicates')
 
     @property
     def herbivores(self) -> list:  # Hvorfor oppdaterer vi ikke de her istedenfor i population?
-        """Returns a list of all animals of species Herbivore"""
+        """Return a list of all animals of species Herbivore."""
+        self._herbivores = [animal for animal in self.population if animal.species == 'Herbivore']
         return self._herbivores
 
     @property
     def carnivores(self) -> list:
-        """Returns a list of all animals of species Carnivores"""
+        """Return a list of all animals of species Carnivore."""
+        self._carnivores = [animal for animal in self.population if animal.species == 'Carnivore']
         return self._carnivores
 
     @property
     def herbivores_number(self) -> int:
-        """Returns a list of all animals of species Herbivores"""
+        """Return the amount of herbivores in terrain."""
+        self._herbivores_number = len(self._herbivores)
         return self._herbivores_number
 
     @property
     def carnivores_number(self) -> int:
-        """Returns a list of all animals of species Carnivores"""
+        """Return the amount of carnivores in terrain."""
+        self._carnivores_number = len(self._carnivores)
         return self._carnivores_number
 
     def grassing(self):
