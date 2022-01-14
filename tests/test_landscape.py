@@ -291,10 +291,12 @@ def test_no_death(terrain, mocker):
 
     assert all([landscape_cell.herb_pop == herb_pop, landscape_cell.carn_pop == carn_pop])
 
-@pytest.mark.skip
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
-def test_regrowth(terrain):
+
+@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
+def test_regrowth(terrain_letter, terrain):
     """Test that fodder is reset to f_max when running regrowth method."""
-    landscape_cell = Landscape(terrain)
-    #landscape.fodder =
-    pass
+    landscape_cell = Landscape(terrain_letter)
+    landscape_cell.fodder = 50
+    landscape_cell.regrowth()
+
+    assert landscape_cell.fodder == Landscape.params['f_max'][terrain]
