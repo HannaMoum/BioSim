@@ -177,8 +177,11 @@ class Graphics(Graphics_param):
 
 
     def make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year=-1):
+        if year == -1: # Convert default year to a plotable last year
+            plot_year = len(herb_data) - 1
+
         fig = plt.figure(figsize=(14, 10))
-        fig.suptitle(str(f'Year: {(year + 1):.0f}'), fontsize=36, x=0.08, y=0.95)
+        fig.suptitle(str(f'Year: {(plot_year + 1):.0f}'), fontsize=36, x=0.08, y=0.95)
 
         grid = plt.GridSpec(10, 14, wspace=0.5, hspace=1)
 
@@ -198,7 +201,6 @@ class Graphics(Graphics_param):
         weight_ax = plt.subplot(grid[8:10, 5:13])
         fitness_ax = plt.subplot(grid[4:6, 5:13])
         self.plot_histogram(hist_herb_data, hist_carn_data, age_ax, weight_ax, fitness_ax, year)
-
 
         return fig
 
