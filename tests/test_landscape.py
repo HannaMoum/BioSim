@@ -302,7 +302,24 @@ def test_regrowth(terrain_letter, terrain):
     assert landscape_cell.fodder == Landscape.params['f_max'][terrain]
 
 
+@pytest.mark.skip
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+def test_add_valid_animals(terrain):
+    added_pop =[{'species': 'Herbivore', 'age': 10, 'weight': 12.5},
+                {'species': 'Carnivore', 'age': 10, 'weight': 12.5},
+                {'species': 'Herbivore', 'age': 20, 'weight': 11}]
 
+    landscape_cell = Landscape(terrain)
+    landscape_cell.add_animals(added_pop)
+
+    assert all([landscape_cell.herb_pop == [Herbivore(12.5, 10), Herbivore(11, 20)],
+                landscape_cell.carn_pop == [Carnivore(12.5, 10)]]) #Wrong identities.TODO: In progress
+
+
+# @pytest.mark.skip
+# @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+# def test_add_invalid_animals(terrain):
+#     pass
 
 
 # def add_animals(self, added_pop):
