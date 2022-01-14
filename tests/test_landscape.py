@@ -202,6 +202,7 @@ def test_no_giving_birth(mocker, terrain):
     assert all([len(location_cell.herb_pop) == len(herb_pop),
                 len(location_cell.carn_pop) == len(carn_pop)])
 
+
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_migration_preparation(terrain):
     """Test that migration_preparation resets all has_migrated attributes to False."""
@@ -220,6 +221,12 @@ def test_migration_preparation(terrain):
     for animal in landscape_cell.herb_pop + landscape_cell.carn_pop:
         assert not animal.has_migrated
 
+
+@pytest.mark.skip
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+def test_migrating_direction(terrain):
+    #TODO: Create when migrating functions have been set...
+    pass
 
 
 
