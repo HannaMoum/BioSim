@@ -313,7 +313,7 @@ def test_birth_prob_maternal_health(species):
     for _ in range(100):
         assert not species(weight, age).probability_to_give_birth(num_animals)
 
-#Oveflødig?? Kan faktisk feile...
+#Oveflødig?? Kan faktisk feile... #TODO: Use bionom test instead, or nothing at all
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_prob_miscarriage(species):
     """Statistical test: testing that miscarriage is directly connected to birth_weight
