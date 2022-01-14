@@ -43,10 +43,11 @@ if __name__ == '__main__':
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
-                             'weight': {'max': 60, 'delta': 2}},
+                             'weight': {'max': 60.0, 'delta': 2}},
+                 ymax_animals=None
                  )
 
-    sim.simulate(num_years=5)
+    sim.simulate(num_years=10)
 
     #sim.set_landscape_parameters('L', {'f_max': 800})
 
@@ -56,7 +57,7 @@ if __name__ == '__main__':
     # print(herbivore_property_array[:, 1])
 
     # Plotter kartet over øya
-    graf = Graphics(sim.island.base_map)
+    # graf = Graphics(sim.island.base_map)
 
     #graf.plot_island_map()
     """
@@ -86,8 +87,7 @@ if __name__ == '__main__':
 
     #graf.make_grid(10)
 
-    dash = Graphics(sim.island.base_map)
-    #fig=dash.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data, year=99)
+    sim.graphics.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data)
     #dash.make_movie()
 
     # TODO: Bildene blir liggende i C:/temp/figs, og filmene blir liggende i C:/temp. Folderne må finnes på disk fra før, slik det er nå.
