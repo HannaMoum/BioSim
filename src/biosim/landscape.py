@@ -169,7 +169,7 @@ class Landscape:
             survivors = [prey for prey in prey_order if not hunter.killing(prey.fitness, prey.weight)]
             prey_order = survivors
 
-        self.population = survivors + hunting_order
+        self.population = prey_order + hunting_order
 
     def give_birth(self):
         """For each animal giving birth, update population.
