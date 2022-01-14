@@ -81,11 +81,6 @@ class Landscape:
 
         return self._f_max
 
-    # @property
-    # def is_migratable(self):
-    #     """TODO: Doc, read-only"""
-    #     return self._is_migratable
-
     @property
     def fodder(self):
         """Fodder available in current landscape (`int` or `float`)."""
@@ -94,7 +89,7 @@ class Landscape:
     @fodder.setter
     def fodder(self, value):
         if value > self.f_max:
-            raise ValueError('Value must be below f_max')  # TODO: Controls water and desert...
+            raise ValueError('Value must be below f_max')
         # TODO: make sure documentation states that f_max is not available for desert and water somewhere
         self._fodder = value
 
