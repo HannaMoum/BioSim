@@ -240,14 +240,12 @@ def test_hunting_only_killing(terrain):
     preys = [Herbivore(0.1, 50) for _ in range(3)]
 
     hunters = [Carnivore(Carnivore.params['w_half'], Carnivore.params['a_half'])]
-    # Needo only one hunter for this...
 
     location_cell = Landscape(terrain)
-    location_cell.herb_pop += preys
-    location_cell.carn_pop += hunters
+    location_cell.population += preys + hunters
     location_cell.hunting()
 
-    assert not location_cell.herb_pop
+    assert not location_cell.herbivores
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
