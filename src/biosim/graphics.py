@@ -46,7 +46,8 @@ class Graphics_param:
 
 class Graphics(Graphics_param):
 
-    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict, vis_years:int):
+    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict, vis_years:int,
+                 img_dir, img_base, img_fmt, img_years):
         """
         numpy_island_map er base_map fra World.
         """
@@ -214,6 +215,7 @@ class Graphics(Graphics_param):
                            hist_herb_data,
                            hist_carn_data,
                            year=year)
+            return None
         if self._vis_years >= 1:
             sim_years = len(herb_data)
             for y in range(0,sim_years, self._vis_years):

@@ -57,7 +57,11 @@ class BioSim(BioSim_param):
                                      hist_specs,
                                      ymax_animals,
                                      cmax_animals,
-                                     vis_years)
+                                     vis_years,
+                                     img_dir,
+                                     img_base,
+                                     img_fmt,
+                                     img_years)
 
     def _validate_island_map(self, island_map:str) -> bool:
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
