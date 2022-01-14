@@ -19,6 +19,7 @@ class World:
         self._base_map = self._make_base_map(island_map)
         self._migrate_map = self._make_migrate_map()
         self._object_map = self._make_object_map()
+
         self._ini_pop = ini_pop
         self.add_population(ini_pop) #Restructure this. Method has to be called
         # TODO: Save ini_pop directly from input
@@ -40,7 +41,7 @@ class World:
         """Map of island consisting of landscape-object references (`ndarray` of `obj`)."""
         return self._object_map
 
-    def _validate_island_map(self, island_map_list:list) -> bool:
+    def _validate_island_map(self, island_map_list: list) -> bool:
         # Should already be textwrapped
 
         length_check = len(island_map_list[0])
@@ -94,13 +95,13 @@ class World:
         return build_map
 
 
-    def _make_migrate_map(self)     -> object:
+    def _make_migrate_map(self) -> object:
         """Create a map mapping all migratable cells (`ndarray` of `bool`)."""
         return self._base_map != 'W'
 
     def _make_object_map(self)->object:
         """
-        Mapping island with landscape objects.
+        Create map of the island's landscape objects references.
 
         Returns
         -------
@@ -110,6 +111,7 @@ class World:
         object_map = np.empty(self._base_map.shape, dtype='object')
         vLandscape = np.vectorize(Landscape)
         object_map[:, :] = vLandscape(self._base_map)
+
         return object_map
 
     def add_population(self, population:dict):
