@@ -13,8 +13,8 @@ SEED = 12345678  # random seed for tests
 def reset_params_default():
     """Reset parameters to default after test has run."""
     yield
-    Herbivore.set_params(Herbivore._default_params_h)
-    Carnivore.set_params(Carnivore._default_params_c)
+    Herbivore.set_params(Herbivore._default_params)
+    Carnivore.set_params(Carnivore._default_params)
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -101,6 +101,14 @@ def test_privacy_F_tilde(species):
 def test_animal_create_has_migrated(species):
     """Test that has_migrated attribute is set to False when animal is created."""
     assert not species(12.5, 10).has_migrated
+
+
+@pytest.mark.parametrize('species', [Herbivore, Carnivore])
+def test_animal_has_migrated_edit(species):
+    """Test that has_migrated attribute is changed correctly on demand."""
+    animal = species(12.5, 10)
+    animal.has_migrated = True
+    assert animal.has_migrated
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
