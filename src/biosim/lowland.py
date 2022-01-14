@@ -191,9 +191,9 @@ class Landscape:
                        (newborn := individual.giving_birth('Carnivore', len(carn_pop)))]
 
         # TODO: Make absolutely sure this is necessary (again)
-        if len(herb_babies) > 0:
+        if herb_babies:
             self.herb_pop += herb_babies
-        if len(carn_babies) > 0:
+        if carn_babies:
             self.carn_pop += carn_babies
 
     def migration_prep(self):
