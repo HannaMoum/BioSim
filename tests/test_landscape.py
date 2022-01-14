@@ -7,7 +7,7 @@ SEED = 12345678  # random seed for tests
 
 
 @pytest.fixture(autouse=True)
-def reset_params_defaul_land():
+def reset_params_default_land():
     """Reset parameters to default after test has run."""
     yield
     Landscape.set_params(Landscape._default_params)
@@ -40,17 +40,6 @@ def test_param_mistake():
 def test_init_landscape_type(terrain):
     """Test correct save of input value to Landscape class."""
     assert Landscape(terrain).landscape_type == terrain
-
-
-# @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
-# def test_init_is_migratable(terrain):
-#     """Test that correct terrains are migratable."""
-#     assert Landscape(terrain).is_migratable
-#
-#
-# def test_init_is_not_migratable():
-#     """Test that water is not migratable."""
-#     assert not Landscape('W').is_migratable
 
 
 @pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
@@ -128,7 +117,6 @@ def test_extract_herbivores(terrain):
     assert location_cell.herbivores == [test_pop[0], test_pop[3]]
 
 
-
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_herbivores_reduction(terrain):
     """Test for correct herbivore population when population are reduced."""
@@ -164,8 +152,7 @@ def test_carnivores_reduction(terrain):
     assert location_cell.carnivores == [population[2]]
 
 
-### TODO: HOW TO AVOID ADDING ANIMALS TO WATER
-@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])  # TODO: Not water here!
+@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
 def test_grassing_fodder_adjustment(terrain_letter, terrain):
     """Test fodder adjustment when grassing in Lowland and Highland while there are still fodder available."""
     herbivores = [Herbivore(12.5, 10), Herbivore(0, 3),
@@ -284,25 +271,6 @@ def test_no_giving_birth(mocker, terrain):
                 len(location_cell.population) == len(herb_pop) + len(carn_pop)])
 
 
-# @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
-# def test_migration_preparation(terrain):
-#     """Test that migration_preparation resets all has_migrated attributes to False."""
-#     herb_pop = [Herbivore(16, 10) for _ in range(20)]
-#     carn_pop = [Carnivore(16, 10) for _ in range(20)]
-#
-#     landscape_cell = Landscape(terrain)
-#
-#     for animal in herb_pop + carn_pop:
-#         animal.has_migrated = True
-#
-#     landscape_cell.herb_pop += herb_pop
-#     landscape_cell.carn_pop += carn_pop
-#     landscape_cell.migration_prep()
-#
-#     for animal in landscape_cell.herb_pop + landscape_cell.carn_pop:
-#         assert not animal.has_migrated
-
-
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_aging(terrain):
     """Test that all animals in the landscape have lost weight and become older."""
@@ -357,7 +325,6 @@ def test_regrowth(terrain_letter, terrain):
     assert landscape_cell.fodder == Landscape.params['f_max'][terrain]
 
 
-# @pytest.mark.skip
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_add_valid_animals(terrain):
     added_pop = [{'species': 'Herbivore', 'age': 10, 'weight': 12.5},
