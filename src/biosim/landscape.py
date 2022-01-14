@@ -108,25 +108,7 @@ class Landscape:
             self._herbivores_number = len(self._herbivores)
             self._carnivores_number = len(self._carnivores)
         else:
-            raise ValueError('Population list can not contain duplicates')  # Når skjer det?
-
-    # @property
-    # def herb_pop(self):
-    #     """Population of herbivores in current landscape (`list` of :py:class:`.animals.Herbivore`)."""
-    #     return self._herb_pop
-    #
-    # @herb_pop.setter
-    # def herb_pop(self, value):
-    #     self._herb_pop = value
-    #
-    # @property
-    # def carn_pop(self):
-    #     """Population of carnivores in current landscape (`list` of :py:class:`.animals.Carnivore`)."""
-    #     return self._carn_pop
-    #
-    # @carn_pop.setter
-    # def carn_pop(self, value):
-    #     self._carn_pop = value
+            raise ValueError('Population list can not contain duplicates')
 
     @property
     def herbivores(self) -> list:  # Hvorfor oppdaterer vi ikke de her istedenfor i population?
