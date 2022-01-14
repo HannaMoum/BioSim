@@ -80,15 +80,15 @@ class Animal:
         self.age = age
         ##
         self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
-        self._has_migrated = False
+        #self._has_migrated = False
 
-    @property
-    def has_migrated(self):
-        return self._has_migrated
-
-    @has_migrated.setter
-    def has_migrated(self, bool):
-        self._has_migrated = bool
+    # @property
+    # def has_migrated(self):
+    #     return self._has_migrated
+    #
+    # @has_migrated.setter
+    # def has_migrated(self, bool):
+    #     self._has_migrated = bool
 
     @property
     def age(self):
@@ -194,7 +194,7 @@ class Animal:
     def probability_to_migrate(self):
         r = uniform(0, 1)
         p = self.fitness * self.params['mu']
-        return p>r
+        return p > r
         # return all((p > r, not self.has_migrated))
 
     # def migration_direction(self):
