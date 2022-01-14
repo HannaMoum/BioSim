@@ -156,22 +156,23 @@ def test_carnivores_reduction(terrain):
     """Test for correct carnivore population when population are reduced."""
     animal = Carnivore(12.5, 10)
     population = [Herbivore(12.5, 10), animal, Carnivore(9, 25), Herbivore(9, 25)]
+
     location_cell = Landscape(terrain)
     location_cell.population += population
     location_cell.population.remove(animal)
+
     assert location_cell.carnivores == [population[2]]
 
 
-### TODO: Is any of this valuable? HOW TO AVOID ADDING ANIMALS TO WATER
+### TODO: HOW TO AVOID ADDING ANIMALS TO WATER
 @pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])  # TODO: Not water here!
 def test_grassing_fodder_adjustment(terrain_letter, terrain):
-    """Test fodder adjustment when grassing in Lowland and Highland while there are still fodder available.
-    #Fitness rangering: H(12.5, 10), H(half), H(0)"""
+    """Test fodder adjustment when grassing in Lowland and Highland while there are still fodder available."""
     herbivores = [Herbivore(12.5, 10), Herbivore(0, 3),
                   Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])]
 
     location_cell = Landscape(terrain_letter)
-    location_cell.herb_pop += herbivores
+    location_cell.population += herbivores
     location_cell.grassing()
 
     assert location_cell.fodder < Landscape.params['f_max'][terrain]
