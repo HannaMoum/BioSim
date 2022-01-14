@@ -7,10 +7,13 @@ SEED = 12345678  # random seed for tests
 
 
 @pytest.fixture(autouse=True)
-def reset_params_default():
+def reset_params_defaul_land():
     """Reset parameters to default after test has run."""
     yield
     Landscape.set_params(Landscape._default_params)
+    Herbivore.set_params(Herbivore._default_params)
+    Carnivore.set_params(Carnivore._default_params)
+
 
 
 @pytest.mark.parametrize('terrain, value', [('Highland', 200.0), ('Lowland', 400.0)])
@@ -150,7 +153,7 @@ def test_hunting_only_killing(terrain):
     preys = [Herbivore(0.1, 50) for _ in range(3)]
 
     hunters = [Carnivore(Carnivore.params['w_half'], Carnivore.params['a_half'])]
-    #Only need on ehunter for this...
+    #Needo only one hunter for this...
 
     location_cell = Landscape(terrain)
     location_cell.herb_pop += preys
@@ -158,3 +161,45 @@ def test_hunting_only_killing(terrain):
     location_cell.hunting()
 
     assert not location_cell.herb_pop
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+def test_all_giving_birth(mocker, terrain):
+    """Test correct update of population if all animals give birth."""
+    mocker.patch('biosim.animals.uniform', return_value=0)
+
+    Herbivore.set_params({'zeta': 0})
+    Carnivore.set_params({'zeta': 0})
+    herb_pop = [Herbivore(16, 10) for _ in range(200)]
+    carn_pop = [Carnivore(16, 10) for _ in range(200)]
+
+    location_cell = Landscape(terrain)
+
+    location_cell.herb_pop += herb_pop
+    location_cell.carn_pop += carn_pop
+
+    location_cell.give_birth()
+
+    assert all([len(location_cell.herb_pop) == len(herb_pop) * 2,
+                len(location_cell.carn_pop) == len(carn_pop) * 2])
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+def test_no_giving_birth(mocker, terrain):
+    """Test no update of population if no animals give birth."""
+    mocker.patch('biosim.animals.uniform', return_value=1)
+
+    herb_pop = [Herbivore(16, 10) for _ in range(200)]
+    carn_pop = [Carnivore(16, 10) for _ in range(200)]
+
+    location_cell = Landscape(terrain)
+
+    location_cell.herb_pop += herb_pop
+    location_cell.carn_pop += carn_pop
+
+    location_cell.give_birth()
+
+    assert all([len(location_cell.herb_pop) == len(herb_pop),
+                len(location_cell.carn_pop) == len(carn_pop)])
+
+
