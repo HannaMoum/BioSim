@@ -105,7 +105,7 @@ class Landscape:
         if not contains_duplicates:
             self._population = value
         else:
-            raise ValueError('Population list can not contain duplicates')
+            raise ValueError('Population list can not contain duplicates') #No test added
 
     @property
     def herbivores(self) -> list:  # Hvorfor oppdaterer vi ikke de her istedenfor i population?
@@ -249,4 +249,4 @@ class Landscape:
                 self.population += [Carnivore(weight, age)]
             else:
                 raise ValueError(f'{animal} is not a defined animal.\n'
-                                f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
+                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
