@@ -212,7 +212,9 @@ class Landscape:
     #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
 
     def migrate(self):
-        """."""
+        """Decide in what direction migrating animals shall move.
+
+        Direction is chosen at random between the bordering horizontal and vertical landscape cells."""
         def make_migration_dict(species):
             migrating_animals = {animal: None for animal in species if animal.probability_to_migrate()}
             for animal in migrating_animals.keys():
