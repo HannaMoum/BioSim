@@ -139,7 +139,7 @@ class Landscape:
         Herbivores eat in order of fitness until everyone is satisfied
         or no more fodder is available.
         """
-        for animal in sorted(self.herbivores, key=lambda x: x.fitness, reverse=True):  # TODO: self.herbivores
+        for animal in sorted(self.herbivores, key=lambda x: x.fitness, reverse=True):
             animal.F_tilde = 0
             eaten = animal.eat(self.fodder)
             self.fodder -= eaten
@@ -157,7 +157,7 @@ class Landscape:
         :py:meth:`.killing`, :py:meth:`.probability_to_kill`
         """
         carnivores = self.carnivores  # TODO: Skriv self.carnivores rett inn i sorted()
-        hunting_order = sample(carnivores, len(carnivores))
+        hunting_order = sample(carnivores, self.carnivores_number)
 
         herbivores = self.herbivores  # TODO: Skriv self.herbivores rett inn i sorted()
         prey_order = sorted(herbivores, key=lambda x: x.fitness)
@@ -167,6 +167,7 @@ class Landscape:
             hunter.F_tilde = 0
 
             survivors = [prey for prey in prey_order if not hunter.killing(prey.fitness, prey.weight)]
+            prey_order = survivors
 
         self.population = survivors + hunting_order
 
