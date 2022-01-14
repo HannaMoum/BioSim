@@ -366,27 +366,37 @@ def test_add_valid_animals(terrain):
 
     landscape_cell = Landscape(terrain)
     landscape_cell.add_animals(added_pop)
-    assert landscape_cell.herb_pop[0].age == 10, landscape_cell.her
-    # assert all([landscape_cell.herb_pop == [Herbivore(12.5, 10), Herbivore(11, 20)],
-    #            landscape_cell.carn_pop == [Carnivore(12.5, 10)]]) #Wrong identities.TODO: In progress
 
-# @pytest.mark.skip
-# @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
-# def test_add_invalid_animals(terrain):
-#     pass
+    assert all([len(landscape_cell.population) == 3,
+                len(landscape_cell.herbivores) == 2,
+                len(landscape_cell.carnivores) == 1])
 
 
-# def add_animals(self, added_pop):
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
+def test_add_correct_animal(terrain):
+    """Test correct attributes of newly added animal"""
+    add_herb = [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]
 
-#     #TODO: DO not add animals for water landscape. Check in island
-#     for animal in added_pop:
-#         age = animal['age']
-#         weight = animal['weight']
-#
-#         if animal['species'] == 'Herbivore':
-#             self.herb_pop += [Herbivore(weight, age)]
-#         elif animal['species'] == 'Carnivore':
-#             self.carn_pop += [Carnivore(weight, age)]
-#         else:
-#             raise TypeError(f'{animal} is not a defined animal.\n'
-#                             f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
+    landscape_cell = Landscape(terrain)
+    landscape_cell.add_animals(add_herb)
+
+    assert all([landscape_cell.herbivores[0].age == 10,
+                landscape_cell.herbivores[0].weight == 12.5])
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
+def test_add_invalid_animal(terrain):
+    added_pop = [{'species': 'Penguin', 'age': 10, 'weight': 12.5}]
+
+    landscape_cell = Landscape(terrain)
+    with pytest.raises(ValueError):
+        landscape_cell.add_animals(added_pop)
+
+
+def test_add_animal_water():
+    added_pop = [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]
+
+    landscape_cell = Landscape('W')
+    with pytest.raises(ValueError):
+        landscape_cell.add_animals(added_pop)
+
