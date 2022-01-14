@@ -103,10 +103,40 @@ def test_inital_population(terrain):
                     Landscape(terrain).herbivores,
                     Landscape(terrain).carnivores])
 
+
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
 def test_initial_pop_count(terrain):
     """Test that initial counter is set to 0."""
     assert all([Landscape(terrain).herbivores_number == 0, Landscape(terrain).carnivores_number == 0])
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
+def test_set_population(terrain):
+    """Test correct update of ottribute population."""
+    population = [Herbivore(12.5, 10), Carnivore(12.5, 10), Carnivore(9, 25), Herbivore(9, 25)]
+    location_cell = Landscape(terrain)
+    location_cell.population = population
+    assert location_cell.population == population
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
+def test_extract_herbivores(terrain):
+    """Test for correct herbivore population."""
+    population = [Herbivore(12.5, 10), Carnivore(12.5, 10), Carnivore(9, 25), Herbivore(9, 25)]
+    location_cell = Landscape(terrain)
+    location_cell.population = population
+    assert location_cell.herbivores == [population[0], population[3]]
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
+def test_extract_carnivores(terrain):
+    """Test for correct herbivore population."""
+    population = [Herbivore(12.5, 10), Carnivore(12.5, 10), Carnivore(9, 25), Herbivore(9, 25)]
+    location_cell = Landscape(terrain)
+    location_cell.population = population
+    assert location_cell.carnivores == [population[1], population[2]]
+
+
 
 
 ### TODO: Is any of this valuable? HOW TO AVOID ADDING ANIMALS TO WATER
