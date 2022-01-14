@@ -30,6 +30,7 @@ def test_parameter_valueerror_negative(species):
     with pytest.raises(ValueError):
         all([species.set_params({'beta': -0.2}), species.set_params({'omega': -5})])
 
+
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_parameter_valueerror_eta(species):
     """Test that only correct values of eta are allowed."""
@@ -87,14 +88,6 @@ def test_animal_create_F_tilde(species): #TODO: Change name when F-tilde changes
     animal = species(12.5, 10)
     eat_amount = 5
     assert all([animal.F_tilde == 0, animal.F_tilde + eat_amount == eat_amount])
-
-
-@pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_privacy_F_tilde(species):
-    animal = species(12.5, 10)
-    eat_amount = 5
-    animal.F_tilde = eat_amount #TODO: We can change F_tilde anywhere... Should all getters and setters be _F_tilde?
-    pass
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
