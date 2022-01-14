@@ -284,30 +284,23 @@ def test_no_giving_birth(mocker, terrain):
                 len(location_cell.population) == len(herb_pop) + len(carn_pop)])
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
-def test_migration_preparation(terrain):
-    """Test that migration_preparation resets all has_migrated attributes to False."""
-    herb_pop = [Herbivore(16, 10) for _ in range(20)]
-    carn_pop = [Carnivore(16, 10) for _ in range(20)]
-
-    landscape_cell = Landscape(terrain)
-
-    for animal in herb_pop + carn_pop:
-        animal.has_migrated = True
-
-    landscape_cell.herb_pop += herb_pop
-    landscape_cell.carn_pop += carn_pop
-    landscape_cell.migration_prep()
-
-    for animal in landscape_cell.herb_pop + landscape_cell.carn_pop:
-        assert not animal.has_migrated
-
-
-@pytest.mark.skip
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
-def test_migrating_direction(terrain):
-    # TODO: Create when migrating functions have been set...
-    pass
+# @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+# def test_migration_preparation(terrain):
+#     """Test that migration_preparation resets all has_migrated attributes to False."""
+#     herb_pop = [Herbivore(16, 10) for _ in range(20)]
+#     carn_pop = [Carnivore(16, 10) for _ in range(20)]
+#
+#     landscape_cell = Landscape(terrain)
+#
+#     for animal in herb_pop + carn_pop:
+#         animal.has_migrated = True
+#
+#     landscape_cell.herb_pop += herb_pop
+#     landscape_cell.carn_pop += carn_pop
+#     landscape_cell.migration_prep()
+#
+#     for animal in landscape_cell.herb_pop + landscape_cell.carn_pop:
+#         assert not animal.has_migrated
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
@@ -317,12 +310,10 @@ def test_aging(terrain):
     carn_pop = [Carnivore(12.5, 10) for _ in range(20)]
 
     landscape_cell = Landscape(terrain)
-    landscape_cell.herb_pop += herb_pop
-    landscape_cell.carn_pop += carn_pop
-
+    landscape_cell.population += herb_pop + carn_pop
     landscape_cell.aging()
 
-    for animal in landscape_cell.herb_pop + landscape_cell.carn_pop:
+    for animal in landscape_cell.population:
         assert all([animal.age > 10, animal.weight < 12.5])
 
 
