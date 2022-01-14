@@ -10,7 +10,6 @@ def geogr_str():
     geogr = """\
                     WWWW
                     WLHW
-                    WLDW
                     WWWW
                 """
     geogr = textwrap.dedent(geogr)
@@ -51,7 +50,12 @@ def test_valid_map_str(geogr_str):
     assert World(geogr_str)
 
 @pytest.mark.skip
-
+def test_base_map(geogr_str):
+    """Test correct creation of base_map."""
+    base_map = [['W', 'W', 'W', 'W'],
+                ['W', 'L', 'H', 'W'],
+                ['W', 'W', 'W', 'W']]
+    assert World(geogr_str) == base_map
 
 @pytest.mark.skip
 def test_create_base_map():
