@@ -44,10 +44,10 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60.0, 'delta': 2}},
-                 ymax_animals=None
+                 ymax_animals=None, cmax_animals={'Herbivore': 40, 'Carnivore': 10}
                  )
 
-    sim.simulate(num_years=10)
+    sim.simulate(num_years=20)
 
     #sim.set_landscape_parameters('L', {'f_max': 800})
 

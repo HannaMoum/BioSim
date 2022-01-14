@@ -52,8 +52,8 @@ class BioSim(BioSim_param):
         # self.cube_properties_herbs = np.empty(())
         # self.cube_properties_carns = np.empty(())
 
-        if self._validate_hist_specs(hist_specs):
-            self.graphics = Graphics(self.island.base_map, hist_specs, ymax_animals)
+        if all((self._validate_hist_specs(hist_specs), self._validate_cmax_animals(cmax_animals))):
+            self.graphics = Graphics(self.island.base_map, hist_specs, ymax_animals, cmax_animals)
 
     def _validate_island_map(self, island_map:str) -> bool:
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
@@ -108,9 +108,12 @@ class BioSim(BioSim_param):
         else:
             return True
 
-
-
-
+    def _validate_cmax_animals(selfself, cmax_animals:dict)-> bool:
+        for key, value in cmax_animals.items():
+            if key not in ['Herbivore', 'Carnivore']:
+                raise KeyError(f'{key} is not a legal key in cmax_animals. Legal keys are Herbivore and Carnivore')
+            else:
+                return True
 
     def get_yearly_herb_count(self)-> object:
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
