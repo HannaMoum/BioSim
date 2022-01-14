@@ -227,11 +227,10 @@ def test_hunting_no_killing(terrain):
                Carnivore(12.5, 10), Carnivore(0, 3)]
 
     location_cell = Landscape(terrain)
-    location_cell.herb_pop += preys
-    location_cell.carn_pop += hunters
+    location_cell.population += preys + hunters
     location_cell.hunting()
 
-    assert len(preys) == len(location_cell.herb_pop)
+    assert len(preys) == len(location_cell.herbivores)
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
