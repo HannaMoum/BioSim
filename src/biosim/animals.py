@@ -67,8 +67,11 @@ class Animal:
 
     def __init__(self, weight, age=0):
         self.id = next(self.id_iter)
+
+        if not isinstance(weight, (int, float)) or weight < 0:
+            raise ValueError('Weight must be a positive number')
         self.weight = weight
-        ##
+
         if not float(age).is_integer() or not isinstance(age, (int, float)):
             raise ValueError('Age must be a whole number')
         elif age < 0:
@@ -105,9 +108,6 @@ class Animal:
 
     @weight.setter
     def weight(self, value):
-        if not isinstance(value, (int, float)) or value < 0:
-            raise ValueError('Weight must be a positive number')
-
         self._weight = value
 
     @property
