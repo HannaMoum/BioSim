@@ -1,5 +1,4 @@
 from random import random, choice, sample
-from itertools import chain
 from copy import deepcopy
 
 from biosim.animals import Animal
@@ -34,7 +33,7 @@ class Landscape:
     _default_params = {'f_max': {'Highland': 300.0, 'Lowland': 800.0}}
     params = deepcopy(_default_params)
 
-    def __init__(self, landscape_type:str):
+    def __init__(self, landscape_type: str):
         self._landscape_type = landscape_type
 
         # if landscape_type == 'W':
@@ -48,12 +47,13 @@ class Landscape:
         self._population = []
         self._herbivores = []
         self._carnivores = []
-        #self._herb_pop = []
-        #self._carn_pop = []
-
+        # self._herb_pop = []
+        # self._carn_pop = []
+        self._herbivores_number = 0
+        self._carnivores_number = 0
 
     @classmethod
-    def set_params(cls, new_params:dict):
+    def set_params(cls, new_params: dict):
         """Set class parameters.
 
         Parameters
@@ -101,24 +101,26 @@ class Landscape:
     @fodder.setter
     def fodder(self, value):
         if value > self.f_max:
-            raise ValueError('Value must be below f_max') #TODO: Controls water and desert...
-        #TODO: make sure documentation states that f_max is not available for desert and water somewhere
+            raise ValueError('Value must be below f_max')  # TODO: Controls water and desert...
+        # TODO: make sure documentation states that f_max is not available for desert and water somewhere
         self._fodder = value
 
     @property
     def population(self) -> list:
         return self._population
+
     @population.setter
     def population(self, value):
         population_set = set(value)
         contains_duplicates = len(value) != len(population_set)
         if not contains_duplicates:
             self._population = value
-            self._herbivores = [animal for animal in value if animal.species == 'Herbivore']
+            self._herbivores = [animal for animal in value if animal.species == 'Herbivore']  # Flytt til herbivores
             self._carnivores = [animal for animal in value if animal.species == 'Carnivore']
+            self._herbivores_number = len(self._herbivores)
+            self._carnivores_number = len(self._carnivores)
         else:
-            raise ValueError('Population list can not contain duplicates')#Når skjer det?
-
+            raise ValueError('Population list can not contain duplicates')  # Når skjer det?
 
     # @property
     # def herb_pop(self):
@@ -139,7 +141,7 @@ class Landscape:
     #     self._carn_pop = value
 
     @property
-    def herbivores(self) -> list: #Hvorfor oppdaterer vi ikke de her istedenfor i population?
+    def herbivores(self) -> list:  # Hvorfor oppdaterer vi ikke de her istedenfor i population?
         """Returns a list of all animals of species Herbivore"""
         return self._herbivores
 
@@ -147,6 +149,16 @@ class Landscape:
     def carnivores(self) -> list:
         """Returns a list of all animals of species Carnivores"""
         return self._carnivores
+
+    @property
+    def herbivores_number(self) -> int:
+        """Returns a list of all animals of species Herbivores"""
+        return self._herbivores_number
+
+    @property
+    def carnivores_number(self) -> int:
+        """Returns a list of all animals of species Carnivores"""
+        return self._carnivores_number
 
     def grassing(self):
         """Feed all herbivores and adjust available fodder.
@@ -156,7 +168,7 @@ class Landscape:
         Herbivores eat in order of fitness until everyone is satisfied
         or no more fodder is available.
         """
-        for animal in sorted(self.population, key=lambda x: x.fitness, reverse=True): #TODO: self.herbivores
+        for animal in sorted(self.population, key=lambda x: x.fitness, reverse=True):  # TODO: self.herbivores
             if animal.species == 'Herbivore':
                 animal.F_tilde = 0
                 eaten = animal.eat(self.fodder)
@@ -174,10 +186,10 @@ class Landscape:
         --------
         :py:meth:`.killing`, :py:meth:`.probability_to_kill`
         """
-        carnivores = self.carnivores #TODO: Skriv self.carnivores rett inn i sorted()
+        carnivores = self.carnivores  # TODO: Skriv self.carnivores rett inn i sorted()
         hunting_order = sample(carnivores, len(carnivores))
 
-        herbivores = self.herbivores #TODO: Skriv self.herbivores rett inn i sorted()
+        herbivores = self.herbivores  # TODO: Skriv self.herbivores rett inn i sorted()
         prey_order = sorted(herbivores, key=lambda x: x.fitness)
 
         survivors = []
@@ -198,20 +210,20 @@ class Landscape:
         # TODO: Linjene under burde kunne slås sammen til en funksjon
         herbivores = self.herbivores
         herb_babies = [newborn for individual in herbivores if
-                       (newborn := individual.giving_birth('Herbivore', len(herbivores)))]
+                       (newborn := individual.giving_birth('Herbivore', self.herbivores_number))]
         carnivores = self.carnivores
         carn_babies = [newborn for individual in carnivores if
-                        (newborn := individual.giving_birth('Carnivore', len(carnivores)))]
+                       (newborn := individual.giving_birth('Carnivore', self.carnivores_number))]
 
         if herb_babies:
             self.population += herb_babies
         if carn_babies:
             self.population += carn_babies
 
-    def migration_prep(self):
-        """Prepare animal for migration."""
-        for animal in self.population:
-            animal.has_migrated = False
+    # def migration_prep(self):
+    #     """Prepare animal for migration."""
+    #     for animal in self.population:
+    #         animal.has_migrated = False
 
     # def migration_direction(self):
     #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
@@ -266,7 +278,7 @@ class Landscape:
         # self.population = alive(self.population)
         population = self.population
         survivors = [animal for animal in population if not animal.dies()]
-        die = [animal for animal in population if animal.dies()]
+        #die = [animal for animal in population if animal.dies()]
 
         # print(len(die), len(survivors), len(population))
         # for animal in die:
@@ -299,7 +311,7 @@ class Landscape:
         [1]_ https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name
         (read 08.01)
         """
-        #TODO: DO not add animals for water landscape. Check in island
+        # TODO: DO not add animals for water landscape. Check in island
         for animal in added_pop:
             age = animal['age']
             weight = animal['weight']
@@ -311,4 +323,3 @@ class Landscape:
             else:
                 raise TypeError(f'{animal} is not a defined animal.\n'
                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
-
