@@ -338,12 +338,13 @@ def test_no_death(terrain, mocker):
     carn_pop = [Carnivore(12.5, 10) for _ in range(20)]
 
     landscape_cell = Landscape(terrain)
-    landscape_cell.herb_pop += herb_pop
-    landscape_cell.carn_pop += carn_pop
+    landscape_cell.population += herb_pop + carn_pop
 
-    landscape_cell.death()
+    landscape_cell.do_death()
 
-    assert all([landscape_cell.herb_pop == herb_pop, landscape_cell.carn_pop == carn_pop])
+    assert all([landscape_cell.herbivores == herb_pop,
+                landscape_cell.carnivores == carn_pop,
+                landscape_cell.population == herb_pop + carn_pop])
 
 
 @pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
