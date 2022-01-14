@@ -191,37 +191,6 @@ class Landscape:
         if carn_babies:
             self.population += carn_babies
 
-    # def migration_prep(self):
-    #     """Prepare animal for migration."""
-    #     for animal in self.population:
-    #         animal.has_migrated = False
-
-    # def migration_direction(self):
-    #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
-    #     #r = uniform(0, 1)
-    #     #p = self.fitness * self.params['mu']
-    #     if self.herb_pop:
-    #     #if p > r: # True betyr at den vil flytte seg
-    #         return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
-    #     else:
-    #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
-
-    # def migrate(self):
-    #     """Decide in what direction migrating animals shall move.
-    #
-    #     Direction is chosen at random between the bordering horizontal and vertical landscape cells."""
-    #     def make_migration_dict(species):
-    #         migrating_animals = {animal: None for animal in species if animal.probability_to_migrate()}
-    #         for animal in migrating_animals.keys():
-    #             direction = choice([(-1, 0), (1, 0), (0, 1), (0, -1)])
-    #             migrating_animals[animal] = direction
-    #             animal.has_migrated = True
-    #         return migrating_animals
-    #
-    #     migrating_herbs = make_migration_dict(self.herbivores)
-    #     migrating_carns = make_migration_dict(self.carnivores)
-    #
-    #     return migrating_herbs, migrating_carns
 
     def aging(self):
         """Age all animals by one year.
