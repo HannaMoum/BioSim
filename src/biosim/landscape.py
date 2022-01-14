@@ -6,27 +6,6 @@ from biosim.animals import Animal
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
 
-from dataclasses import dataclass
-
-# Under arbeid
-# @dataclass
-# class Params:
-#     w_birth: float = 6.0
-#     sigma_birth: float = 1.0
-#     beta: float = 0.75
-#     eta: float = 0.0125
-#     a_half: float = 40.0
-#     phi_age: float = 0.3
-#     w_half: float = 4.0
-#     phi_weight: float = 0.4
-#     mu: float = 0.4
-#     gamma: float = 0.8
-#     zeta: float = 3.5
-#     xi: float = 1.1
-#     omega: float = 0.8
-#     F: float = 50.0
-#     DeltaPhiMax: float = 10.0
-
 
 class Landscape:
     """A landscape with corresponding characteristics and traits for different terrains.
