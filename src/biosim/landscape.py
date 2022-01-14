@@ -65,6 +65,8 @@ class Landscape:
 
         self._fodder = self.f_max  # Initial amount of fodder
         self._population = []
+        self._herbivores = []
+        self._carnivores = []
         #self._herb_pop = []
         #self._carn_pop = []
 
@@ -107,11 +109,19 @@ class Landscape:
         self._fodder = value
 
     @property
-    def population(self):
+    def population(self)-> list:
         return self._population
     @population.setter
     def population(self, value):
-        self._population = value
+        population_set = set(value)
+        contains_duplicates = len(value) != len(population_set)
+        if not contains_duplicates:
+            self._population = value
+            self._herbivores = [animal for animal in value if animal.species == 'Herbivore']
+            self._carnivores = [animal for animal in value if animal.species == 'Carnivore']
+        else:
+            raise ValueError('Population list cant contain duplicates')
+
 
     # @property
     # def herb_pop(self):
@@ -130,20 +140,15 @@ class Landscape:
     # @carn_pop.setter
     # def carn_pop(self, value):
     #     self._carn_pop = value
-
+    @property
     def herbivores(self)->list:
         """Returns a list of all animals of species Herbivore"""
-        herbivores = [animal
-                      for animal in self.population
-                      if animal.species == 'Herbivore']
-        return herbivores
+        return self._herbivores
 
+    @property
     def carnivores(self) -> list:
         """Returns a list of all animals of species Carnivores"""
-        carnivores = [animal
-                      for animal in self.population
-                      if animal.species == 'Carnivore']
-        return carnivores
+        return self._carnivores
 
     def grassing(self):
         """Feed all herbivores and adjust available fodder.
@@ -171,9 +176,11 @@ class Landscape:
         --------
         :py:meth:`.killing`, :py:meth:`.probability_to_kill`
         """
+        carnivores = self.carnivores
+        hunting_order = sample(carnivores, len(carnivores))
 
-        hunting_order = sample(self.carnivores(), len(self.carnivores()))
-        prey_order = sorted(self.herbivores(), key=lambda x: x.fitness)
+        herbivores = self.herbivores
+        prey_order = sorted(herbivores, key=lambda x: x.fitness)
 
         survivors = []
         for hunter in hunting_order:
@@ -181,8 +188,7 @@ class Landscape:
 
             survivors = [prey for prey in prey_order if not hunter.killing(prey.fitness, prey.weight)]
 
-
-        self.population = survivors + self.carnivores()
+        self.population = survivors + hunting_order
 
     def give_birth(self):
         """For each animal giving birth, update population.
@@ -192,17 +198,21 @@ class Landscape:
         :py:meth:`.giving_birth`, :py:meth:`.probability_to_give_birth`
         """
         # TODO: Linjene under burde kunne slås sammen til en funksjon
-        herb_babies = [newborn for individual in self.herbivores() if
-                       (newborn := individual.giving_birth('Herbivore', len(self.herbivores())))]
-
-        carn_babies = [newborn for individual in self.carnivores() if
-                       (newborn := individual.giving_birth('Carnivore', len(self.carnivores())))]
+        herbivores = self.herbivores
+        herb_babies = [newborn for individual in herbivores if
+                       (newborn := individual.giving_birth('Herbivore', len(herbivores)))]
+        carnivores = self.carnivores
+        carn_babies = [newborn for individual in carnivores if
+                        (newborn := individual.giving_birth('Carnivore', len(carnivores)))]
 
         # TODO: Make absolutely sure this is necessary (again). YES! Ha en beskyttelse mot tomme lister, lister inni lister, None etc. Konsekvensene av dette er så store.
         if len(herb_babies) > 0:
             self.population += herb_babies
         if len(carn_babies) > 0:
             self.population += carn_babies
+
+
+
 
     def migration_prep(self):
         """Prepare animal for migration."""
@@ -229,8 +239,8 @@ class Landscape:
                 animal.has_migrated = True
             return migrating_animals
 
-        migrating_herbs = make_migration_dict(self.herbivores())
-        migrating_carns = make_migration_dict(self.carnivores())
+        migrating_herbs = make_migration_dict(self.herbivores)
+        migrating_carns = make_migration_dict(self.carnivores)
 
         return migrating_herbs, migrating_carns
 
@@ -245,7 +255,7 @@ class Landscape:
         for animal in self.population:
             animal.age_and_weightloss()
 
-    def death(self):
+    def do_death(self):
         """Remove dying animals.
 
         See Also
@@ -253,12 +263,24 @@ class Landscape:
         :py:meth:`probability_of_death`
         """
         # TODO: Trenger vel ikke funksjonen når vi bare har en populasjon å forholde oss til. Bør kunne bli en list-comp.
-        def alive(species):
-            return [individual
-                    for individual in species
-                    if not individual.probability_of_death()]
+        # def alive(population):
+        #     return [animal
+        #             for animal in population
+        #             if not animal.probability_of_death()]
+        #
+        # self.population = alive(self.population)
+        population = self.population
+        survivors = [animal for animal in population if not animal.dies()]
+        die = [animal for animal in population if animal.dies()]
 
-        self.population = alive(self.population)
+        # print(len(die), len(survivors), len(population))
+        # for animal in die:
+        #     print(animal.species, animal.id, animal.fitness)
+
+
+        self.population = survivors
+
+
 
 
     def regrowth(self):

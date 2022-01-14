@@ -1,10 +1,12 @@
 """ Implements Animal model used by subspecies."""
 
 import math
+import itertools
 from copy import deepcopy
 from random import seed, choice, gauss, sample, uniform
 from abc import ABC, abstractmethod  # Remove unless in use
 from dataclasses import dataclass, asdict
+
 
 
 # #TODO: Remove dataclasses if not in use
@@ -66,7 +68,7 @@ class Animal:
     ----------
     TODO: Add new attributes
     """
-
+    id_iter = itertools.count()
     # dict: Parameter values for calculations
     # w_birth = (8.0, 6.0)
     # # TODO: Figure out if this is necessary
@@ -122,6 +124,7 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, weight, age=0):
+        self.id = next(self.id_iter)
         self.weight = weight
         self.age = age
         self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
@@ -310,8 +313,7 @@ class Animal:
 
         fertilization = r < match_probability
 
-        reached_puberty = self.weight > self.params['zeta'] * \
-                       (self.params['w_birth'] + self.params['sigma_birth'])
+        reached_puberty = self.weight > self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth'])
 
         birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])
         miscarriage = birth_weight < 0
@@ -351,13 +353,13 @@ class Animal:
                 newborn = Carnivore(birth_weight)
 
             # TODO: Optimization possibilities
-            self._weight -= birth_weight * self.params['xi']
+            self.weight -= birth_weight * self.params['xi']
 
             return newborn
 
         return None
 
-    def probability_of_death(self):
+    def dies(self):
         """
         Decide whether animal dies.
 

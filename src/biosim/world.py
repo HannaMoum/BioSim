@@ -124,11 +124,11 @@ class World:
     # Parameter-funksjoner som kan brukes i fabrikken
     def v_size_herb_pop(self, location: object)->int:
         """Population sizer for herbivores at given location. """
-        return len(location.herbivores())
+        return len(location.herbivores)
 
     def v_size_carn_pop(self, location: object)->int:
         """Population sizer for carnivores at given location."""
-        return len(location.carnivores())
+        return len(location.carnivores)
 
     # ----------------------------------------------------------------------------------------------------------------
     # Her kommer det ut en np.array med objekter, som f.eks. inneholder hele landskapsobjektet
@@ -144,7 +144,7 @@ class World:
 
     # TODO: Om vi får en populasjon per landskap kan disse bli til 1 funksjon
     def v_herb_properties_objects(self, location: object)->list:
-        population_list = location.herbivores()
+        population_list = location.herbivores
         if len(population_list) > 0:
             liste = []
             for animal in population_list:
@@ -152,7 +152,7 @@ class World:
             return liste
 
     def v_carn_properties_objects(self, location: object)->list:
-        population_list = location.carnivores()
+        population_list = location.carnivores
         if len(population_list) > 0:
             liste = []
             for animal in population_list:
