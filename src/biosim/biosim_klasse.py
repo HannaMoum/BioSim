@@ -8,12 +8,12 @@ from world import World
 
 
 
-@dataclass
-class BioSim_param:
-    codes_for_landscape_types: str = 'WLHD' #Brukes denne?
+# @dataclass
+# class BioSim_param:
+#     codes_for_landscape_types: str = 'WLHD' #Brukes denne?
 
 
-class BioSim(BioSim_param):
+class BioSim():
     """Island hosting landscapes with animals.
 
         Parameters
@@ -35,7 +35,7 @@ class BioSim(BioSim_param):
         random.seed(seed) # Påvirker potensielt andre script som kjører. Vurder å lage egen Random-instans, slik at BioSIm kan eie sitt eget random seed.
 
         if all((self._validate_island_map(island_map),
-               self._validate_ini_pop(ini_pop))):
+               self._validate_ini_pop(ini_pop))): # ikke sjekk hele her, fordeles ned til animals
             self.island = World(island_map, ini_pop)
 
         # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
@@ -48,7 +48,7 @@ class BioSim(BioSim_param):
         # self.cube_properties_herbs = np.empty(())
         # self.cube_properties_carns = np.empty(())
 
-    def _validate_island_map(self, island_map:str)->bool:
+    def _validate_island_map(self, island_map:str) -> bool:
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
         island_map_list = island_map.split(sep='\n') #Endret til input
 
@@ -107,6 +107,10 @@ class BioSim(BioSim_param):
         """
         if species == 'Herbivore':
             Herbivore.set_params(params)
+        if species == 'Carnivore':
+            Carnivore.set_params(params)
+
+        #Evt: type(species).set_params(params)
 
     def set_landscape_parameters(self, landscape:str, params:dict):
         """
@@ -135,140 +139,48 @@ class BioSim(BioSim_param):
         #         else:
         #             landskapsobjekt.f_max = 0
 
-    def migration_preparation(self):
-        with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
-            for element in it:
-                landscape_obj = element.item()
-                landscape_obj.migration_prep()  # Better hierarcy
-                # for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
-                #     animal.has_migrated = False
+    # def migration_preparation(self):
+    #     with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
+    #         for element in it:
+    #             landscape_obj = element.item()
+    #             landscape_obj.migration_prep()  # Better hierarcy
+    #             # for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
+    #             #     animal.has_migrated = False
 
-    def migration(self):
-        """."""
-        with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
-            for element in it:
-                landscape_obj = element.item()
-                #current_row, current_col = it.multi_index
-                row, col = it.multi_index
+    # def migration(self):
+    #     """."""
+    #     with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
+    #         for element in it:
+    #             landscape_obj = element.item()
+    #             #current_row, current_col = it.multi_index
+    #             row, col = it.multi_index
+    #
+    #             migrate_herbs, migrate_carns = landscape_obj.migrate() #-> {herb: (r,c)}
+    #
+    #             def method_2(landscape_pop, migrate_dict, current_row, current_col, species):
+    #                 moved = []
+    #                 for animal, location in migrate_dict.items():
+    #                     r, c = location
+    #                     new_row = current_row + r
+    #                     new_col = current_col + c
+    #
+    #                     if self.island.object_map[new_row, new_col].is_migratable:
+    #                         self.island.object_map[new_row, new_col].population.append(animal)
+    #                         # if species == 'Herbivore':
+    #                         #     self.island.object_map[new_row, new_col].herb_pop.append(animal) #Still not good...
+    #                         # if species == 'Carnivore':
+    #                         #     self.island.object_map[new_row, new_col].carn_pop.append(animal)
+    #
+    #                         moved.append(animal)
+    #
+    #                 for migrated_animal in moved:
+    #                     landscape_pop.remove(migrated_animal)
+    #
+    #             if landscape_obj.is_migratable:
+    #                 method_2(landscape_obj.population, {**migrate_herbs, **migrate_carns}, row, col, 'dummy')
+    #                 # method_2(landscape_obj.herb_pop, migrate_herbs, row, col, 'Herbivore')
+    #                 # method_2(landscape_obj.carn_pop, migrate_carns, row, col, 'Carnivore')
 
-                migrate_herbs, migrate_carns = landscape_obj.migrate() #-> {herb: (r,c)}
-
-                def method_2(landscape_pop, migrate_dict, current_row, current_col, species):
-                    moved = []
-                    for animal, location in migrate_dict.items():
-                        r, c = location
-                        new_row = current_row + r
-                        new_col = current_col + c
-
-                        if self.island.object_map[new_row, new_col].is_migratable:
-                            self.island.object_map[new_row, new_col].population.append(animal)
-                            # if species == 'Herbivore':
-                            #     self.island.object_map[new_row, new_col].herb_pop.append(animal) #Still not good...
-                            # if species == 'Carnivore':
-                            #     self.island.object_map[new_row, new_col].carn_pop.append(animal)
-
-                            moved.append(animal)
-
-                    for migrated_animal in moved:
-                        landscape_pop.remove(migrated_animal)
-
-                if landscape_obj.is_migratable:
-                    method_2(landscape_obj.population, {**migrate_herbs, **migrate_carns}, row, col, 'dummy')
-                    # method_2(landscape_obj.herb_pop, migrate_herbs, row, col, 'Herbivore')
-                    # method_2(landscape_obj.carn_pop, migrate_carns, row, col, 'Carnivore')
-
-
-
-                # # TODO: Look for opportunities to structure this better mtp. hierarcy
-                # #Possibilities; Split over several levels;
-                # #retur verdi False hvis dyr ikke beveger seg? (Mulig bug å legge til og slette objekt identitet fra samme liste?)
-                # def moving(landscape_population, current_row, current_col, species): #species = self.herb_pop or self.carn_pop
-                #
-                #     #
-                #     if landscape_population:
-                #         moved = []
-                #         for animal in landscape_population:
-                #             if not animal.has_migrated:
-                #                 row_direction, col_direction = animal.migration_direction() #Returnerer tuple av hvor dyr vil flytte seg, evt.(0,0)
-                #                 new_row = current_row + row_direction
-                #                 new_col = current_col + col_direction
-                #
-                #                 if self.island_map_objects[new_row, new_col].is_migratable:
-                #
-                #                     if species == 'Herbivore':
-                #                         self.island_map_objects[new_row, new_col].herb_pop.append(animal)
-                #                     if species == 'Carnivore':
-                #                         self.island_map_objects[new_row, new_col].carn_pop.append(animal)
-                #
-                #                     moved.append(animal)
-                #                     animal.has_migrated = True
-                #
-                #         for migrated_animal in moved:
-                #             landscape_population.remove(migrated_animal)
-                #
-                #
-                # if landscape_obj.is_migratable:
-                #     moving(landscape_obj.herb_pop, row, col, 'Herbivore')
-                #     moving(landscape_obj.carn_pop, row, col, 'Carnivore')
-                    ###################
-                # if landscape_obj.herb_pop:
-                #     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                #     if landscape_obj.is_migratable: # Sjekker at vi står på noe annet enn vann #TODO: Remove when assured we cannot add population to water
-                #         row, col = it.multi_index # Blir en tuple, med lokasjon på hvor vi er #TODO: Handled above
-                #         if self.island_map_objects[row-1, col].is_migratable:
-                #             lovlige_retninger.append((-1, 0))
-                #         if self.island_map_objects[row+1, col].is_migratable:
-                #             lovlige_retninger.append((1,0))
-                #         if self.island_map_objects[row, col-1].is_migratable:
-                #             lovlige_retninger.append((0, -1))
-                #         if self.island_map_objects[row, col+1].is_migratable:
-                #             lovlige_retninger.append((0, 1))
-                #
-                #     moved = []
-                #     for herbivore in landscape_obj.herb_pop: #
-                #         if not herbivore.has_migrated: #
-                #             row_direction, col_direction = herbivore.migration_direction() #
-                #             if (row_direction, col_direction) in lovlige_retninger: #
-                #                 new_row = current_row+row_direction #
-                #                 new_col = current_col+col_direction #
-                #
-                #                 self.island_map_objects[new_row, new_col].herb_pop.append(herbivore) #
-                #
-                #                 moved.append(herbivore)#
-                #                 herbivore.has_migrated = True #
-                #
-                #     for herbivore in moved:
-                #         landscape_obj.herb_pop.remove(herbivore)
-                #
-                # if landscape_obj.carn_pop:
-                #     lovlige_retninger = []  # Lovlige retninger å bevege seg i for dyrene på denne lokasjoner
-                #     if landscape_obj.is_migratable:  # Sjekker at vi står på noe annet enn vann
-                #         row, col = it.multi_index  # Blir en tuple, med lokasjon på hvor vi er
-                #         if self.island_map_objects[row - 1, col].is_migratable:
-                #             lovlige_retninger.append((-1, 0))
-                #         if self.island_map_objects[row + 1, col].is_migratable:
-                #             lovlige_retninger.append((1, 0))
-                #         if self.island_map_objects[row, col - 1].is_migratable:
-                #             lovlige_retninger.append((0, -1))
-                #         if self.island_map_objects[row, col + 1].is_migratable:
-                #             lovlige_retninger.append((0, 1))
-                #
-                #     moved = []
-                #     for carnivore in landscape_obj.carn_pop:
-                #         if not carnivore.has_migrated:
-                #             row_direction, col_direction = carnivore.migration_direction()
-                #
-                #             if (row_direction, col_direction) in lovlige_retninger:
-                #                 new_row = current_row + row_direction
-                #                 new_col = current_col + col_direction
-                #
-                #                 self.island_map_objects[new_row, new_col].carn_pop.append(carnivore)
-                #
-                #                 moved.append(carnivore)
-                #                 carnivore.has_migrated = True
-                #
-                #     for carnivore in moved:
-                #         landscape_obj.carn_pop.remove(carnivore)
 
 
     def simulate(self, num_years:int = 10):
