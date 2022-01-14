@@ -101,7 +101,7 @@ class World:
         """Create a map mapping all migratable cells (`ndarray` of `bool`)."""
         return self._base_map != 'W'
 
-    def _make_object_map(self)->object:
+    def _make_object_map(self) -> object:
         """
         Create map of the island's landscape objects references.
 
