@@ -139,14 +139,13 @@ class Landscape:
         Herbivores eat in order of fitness until everyone is satisfied
         or no more fodder is available.
         """
-        for animal in sorted(self.population, key=lambda x: x.fitness, reverse=True):  # TODO: self.herbivores
-            if animal.species == 'Herbivore':
-                animal.F_tilde = 0
-                eaten = animal.eat(self.fodder)
-                self.fodder -= eaten
+        for animal in sorted(self.herbivores, key=lambda x: x.fitness, reverse=True):
+            animal.F_tilde = 0
+            eaten = animal.eat(self.fodder)
+            self.fodder -= eaten
 
-                if self.fodder <= 0:
-                    break
+            if self.fodder <= 0:
+                break
 
     def hunting(self):
         """Carnivores hunt herbivores.
@@ -158,18 +157,18 @@ class Landscape:
         :py:meth:`.killing`, :py:meth:`.probability_to_kill`
         """
         carnivores = self.carnivores  # TODO: Skriv self.carnivores rett inn i sorted()
-        hunting_order = sample(carnivores, len(carnivores))
+        hunting_order = sample(carnivores, self.carnivores_number)
 
         herbivores = self.herbivores  # TODO: Skriv self.herbivores rett inn i sorted()
         prey_order = sorted(herbivores, key=lambda x: x.fitness)
 
-        survivors = []
         for hunter in hunting_order:
             hunter.F_tilde = 0
 
             survivors = [prey for prey in prey_order if not hunter.killing(prey.fitness, prey.weight)]
+            prey_order = survivors
 
-        self.population = survivors + hunting_order
+        self.population = prey_order + hunting_order
 
     def give_birth(self):
         """For each animal giving birth, update population.
@@ -191,38 +190,6 @@ class Landscape:
         if carn_babies:
             self.population += carn_babies
 
-    # def migration_prep(self):
-    #     """Prepare animal for migration."""
-    #     for animal in self.population:
-    #         animal.has_migrated = False
-
-    # def migration_direction(self):
-    #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
-    #     #r = uniform(0, 1)
-    #     #p = self.fitness * self.params['mu']
-    #     if self.herb_pop:
-    #     #if p > r: # True betyr at den vil flytte seg
-    #         return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
-    #     else:
-    #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
-
-    # def migrate(self):
-    #     """Decide in what direction migrating animals shall move.
-    #
-    #     Direction is chosen at random between the bordering horizontal and vertical landscape cells."""
-    #     def make_migration_dict(species):
-    #         migrating_animals = {animal: None for animal in species if animal.probability_to_migrate()}
-    #         for animal in migrating_animals.keys():
-    #             direction = choice([(-1, 0), (1, 0), (0, 1), (0, -1)])
-    #             migrating_animals[animal] = direction
-    #             animal.has_migrated = True
-    #         return migrating_animals
-    #
-    #     migrating_herbs = make_migration_dict(self.herbivores)
-    #     migrating_carns = make_migration_dict(self.carnivores)
-    #
-    #     return migrating_herbs, migrating_carns
-
     def aging(self):
         """Age all animals by one year.
 
@@ -240,20 +207,8 @@ class Landscape:
         --------
         :py:meth:`probability_of_death`
         """
-        # TODO: Trenger vel ikke funksjonen når vi bare har en populasjon å forholde oss til. Bør kunne bli en list-comp.
-        # def alive(population):
-        #     return [animal
-        #             for animal in population
-        #             if not animal.probability_of_death()]
-        #
-        # self.population = alive(self.population)
         population = self.population
         survivors = [animal for animal in population if not animal.dies()]
-        #die = [animal for animal in population if animal.dies()]
-
-        # print(len(die), len(survivors), len(population))
-        # for animal in die:
-        #     print(animal.species, animal.id, animal.fitness)
 
         self.population = survivors
 
@@ -282,7 +237,8 @@ class Landscape:
         [1]_ https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name
         (read 08.01)
         """
-        # TODO: DO not add animals for water landscape. Check in island
+        if self.landscape_type == 'W':
+            raise ValueError('Can not add animals into a water landscape.')
         for animal in added_pop:
             age = animal['age']
             weight = animal['weight']
@@ -292,5 +248,5 @@ class Landscape:
             elif animal['species'] == 'Carnivore':
                 self.population += [Carnivore(weight, age)]
             else:
-                raise TypeError(f'{animal} is not a defined animal.\n'
+                raise ValueError(f'{animal} is not a defined animal.\n'
                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
