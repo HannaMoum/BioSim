@@ -122,10 +122,24 @@ def test_set_population(terrain):
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_extract_herbivores(terrain):
     """Test for correct herbivore population."""
-    population = [Herbivore(12.5, 10), Carnivore(12.5, 10), Carnivore(9, 25), Herbivore(9, 25)]
+    test_pop = [Herbivore(12.5, 10), Carnivore(12.5, 10), Carnivore(9, 25), Herbivore(9, 25)]
     location_cell = Landscape(terrain)
-    location_cell.population = population
-    assert location_cell.herbivores == [population[0], population[3]]
+    location_cell.population += test_pop
+    assert location_cell.herbivores == [test_pop[0], test_pop[3]]
+
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
+def test_herbivores_reduction(terrain):
+    """Test for correct herbivore population when population are reduced."""
+    animal = Herbivore(12.5, 10)
+    test_pop = [animal, Carnivore(12.5, 10), Carnivore(9, 25), Herbivore(9, 25)]
+
+    location_cell = Landscape(terrain)
+    location_cell.population += test_pop
+    location_cell.population.remove(animal)
+
+    assert location_cell.herbivores == [test_pop[3]]
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
@@ -137,6 +151,15 @@ def test_extract_carnivores(terrain):
     assert location_cell.carnivores == [population[1], population[2]]
 
 
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
+def test_carnivores_reduction(terrain):
+    """Test for correct carnivore population when population are reduced."""
+    animal = Carnivore(12.5, 10)
+    population = [Herbivore(12.5, 10), animal, Carnivore(9, 25), Herbivore(9, 25)]
+    location_cell = Landscape(terrain)
+    location_cell.population += population
+    location_cell.population.remove(animal)
+    assert location_cell.carnivores == [population[2]]
 
 
 ### TODO: Is any of this valuable? HOW TO AVOID ADDING ANIMALS TO WATER
