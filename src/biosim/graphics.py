@@ -15,7 +15,14 @@ from datetime import datetime
 
 @dataclass
 class Graphics_param:
+    age_max: float = 60
+    age_delta: float = 2
+    weight_max: float = 60
+    weight_delta: float = 2
+    fitness_max: float = 1
+    fitness_delta: float = 0.05
     codes_for_landscape_types: str = 'WLHD'
+
 
     def code_landscape(self, value): # Finn mer beskrivende funksjonsnavn
         # TODO: Funksjonen må oppdateres med å sjekke at input value er lovlig.
@@ -27,9 +34,19 @@ class Graphics_param:
                 if value == letter:
                     return int(number)
 
+    def update(self, new_dict):
+        for key, value in new_dict.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+
+    def __setattr__(self, name, value):
+        if name == 'age_max':
+            if 0 <= value < 100:
+                raise ValueError(f'Values must be between 0 and 100: {value} ')
+
 class Graphics(Graphics_param):
 
-    def __init__(self, numpy_island_map):
+    def __init__(self, numpy_island_map, hist_specs):
         self._island_plot = self.make_plot_map(numpy_island_map)
 
     @property
@@ -134,7 +151,7 @@ class Graphics(Graphics_param):
         return ax_age, ax_weight, ax_fitness
 
 
-    def make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year):
+    def make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year=-1):
         scale = 1.6
         fig = plt.figure(figsize=(14, 10))
         fig.suptitle(str(f'Year: {(year + 1):.0f}'), fontsize=36, x=0.08, y=0.95)

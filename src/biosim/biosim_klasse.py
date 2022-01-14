@@ -5,15 +5,19 @@ from biosim.animals import Herbivore
 from biosim.animals import Carnivore
 from biosim.landscape import Landscape
 from world import World
+from graphics import Graphics
 
 
 
-# @dataclass
-# class BioSim_param:
-#     codes_for_landscape_types: str = 'WLHD' #Brukes denne?
+@dataclass
+class BioSim_param:
+    codes_for_landscape_types: str = 'WLHD' #Brukes denne?
+    hist_spec_pattern = {'fitness': {'max': float, 'delta': int},
+                      'age': {'max': float, 'delta': int},
+                      'weight': {'max': float, 'delta': int}}
 
 
-class BioSim():
+class BioSim(BioSim_param):
     """Island hosting landscapes with animals.
 
         Parameters
@@ -48,6 +52,9 @@ class BioSim():
         # self.cube_properties_herbs = np.empty(())
         # self.cube_properties_carns = np.empty(())
 
+        if self._validate_hist_specs(hist_specs):
+            self.graphics = Graphics(self.island.base_map, hist_specs)
+
     def _validate_island_map(self, island_map:str) -> bool:
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
         island_map_list = island_map.split(sep='\n') #Endret til input
@@ -79,6 +86,31 @@ class BioSim():
         # TODO: Lag en valideringsrutine
         """Validates the ini_pop input, and check that it follow the rules"""
         return True
+
+    def _validate_hist_specs(self, hist_specs:dict)-> bool:
+        """
+        hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
+                      'age': {'max': 60.0, 'delta': 2},
+                      'weight': {'max': 60, 'delta': 2}},
+        """
+        error_main_key = False
+        error_sub_key = False
+        for key in hist_specs:
+            if key not in self.hist_spec_pattern:
+                error_main_key = True
+                break
+            for sub_key in hist_specs[key]:
+                if sub_key not in self.hist_spec_pattern[key]:
+                    error_sub_key = True
+
+        if any((error_main_key, error_sub_key)):
+            raise KeyError(f'Not is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
+        else:
+            return True
+
+
+
+
 
     def get_yearly_herb_count(self)-> object:
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
