@@ -15,7 +15,6 @@ def reset_params_defaul_land():
     Carnivore.set_params(Carnivore._default_params)
 
 
-
 @pytest.mark.parametrize('terrain, value', [('Highland', 200.0), ('Lowland', 400.0)])
 def test_set_single_params(terrain, value):
     """Test optional change of default parameters, singles."""
@@ -64,6 +63,22 @@ def test_initial_fodder(terrain):
     """Test that initial amount of fodder is equal to f_max."""
     location_cell = Landscape(terrain)
     assert location_cell.fodder == location_cell.f_max
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H'])
+def test_legal_changes_of_fodder(terrain):
+    """Test legal changes of fodder for lowland og highland with the correct update."""
+    landscape_cell = Landscape(terrain)
+    landscape_cell.fodder = 200
+    assert landscape_cell.fodder == 200
+
+
+@pytest.mark.parametrize('terrain', ['L', 'H', 'W', 'D'])
+def test_illegal_changes_of_fodder(terrain):
+    """Test ValueError is risen when illegal changes are made of fodder."""
+    landscape_cell = Landscape(terrain)
+    with pytest.raises(ValueError):
+        landscape_cell.fodder = 900
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
@@ -276,4 +291,10 @@ def test_no_death(terrain, mocker):
 
     assert all([landscape_cell.herb_pop == herb_pop, landscape_cell.carn_pop == carn_pop])
 
-
+@pytest.mark.skip
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+def test_regrowth(terrain):
+    """Test that fodder is reset to f_max when running regrowth method."""
+    landscape_cell = Landscape(terrain)
+    #landscape.fodder =
+    pass
