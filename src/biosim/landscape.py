@@ -237,7 +237,8 @@ class Landscape:
         [1]_ https://stackoverflow.com/questions/3862310/how-to-find-all-the-subclasses-of-a-class-given-its-name
         (read 08.01)
         """
-        # TODO: DO not add animals for water landscape. Check in island
+        if self.landscape_type == 'W':
+            raise ValueError('Can not add animals into a water landscape.')
         for animal in added_pop:
             age = animal['age']
             weight = animal['weight']
@@ -247,5 +248,5 @@ class Landscape:
             elif animal['species'] == 'Carnivore':
                 self.population += [Carnivore(weight, age)]
             else:
-                raise TypeError(f'{animal} is not a defined animal.\n'
+                raise ValueError(f'{animal} is not a defined animal.\n'
                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
