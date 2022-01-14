@@ -44,7 +44,9 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60.0, 'delta': 2}},
-                 ymax_animals=None, cmax_animals={'Herbivore': 40, 'Carnivore': 10}
+                 vis_years=2,
+                 ymax_animals=None,
+                 cmax_animals={'Herbivore': 40, 'Carnivore': 10}
                  )
 
     sim.simulate(num_years=20)
@@ -66,8 +68,8 @@ if __name__ == '__main__':
     carn_count = sim.get_yearly_carn_count()
     graf.plotting_population_count(herb_count, carn_count)
     """
-    kube1 = sim.cube_population_herbs
-    kube2 = sim.cube_population_carns
+    # kube1 = sim.cube_population_herbs
+    # kube2 = sim.cube_population_carns
     #graf.plot_heatmap(kube1, species='herbivore')
     #graf.plot_heatmap(kube2, species='carnivore')
     # plt.show()
@@ -77,17 +79,17 @@ if __name__ == '__main__':
 
     graf.plot_histogram(herb_data, carn_data)"""
 
-    herb_count = sim.get_yearly_herb_count()
-    carn_count = sim.get_yearly_carn_count()
-    kube1 = sim.cube_population_herbs
-    kube2 = sim.cube_population_carns
-    herb_data = sim.cubelist_properties_herbs
-    carn_data = sim.cubelist_properties_carns
+    # herb_count = sim.get_yearly_herb_count()
+    # carn_count = sim.get_yearly_carn_count()
+    # kube1 = sim.cube_population_herbs
+    # kube2 = sim.cube_population_carns
+    # herb_data = sim.cubelist_properties_herbs
+    # carn_data = sim.cubelist_properties_carns
     #graf.show_panel(herb_count, carn_count, kube1, 'herbivore', herb_data, carn_data)
 
     #graf.make_grid(10)
 
-    sim.graphics.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data)
+    #sim.graphics.do_graphics(kube1, kube2, herb_count, carn_count, herb_data, carn_data)
     #dash.make_movie()
 
     # TODO: Bildene blir liggende i C:/temp/figs, og filmene blir liggende i C:/temp. Folderne må finnes på disk fra før, slik det er nå.

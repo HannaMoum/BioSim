@@ -53,7 +53,11 @@ class BioSim(BioSim_param):
         # self.cube_properties_carns = np.empty(())
 
         if all((self._validate_hist_specs(hist_specs), self._validate_cmax_animals(cmax_animals))):
-            self.graphics = Graphics(self.island.base_map, hist_specs, ymax_animals, cmax_animals)
+            self.graphics = Graphics(self.island.base_map,
+                                     hist_specs,
+                                     ymax_animals,
+                                     cmax_animals,
+                                     vis_years)
 
     def _validate_island_map(self, island_map:str) -> bool:
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
@@ -282,7 +286,7 @@ class BioSim(BioSim_param):
             # Brukes ikke nå, men ikke slett!
             #yearly_property_map_carns.append(yearly_carn_objects_map)
 
-            print('\\r',f'Year:{current_year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '\n')
+            print('\r',f'Year:{current_year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '')
 
         # Data at end of simulation
         # TODO: Add evaluation. Check shape and size. Raises valueerror
@@ -292,6 +296,13 @@ class BioSim(BioSim_param):
         # Disse brukes ikke akkurat nå, men ikke slett!
         #self.cube_properties_herbs = np.stack(yearly_property_map_herbs)
         #self.cube_properties_carns = np.stack(yearly_property_map_carns)
+
+        self.graphics.show(self.cube_population_herbs,
+                           self.cube_population_carns,
+                           self.get_yearly_herb_count(),
+                           self.get_yearly_carn_count(),
+                           self.cubelist_properties_herbs,
+                           self.cubelist_properties_carns)
 
     def add_population(self, population:dict):
         """Validates input dict befor sending calling add_population method in

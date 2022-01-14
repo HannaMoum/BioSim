@@ -46,16 +46,15 @@ class Graphics_param:
 
 class Graphics(Graphics_param):
 
-    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict):
-        """hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
-                      'age': {'max': 60.0, 'delta': 2},
-                      'weight': {'max': 60, 'delta': 2}}
+    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict, vis_years:int):
+        """
         numpy_island_map er base_map fra World.
         """
         self._island_plot = self.make_plot_map(numpy_island_map)
         self._set_hist_specs(hist_specs)
         self.ymax_animals = ymax_animals
         self._set_cmax_animals(cmax_animals)
+        self._vis_years = vis_years
 
     def _set_hist_specs(self, hist_specs: dict):
         for key, value in hist_specs.items():
@@ -76,7 +75,6 @@ class Graphics(Graphics_param):
                 self.cmax_animals_herbivore = value
             if key == 'Carnivore':
                 self.cmax_animals_carnivore = value
-        print(self.__dict__)
 
     def make_plot_map(self, numpy_island_map):
         """Lager numpy array (kartet) som brukes for å plotte verdenskartet."""
@@ -199,13 +197,44 @@ class Graphics(Graphics_param):
 
         return ax_age, ax_weight, ax_fitness
 
+    def show(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year = -1):
+        """
+                vis_years = 0, disables graphics
+                vis_years = None, then the last year in the simulation i used to make graphics
+                vis_years = any, periodic update of the graphics
+                """
+        if self._vis_years == 0:
+            return None
+        if self._vis_years == None:
+            year = -1
+            self._make_grid(data_heat_herb,
+                           data_heat_carn,
+                           herb_data,
+                           carn_data,
+                           hist_herb_data,
+                           hist_carn_data,
+                           year=year)
+        if self._vis_years >= 1:
+            sim_years = len(herb_data)
+            for y in range(0,sim_years, self._vis_years):
+                self._make_grid(data_heat_herb,
+                                data_heat_carn,
+                                herb_data,
+                                carn_data,
+                                hist_herb_data,
+                                hist_carn_data,
+                                year=y)
 
-    def make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year=-1):
+
+    def _make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year=-1):
+
         if year == -1: # Convert default year to a plotable last year
-            plot_year = len(herb_data) - 1
+            plot_year = len(herb_data)
+        else:
+            plot_year = year + 1
 
         fig = plt.figure(figsize=(14, 10))
-        fig.suptitle(str(f'Year: {(plot_year + 1):.0f}'), fontsize=36, x=0.08, y=0.95)
+        fig.suptitle(str(f'Year: {(plot_year):.0f}'), fontsize=36, x=0.08, y=0.95)
 
         grid = plt.GridSpec(10, 14, wspace=0.5, hspace=1)
 
@@ -230,7 +259,7 @@ class Graphics(Graphics_param):
 
     def make_movie(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
         def make_frame(year_frame):
-            fig = self.make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
+            fig = self._make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
             return mplfig_to_npimage(fig) # Tar fig-en og lager til numpy-image som kan brukes videre.
 
         animation = VideoClip(make_frame, duration=year_-1) # VideoClip får returen fra make_frame, som er en numpy-image. Duration er lengden på videoen.
@@ -241,7 +270,7 @@ class Graphics(Graphics_param):
         format = 'png'
 
         def make_frame(year_frame):
-            fig = self.make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
+            fig = self._make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
 
             fig.savefig(f'C:/temp/figs/{year_frame:05d}.{format}', format=format)
 
