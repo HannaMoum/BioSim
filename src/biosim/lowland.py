@@ -118,7 +118,8 @@ class Landscape:
     @fodder.setter
     def fodder(self, value):
         if value > self.f_max:
-            raise ValueError('Value must be below f_max') #TODO: remove this. Not created test either
+            raise ValueError('Value must be below f_max') #TODO: Controls water and desert...
+        #TODO: make sure documentation states that f_max is not available for desert and water somewhere
         self._fodder = value
 
     @property
@@ -227,8 +228,6 @@ class Landscape:
         migrating_carns = make_migration_dict(self.carn_pop)
 
         return migrating_herbs, migrating_carns
-
-
 
     def aging(self):
         """Age all animals by one year.
