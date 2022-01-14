@@ -168,7 +168,7 @@ def test_hunting_only_killing(terrain):
     preys = [Herbivore(0.1, 50) for _ in range(3)]
 
     hunters = [Carnivore(Carnivore.params['w_half'], Carnivore.params['a_half'])]
-    #Needo only one hunter for this...
+    # Needo only one hunter for this...
 
     location_cell = Landscape(terrain)
     location_cell.herb_pop += preys
@@ -240,7 +240,7 @@ def test_migration_preparation(terrain):
 @pytest.mark.skip
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_migrating_direction(terrain):
-    #TODO: Create when migrating functions have been set...
+    # TODO: Create when migrating functions have been set...
     pass
 
 
@@ -302,19 +302,18 @@ def test_regrowth(terrain_letter, terrain):
     assert landscape_cell.fodder == Landscape.params['f_max'][terrain]
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_add_valid_animals(terrain):
-    added_pop =[{'species': 'Herbivore', 'age': 10, 'weight': 12.5},
-                {'species': 'Carnivore', 'age': 10, 'weight': 12.5},
-                {'species': 'Herbivore', 'age': 20, 'weight': 11}]
+    added_pop = [{'species': 'Herbivore', 'age': 10, 'weight': 12.5},
+                 {'species': 'Carnivore', 'age': 10, 'weight': 12.5},
+                 {'species': 'Herbivore', 'age': 20, 'weight': 11}]
 
     landscape_cell = Landscape(terrain)
     landscape_cell.add_animals(added_pop)
-
-    assert all([landscape_cell.herb_pop == [Herbivore(12.5, 10), Herbivore(11, 20)],
-                landscape_cell.carn_pop == [Carnivore(12.5, 10)]]) #Wrong identities.TODO: In progress
-
+    assert landscape_cell.herb_pop[0].age == 10, landscape_cell.her
+    # assert all([landscape_cell.herb_pop == [Herbivore(12.5, 10), Herbivore(11, 20)],
+    #            landscape_cell.carn_pop == [Carnivore(12.5, 10)]]) #Wrong identities.TODO: In progress
 
 # @pytest.mark.skip
 # @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water

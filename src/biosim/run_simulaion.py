@@ -46,7 +46,7 @@ if __name__ == '__main__':
                  )
 
     sim.set_landscape_parameters('L', {'f_max': 700})
-    sim.simulate(num_years=10)
+    sim.simulate(num_years=200)
 
 
 
