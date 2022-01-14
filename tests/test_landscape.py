@@ -170,8 +170,8 @@ def test_all_giving_birth(mocker, terrain):
 
     Herbivore.set_params({'zeta': 0})
     Carnivore.set_params({'zeta': 0})
-    herb_pop = [Herbivore(16, 10) for _ in range(200)]
-    carn_pop = [Carnivore(16, 10) for _ in range(200)]
+    herb_pop = [Herbivore(16, 10) for _ in range(20)]
+    carn_pop = [Carnivore(16, 10) for _ in range(20)]
 
     location_cell = Landscape(terrain)
 
@@ -189,8 +189,8 @@ def test_no_giving_birth(mocker, terrain):
     """Test no update of population if no animals give birth."""
     mocker.patch('biosim.animals.uniform', return_value=1)
 
-    herb_pop = [Herbivore(16, 10) for _ in range(200)]
-    carn_pop = [Carnivore(16, 10) for _ in range(200)]
+    herb_pop = [Herbivore(16, 10) for _ in range(20)]
+    carn_pop = [Carnivore(16, 10) for _ in range(20)]
 
     location_cell = Landscape(terrain)
 
@@ -202,4 +202,29 @@ def test_no_giving_birth(mocker, terrain):
     assert all([len(location_cell.herb_pop) == len(herb_pop),
                 len(location_cell.carn_pop) == len(carn_pop)])
 
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+def test_migration_preparation(terrain):
+    """Test that migration_preparation resets all has_migrated attributes to False."""
+    herb_pop = [Herbivore(16, 10) for _ in range(20)]
+    carn_pop = [Carnivore(16, 10) for _ in range(20)]
 
+    landscape_cell = Landscape(terrain)
+
+    for animal in herb_pop + carn_pop:
+        animal.has_migrated = True
+
+    landscape_cell.herb_pop += herb_pop
+    landscape_cell.carn_pop += carn_pop
+    landscape_cell.migration_prep()
+
+    for animal in landscape_cell.herb_pop + landscape_cell.carn_pop:
+        assert not animal.has_migrated
+
+
+
+
+
+# def migration_prep(self):
+#     """Prepare animal for migration."""
+#     for animal in self.herb_pop + self.carn_pop:
+#         animal.has_migrated = False
