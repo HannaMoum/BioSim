@@ -229,9 +229,17 @@ def test_migrating_direction(terrain):
     pass
 
 
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+def test_aging(terrain):
+    """Test that all animals in the landscape have lost weight and become older."""
+    herb_pop = [Herbivore(12.5, 10) for _ in range(20)]
+    carn_pop = [Carnivore(12.5, 10) for _ in range(20)]
 
+    landscape_cell = Landscape(terrain)
+    landscape_cell.herb_pop += herb_pop
+    landscape_cell.carn_pop += carn_pop
 
-# def migration_prep(self):
-#     """Prepare animal for migration."""
-#     for animal in self.herb_pop + self.carn_pop:
-#         animal.has_migrated = False
+    landscape_cell.aging()
+
+    for animal in landscape_cell.herb_pop + landscape_cell.carn_pop:
+        assert all([animal.age > 10, animal.weight < 12.5])
