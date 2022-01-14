@@ -30,8 +30,6 @@ class Animal:
     TODO: Add new attributes
     """
     id_iter = itertools.count()
-    # dict:Parameter values
-    # TODO: Figure out if this is necessary; Doesnt create confusion...?
     params = None
 
     @classmethod
