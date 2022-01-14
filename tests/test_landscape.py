@@ -96,11 +96,12 @@ def test_initial_population_type(terrain):
                 type(Landscape(terrain).carnivores) == list])
 
 
-#
-# @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
-# def test_inital_population(terrain):
-#     """Test for no initial population. An emtpy list returns False"""
-#     assert not all([Landscape(terrain).herb_pop, Landscape(terrain).carn_pop])
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
+def test_inital_population(terrain):
+    """Test for no initial population. An emtpy list returns False"""
+    assert not all([Landscape(terrain).population,
+                    Landscape(terrain).herbivores,
+                    Landscape(terrain).carnivores])
 
 
 ### TODO: Is any of this valuable? HOW TO AVOID ADDING ANIMALS TO WATER
