@@ -103,6 +103,11 @@ def test_inital_population(terrain):
                     Landscape(terrain).herbivores,
                     Landscape(terrain).carnivores])
 
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
+def test_initial_pop_count(terrain):
+    """Test that initial counter is set to 0."""
+    assert all([Landscape(terrain).herbivores_number == 0, Landscape(terrain).carnivores_number == 0])
+
 
 ### TODO: Is any of this valuable? HOW TO AVOID ADDING ANIMALS TO WATER
 @pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])  # TODO: Not water here!
