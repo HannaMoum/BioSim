@@ -3,7 +3,7 @@ Landscapes and Animals
 
 The landscape module
 ---------------------
-.. automodule:: biosim.lowland
+.. automodule:: biosim.landscapes
    :members:
 
 The animal module
