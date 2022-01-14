@@ -259,14 +259,12 @@ def test_all_giving_birth(mocker, terrain):
     carn_pop = [Carnivore(16, 10) for _ in range(20)]
 
     location_cell = Landscape(terrain)
-
-    location_cell.herb_pop += herb_pop
-    location_cell.carn_pop += carn_pop
-
+    location_cell.population += herb_pop + carn_pop
     location_cell.give_birth()
 
-    assert all([len(location_cell.herb_pop) == len(herb_pop) * 2,
-                len(location_cell.carn_pop) == len(carn_pop) * 2])
+    assert all([len(location_cell.herbivores) == len(herb_pop) * 2,
+                len(location_cell.carnivores) == len(carn_pop) * 2,
+                len(location_cell.population) == 2 * (len(herb_pop) + len(carn_pop))])
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
@@ -278,14 +276,12 @@ def test_no_giving_birth(mocker, terrain):
     carn_pop = [Carnivore(16, 10) for _ in range(20)]
 
     location_cell = Landscape(terrain)
-
-    location_cell.herb_pop += herb_pop
-    location_cell.carn_pop += carn_pop
-
+    location_cell.population += herb_pop + carn_pop
     location_cell.give_birth()
 
-    assert all([len(location_cell.herb_pop) == len(herb_pop),
-                len(location_cell.carn_pop) == len(carn_pop)])
+    assert all([len(location_cell.herbivores) == len(herb_pop),
+                len(location_cell.carnivores) == len(carn_pop),
+                len(location_cell.population) == len(herb_pop) + len(carn_pop)])
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
