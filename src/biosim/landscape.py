@@ -209,11 +209,6 @@ class Landscape:
         """
         population = self.population
         survivors = [animal for animal in population if not animal.dies()]
-        #die = [animal for animal in population if animal.dies()]
-
-        # print(len(die), len(survivors), len(population))
-        # for animal in die:
-        #     print(animal.species, animal.id, animal.fitness)
 
         self.population = survivors
 
