@@ -300,3 +300,22 @@ def test_regrowth(terrain_letter, terrain):
     landscape_cell.regrowth()
 
     assert landscape_cell.fodder == Landscape.params['f_max'][terrain]
+
+
+
+
+
+# def add_animals(self, added_pop):
+
+#     #TODO: DO not add animals for water landscape. Check in island
+#     for animal in added_pop:
+#         age = animal['age']
+#         weight = animal['weight']
+#
+#         if animal['species'] == 'Herbivore':
+#             self.herb_pop += [Herbivore(weight, age)]
+#         elif animal['species'] == 'Carnivore':
+#             self.carn_pop += [Carnivore(weight, age)]
+#         else:
+#             raise TypeError(f'{animal} is not a defined animal.\n'
+#                             f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
