@@ -319,18 +319,15 @@ def test_aging(terrain):
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_death_all(terrain):
-    """Test no population left in landscape cell if all animals die."""
-
+    """Test no population left in landscape cell if all animals dies due to lack of weight."""
     herb_pop = [Herbivore(0, 10) for _ in range(20)]
     carn_pop = [Carnivore(0, 10) for _ in range(20)]
 
     landscape_cell = Landscape(terrain)
-    landscape_cell.herb_pop += herb_pop
-    landscape_cell.carn_pop += carn_pop
+    landscape_cell.population += herb_pop + carn_pop
+    landscape_cell.do_death()
 
-    landscape_cell.death()
-
-    assert not all([landscape_cell.herb_pop, landscape_cell.carn_pop])
+    assert not all([landscape_cell.herbivores, landscape_cell.carnivores, landscape_cell.population])
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
