@@ -31,14 +31,13 @@ class World:
 
     @property
     def migrate_map(self):
-        """Map og migratable and non-migratable cells (`ndarray` of `bool`).
+        """Map of the island's migratable and non-migratable cells (`ndarray` of `bool`).
         #Gives True/False if movement on to location is allowed"""
         return self._migrate_map
 
     @property
     def object_map(self):
-        """Dette kartet inneholder referanser til landskapsobjekter.
-        Det er en transformering av island_map. Kart med landskapsobjekter."""
+        """Map of island consisting of landscape-object references (`ndarray` of `obj`)."""
         return self._object_map
 
     def _validate_island_map(self, island_map_list:list) -> bool:
