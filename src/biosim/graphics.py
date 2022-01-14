@@ -34,24 +34,29 @@ class Graphics_param:
                 if value == letter:
                     return int(number)
 
-    def update(self, new_dict):
-        for key, value in new_dict.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-
-    def __setattr__(self, name, value):
-        if name == 'age_max':
-            if 0 <= value < 100:
-                raise ValueError(f'Values must be between 0 and 100: {value} ')
-
 class Graphics(Graphics_param):
 
     def __init__(self, numpy_island_map, hist_specs):
+        """hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
+                      'age': {'max': 60.0, 'delta': 2},
+                      'weight': {'max': 60, 'delta': 2}}
+        numpy_island_map er base_map fra World.
+        """
         self._island_plot = self.make_plot_map(numpy_island_map)
+        self._set_hist_specs(hist_specs)
 
-    @property
-    def island_plot(self):
-        return self._island_plot
+    def _set_hist_specs(self, hist_specs):
+        for key, value in hist_specs.items():
+            if key == 'fitness':
+                self.fitness_max = value['max']
+                self.fitness_delta = value['delta']
+            if key == 'age':
+                self.age_max = value['max']
+                self.age_delta = value['delta']
+            if key == 'weight':
+                self.weight_max = value['max']
+                self.weight_delta = value['delta']
+
 
     def make_plot_map(self, numpy_island_map):
         """Lager numpy array (kartet) som brukes for å plotte verdenskartet."""
@@ -69,7 +74,7 @@ class Graphics(Graphics_param):
     def plot_island_map(self, ax):
         """Plotter verdenskartet"""
         #if plot_map == None:
-        plot_map = self.island_plot
+        plot_map = self._island_plot
         row, col = plot_map.shape
         with plt.style.context('seaborn-whitegrid'):  # Konfigurerbar? Skal dette være en input?
             colormap = colors.ListedColormap(['blue', 'darkgreen', 'lightgreen', 'yellow'])  # Skal dette være en input
@@ -122,37 +127,56 @@ class Graphics(Graphics_param):
         """
         colors = ['green', 'red']
         age, weight, fitness = (0, 1, 2)
+        """
         max_age, delta_age = (60, 2) #TODO: Skal leses inn som parametere når BioSim objektet instansieres
         max_weight, delta_weight = (60, 2)
         max_fitness, delta_fitness = (1, 0.05)
-
+        """
         #fig, ax = plt.subplots(nrows=3, ncols=1, figsize = (12, 18))
         yearly_herb_data = hist_herb_data[year]
         yearly_carn_data = hist_carn_data[year]
 
-
         # Age
-        ax_age.set_title('Age')
-        ax_age.hist([yearly_herb_data[:, 0],yearly_carn_data[:,0]], bins=int(max_age/delta_age),
-                     range=(0,max_age), histtype= 'step', stacked=False, fill=False, color=colors, label=['Herbivore', 'Carnivore'])
-        leg = ax_age.legend()
+        ax_age.hist([yearly_herb_data[:, 0],yearly_carn_data[:,0]],
+                    bins=int(self.age_max/self.age_delta),
+                    range=(0,self.age_max),
+                    histtype= 'step',
+                    stacked=False,
+                    fill=False,
+                    color=colors,
+                    label=['Herbivore', 'Carnivore'])
+        ax_age.set(xlim=(0, self.age_max),
+                   title = 'Age')
 
         # Weight
-        ax_weight.set_title('Weight')
-        ax_weight.hist([yearly_herb_data[:, 1], yearly_carn_data[:, 1]], bins=int(max_weight / delta_weight),
-                     range=(0, max_weight), histtype='step', stacked=False, fill=False, color=colors)
+        ax_weight.hist([yearly_herb_data[:, 1], yearly_carn_data[:, 1]],
+                       bins=int(self.weight_max / self.weight_delta),
+                       range=(0, self.weight_max),
+                       histtype='step',
+                       stacked=False,
+                       fill=False,
+                       color=colors,
+                       label=['Herbivore', 'Carnivore'])
+        ax_weight.set(xlim=(0, self.weight_max),
+                      title = 'Weight')
 
         # Fitness
-        ax_fitness.set_title('Fitness')
-        ax_fitness.hist([yearly_herb_data[:, 2], yearly_carn_data[:, 2]], bins=int(max_fitness / delta_fitness),
-                        range=(0, max_fitness), histtype='step', stacked=False, fill=False, color=colors)
+        ax_fitness.hist([yearly_herb_data[:, 2], yearly_carn_data[:, 2]],
+                        bins=int(self.fitness_max / self.fitness_delta),
+                        range=(0, self.fitness_max),
+                        histtype='step',
+                        stacked=False,
+                        fill=False,
+                        color=colors,
+                        label = ['Herbivore', 'Carnivore'])
+        ax_fitness.legend(bbox_to_anchor = (1.01, 1))
+        ax_fitness.set(xlim=(0, self.fitness_max),
+                      title='Fitness')
 
-        plt.show()
         return ax_age, ax_weight, ax_fitness
 
 
     def make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year=-1):
-        scale = 1.6
         fig = plt.figure(figsize=(14, 10))
         fig.suptitle(str(f'Year: {(year + 1):.0f}'), fontsize=36, x=0.08, y=0.95)
 
