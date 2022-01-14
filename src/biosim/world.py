@@ -1,6 +1,5 @@
 import numpy as np
 from landscape import Landscape
-from animals import Animal, Herbivore, Carnivore
 from random import choice
 
 class World:
@@ -51,7 +50,7 @@ class World:
                 build_map[row_index, col_index] = landscape_letter
         return build_map
 
-    def _make_migrate_map(self)-> object:
+    def _make_migrate_map(self)     -> object:
         """Make migration map (np bool)."""
         return self._base_map != 'W'
 
@@ -123,16 +122,16 @@ class World:
     # Parameter-funksjoner som kan brukes i fabrikken
     def v_size_herb_pop(self, location: object)->int:
         """Population sizer for herbivores at given location. """
-        return len(location.herbivores)
+        return location.herbivores_number
 
     def v_size_carn_pop(self, location: object)->int:
         """Population sizer for carnivores at given location."""
-        return len(location.carnivores)
+        return location.carnivores_number
 
     # ----------------------------------------------------------------------------------------------------------------
     # Her kommer det ut en np.array med objekter, som f.eks. inneholder hele landskapsobjektet
 
-    def get_property_map_objects(self, fx_map_type:str)->object:
+    def get_property_map_objects(self, fx_map_type:str) -> object:
         return self._make_property_map_objects(getattr(self, fx_map_type), self.base_map, self.object_map)
 
     def _make_property_map_objects(self, fx: callable(object), base_map: object, object_map: object):
@@ -144,7 +143,7 @@ class World:
     # TODO: Om vi får en populasjon per landskap kan disse bli til 1 funksjon
     def v_herb_properties_objects(self, location: object)->list:
         population_list = location.herbivores
-        if len(population_list) > 0:
+        if len(population_list) > 0: # bare sjekke om den eksisterer
             liste = []
             for animal in population_list:
                 liste.append((animal.age, animal.weight, animal.fitness))
@@ -152,7 +151,7 @@ class World:
 
     def v_carn_properties_objects(self, location: object)->list:
         population_list = location.carnivores
-        if len(population_list) > 0:
+        if len(population_list) > 0: # bare sjekke om den eksisterer
             liste = []
             for animal in population_list:
                 liste.append((animal.age, animal.weight, animal.fitness))
