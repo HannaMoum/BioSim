@@ -29,6 +29,13 @@ def test_set_all_params():
     assert Landscape.params == new_params
 
 
+def test_param_mistake():
+    """Test for errormessage if wrongful value are given"""
+    new_params = {'f_max': {'Highland': -200.0}}
+    with pytest.raises(ValueError):
+        Landscape.set_params(new_params)
+
+
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
 def test_init_landscape_type(terrain):
     """Test correct save of input value to Landscape class."""
