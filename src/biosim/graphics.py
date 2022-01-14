@@ -15,12 +15,15 @@ from datetime import datetime
 
 @dataclass
 class Graphics_param:
+    ymax_animals: int
+
     age_max: float = 60
     age_delta: float = 2
     weight_max: float = 60
     weight_delta: float = 2
     fitness_max: float = 1
     fitness_delta: float = 0.05
+
     codes_for_landscape_types: str = 'WLHD'
 
 
@@ -36,7 +39,7 @@ class Graphics_param:
 
 class Graphics(Graphics_param):
 
-    def __init__(self, numpy_island_map, hist_specs):
+    def __init__(self, numpy_island_map, hist_specs, ymax_animals):
         """hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
                       'age': {'max': 60.0, 'delta': 2},
                       'weight': {'max': 60, 'delta': 2}}
@@ -44,6 +47,7 @@ class Graphics(Graphics_param):
         """
         self._island_plot = self.make_plot_map(numpy_island_map)
         self._set_hist_specs(hist_specs)
+        self.ymax_animals = ymax_animals
 
     def _set_hist_specs(self, hist_specs):
         for key, value in hist_specs.items():
@@ -56,7 +60,6 @@ class Graphics(Graphics_param):
             if key == 'weight':
                 self.weight_max = value['max']
                 self.weight_delta = value['delta']
-
 
     def make_plot_map(self, numpy_island_map):
         """Lager numpy array (kartet) som brukes for å plotte verdenskartet."""
@@ -108,19 +111,20 @@ class Graphics(Graphics_param):
             return ax
 
     def plotting_population_count(self, herb_data: object, carn_data: object, ax: object, year):
-        """Brukes til å plotte population size over tid"""
-        """Data er np array, med en sum per år i simuleringen"""
-        with plt.style.context('default'):
-            # fig, ax = plt.subplots()
-            ax.plot(herb_data[0:year], linestyle='dashed', color='green', label='herbs')
-            ax.plot(carn_data[0:year], color='red', label='carns')
-            ax.set_title('Population size', loc='left')
-            ax.set_xlabel('Years')
-            ax.set_ylabel('Number of animals')
-            leg = ax.legend(loc='center left')
-            # plt.show()
-            # fig.savefig('Test_plot.pdf')
-            return ax
+        """
+        Brukes til å plotte population size over tid
+        Data er np array, med en sum per år i simuleringen
+        """
+
+        ax.plot(herb_data[0:year], linestyle='dashed', color='green', label='herbs')
+        ax.plot(carn_data[0:year], color='red', label='carns')
+        ax.set_title('Population size', loc='left')
+        ax.set_xlabel('Years')
+        ax.set_ylabel('Number of animals')
+        ax.legend(loc='upper left')
+        ax.set(ylim=(0, self.ymax_animals))
+
+        return ax
 
     def plot_histogram(self, hist_herb_data:object, hist_carn_data:object, ax_age, ax_weight, ax_fitness, year: int = -1)-> object:
         """

@@ -53,7 +53,7 @@ class BioSim(BioSim_param):
         # self.cube_properties_carns = np.empty(())
 
         if self._validate_hist_specs(hist_specs):
-            self.graphics = Graphics(self.island.base_map, hist_specs)
+            self.graphics = Graphics(self.island.base_map, hist_specs, ymax_animals)
 
     def _validate_island_map(self, island_map:str) -> bool:
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
