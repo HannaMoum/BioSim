@@ -1,6 +1,7 @@
 """ Implements Animal model used by subspecies."""
 
 import math
+import itertools
 from copy import deepcopy
 from random import seed, choice, gauss, sample, uniform
 
@@ -28,7 +29,7 @@ class Animal:
     ----------
     TODO: Add new attributes
     """
-
+    id_iter = itertools.count()
     # dict:Parameter values
     # TODO: Figure out if this is necessary; Doesnt create confusion...?
     params = {
@@ -83,6 +84,7 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, weight, age=0):
+        self.id = next(self.id_iter)
         self.weight = weight
         self.age = age
         self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
@@ -209,8 +211,8 @@ class Animal:
     def probability_to_migrate(self):
         r = uniform(0, 1)
         p = self.fitness * self.params['mu']
-
-        return all((p > r, not self.has_migrated))
+        return p>r
+        # return all((p > r, not self.has_migrated))
 
     # def migration_direction(self):
     #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
@@ -317,7 +319,7 @@ class Animal:
 
         return None
 
-    def probability_of_death(self):
+    def dies(self):
         """
         Decide whether animal dies.
 
@@ -342,6 +344,8 @@ class Animal:
 
 
 class Herbivore(Animal):
+    species = 'Herbivore'
+
     # Default parameter values for Herbivore
     _default_params = {
         'w_birth': 8.0,
@@ -364,6 +368,8 @@ class Herbivore(Animal):
 
 class Carnivore(Animal):
     # Default parameter values for Carnivore
+    species = 'Carnivore'
+
     _default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,

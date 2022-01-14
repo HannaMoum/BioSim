@@ -1,8 +1,9 @@
 import textwrap
-from world import BioSim_param, BioSim
-from graphics import Graphics, Graphics_param
+from biosim_klasse import BioSim
 import matplotlib.pyplot as plt
-from biosim.lowland import Landscape
+from graphics import Graphics
+
+#from biosim.lowland import Landscape
 
 plt.show()
 import numpy as np
@@ -45,10 +46,9 @@ if __name__ == '__main__':
                              'weight': {'max': 60, 'delta': 2}},
                  )
 
-    sim.set_landscape_parameters('L', {'f_max': 700})
-    sim.simulate(num_years=200)
+    sim.simulate(num_years=50)
 
-
+    #sim.set_landscape_parameters('L', {'f_max': 800})
 
     # herb_pop_map = sim.get_property_map('v_size_herb_pop')
 
@@ -56,9 +56,9 @@ if __name__ == '__main__':
     # print(herbivore_property_array[:, 1])
 
     # Plotter kartet over øya
-    graf = Graphics(sim.island_map)
+    graf = Graphics(sim.island.base_map)
 
-    graf.plot_island_map()
+    #graf.plot_island_map()
     """
     # Plotter begge populasjoner på samme ax
     herb_count = sim.get_yearly_herb_count()
@@ -67,8 +67,8 @@ if __name__ == '__main__':
     """
     kube1 = sim.cube_population_herbs
     kube2 = sim.cube_population_carns
-    graf.plot_heatmap(kube1, species='herbivore')
-    graf.plot_heatmap(kube2, species='carnivore')
+    #graf.plot_heatmap(kube1, species='herbivore')
+    #graf.plot_heatmap(kube2, species='carnivore')
     # plt.show()
 
     """herb_data = sim.cubelist_properties_herbs
@@ -79,6 +79,21 @@ if __name__ == '__main__':
     herb_count = sim.get_yearly_herb_count()
     carn_count = sim.get_yearly_carn_count()
     kube1 = sim.cube_population_herbs
+    kube2 = sim.cube_population_carns
     herb_data = sim.cubelist_properties_herbs
     carn_data = sim.cubelist_properties_carns
-    graf.show_panel(herb_count, carn_count, kube1, 'herbivore', herb_data, carn_data)
+    #graf.show_panel(herb_count, carn_count, kube1, 'herbivore', herb_data, carn_data)
+
+    #graf.make_grid(10)
+
+    dash = Graphics(sim.island.base_map)
+    #fig=dash.make_grid(kube1, kube2, herb_count, carn_count, herb_data, carn_data, year=99)
+    #dash.make_movie()
+
+    # TODO: Bildene blir liggende i C:/temp/figs, og filmene blir liggende i C:/temp. Folderne må finnes på disk fra før, slik det er nå.
+    # dash.make_from_files(kube1, kube2, herb_count, carn_count, herb_data, carn_data, 29)
+    #dash.make_movie(kube1, kube2, herb_count, carn_count, herb_data, carn_data, 20)
+    # dash.make_grid(year=5)
+    # dash.make_movie()
+    #dash.make_from_files()
+    plt.show()
