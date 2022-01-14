@@ -139,14 +139,13 @@ class Landscape:
         Herbivores eat in order of fitness until everyone is satisfied
         or no more fodder is available.
         """
-        for animal in sorted(self.population, key=lambda x: x.fitness, reverse=True):  # TODO: self.herbivores
-            if animal.species == 'Herbivore':
-                animal.F_tilde = 0
-                eaten = animal.eat(self.fodder)
-                self.fodder -= eaten
+        for animal in sorted(self.herbivores, key=lambda x: x.fitness, reverse=True):  # TODO: self.herbivores
+            animal.F_tilde = 0
+            eaten = animal.eat(self.fodder)
+            self.fodder -= eaten
 
-                if self.fodder <= 0:
-                    break
+            if self.fodder <= 0:
+                break
 
     def hunting(self):
         """Carnivores hunt herbivores.
