@@ -166,7 +166,7 @@ class World:
             for grid_cell in it:
                 current_loaction = grid_cell.item()
 
-                if len(current_loaction.population) > 0:
+                if len(current_loaction.population) > 0: #if current_loaction.population:
                     local_migrated_animals = []
                     for animal in current_loaction.population:
                         if animal not in global_migrated_animals:
@@ -195,6 +195,8 @@ class World:
             destination_location = self.object_map[r - 1:r + 2, c - 1:c + 2][view & mask]
             if destination_location.size > 0:
                 return destination_location.item() # Returnerer landskapsobjektet dyret skal migrere til (om dyret skal migrere)
+        #else:
+            # return False
 
 
 
