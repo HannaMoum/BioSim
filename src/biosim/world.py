@@ -26,7 +26,7 @@ class World:
 
     @property
     def base_map(self):
-        """Base map. Det initsielle verdenskartet."""
+        """Map of island consisting of landscape letters (`ndarray` of `str`)."""
         return self._base_map
 
     @property
@@ -40,7 +40,6 @@ class World:
         Det er en transformering av island_map. Kart med landskapsobjekter."""
         return self._object_map
 
-###############
     def _validate_island_map(self, island_map_list:list) -> bool:
         # Should already be textwrapped
 
@@ -65,7 +64,6 @@ class World:
 
         return True
 
-###########
     def _make_base_map(self, input_map: str)-> object:
         """
         Mapping island with respect to each landscape letter.
@@ -97,7 +95,7 @@ class World:
 
 
     def _make_migrate_map(self)     -> object:
-        """Make migration map (np bool)."""
+        """Create a map mapping all migratable cells (`ndarray` of `bool`)."""
         return self._base_map != 'W'
 
     def _make_object_map(self)->object:
