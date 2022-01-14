@@ -44,7 +44,7 @@ class Landscape:
         self._carnivores_number = 0
 
     @classmethod
-    def set_params(cls, new_params: dict):
+    def set_params(cls, new_params):
         """Set class parameters.
 
         Parameters
@@ -56,12 +56,15 @@ class Landscape:
         Input vil se slik ut fra word: new_params = {'f_max': {'Highland': 200.0}}
         Landscape.set_params({'f_max': {'Highland': params['f_max']}})
         """
-        if 'f_max' in new_params:
+        if 'f_max' in new_params: #Trngs kanskje ikke å sjekkes, sjekk input...
             param_dict = new_params['f_max']
+            if not all([value >= 0 for value in param_dict.values()]):
+                raise ValueError('f_max must be equal to or greater than zero')
             if 'Highland' in param_dict:
                 cls.params['f_max']['Highland'] = param_dict['Highland']
             if 'Lowland' in param_dict:
                 cls.params['f_max']['Lowland'] = param_dict['Lowland']
+        # TODO: Errormessage
 
     @property
     def landscape_type(self):
