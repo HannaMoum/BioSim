@@ -90,19 +90,20 @@ def test_animal_create_F_tilde(species): #TODO: Change name when F-tilde changes
     assert all([animal.F_tilde == 0, animal.F_tilde + eat_amount == eat_amount])
 
 
-@pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_animal_create_has_migrated(species):
-    """Test that has_migrated attribute is set to False when animal is created."""
-    assert not species(12.5, 10).has_migrated
+# @pytest.mark.parametrize('species', [Herbivore, Carnivore])
+# def test_animal_create_has_migrated(species):
+#     """Test that has_migrated attribute is set to False when animal is created."""
+#     assert not species(12.5, 10).has_migrated
+#
+#
+# @pytest.mark.parametrize('species', [Herbivore, Carnivore])
+# def test_animal_has_migrated_edit(species):
+#     """Test that has_migrated attribute is changed correctly on demand."""
+#     animal = species(12.5, 10)
+#     animal.has_migrated = True
+#     assert animal.has_migrated
 
-
-@pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_animal_has_migrated_edit(species):
-    """Test that has_migrated attribute is changed correctly on demand."""
-    animal = species(12.5, 10)
-    animal.has_migrated = True
-    assert animal.has_migrated
-
+#TODO: Test id_iter in int???
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_zero_fitness(species):
@@ -168,8 +169,6 @@ def test_eat_F_tilde_grow(species): #TODO: Edit name when F_tilde changes
     eaten = animal.eat(available_food)
     assert animal.F_tilde == eaten
 
-#No testing for wanted_food = param F - F_tilde...
-
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_aging(species):
@@ -220,7 +219,7 @@ def test_probability_to_give_birth(species):
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_ztest(species):
     """Test that the mean of all birth weights drawn from probability_to_give_birth is within
-    a gaussian distribution with a given mean and variance.
+    a gaussian distribution with given mean and variance.
     Ztest returns a p_value which gives the probability to observe a value a distance or further
     away from the mean, if that value follows the assumed distribution.
     We compare the p_value to a predefined acceptance limit alpha, and pass the test if p > a.
@@ -306,26 +305,21 @@ def test_birth_prob_maternal_health(species):
     for _ in range(100):
         assert not species(weight, age).probability_to_give_birth(num_animals)
 
-#Oveflødig?? Kan faktisk feile... #TODO: Use bionom test instead, or nothing at all
+
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_birth_prob_miscarriage(species):
-    """Statistical test: testing that miscarriage is directly connected to birth_weight
-    trough the gaussian distribution.
-
-    w_birth = 0 and sigma_birth as any positive value assures 50% of births are miscarriages.
-    We pass the test if this statement holds by ± 10% due to:
-        1. We can only calculate with whole numbers
-        2. If by chance a baby is born at exact weight 0, it will count as a positive birth.
-    """
+def test_miscarriage_binomial(species):
+    """Binoimal test: Test the statistical significance of deviation from an animal's probability to miscarriage
+    (by manually set parameters), of the observed miscarriages..
+    Using scipy.stats bionom_test to find the p_value, and deciding upon a 5% level of significance."""
     species.set_params({'sigma_birth': 0.2, 'w_birth': 0})
-
-    newborns = [gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(500)]
+    num_tests = 500
+    newborns = [gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(num_tests)]
     negative_newborns = [newborn for newborn in newborns if newborn < 0]
-    lower_limit = 1.90
-    upper_limit = 2.10
+    num_cases = len(negative_newborns)
 
-    assert lower_limit < len(newborns)/len(negative_newborns) < upper_limit
-
+    p_value = binom_test(num_cases, num_tests, 1/2)
+    alpha = 0.05
+    assert p_value > alpha
 
 @pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
 def test_giving_birth_true(species_obj, species_str):
@@ -370,13 +364,13 @@ def test_giving_birth_false(species_obj, species_str):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_death_probability_binomial(species):
-    """Binomal test: Test the statistical significance of deviation from an animal's probability to die
+    """Binoimal test: Test the statistical significance of deviation from an animal's probability to die
     (if weight grater than zero), of the observed deaths.
     Using scipy.stats bionom_test to find the p_value, and deciding upon a 5% level of significance."""
     alpha = 0.05 #Level of significance we demand for the probability to not be biased
     animal = species(12.5, 10)
     num_tests = 200
-    n = sum(animal.probability_of_death() for _ in range(num_tests)) #Observed death cases
+    n = sum(animal.dies() for _ in range(num_tests)) #Observed death cases
 
     probability = species.params['omega'] * (1 - animal.fitness)
     p_value = binom_test(n, num_tests, probability, alternative='two-sided')
@@ -388,7 +382,7 @@ def test_death_probability_starved(mocker, species):
     """Use mocked uniform to test animal death if starved, but not sick."""
     mocker.patch('biosim.animals.uniform', return_value=1)
     starved_animal = species(0, 10)
-    assert starved_animal.probability_of_death()
+    assert starved_animal.dies()
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -396,7 +390,7 @@ def test_death_probability_sick(mocker, species):
     """Use mocked uniform to test animal death if sick, but not starved."""
     mocker.patch('biosim.animals.uniform', return_value=0)
     sick_animal = species(12.5, 10)
-    assert sick_animal.probability_of_death()
+    assert sick_animal.dies()
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -404,7 +398,7 @@ def test_death_probability_survive(mocker, species):
     """Use mocked uniform to test that animal does not die under correct circumstances."""
     mocker.patch('biosim.animals.uniform', return_value=1)
     healthy_animal = species(12.5, 10)
-    assert not healthy_animal.probability_of_death()
+    assert not healthy_animal.dies()
 
 
 def test_hungry():
