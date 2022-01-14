@@ -191,14 +191,17 @@ def test_correct_eating_order():
     third_eater = Herbivore(0, 3)
 
     herbivores = [second_eater, third_eater, first_eater]
-    sorted_herbivores = [herbivore for herbivore in sorted(herbivores, key=lambda x: x.fitness, reverse=True)]
+    location_cell = Landscape('L')
+    location_cell.population += herbivores
+
+    sorted_herbivores = [herbivore for herbivore in sorted(location_cell.population, key=lambda x: x.fitness, reverse=True)]
 
     assert sorted_herbivores == [first_eater, second_eater, third_eater]
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
 def test_hunting_no_carnivores(terrain):
-    """Test for sorted updated herbivore population with the same amount of herbivores,
+    """Test for correctly sorted updated herbivore population with the same amount of herbivores,
     when no carnivores are present."""
     first_prey = Herbivore(0, 3)
     second_prey = Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])
@@ -206,10 +209,10 @@ def test_hunting_no_carnivores(terrain):
     preys = [second_prey, third_prey, first_prey]
 
     location_cell = Landscape(terrain)
-    location_cell.herb_pop += preys
+    location_cell.population += preys
     location_cell.hunting()
 
-    assert location_cell.herb_pop == [first_prey, second_prey, third_prey]
+    assert location_cell.herbivores == [first_prey, second_prey, third_prey]
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
