@@ -16,6 +16,8 @@ from datetime import datetime
 @dataclass
 class Graphics_param:
     ymax_animals: int
+    cmax_animals_herbivore: int
+    cmax_animals_carnivore: int
 
     age_max: float = 60
     age_delta: float = 2
@@ -37,9 +39,14 @@ class Graphics_param:
                 if value == letter:
                     return int(number)
 
+    # def update_params(self, new_dict):
+    #     for key, value in new_dict.items():
+    #         if hasattr(self, key):
+    #             setattr(self, key, value)
+
 class Graphics(Graphics_param):
 
-    def __init__(self, numpy_island_map, hist_specs, ymax_animals):
+    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict):
         """hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
                       'age': {'max': 60.0, 'delta': 2},
                       'weight': {'max': 60, 'delta': 2}}
@@ -48,8 +55,9 @@ class Graphics(Graphics_param):
         self._island_plot = self.make_plot_map(numpy_island_map)
         self._set_hist_specs(hist_specs)
         self.ymax_animals = ymax_animals
+        self._set_cmax_animals(cmax_animals)
 
-    def _set_hist_specs(self, hist_specs):
+    def _set_hist_specs(self, hist_specs: dict):
         for key, value in hist_specs.items():
             if key == 'fitness':
                 self.fitness_max = value['max']
@@ -60,6 +68,15 @@ class Graphics(Graphics_param):
             if key == 'weight':
                 self.weight_max = value['max']
                 self.weight_delta = value['delta']
+
+    def _set_cmax_animals(self, cmax_animals: dict):
+        """{'Herbivore': 50, 'Carnivore': 20}"""
+        for key, value in cmax_animals.items():
+            if key == 'Herbivore':
+                self.cmax_animals_herbivore = value
+            if key == 'Carnivore':
+                self.cmax_animals_carnivore = value
+        print(self.__dict__)
 
     def make_plot_map(self, numpy_island_map):
         """Lager numpy array (kartet) som brukes for å plotte verdenskartet."""
@@ -93,22 +110,24 @@ class Graphics(Graphics_param):
 
     def plot_heatmap(self, data: object, species: str, ax, square = True, year: int = -1):
         """Plotter heatmap"""
-        if species == 'herbivore':
+        if species == 'Herbivore':
             title = 'Herbivore distribution'
             cmap = 'Greens'
-        elif species == 'carnivore':
+            center = self.cmax_animals_herbivore
+        elif species == 'Carnivore':
             title = 'Carnivore distribution'
             cmap = 'Reds'
+            center = self.cmax_animals_carnivore
         else:
             raise ValueError('Feil')
-        with plt.style.context('default'):
-            ax = sns.heatmap(data[year, :, :], annot=True, cmap=cmap, ax = ax)
-            ax.set_title(title)
-            #ax.set_xticklabels(range(1, data.shape[2] + 1))
-            #ax.set_yticklabels(range(1, data.shape[1] + 1))
 
-            #plt.show()
-            return ax
+        ax = sns.heatmap(data[year, :, :], annot=False, cmap=cmap, ax = ax, center = center)
+        ax.set_title(title)
+        #ax.set_xticklabels(range(1, data.shape[2] + 1))
+        #ax.set_yticklabels(range(1, data.shape[1] + 1))
+
+        #plt.show()
+        return ax
 
     def plotting_population_count(self, herb_data: object, carn_data: object, ax: object, year):
         """
@@ -194,10 +213,10 @@ class Graphics(Graphics_param):
         self.plot_island_map(map_ax)
 
         herb_heatax = plt.subplot(grid[0:3, 4:9])
-        self.plot_heatmap(data_heat_herb, 'herbivore', herb_heatax, year = year)
+        self.plot_heatmap(data_heat_herb, 'Herbivore', herb_heatax, year = year)
 
         carn_heatax = plt.subplot(grid[0:3, 9:14])
-        self.plot_heatmap(data_heat_carn, 'carnivore', carn_heatax, year = year)
+        self.plot_heatmap(data_heat_carn, 'Carnivore', carn_heatax, year = year)
 
         pop_ax = plt.subplot(grid[4:10, 0:5])
         self.plotting_population_count(herb_data, carn_data, pop_ax, year = year)
