@@ -47,7 +47,8 @@ def test_invalid_map_str(geogr):
 @pytest.mark.skip
 def test_valid_map_str(geogr_str):
     """Test no ValuErrors are risen when valid map string are given."""
-    assert World(geogr_str)
+    assert all ([World(geogr_str),
+                 World(geogr_str)._make_base_map(geogr_str)])
 
 @pytest.mark.skip
 def test_base_map(geogr_str):
@@ -55,7 +56,8 @@ def test_base_map(geogr_str):
     base_map = [['W', 'W', 'W', 'W'],
                 ['W', 'L', 'H', 'W'],
                 ['W', 'W', 'W', 'W']]
-    assert World(geogr_str) == base_map
+    assert all([World(geogr_str).base_map == base_map,
+               World(geogr_str)._make_base_map(geogr_str) == base_map])
 
 @pytest.mark.skip
 def test_create_base_map():
