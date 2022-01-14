@@ -7,6 +7,7 @@ from random import seed, choice, gauss, sample, uniform
 from abc import ABC, abstractmethod  # Remove unless in use
 from dataclasses import dataclass, asdict
 
+
 class Animal:
     """Animal with corresponding characteristics and traits for different species.
 
@@ -29,7 +30,7 @@ class Animal:
     """
 
     # dict:Parameter values
-    #TODO: Figure out if this is necessary; Doesnt create confusion...?
+    # TODO: Figure out if this is necessary; Doesnt create confusion...?
     params = {
         'w_birth': None,
         'sigma_birth': None,
@@ -271,7 +272,7 @@ class Animal:
         fertilization = r < match_probability
 
         reached_puberty = self.weight > self.params['zeta'] * \
-                       (self.params['w_birth'] + self.params['sigma_birth'])
+                          (self.params['w_birth'] + self.params['sigma_birth'])
 
         birth_weight = gauss(self.params['w_birth'], self.params['sigma_birth'])
         miscarriage = birth_weight < 0
@@ -304,7 +305,7 @@ class Animal:
         """
         birth_weight = self.probability_to_give_birth(number_of_animals)
 
-        if birth_weight: # TODO: Optimization possibilities
+        if birth_weight:  # TODO: Optimization possibilities
             if species == 'Herbivore':
                 newborn = Herbivore(birth_weight)
             if species == 'Carnivore':
