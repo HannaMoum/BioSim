@@ -5,9 +5,6 @@ import itertools
 from copy import deepcopy
 from random import seed, choice, gauss, sample, uniform
 
-from abc import ABC, abstractmethod  # Remove unless in use
-from dataclasses import dataclass, asdict
-
 
 class Animal:
     """Animal with corresponding characteristics and traits for different species.
@@ -152,7 +149,8 @@ class Animal:
             q_plus = q(+1, self.age, self.params['a_half'], self.params['phi_age'])
             q_minus = q(-1, self.weight, self.params['w_half'], self.params['phi_weight'])
 
-            return q_plus * q_minus
+            fitness = q_plus * q_minus
+            return fitness
 
     def eat(self, food_available):
         """
@@ -297,7 +295,6 @@ class Animal:
                 newborn = Carnivore(birth_weight)
 
             self.weight -= birth_weight * self.params['xi']
-
             return newborn
 
         return None
@@ -350,9 +347,9 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
-    # Default parameter values for Carnivore
-    species = 'Carnivore'
 
+    species = 'Carnivore'
+    # Default parameter values for Carnivore
     _default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,
