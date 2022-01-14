@@ -122,7 +122,8 @@ class Graphics(Graphics_param):
         ax.set_xlabel('Years')
         ax.set_ylabel('Number of animals')
         ax.legend(loc='upper left')
-        ax.set(ylim=(0, self.ymax_animals))
+        if self.ymax_animals:
+            ax.set(ylim=(0, self.ymax_animals))
 
         return ax
 
