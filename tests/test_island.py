@@ -52,12 +52,22 @@ def test_valid_map_str(geogr_str):
 
 @pytest.mark.skip
 def test_base_map(geogr_str):
-    """Test correct creation of base_map."""
+    """Test correct creation and attribute save of base_map."""
     base_map = [['W', 'W', 'W', 'W'],
                 ['W', 'L', 'H', 'W'],
                 ['W', 'W', 'W', 'W']]
-    assert all([World(geogr_str).base_map == base_map,
-               World(geogr_str)._make_base_map(geogr_str) == base_map])
+    assert all([World(geogr_str)._make_base_map(geogr_str) == base_map,
+                World(geogr_str).base_map == base_map,])
+
+@pytest.mark.skip
+def test_migrate_map(geogr_str):
+    """Test correct creation and attribute save of migrate_map."""
+    migrate_map = [[False, False, False, False],
+                   [False, True, True, False],
+                   [False, False, False, False]]
+    assert all([World(geogr_str)._make_migrate_map() == migrate_map,
+                World(geogr_str).migrate_map == migrate_map])
+
 
 @pytest.mark.skip
 def test_create_base_map():
