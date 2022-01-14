@@ -37,10 +37,10 @@ class Landscape:
     def __init__(self, landscape_type:str):
         self._landscape_type = landscape_type
 
-        if landscape_type == 'W':
-            self._is_migratable = False
-        else:
-            self._is_migratable = True
+        # if landscape_type == 'W':
+        #     self._is_migratable = False
+        # else:
+        #     self._is_migratable = True
 
         self._f_max = None
 
@@ -88,10 +88,10 @@ class Landscape:
 
         return self._f_max
 
-    @property
-    def is_migratable(self):
-        """TODO: Doc, read-only"""
-        return self._is_migratable
+    # @property
+    # def is_migratable(self):
+    #     """TODO: Doc, read-only"""
+    #     return self._is_migratable
 
     @property
     def fodder(self):
@@ -106,7 +106,7 @@ class Landscape:
         self._fodder = value
 
     @property
-    def population(self)-> list:
+    def population(self) -> list:
         return self._population
     @population.setter
     def population(self, value):
@@ -117,7 +117,7 @@ class Landscape:
             self._herbivores = [animal for animal in value if animal.species == 'Herbivore']
             self._carnivores = [animal for animal in value if animal.species == 'Carnivore']
         else:
-            raise ValueError('Population list cant contain duplicates')
+            raise ValueError('Population list can not contain duplicates')#Når skjer det?
 
 
     # @property
@@ -137,8 +137,9 @@ class Landscape:
     # @carn_pop.setter
     # def carn_pop(self, value):
     #     self._carn_pop = value
+
     @property
-    def herbivores(self)->list:
+    def herbivores(self) -> list: #Hvorfor oppdaterer vi ikke de her istedenfor i population?
         """Returns a list of all animals of species Herbivore"""
         return self._herbivores
 
@@ -155,8 +156,8 @@ class Landscape:
         Herbivores eat in order of fitness until everyone is satisfied
         or no more fodder is available.
         """
-        for animal in sorted(self.population, key=lambda x: x.fitness, reverse=True):
-            if animal.species == 'Herbivore': #Ta kun ut herbivores fra starten av
+        for animal in sorted(self.population, key=lambda x: x.fitness, reverse=True): #TODO: self.herbivores
+            if animal.species == 'Herbivore':
                 animal.F_tilde = 0
                 eaten = animal.eat(self.fodder)
                 self.fodder -= eaten
@@ -173,10 +174,10 @@ class Landscape:
         --------
         :py:meth:`.killing`, :py:meth:`.probability_to_kill`
         """
-        carnivores = self.carnivores
+        carnivores = self.carnivores #TODO: Skriv self.carnivores rett inn i sorted()
         hunting_order = sample(carnivores, len(carnivores))
 
-        herbivores = self.herbivores
+        herbivores = self.herbivores #TODO: Skriv self.herbivores rett inn i sorted()
         prey_order = sorted(herbivores, key=lambda x: x.fitness)
 
         survivors = []
@@ -202,7 +203,6 @@ class Landscape:
         carn_babies = [newborn for individual in carnivores if
                         (newborn := individual.giving_birth('Carnivore', len(carnivores)))]
 
-
         if herb_babies:
             self.population += herb_babies
         if carn_babies:
@@ -223,23 +223,22 @@ class Landscape:
     #     else:
     #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
 
-    def migrate(self):
-        """Decide in what direction migrating animals shall move.
-
-        Direction is chosen at random between the bordering horizontal and vertical landscape cells."""
-        def make_migration_dict(species):
-            migrating_animals = {animal: None for animal in species if animal.probability_to_migrate()}
-            for animal in migrating_animals.keys():
-                direction = choice([(-1, 0), (1, 0), (0, 1), (0, -1)])
-                migrating_animals[animal] = direction
-                animal.has_migrated = True
-            return migrating_animals
-
-        migrating_herbs = make_migration_dict(self.herbivores)
-        migrating_carns = make_migration_dict(self.carnivores)
-
-        return migrating_herbs, migrating_carns
-
+    # def migrate(self):
+    #     """Decide in what direction migrating animals shall move.
+    #
+    #     Direction is chosen at random between the bordering horizontal and vertical landscape cells."""
+    #     def make_migration_dict(species):
+    #         migrating_animals = {animal: None for animal in species if animal.probability_to_migrate()}
+    #         for animal in migrating_animals.keys():
+    #             direction = choice([(-1, 0), (1, 0), (0, 1), (0, -1)])
+    #             migrating_animals[animal] = direction
+    #             animal.has_migrated = True
+    #         return migrating_animals
+    #
+    #     migrating_herbs = make_migration_dict(self.herbivores)
+    #     migrating_carns = make_migration_dict(self.carnivores)
+    #
+    #     return migrating_herbs, migrating_carns
 
     def aging(self):
         """Age all animals by one year.
@@ -273,11 +272,7 @@ class Landscape:
         # for animal in die:
         #     print(animal.species, animal.id, animal.fitness)
 
-
         self.population = survivors
-
-
-
 
     def regrowth(self):
         """Reset available fodder in terrain to maximum.

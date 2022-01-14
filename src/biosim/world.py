@@ -78,7 +78,6 @@ class World:
             r, c = dictionary['loc'] #Tuple
             r -= 1  # Adjustments
             c -= 1  # Adjustments. Checked.
-
             landscape_object = self.object_map[r, c]
 
             population = dictionary['pop']  # [{},{}]

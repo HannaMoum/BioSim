@@ -46,7 +46,7 @@ if __name__ == '__main__':
                              'weight': {'max': 60, 'delta': 2}},
                  )
 
-    sim.simulate(num_years=50)
+    sim.simulate(num_years=5)
 
     #sim.set_landscape_parameters('L', {'f_max': 800})
 
