@@ -123,17 +123,17 @@ class BioSim(BioSim_param):
         else:
             raise ValueError('Feil input')
 
-        # Oppdaterer alle eksisterende objekter.f_max. Denne settes normalt kun i __init__, og må oppdateres når klassevariabelen endres.
-        # TODO: Sjekk om dette har tilbakevirkende kraft på instansene som allerede finnes.
-        with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
-            for element in it:
-                landskapsobjekt = element.item()
-                if landskapsobjekt.landscape_type == 'H':
-                    landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Highland']
-                elif landskapsobjekt.landscape_type == 'L':
-                    landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Lowland']
-                else:
-                    landskapsobjekt.f_max = 0
+        # # Oppdaterer alle eksisterende objekter.f_max. Denne settes normalt kun i __init__, og må oppdateres når klassevariabelen endres.
+        # # TODO: Sjekk om dette har tilbakevirkende kraft på instansene som allerede finnes.
+        # with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
+        #     for element in it:
+        #         landskapsobjekt = element.item()
+        #         if landskapsobjekt.landscape_type == 'H':
+        #             landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Highland']
+        #         elif landskapsobjekt.landscape_type == 'L':
+        #             landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Lowland']
+        #         else:
+        #             landskapsobjekt.f_max = 0
 
     def migration_preparation(self):
         with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:

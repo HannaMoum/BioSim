@@ -2,9 +2,9 @@ from random import random, choice, sample
 from itertools import chain
 from copy import deepcopy
 
-from .animals import Animal
-from .animals import Herbivore
-from .animals import Carnivore
+from biosim.animals import Animal
+from biosim.animals import Herbivore
+from biosim.animals import Carnivore
 
 from dataclasses import dataclass
 
@@ -225,9 +225,9 @@ class Landscape:
 
 
         if herb_babies:
-            self.herb_pop += herb_babies
+            self.population += herb_babies
         if carn_babies:
-            self.carn_pop += carn_babies
+            self.population += carn_babies
 
     def migration_prep(self):
         """Prepare animal for migration."""
