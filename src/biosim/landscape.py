@@ -191,7 +191,6 @@ class Landscape:
         if carn_babies:
             self.population += carn_babies
 
-
     def aging(self):
         """Age all animals by one year.
 
@@ -209,13 +208,6 @@ class Landscape:
         --------
         :py:meth:`probability_of_death`
         """
-        # TODO: Trenger vel ikke funksjonen når vi bare har en populasjon å forholde oss til. Bør kunne bli en list-comp.
-        # def alive(population):
-        #     return [animal
-        #             for animal in population
-        #             if not animal.probability_of_death()]
-        #
-        # self.population = alive(self.population)
         population = self.population
         survivors = [animal for animal in population if not animal.dies()]
         #die = [animal for animal in population if animal.dies()]
