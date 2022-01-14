@@ -31,7 +31,8 @@ class World:
 
     @property
     def migrate_map(self):
-        """Migration map. Gives True/False if movement on to location is allowed"""
+        """Map og migratable and non-migratable cells (`ndarray` of `bool`).
+        #Gives True/False if movement on to location is allowed"""
         return self._migrate_map
 
     @property
