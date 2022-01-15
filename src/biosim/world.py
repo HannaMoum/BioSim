@@ -167,11 +167,11 @@ class World:
 
     def _make_property_map(self, fx: callable(object), base_map: object, object_map: object):
         """
-        Create map of chosen properties for :py:meth:`.get_property_map`.
+        Create map of chosen property for :py:meth:`.get_property_map`.
 
         Parameters
         ----------
-        fx: class attribute or method
+        fx: class method
             Method to be vectorized.
         base_map #TODO Remove
         object_map #TODO remove
@@ -179,7 +179,7 @@ class World:
         Returns
         -------
         `ndarray`
-            Array mapping chosen property
+            Array mapping chosen property.
         """
         property_map = np.empty(base_map.shape, dtype=float)
         vget_property = np.vectorize(fx)
@@ -245,15 +245,30 @@ class World:
 
         Returns
         -------
-        `list`
-            List mapping attributes of chosen species.
+        `ndarray`
+            Array mapping attributes of chosen species.
         """
         return self._make_property_map_objects(getattr(self, fx_map_type), self.base_map, self.object_map)
 
     def _make_property_map_objects(self, fx: callable(object), base_map: object, object_map: object):
+        """Create mapping of a chosen species' attribuets for :py:meth:`.get_property_map_objects`.
+
+        Parameters
+        ----------
+        fx: class method
+            Method to be vectorized.
+        base_map #TODO Remove
+        object_map #TODO remove
+
+        Returns
+        -------
+        `ndarray`
+            Array mapping chosen property.
+        """
         property_map = np.empty(base_map.shape, dtype=object)
         vget_property = np.vectorize(fx)
         property_map[:, :] = vget_property(object_map)
+        print(type(property_map))
         return property_map
 
     # TODO: Om vi får en populasjon per landskap kan disse bli til 1 funksjon
