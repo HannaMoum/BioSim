@@ -166,7 +166,7 @@ class World:
             for grid_cell in it:
                 current_location = grid_cell.item()
 
-                if len(current_location.population) > 0: #if current_loaction.population:
+                if current_location.population:
                     local_migrated_animals = []
                     for animal in current_location.population:
                         if animal not in global_migrated_animals:
@@ -182,9 +182,11 @@ class World:
 
                     global_migrated_animals += local_migrated_animals
 
-    def _get_migrate_to_location(self, animal:object, location_coordinates: tuple)-> object:
+    def _get_migrate_to_location(self, animal, location_coordinates):
         r, c = location_coordinates
-        view = self.migrate_map[r - 1:r + 2, c - 1:c + 2]
+        view = self.migrate_map[r-1:r+2, c-1:c+2]
+
+        #if mask:= migra
 
         if animal.probability_to_migrate():
             direction = choice('NSEW')
@@ -192,9 +194,10 @@ class World:
                              [direction == 'W', False, direction == 'E'],
                              [False, direction == 'S', False]])
 
-            destination_location = self.object_map[r - 1:r + 2, c - 1:c + 2][view & mask]
-            if destination_location.size > 0:
-                return destination_location.item() # Returnerer landskapsobjektet dyret skal migrere til (om dyret skal migrere)
+            if destination_location := self.object_map[r-1:r+2, c-1:c+2][view & mask]:
+                return destination_location.item()
+            else:
+                return False
         else:
             return False
 
