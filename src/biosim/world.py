@@ -43,25 +43,22 @@ class World:
         """Map of island consisting of landscape-object references (`ndarray` of `obj`)."""
         return self._object_map
 
-    def _validate_island_map(self, island_map_list: list) -> bool:
+    def _validate_island_map(self, island_map:str) -> bool:
         # Should already be textwrapped
-        length_check = len(island_map_list[0])
-        for element in island_map_list:
+        str_list = island_map.split(sep='\n')
 
-            for letter in element:
+        for element in str_list:
+            for letter in island_map:
                 if letter not in 'WHLD':
                     raise ValueError(
                         f'{letter} is not a defined landscape.\n'
                         f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
                         'respectively given by their belonging capital letter.')
 
-            if len(element) != length_check:
-                raise ValueError('Island map must contain an equal amount of columns.')
-
             if not (element[0] and not element[-1]) == 'W':
                 raise ValueError('All the islands` outer edges must be of landscape Water.')
 
-        if not (island_map_list[0] and not island_map_list[-1]) == 'W' * length_check:
+        if not (str_list[0] and not str_list[-1]) == 'W':
             raise ValueError('All the islands` outer edges must be of landscape Water.')
 
         return True
