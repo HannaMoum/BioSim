@@ -64,9 +64,8 @@ def test_valid_map_str(geogr_str):
     assert np.all(World(geogr_str))
 
 
-
 def test_base_map(geogr_str):
-    """Test correct creation of base_map."""
+    """Test correct creation and attribute save of base_map."""
     base_map_wanted = [['W', 'W', 'W', 'W'],
                        ['W', 'L', 'H', 'W'],
                        ['W', 'W', 'W', 'W']]
@@ -76,15 +75,15 @@ def test_base_map(geogr_str):
             assert letter_wanted == letter
 
 
-@pytest.mark.skip
 def test_migrate_map(geogr_str):
     """Test correct creation and attribute save of migrate_map."""
-    migrate_map = [[False, False, False, False],
-                   [False, True, True, False],
-                   [False, False, False, False]]
-    # assert all([World(geogr_str)._make_migrate_map() == migrate_map,
-    #             World(geogr_str).migrate_map == migrate_map])
-    assert np.testing.assert_allclose(World(geogr_str)._make_migrate_map(), migrate_map)
+    migrate_map_wanted = [[False, False, False, False],
+                          [False, True, True, False],
+                          [False, False, False, False]]
+    migrate_map = World(geogr_str).migrate_map
+    for row_wanted, row in zip(migrate_map_wanted, migrate_map):
+        for wanted_bool, boolean in zip(row_wanted, row):
+            assert wanted_bool == boolean
 
 
 @pytest.mark.skip
