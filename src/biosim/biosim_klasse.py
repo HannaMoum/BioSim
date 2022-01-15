@@ -44,22 +44,6 @@ class BioSim(BioSim_param):
 
         self.add_population(ini_pop)
 
-    def _validate_island_map(self, island_map:str)-> bool:
-        """Returns True/False. Checks that the str contains no white space, and that the rows are of the same length"""
-        if not type(island_map) is str:
-            raise ValueError('island_map must be of type str.')
-            return False
-
-        str_list = island_map.split(sep='\n')
-        length_check = len(str_list[0])
-
-        for element in str_list:
-            if len(element) != length_check:
-                raise ValueError('Island map must contain an equal amount of columns.')
-                return False
-        return True
-
-
         # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
         self._num_years = 0  # Duration of sim
         self.cube_population_herbs = np.empty(())
@@ -83,6 +67,21 @@ class BioSim(BioSim_param):
                                      img_fmt,
                                      img_years)
 
+
+    def _validate_island_map(self, island_map:str)-> bool:
+        """Returns True/False. Checks that the str contains no white space, and that the rows are of the same length"""
+        if not type(island_map) is str:
+            raise ValueError('island_map must be of type str.')
+            return False
+
+        str_list = island_map.split(sep='\n')
+        length_check = len(str_list[0])
+
+        for element in str_list:
+            if len(element) != length_check:
+                raise ValueError('Island map must contain an equal amount of columns.')
+                return False
+        return True
 
     def _validate_hist_specs(self, hist_specs:dict)-> bool:
         """
