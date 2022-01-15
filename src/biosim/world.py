@@ -189,6 +189,21 @@ class World:
                     global_migrated_animals += local_migrated_animals
 
     def _get_migration_location(self, animal, location_coordinates):
+        """
+        Find final destination for a migrating animal.
+
+        Parameters
+        ----------
+        animal: `obj`
+            migrating animal
+        location_coordinates: `tuple`
+            Row and column of current position
+
+        Returns
+        -------
+        `obj` or `bool`
+            Return landscape cell reference if requirements are met, or return False.
+        """
         r, c = location_coordinates
         view = self.migrate_map[r-1:r+2, c-1:c+2]
 
