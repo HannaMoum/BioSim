@@ -1,9 +1,9 @@
-""" Implements Animal model used by subspecies."""
+"""Implement Animal model used by subspecies."""
 
 import math
 import itertools
 from copy import deepcopy
-from random import seed, choice, gauss, sample, uniform
+from random import gauss, uniform
 
 
 class Animal:
@@ -11,7 +11,7 @@ class Animal:
 
     Notes
     ------
-    Implemented species are :py:class:`.Herbivore` and :py:class:`.Carnivore`. #Move to Sphinx doc(?)
+    Implemented species are :py:class:`.Herbivore` and :py:class:`.Carnivore`.
 
     Parameters
     ----------
@@ -21,10 +21,6 @@ class Animal:
         Must be a whole number.
     weight: `float`
         The animal's weight.
-
-    Attributes
-    ----------
-    TODO: Add new attributes
     """
     id_iter = itertools.count()
     params = None
@@ -75,17 +71,8 @@ class Animal:
             raise ValueError('Age must be a positive number')
 
         self.age = age
-        ##
-        self._F_tilde = 0  # TODO: Change name of F_tilde to eaten
-        #self._has_migrated = False
 
-    # @property
-    # def has_migrated(self):
-    #     return self._has_migrated
-    #
-    # @has_migrated.setter
-    # def has_migrated(self, bool):
-    #     self._has_migrated = bool
+        self._F_tilde = 0
 
     @property
     def age(self):
@@ -137,7 +124,7 @@ class Animal:
             q^{\\pm}(x, x_{\\frac{1}{2}}, \phi) = \
             {\\frac{1}{1+e^{\\pm\phi(x-x_{\\frac{1}{2}})}}}
 
-        For more information see :py:obj:`.params`. #TODO: Change when parameters are updated.
+        For more information see table of parameters.
         """
 
         def q(sgn, x, x_half, phi):
@@ -156,7 +143,7 @@ class Animal:
         """
         Animal gains weight from eating.
 
-        Animal will always eat until satisfied (parameter `F`) or eat :math:`\mathtt{food\_available}`.
+        Animal will always eat until satisfied (`F`), otherwise it will eat :math:`\mathtt{food\_available}`.
         Weight increases by `Food eaten` :math:`* \\beta`.
 
         Parameters
@@ -169,7 +156,6 @@ class Animal:
             Food eaten
         """
         wanted_food = self.params['F'] - self.F_tilde
-        # Only necessary for Carnivores
 
         if food_available >= wanted_food:
             eaten = wanted_food
@@ -177,9 +163,9 @@ class Animal:
             eaten = food_available
 
         self.weight += eaten * self.params['beta']
-        self.F_tilde += eaten  # TODO: Is it possible to make this only an attribute for carnivores (F_tilde)
+        self.F_tilde += eaten
 
-        return eaten  # Only necessary for Herbivores
+        return eaten
 
     def age_and_weightloss(self):
         """Age animal by one year and lose weight.
@@ -193,16 +179,6 @@ class Animal:
         r = uniform(0, 1)
         p = self.fitness * self.params['mu']
         return p > r
-        # return all((p > r, not self.has_migrated))
-
-    # def migration_direction(self):
-    #     """Finner hvilken retning migreringen skal skje, eller om den skal stå stille"""
-    #     r = uniform(0, 1)
-    #     p = self.fitness * self.params['mu']
-    #     if p > r: # True betyr at den vil flytte seg
-    #         return choice([(-1, 0), (1, 0), (0, 1), (0, -1)]) # Ned (sør), opp (nord), høyre (øst), venstre (vest)
-    #     else:
-    #         return (0, 0) # Stå stille #TODO: Update to False, if implementerbart...
 
     def probability_to_give_birth(self, number_of_animals):
         """
@@ -237,7 +213,7 @@ class Animal:
         Each animal can give birth to at most one offspring every year.
         #TODO: Add description and implement new conditions
 
-        For more information see :py:obj:`.params`. #TODO: Change when parameters are updated.
+        For more information see table of parameters.
 
         Parameters
         ----------
@@ -373,7 +349,7 @@ class Carnivore(Animal):
         """
         Decide whether carnivore is hungry.
 
-        Carnivore is satisfied when it has eaten amount `F` (parameter). #TODO: fix parameters
+        Carnivore is satisfied when it has eaten amount `F`.
 
         Returns
         -------
