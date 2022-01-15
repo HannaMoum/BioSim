@@ -4,6 +4,7 @@ from biosim.world import World
 
 SEED = 12345678  # random seed for tests
 
+
 @pytest.fixture()
 def geogr_str():
     """Create initial island string to be used in other tests."""
@@ -15,12 +16,18 @@ def geogr_str():
     geogr = textwrap.dedent(geogr)
     return geogr
 
-#Initial tests, made to run when changes in world has been made
 
-@pytest.mark.skip
+# Initial tests, made to run when changes in world has been made
+
+
 @pytest.mark.parametrize('geogr', ["""\
                                         WWW
                                         WLH 
+                                        WWW
+                                    """,
+                                   """\
+                                        WWW
+                                        DLW
                                         WWW
                                     """,
                                    """\
@@ -30,14 +37,20 @@ def geogr_str():
                                     """,
                                    """\
                                         WDW
+                                        WLW
                                         WWW
+                                    """,
+                                   """\
                                         WWW
+                                        WLW
+                                        WHW
                                     """,
                                    """\
                                         WWW
                                         WH
                                         WWW
-                                    """])
+                                    """
+                                   ])
 def test_invalid_map_str(geogr):
     """Test ValueError if any map requirements are not met."""
     geogr_wrapped = textwrap.dedent(geogr)
@@ -48,8 +61,8 @@ def test_invalid_map_str(geogr):
 @pytest.mark.skip
 def test_valid_map_str(geogr_str):
     """Test no ValuErrors are risen when valid map string are given."""
-    assert all ([World(geogr_str),
-                 World(geogr_str)._make_base_map(geogr_str)])
+    assert all([World(geogr_str),
+                World(geogr_str)._make_base_map(geogr_str)])
 
 
 @pytest.mark.skip
@@ -59,7 +72,7 @@ def test_base_map(geogr_str):
                 ['W', 'L', 'H', 'W'],
                 ['W', 'W', 'W', 'W']]
     assert all([World(geogr_str)._make_base_map(geogr_str) == base_map,
-                World(geogr_str).base_map == base_map,])
+                World(geogr_str).base_map == base_map, ])
 
 
 @pytest.mark.skip
@@ -77,7 +90,7 @@ def test_object_map_save(geogr_str):
     """Test correct attribute save from making an object map."""
     object_map_creation = World(geogr_str)._make_object_map()
     object_map_attribute = World(geogr_str).object_map
-    assert object_map_creation == object_map_attribute #Not sure this will work...
+    assert object_map_creation == object_map_attribute  # Not sure this will work...
 
 
 @pytest.mark.skip
@@ -93,7 +106,7 @@ def test_object_map_type(geogr_str):
     island = World(geogr_str)
     for reference_row in island.object_map:
         for reference in reference_row:
-            assert type(reference) == object #Or something like this...
+            assert type(reference) == object  # Or something like this...
 
 
 @pytest.mark.skip
@@ -135,5 +148,3 @@ def test_add_animals_success(geogr_str, location):
     assert all([len(island.object_map[location].population) == 2,
                 len(island.object_map[location].herbivores) == 1,
                 len(island.object_map[location].carnivores) == 1])
-
-
