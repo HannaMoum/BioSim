@@ -38,10 +38,6 @@ class Landscape:
         self._f_max = None
         self._fodder = self.f_max
         self._population = []
-        #self._herbivores = [] Only getter
-        #self._carnivores = [] Only getter
-        #self._herbivores_number = 0
-        #self._carnivores_number = 0
 
     @classmethod
     def set_params(cls, new_params):
@@ -108,26 +104,26 @@ class Landscape:
             raise ValueError('Population list can not contain duplicates') #No test added
 
     @property
-    def herbivores(self) -> list:  # Hvorfor oppdaterer vi ikke de her istedenfor i population?
-        """Return a list of all animals of species Herbivore."""
+    def herbivores(self):
+        """List of all animals of species Herbivore (`list`)."""
         herbivores = [animal for animal in self.population if animal.species == 'Herbivore']
         return herbivores
 
     @property
-    def carnivores(self) -> list:
-        """Return a list of all animals of species Carnivore."""
+    def carnivores(self):
+        """All animals of species Carnivore (`list`)."""
         carnivores = [animal for animal in self.population if animal.species == 'Carnivore']
         return carnivores
 
     @property
-    def herbivores_number(self) -> int:
-        """Return the amount of herbivores in terrain."""
+    def herbivores_number(self):
+        """The amount of herbivores in a terrain (`int`)."""
         herbivores_number = len(self.herbivores)
         return herbivores_number
 
     @property
-    def carnivores_number(self) -> int:
-        """Return the amount of carnivores in terrain."""
+    def carnivores_number(self):
+        """The amount of carnivores in a terrain (`int`)."""
         carnivores_number = len(self.carnivores)
         return carnivores_number
 
