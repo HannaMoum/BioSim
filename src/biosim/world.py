@@ -55,7 +55,7 @@ class World:
                         f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
                         'respectively given by their belonging capital letter.')
 
-            if not all([line.startswith('W'), line.endswith('W')]): #not (line[0] and not line[-1]) == 'W':
+            if not all([line.startswith('W'), line.endswith('W')]):
                 raise ValueError('All the islands` outer edges must be of landscape Water.')
 
         if not island_map[0] == 'W'*length or not island_map[-1] == 'W'*length:
@@ -63,7 +63,7 @@ class World:
 
         return True
 
-    def _make_base_map(self, input_map: str)-> object:
+    def _make_base_map(self, input_map: str) -> object:
         """
         Mapping island with respect to each landscape letter.
 
@@ -73,7 +73,6 @@ class World:
             Geography of island.
 
             Made up by the letters 'W', 'D', 'L' and 'H' each representing a landscape.
-            Forutsetter at den er ferdig validert.
 
         Returns
         -------
