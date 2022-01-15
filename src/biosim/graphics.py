@@ -50,7 +50,7 @@ class Graphics_param:
 
 class Graphics(Graphics_param):
 
-    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict, vis_years:int,
+    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict,
                  img_dir, img_base, img_fmt, img_years):
         """
         numpy_island_map er base_map fra World.
@@ -59,15 +59,15 @@ class Graphics(Graphics_param):
         self._set_hist_specs(hist_specs)
         self.ymax_animals = ymax_animals
         self._set_cmax_animals(cmax_animals)
-        self._vis_years = vis_years
+        #self._vis_years = vis_years
         self.img_dir = img_dir
         self.img_base = img_base
         self.img_fmt = img_fmt
 
-        if not img_years:
-            self._img_years = vis_years
-        else:
-            self._img_years = img_years
+        # if not img_years:
+        #     self._img_years = vis_years
+        # else:
+        #     self._img_years = img_years
 
     def _set_hist_specs(self, hist_specs: dict):
         for key, value in hist_specs.items():
@@ -210,44 +210,20 @@ class Graphics(Graphics_param):
 
         return ax_age, ax_weight, ax_fitness
 
-    def show(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year = -1):
-        """
-                vis_years = 0, disables graphics
-                vis_years = None, then the last year in the simulation i used to make graphics
-                vis_years = any, periodic update of the graphics
-                """
-        if self._vis_years == 0:
-            return None
-        if self._vis_years == None:
-            year = -1
-            self._make_grid(data_heat_herb,
-                           data_heat_carn,
-                           herb_data,
-                           carn_data,
-                           hist_herb_data,
-                           hist_carn_data,
-                           year=year)
-            return None
-        if self._vis_years >= 1:
-            sim_years = len(herb_data)
-            for y in range(0,sim_years, self._vis_years):
-                fig = self._make_grid(data_heat_herb,
-                                data_heat_carn,
-                                herb_data,
-                                carn_data,
-                                hist_herb_data,
-                                hist_carn_data,
-                                year=y)
+    def show_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year):
 
-                fig.pause(0.2)
-                #plt.show()
+        fig = self._make_grid(data_heat_herb, data_heat_carn,
+                              herb_data, carn_data,
+                              hist_herb_data,
+                              hist_carn_data, pause, year)
+        plt.pause(pause)
 
+        self._save_grid(fig, year)
 
-    def _make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year=-1):
-        if year == -1: # Convert default year to a plotable last year
-            plot_year = len(herb_data)
-        else:
-            plot_year = year + 1
+    def _make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year):
+
+        plot_year = year
+        year -= 1 # Må ta -1 fordi dataene er null-basert (første index er 0)
 
         fig = plt.figure(figsize=(14, 10))
         fig.suptitle(str(f'Year: {(plot_year):.0f}'), fontsize=36, x=0.08, y=0.95)
@@ -271,8 +247,11 @@ class Graphics(Graphics_param):
         fitness_ax = plt.subplot(grid[4:6, 5:13])
         self.plot_histogram(hist_herb_data, hist_carn_data, age_ax, weight_ax, fitness_ax, year)
 
-        plt.pause(pause)
         return fig
+
+    def _save_grid(self, fig: object, year: int):
+        fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
+
 
     def make_movie(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
         def make_frame(year_frame):
@@ -284,13 +263,11 @@ class Graphics(Graphics_param):
         animation.write_videofile('C:/temp/direkte_video' + '.mp4', fps=1) # fps er antall bilder per sekund
 
     def make_from_files(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
-        print(self.img_dir)
-        print((f'{self.img_dir}/{self.img_base}{12:05d}.{self.img_fmt}'))
 
         def make_frame(year_frame):
             fig = self._make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
 
-            fig.savefig(f'{os.path.join(self.img_dir, self.img_base)}{year_frame:05d}.{self.img_fmt}', format=self.img_fmt)
+            #fig.savefig(f'{os.path.join(self.img_dir, self.img_base)}{year_frame:05d}.{self.img_fmt}', format=self.img_fmt)
 
         for year in range(year_):
             make_frame(year)

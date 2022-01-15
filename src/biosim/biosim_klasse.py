@@ -326,13 +326,13 @@ class BioSim(BioSim_param):
                     yearly_plot = True
 
             if yearly_plot:
-                self.graphics._make_grid(self.cube_population_herbs,
+                self.graphics.show_grid(self.cube_population_herbs,
                                          self.cube_population_carns,
                                          self.get_yearly_herb_count(),
                                          self.get_yearly_carn_count(),
                                          self.cubelist_properties_herbs,
                                          self.cubelist_properties_carns,
-                                         pause = pause)
+                                         pause = pause, year = year)
 
             print('\r',f'Year:{year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '')
 
