@@ -171,18 +171,11 @@ class World:
         `ndarray`
             Array mapping chosen property
         """
-        """
-        Brukergrensesnittet som gjør at man kan skrive inn hvilken type informasjon som fabrikke nskal benytte seg av.
-        Forteller fabrikken hvilken funksjon man vil bruke.
-        getattr slår opp i klassen og ser om vi har en tilsvarende funksjon i klassen som samsvarer med navnet på den funksjonen vi putter inn.
-        dir(BioSim)
-        Om funksjonen ligger i klassen så sender den tilbake en referanse til funksjonsobjektet.
-        """
         return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map) #TODO: self is not input
 
     def _make_property_map(self, fx: callable(object), base_map: object, object_map: object):
         """
-        Create map of chosen properties
+        Create map of chosen properties for :py:meth:`.get_property_map`.
 
         Parameters
         ----------
@@ -205,7 +198,10 @@ class World:
     def v_size_herb_pop(self, location: object)->int:
         """Find the herbivore population size at given location.
 
-        Function used by :py:meth:`._make_property_map`
+        See Also
+        --------
+        :py:meth:`.get_property_map`
+            Relationship
 
         Parameters
         ----------
@@ -221,6 +217,11 @@ class World:
 
     def v_size_carn_pop(self, location: object)->int:
         """Find the carnivore population size at given location.
+
+        See Also
+        --------
+        :py:meth:`.get_property_map`
+            Relationship
 
         Parameters
         ----------
