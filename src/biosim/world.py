@@ -177,14 +177,14 @@ class World:
         dir(BioSim)
         Om funksjonen ligger i klassen så sender den tilbake en referanse til funksjonsobjektet.
         """
-        return self._make_property_map(getattr(self, fx_map_type))###, self.base_map, self.object_map)
+        return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map)
 
     # Factory for property_maps
-    def _make_property_map(self, fx: callable(object)):#, base_map: object, object_map: object):
+    def _make_property_map(self, fx: callable(object), base_map: object, object_map: object):
         """Create map of ..."""
-        property_map = np.empty(self.base_map.shape, dtype=float)
+        property_map = np.empty(base_map.shape, dtype=float)
         vget_property = np.vectorize(fx)
-        property_map[:, :] = vget_property(self.object_map)
+        property_map[:, :] = vget_property(object_map)
         return property_map
 
     # Parameter-funksjoner som kan brukes i fabrikken
