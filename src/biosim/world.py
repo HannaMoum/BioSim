@@ -123,6 +123,11 @@ class World:
         population: `list` of `dict`
             Population of animals to be placed in specified locations on the island.
 
+        Raises
+        ------
+        IndexError
+            Provided location does not exist.
+
         See Also
         ---------
         :py:meth:`.add_animals`
@@ -135,10 +140,10 @@ class World:
             max_r, max_col = self.base_map.shape
 
             if row < 0 or col < 0:
-                raise IndexError('Given coordinates for adding population must be greater than zero.')
+                raise IndexError('Given locations for adding population must be greater than zero.')
 
             if row >= max_r or col >= max_col:
-                raise IndexError('Given coordinates for adding population does not exist on the created island.')
+                raise IndexError('Given locations for adding population does not exist on the created island.')
 
             landscape_object = self.object_map[row, col]
 
