@@ -149,18 +149,22 @@ def test_add_animals_success(geogr_str, location):
                 len(island.object_map[adjust_row, adjust_col].carnivores) == 1])
 
 
-def test_get_property_map_herb_count(geogr_str):
+@pytest.mark.parametrize('function_call', ['v_size_herb_pop', 'v_size_carn_pop'])
+def test_get_property_map_herb_count(geogr_str, function_call):
     """Test get_ and make_property_map for herbivores by checking expected population."""
     island = World(geogr_str)
     add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
                                        {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
     island.add_population(add_pop)
-    herb_map = island.get_property_map('v_size_herb_pop')
-    zeros = sum(True for sub_array in herb_map for number in sub_array if not number)
-    row, col = herb_map.shape
+    species_map = island.get_property_map(function_call)
+    zeros = sum(True for sub_array in species_map for number in sub_array if not number)
+    row, col = species_map.shape
     expected_zeros = (row * col) - 1
 
-    assert all([herb_map[1, 1] == 1, zeros == expected_zeros])
+    assert all([species_map[1, 1] == 1, zeros == expected_zeros])
+
+
+
 
 
 
