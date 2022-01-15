@@ -177,11 +177,70 @@ def test_get_property_map_objects(geogr_str, function_call, species):
     assert all([attributes[1, 1] == [(6, 6.5, species(6.5, 6).fitness)], nones == expected_nones])
 
 
+def test_migration(mocker, geogr_str):
+    """Test correct migration of animal by assuring migration will happen in right direction
+    and checking expected journey."""
+    mocker.patch('biosim.animals.uniform', return_value=0)
+    mocker.patch('biosim.world.choice', return_value='E')
+    island = World(geogr_str)
+    add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5},
+                                       {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
+    island.add_population(add_pop)
+    island.do_migration()
+
+    assert all([island.object_map[1, 2].population,
+                len(island.object_map[1, 2].herbivores) == 1,
+                len(island.object_map[1, 2].carnivores) == 1])
 
 
+@pytest.mark.parametrize('direction', ['N', 'S', 'W'])
+def test_migration_water(mocker, geogr_str, direction):
+    """Test that migration can not happen to water cells."""
+    mocker.patch('biosim.animals.uniform', return_value=0)
+    mocker.patch('biosim.world.choice', return_value=direction)
+    island = World(geogr_str)
+    add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5}]}]
+    island.add_population(add_pop)
+    island.do_migration()
+
+    assert not all([island.object_map[1, 2].population,
+                    island.object_map[0, 1].population,
+                    island.object_map[1, 0].population,
+                    island.object_map[2, 1].population,
+                    not island.object_map[1, 1].population])
 
 
+def test_one_migration(mocker):
+    """Test that an animal bound to migrate will only migrate once."""
+    mocker.patch('biosim.animals.uniform', return_value=0)
+    mocker.patch('biosim.world.choice', return_value='E')
+
+    geogr = """\
+                WWWWW
+                WLHDW
+                WWWWW"""
+    geogr = textwrap.dedent(geogr)
+
+    island = World(geogr)
+    add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5}]}]
+    island.add_population(add_pop)
+    island.do_migration()
+
+    assert all([not island.object_map[1, 1].population,
+                island.object_map[1, 2].population,
+                not island.object_map[1, 3].population])
 
 
+def test_no_migration(mocker, geogr_str):
+    """Test for no migration if probability_to_migrate is absent."""
+    mocker.patch('biosim.animals.uniform', return_value=1)
+    mocker.patch('biosim.world.choice', return_value='E')
 
+    island = World(geogr_str)
+    add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5}]}]
+    island.add_population(add_pop)
+    island.do_migration()
+
+    assert all([island.object_map[1, 1].population,
+                not island.object_map[1, 2].population])
 
