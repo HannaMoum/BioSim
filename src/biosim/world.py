@@ -197,7 +197,7 @@ class World:
         Parameters
         ----------
         location: `obj`
-            Location in island.
+            Location on island.
 
         Returns
         -------
@@ -217,7 +217,7 @@ class World:
         Parameters
         ----------
         location: `obj`
-            Location in island.
+            Location on island.
 
         Returns
         -------
@@ -273,6 +273,23 @@ class World:
 
     # TODO: Om vi får en populasjon per landskap kan disse bli til 1 funksjon
     def v_herb_properties_objects(self, location: object) -> list:
+        """Find the herbivores' attributes at given location.
+
+        See Also
+        --------
+        :py:meth:`.get_property_map_objects`
+            Relationship
+
+        Parameters
+        ----------
+        location: `obj`
+            Location on island.
+
+        Returns
+        -------
+        `list`
+            List of attributes for herbivores.
+        """
         if location.herbivores:
             characteristics = []
             for animal in location.herbivores:
@@ -280,6 +297,23 @@ class World:
             return characteristics
 
     def v_carn_properties_objects(self, location: object) -> list:
+        """Find the carnivores' attributes at given location.
+
+        See Also
+        --------
+        :py:meth:`.get_property_map_objects`
+            Relationship
+
+        Parameters
+        ----------
+        location: `obj`
+            Location on island.
+
+        Returns
+        -------
+        `list`
+            List of attributes for carnivores.
+        """
         if location.carnivores:
             characteristics = []
             for animal in location.carnivores:
