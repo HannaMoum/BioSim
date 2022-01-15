@@ -156,6 +156,11 @@ class World:
         User interface that provides the value or action of any specified method or
         attribute of the class.
 
+        Notes
+        -----
+        Function takes method :py:meth:`.v_size_herb_pop` or :py:meth:`.v_size_carn_pop` as input
+        and provides a map of their respective populations sizes for every cell on the island.
+
         Parameters
         ----------
         fx_map_type: `str`
@@ -175,7 +180,6 @@ class World:
         """
         return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map) #TODO: self is not input
 
-    # Factory for property_maps
     def _make_property_map(self, fx: callable(object), base_map: object, object_map: object):
         """
         Create map of chosen properties
@@ -192,20 +196,22 @@ class World:
         `ndarray`
             Array mapping chosen property
         """
-        """Create map of chosen properties."""
         property_map = np.empty(base_map.shape, dtype=float)
         vget_property = np.vectorize(fx)
         property_map[:, :] = vget_property(object_map)
         return property_map
 
-    # Parameter-funksjoner som kan brukes i fabrikken
+
     def v_size_herb_pop(self, location: object)->int:
         """Find the herbivore population size at given location.
+
+        Function used by :py:meth:`._make_property_map`
 
         Parameters
         ----------
         location: `obj`
             Location in island.
+
         Returns
         -------
         `int`
@@ -220,6 +226,7 @@ class World:
         ----------
         location: `obj`
             Location in island.
+
         Returns
         -------
         `int`
