@@ -231,6 +231,16 @@ def test_one_migration(mocker):
                 not island.object_map[1, 3].population])
 
 
+def test_no_migration(mocker, geogr_str):
+    """Test for no migration if probability_to_migrate is absent."""
+    mocker.patch('biosim.animals.uniform', return_value=1)
+    mocker.patch('biosim.world.choice', return_value='E')
 
+    island = World(geogr_str)
+    add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5}]}]
+    island.add_population(add_pop)
+    island.do_migration()
 
+    assert all([island.object_map[1, 1].population,
+                not island.object_map[1, 2].population])
 
