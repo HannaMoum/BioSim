@@ -145,7 +145,46 @@ class World:
             population = dictionary['pop']
             landscape_object.add_animals(population)
 
-    ###################################################################################################################
+
+    def do_migration(self):
+        global_migrated_animals = []
+        with np.nditer(self.object_map, flags=['multi_index', 'refs_ok']) as it:
+            for grid_cell in it:
+                current_loaction = grid_cell.item()
+
+                if len(current_loaction.population) > 0: #if current_loaction.population:
+                    local_migrated_animals = []
+                    for animal in current_loaction.population:
+                        if animal not in global_migrated_animals:
+
+                            migrate_to_location = self._get_migrate_to_location(animal, it.multi_index)
+
+                            if migrate_to_location:
+                                migrate_to_location.population.append(animal)
+                                local_migrated_animals.append(animal)
+
+                    for animal in local_migrated_animals:
+                        current_loaction.population.remove(animal)
+
+                    global_migrated_animals += local_migrated_animals
+
+    def _get_migrate_to_location(self, animal:object, location_coordinates: tuple)-> object:
+        r, c = location_coordinates
+        view = self.migrate_map[r - 1:r + 2, c - 1:c + 2]
+
+        if animal.probability_to_migrate():
+            direction = choice('NSEW')
+            mask = np.array([[False, direction == 'N', False],
+                             [direction == 'W', False, direction == 'E'],
+                             [False, direction == 'S', False]])
+
+            destination_location = self.object_map[r - 1:r + 2, c - 1:c + 2][view & mask]
+            if destination_location.size > 0:
+                return destination_location.item() # Returnerer landskapsobjektet dyret skal migrere til (om dyret skal migrere)
+        else:
+             return False
+
+    # Methods concerning mapping
     def get_property_map(self, fx_map_type:str) -> object:
         """User interface that provides mapped values from specified methods of the class.
 
@@ -226,9 +265,6 @@ class World:
         """
         return location.carnivores_number
 
-    # ----------------------------------------------------------------------------------------------------------------
-    # Her kommer det ut en np.array med objekter, som f.eks. inneholder hele landskapsobjektet
-
     def get_property_map_objects(self, fx_map_type:str) -> object:
         """User interface that provides mapped values from specified methods of the class.
 
@@ -268,7 +304,6 @@ class World:
         property_map = np.empty(base_map.shape, dtype=object)
         vget_property = np.vectorize(fx)
         property_map[:, :] = vget_property(object_map)
-        print(type(property_map))
         return property_map
 
     # TODO: Om vi får en populasjon per landskap kan disse bli til 1 funksjon
@@ -319,47 +354,6 @@ class World:
             for animal in location.carnivores:
                 characteristics.append((animal.age, animal.weight, animal.fitness))
             return characteristics
-    ###################################################################################################################
-
-    def do_migration(self):
-        global_migrated_animals = []
-        with np.nditer(self.object_map, flags=['multi_index', 'refs_ok']) as it:
-            for grid_cell in it:
-                current_loaction = grid_cell.item()
-
-                if len(current_loaction.population) > 0: #if current_loaction.population:
-                    local_migrated_animals = []
-                    for animal in current_loaction.population:
-                        if animal not in global_migrated_animals:
-
-                            migrate_to_location = self._get_migrate_to_location(animal, it.multi_index)
-
-                            if migrate_to_location:
-                                migrate_to_location.population.append(animal)
-                                local_migrated_animals.append(animal)
-
-                    for animal in local_migrated_animals:
-                        current_loaction.population.remove(animal)
-
-                    global_migrated_animals += local_migrated_animals
-
-    def _get_migrate_to_location(self, animal:object, location_coordinates: tuple)-> object:
-        r, c = location_coordinates
-        view = self.migrate_map[r - 1:r + 2, c - 1:c + 2]
-
-        if animal.probability_to_migrate():
-            direction = choice('NSEW')
-            mask = np.array([[False, direction == 'N', False],
-                             [direction == 'W', False, direction == 'E'],
-                             [False, direction == 'S', False]])
-
-            destination_location = self.object_map[r - 1:r + 2, c - 1:c + 2][view & mask]
-            if destination_location.size > 0:
-                return destination_location.item() # Returnerer landskapsobjektet dyret skal migrere til (om dyret skal migrere)
-        #else:
-            # return False
-
-
 
 
 
