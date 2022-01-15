@@ -56,30 +56,6 @@ class BioSim(BioSim_param):
         return True
 
 
-
-
-        # def _validate_island_map(self, island_map_list: list) -> bool:
-        #     # Should already be textwrapped
-        #     length_check = len(island_map_list[0])
-        #     for element in island_map_list:
-        #
-        #         for letter in element:
-        #             if letter not in 'WHLD':
-        #                 raise ValueError(
-        #                     f'{letter} is not a defined landscape.\n'
-        #                     f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
-        #                     'respectively given by their belonging capital letter.')
-        #
-        #         if len(element) != length_check:
-        #             raise ValueError('Island map must contain an equal amount of columns.')
-        #
-        #         if not (element[0] and not element[-1]) == 'W':
-        #             raise ValueError('All the islands` outer edges must be of landscape Water.')
-        #
-        #     if not (island_map_list[0] and not island_map_list[-1]) == 'W' * length_check:
-        #         raise ValueError('All the islands` outer edges must be of landscape Water.')
-        #
-        #     return True
         # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
         self._num_years = 0  # Duration of sim
         self.cube_population_herbs = np.empty(())
