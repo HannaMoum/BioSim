@@ -136,3 +136,4 @@ def test_add_animals_success(geogr_str, location):
                 len(island.object_map[location].herbivores) == 1,
                 len(island.object_map[location].carnivores) == 1])
 
+
