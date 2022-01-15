@@ -39,7 +39,7 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
-    sim = BioSim(island_map=geogr, ini_pop=ini_herbs+ini_carns,
+    sim = BioSim(island_map=geogr, ini_pop=ini_carns,
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 800})
 
-    sim.simulate(num_years=100)
+    sim.simulate(num_years=5)
     # sim.add_population(population=ini_carns)
     #sim.simulate(num_years=100)
 

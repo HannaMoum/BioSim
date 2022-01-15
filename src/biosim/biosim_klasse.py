@@ -204,7 +204,7 @@ class BioSim(BioSim_param):
         else:
             raise ValueError('Feil input')
 
-    def add_population(self, ini_pop:dict):
+    def add_population(self, ini_pop:dict): #TODO: Sjekk om begge populasjoner (ini_pop) er tomme. Ikke noe poeng å kjøre simulering.
         """Validates input dict befor sending calling add_population method in
         the world class
         Initial_population looks like:

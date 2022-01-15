@@ -157,14 +157,19 @@ class Graphics(Graphics_param):
 
         return ax
 
-    def plot_histogram(self, hist_herb_data:object, hist_carn_data:object, ax_age, ax_weight, ax_fitness, year: int = -1)-> object:
+    def plot_histogram(self, hist_herb_data:list, hist_carn_data:list, ax_age, ax_weight, ax_fitness, year: int = -1)-> object:
         colors = ['green', 'red']
 
         yearly_herb_data = hist_herb_data[year]
         yearly_carn_data = hist_carn_data[year]
 
+        if yearly_carn_data.shape == (0,):
+            yearly_carn_data = np.zeros(shape=(1, 3))
+        if yearly_herb_data.shape == (0,):
+            yearly_herb_data = np.zeros(shape=(1,3))
+
         # Age
-        ax_age.hist([yearly_herb_data[:, 0],yearly_carn_data[:,0]],
+        ax_age.hist([yearly_herb_data[:, 0],yearly_carn_data[:, 0]],
                     bins=int(self.age_max/self.age_delta),
                     range=(0,self.age_max),
                     histtype= 'step',
