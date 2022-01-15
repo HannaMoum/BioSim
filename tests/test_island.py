@@ -181,7 +181,7 @@ def test_get_property_map_objects(geogr_str, function_call, species):
     nones = sum(True for sub_array in attributes for value in sub_array if not value)
     row, col = attributes.shape
     expected_nones = (row * col) - 1
-    print(attributes[1, 1])
+
     assert all([attributes[1, 1] == [(6, 6.5, species(6.5, 6).fitness)], nones == expected_nones])
 
 
