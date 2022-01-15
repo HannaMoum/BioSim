@@ -231,7 +231,7 @@ class Graphics(Graphics_param):
         if self._vis_years >= 1:
             sim_years = len(herb_data)
             for y in range(0,sim_years, self._vis_years):
-                self._make_grid(data_heat_herb,
+                fig = self._make_grid(data_heat_herb,
                                 data_heat_carn,
                                 herb_data,
                                 carn_data,
@@ -239,9 +239,11 @@ class Graphics(Graphics_param):
                                 hist_carn_data,
                                 year=y)
 
+                fig.pause(0.2)
+                #plt.show()
 
-    def _make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year=-1):
 
+    def _make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year=-1):
         if year == -1: # Convert default year to a plotable last year
             plot_year = len(herb_data)
         else:
@@ -269,6 +271,7 @@ class Graphics(Graphics_param):
         fitness_ax = plt.subplot(grid[4:6, 5:13])
         self.plot_histogram(hist_herb_data, hist_carn_data, age_ax, weight_ax, fitness_ax, year)
 
+        plt.pause(pause)
         return fig
 
     def make_movie(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
@@ -282,7 +285,7 @@ class Graphics(Graphics_param):
 
     def make_from_files(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
         print(self.img_dir)
-        print((f'{os.path.join(self.img_dir, self.img_base)}{12:05d}.{self.img_fmt}'))
+        print((f'{self.img_dir}/{self.img_base}{12:05d}.{self.img_fmt}'))
 
         def make_frame(year_frame):
             fig = self._make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))

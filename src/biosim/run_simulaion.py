@@ -44,7 +44,7 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60.0, 'delta': 2}},
-                 vis_years=None,
+                 vis_years=1,
                  ymax_animals=None,
                  cmax_animals={'Herbivore': 40, 'Carnivore': 10},
                  img_dir='C:/temp/test',
@@ -103,4 +103,4 @@ if __name__ == '__main__':
     # dash.make_grid(year=5)
     # dash.make_movie()
     #dash.make_from_files()
-    plt.show()
+    #plt.show()
