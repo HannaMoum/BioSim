@@ -50,7 +50,7 @@ class Graphics_param:
 
 class Graphics(Graphics_param):
 
-    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict,
+    def __init__(self, numpy_island_map, hist_specs:dict, ymax_animals:int, cmax_animals:dict, vis_years:int,
                  img_dir, img_base, img_fmt, img_years):
         """
         numpy_island_map er base_map fra World.
@@ -59,15 +59,15 @@ class Graphics(Graphics_param):
         self._set_hist_specs(hist_specs)
         self.ymax_animals = ymax_animals
         self._set_cmax_animals(cmax_animals)
-        #self._vis_years = vis_years
+        self._vis_years = vis_years
         self.img_dir = img_dir
         self.img_base = img_base
         self.img_fmt = img_fmt
 
-        # if not img_years:
-        #     self._img_years = vis_years
-        # else:
-        #     self._img_years = img_years
+        if not img_years:
+            self._img_years = vis_years
+        else:
+            self._img_years = img_years
 
     def _set_hist_specs(self, hist_specs: dict):
         for key, value in hist_specs.items():
