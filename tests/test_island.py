@@ -1,6 +1,7 @@
 import textwrap
 import pytest
 from biosim.world import World
+import numpy as np
 
 SEED = 12345678  # random seed for tests
 
@@ -58,21 +59,21 @@ def test_invalid_map_str(geogr):
         World(geogr_wrapped)
 
 
-@pytest.mark.skip
 def test_valid_map_str(geogr_str):
-    """Test no ValuErrors are risen when valid map string are given."""
-    assert all([World(geogr_str),
-                World(geogr_str)._make_base_map(geogr_str)])
+    """Test no ValueErrors are risen when valid map string are given."""
+    assert np.all(World(geogr_str))
 
 
-@pytest.mark.skip
+
 def test_base_map(geogr_str):
-    """Test correct creation and attribute save of base_map."""
-    base_map = [['W', 'W', 'W', 'W'],
-                ['W', 'L', 'H', 'W'],
-                ['W', 'W', 'W', 'W']]
-    assert all([World(geogr_str)._make_base_map(geogr_str) == base_map,
-                World(geogr_str).base_map == base_map, ])
+    """Test correct creation of base_map."""
+    base_map_wanted = [['W', 'W', 'W', 'W'],
+                       ['W', 'L', 'H', 'W'],
+                       ['W', 'W', 'W', 'W']]
+    base_map = World(geogr_str).base_map
+    for row_wanted, row in zip(base_map_wanted, base_map):
+        for letter_wanted, letter in zip(row_wanted, row):
+            assert letter_wanted == letter
 
 
 @pytest.mark.skip
@@ -81,8 +82,9 @@ def test_migrate_map(geogr_str):
     migrate_map = [[False, False, False, False],
                    [False, True, True, False],
                    [False, False, False, False]]
-    assert all([World(geogr_str)._make_migrate_map() == migrate_map,
-                World(geogr_str).migrate_map == migrate_map])
+    # assert all([World(geogr_str)._make_migrate_map() == migrate_map,
+    #             World(geogr_str).migrate_map == migrate_map])
+    assert np.testing.assert_allclose(World(geogr_str)._make_migrate_map(), migrate_map)
 
 
 @pytest.mark.skip
