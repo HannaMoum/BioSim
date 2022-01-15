@@ -82,9 +82,11 @@ def test_object_map_save(geogr_str):
 
 @pytest.mark.skip
 def test_object_map_type(geogr_str):
+    """Test correct creation of object references by checking their attribute landscape_type."""
     island = World(geogr_str)
-    #Må iterere riktig, ikke slik;
-    for letter, reference in (geogr_str, island.object_map):
-        assert reference.landscape_type == letter
+    geogr = geogr_str.split()
+    for letter_row, reference_row in zip(geogr, island.object_map):
+        for letter, reference in zip(letter_row, reference_row):
+            assert reference.landscape_type == letter
 
 
