@@ -58,10 +58,10 @@ class World:
             if len(element) != length_check:
                 raise ValueError('Island map must contain an equal amount of columns.')
 
-            if not (element[0] and element[-1]) == 'W':
+            if not (element[0] and not element[-1]) == 'W':
                 raise ValueError('All the islands` outer edges must be of landscape Water.')
 
-        if not (island_map_list[0] and island_map_list[-1]) == 'W' * length_check:
+        if not (island_map_list[0] and not island_map_list[-1]) == 'W' * length_check:
             raise ValueError('All the islands` outer edges must be of landscape Water.')
 
         return True
