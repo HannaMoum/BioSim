@@ -44,7 +44,28 @@ class World:
         """Map of island consisting of landscape-object references (`ndarray` of `obj`)."""
         return self._object_map
 
-    def _validate_island_map(self, island_map:str) -> bool:
+    def _validate_island_map(self, island_map):
+        """
+        Validate correct setup of island map string.
+
+        Parameters
+        ----------
+        island_map: `list` of `str`
+            Draft of the island's geography.
+
+            Each element of the list represents a row consisting of landscapeletters.
+
+        Raises
+        ------
+        ValueError
+            * Provided input consists of one or more illegal landscape letter, or
+            * outer edges of the island are not uniquely made up landscape Water.
+
+        Returns
+        -------
+        `bool`
+            Return True if ValueError is not risen.
+        """
         # Should already be textwrapped
         length = len(island_map[0])
         for line in island_map:
@@ -64,8 +85,7 @@ class World:
         return True
 
     def _make_base_map(self, input_map: str) -> object:
-        """
-        Mapping island with respect to each landscape letter.
+        """Mapping island with respect to each landscape letter.
 
         Parameters
         ----------
@@ -81,7 +101,7 @@ class World:
         """
 
         map_list = input_map.split()
-        self._validate_island_map(map_list)  # Validerer her, inne i øya selv
+        self._validate_island_map(map_list)
         row, col = len(map_list), len(map_list[0])
 
         build_map = np.empty(shape=(row, col), dtype='str')
@@ -182,7 +202,7 @@ class World:
             if destination_location.size > 0:
                 return destination_location.item() # Returnerer landskapsobjektet dyret skal migrere til (om dyret skal migrere)
         else:
-             return False
+            return False
 
     # Methods concerning mapping
     def get_property_map(self, fx_map_type:str) -> object:
