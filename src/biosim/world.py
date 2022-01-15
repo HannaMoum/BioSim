@@ -161,6 +161,13 @@ class World:
 
 
     def do_migration(self):
+        """
+        Migrate all animals in all terrains.
+
+        Returns
+        -------
+
+        """
         global_migrated_animals = []
         with np.nditer(self.object_map, flags=['multi_index', 'refs_ok']) as it:
             for grid_cell in it:
@@ -168,12 +175,11 @@ class World:
 
                 if current_location.population:
                     local_migrated_animals = []
+
                     for animal in current_location.population:
                         if animal not in global_migrated_animals:
 
-                            migrate_to_location = self._get_migrate_to_location(animal, it.multi_index)
-
-                            if migrate_to_location:
+                            if migrate_to_location := self._get_migration_location(animal, it.multi_index):
                                 migrate_to_location.population.append(animal)
                                 local_migrated_animals.append(animal)
 
@@ -182,11 +188,9 @@ class World:
 
                     global_migrated_animals += local_migrated_animals
 
-    def _get_migrate_to_location(self, animal, location_coordinates):
+    def _get_migration_location(self, animal, location_coordinates):
         r, c = location_coordinates
         view = self.migrate_map[r-1:r+2, c-1:c+2]
-
-        #if mask:= migra
 
         if animal.probability_to_migrate():
             direction = choice('NSEW')
@@ -194,8 +198,8 @@ class World:
                              [direction == 'W', False, direction == 'E'],
                              [False, direction == 'S', False]])
 
-            if destination_location := self.object_map[r-1:r+2, c-1:c+2][view & mask]:
-                return destination_location.item()
+            if destination := self.object_map[r-1:r+2, c-1:c+2][view & mask]:
+                return destination.item()
             else:
                 return False
         else:
