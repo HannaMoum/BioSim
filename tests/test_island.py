@@ -123,4 +123,7 @@ def test_add_animals_success(geogr_str, location):
     add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
                                          {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
     island.add_population(add_pop)
-    assert len(island.object_map[location].population == 2)
+    assert all([len(island.object_map[location].population) == 2,
+                len(island.object_map[location].herbivores) == 1,
+                len(island.object_map[location].carnivores) == 1])
+
