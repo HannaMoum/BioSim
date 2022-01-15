@@ -5,8 +5,8 @@ from dataclasses import dataclass
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
 from biosim.landscape import Landscape
-from world import World
-from graphics import Graphics
+from biosim.world import World
+from biosim.graphics import Graphics
 
 
 
@@ -49,12 +49,16 @@ class BioSim(BioSim_param):
 
         self.add_population(ini_pop)
 
+        self._initial_num_year = None
+
         # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
         self._num_years = 0  # Duration of sim
         self.cube_population_herbs = np.empty(())
         self.cube_population_carns = np.empty(())
         self.cubelist_properties_herbs = []
         self.cubelist_properties_carns = []
+        self.yearly_pop_map_herbs = []
+        self.yearly_pop_map_carns = []
 
 
         if all((self._validate_hist_specs(hist_specs),
@@ -122,6 +126,9 @@ class BioSim(BioSim_param):
             return True
 
     def _validate_cmax_animals(selfself, cmax_animals:dict)-> bool:
+        # TODO: Må håndtere None-verdi
+        if cmax_animals is None:
+            return True
         for key, value in cmax_animals.items():
             if key not in ['Herbivore', 'Carnivore']:
                 raise KeyError(f'{key} is not a legal key in cmax_animals. Legal keys are Herbivore and Carnivore')
@@ -129,8 +136,10 @@ class BioSim(BioSim_param):
                 return True
 
     def _validate_im_dir_im_base(self, img_dir:str, img_base:str):
-        if any((all((type(img_dir) == str, type(img_base) == 'str')),
-                    all((type(img_dir) == None, type(img_base) == None)))):
+        # TODO: Må sette default på im:dir, for å håndtere når variabelen er satt til None
+
+        if not any((all((type(img_dir) is str, type(img_base) is str)),
+                    all((type(img_dir) is None, type(img_base) is None)))):
             raise ValueError('Error. Both must be str or None')
             return None
 
@@ -188,7 +197,6 @@ class BioSim(BioSim_param):
         if species == 'Carnivore':
             Carnivore.set_params(params)
 
-
     def set_landscape_parameters(self, landscape:str, params:dict):
         """
         Set parameters for landscape type.
@@ -204,7 +212,7 @@ class BioSim(BioSim_param):
         else:
             raise ValueError('Feil input')
 
-    def add_population(self, ini_pop:dict): #TODO: Sjekk om begge populasjoner (ini_pop) er tomme. Ikke noe poeng å kjøre simulering.
+    def add_population(self, population): #TODO: Sjekk om begge populasjoner (ini_pop) er tomme. Ikke noe poeng å kjøre simulering.
         """Validates input dict befor sending calling add_population method in
         the world class
         Initial_population looks like:
@@ -215,7 +223,7 @@ class BioSim(BioSim_param):
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
         """
-        self.island.add_population(ini_pop)
+        self.island.add_population(population)
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
@@ -225,11 +233,18 @@ class BioSim(BioSim_param):
             raise FileNotFoundError(f'{self._img_dir} is empty.')
 
     def simulate(self, num_years:int = 10):
-        self._num_years = num_years # Trenger num_years utenfor simulate metoden. Brukes i get_yearly_carn_count og get_yearly_herb_count
-        yearly_pop_map_herbs = []
-        yearly_pop_map_carns = []
+        if self._initial_num_year is None:
+            self._initial_num_year = num_years
+            start_loop = 1
+            self._num_years = num_years
 
-        for year in range(1, self._num_years + 1):
+        else:
+            start_loop = self.year + 1
+            self._num_years = self.year + num_years
+
+        for current_year in range(start_loop, self._num_years + 1):
+            self._year += 1
+
             with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     landscape = element.item()
@@ -251,9 +266,9 @@ class BioSim(BioSim_param):
             # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
 
             # Herbivore populasjonsstørrelse for alle lokasjoner per år
-            yearly_pop_map_herbs.append(self.island.get_property_map('v_size_herb_pop'))
+            self.yearly_pop_map_herbs.append(self.island.get_property_map('v_size_herb_pop'))
             # Carnivore populasjonsstørrelse for alle lokasjoner per år
-            yearly_pop_map_carns.append(self.island.get_property_map('v_size_carn_pop'))
+            self.yearly_pop_map_carns.append(self.island.get_property_map('v_size_carn_pop'))
 
 
             yearly_herb_objects_map = self.island.get_property_map_objects('v_herb_properties_objects')
@@ -281,14 +296,14 @@ class BioSim(BioSim_param):
 
             # Data at end of simulation
             # TODO: Add evaluation. Check shape and size. Raises valueerror
-            self.cube_population_herbs = np.stack(yearly_pop_map_herbs)
-            self.cube_population_carns = np.stack(yearly_pop_map_carns)
+            self.cube_population_herbs = np.stack(self.yearly_pop_map_herbs)
+            self.cube_population_carns = np.stack(self.yearly_pop_map_carns)
 
             #--------------------------------------------------------------------------------------------------------
             # Graphics for the year
             if not self._vis_years is None:
                 if self._vis_years > 0:
-                    if num_years % self._vis_years != 0:
+                    if self._initial_num_year % self._vis_years != 0:
                         raise ValueError('num_years must be multiple of vis_years')
 
             pause = 0.2
@@ -298,21 +313,21 @@ class BioSim(BioSim_param):
             if self._vis_years == 0:
                 show = False
             elif self._vis_years is None:
-                if year == self._num_years:
+                if current_year == self._num_years:
                     pause = 3
                     show = True
             elif self._vis_years >= 1:
-                if year % self._vis_years == 0:
+                if current_year % self._vis_years == 0:
                     pause = 1/self._vis_years #TODO: Finn en pause basert på antall år som simuleres og intervall mellom bilder.
                     show = True
 
             if self._img_years == 0:
                 save =False
             if self._img_years is None:
-                if year == self._num_years:
+                if current_year == self._num_years:
                     save = True
             elif self._img_years >= 1:
-                if year % self._img_years == 0:
+                if current_year % self._img_years == 0:
                     save = True
 
             if any((show, save)):
@@ -322,13 +337,13 @@ class BioSim(BioSim_param):
                                          self.get_yearly_carn_count(),
                                          self.cubelist_properties_herbs,
                                          self.cubelist_properties_carns,
-                                         pause, year, show, save)
-            self._year += 1
-            self._num_animals_per_species = {'Herbivores': yearly_pop_map_herbs[-1].sum(),
-                                             'Carnivores': yearly_pop_map_carns[-1].sum()}
-            self._num_animals = yearly_pop_map_herbs[-1].sum() + yearly_pop_map_carns[-1].sum()
+                                         pause, current_year, show, save)
 
-            print('\r',f'Year:{year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '')
+            self._num_animals_per_species = {'Herbivores': self.yearly_pop_map_herbs[-1].sum(),
+                                             'Carnivores': self.yearly_pop_map_carns[-1].sum()}
+            self._num_animals = self.yearly_pop_map_herbs[-1].sum() + self.yearly_pop_map_carns[-1].sum()
+
+            print('\r',f'Year:{current_year}  Herbivores:{self.yearly_pop_map_herbs[-1].sum()}   Carnivores:{self.yearly_pop_map_carns[-1].sum()}', end = '')
 
         print()
 

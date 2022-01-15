@@ -16,8 +16,8 @@ from datetime import datetime
 @dataclass
 class Graphics_param:
     ymax_animals: int
-    cmax_animals_herbivore: int
-    cmax_animals_carnivore: int
+    cmax_animals_herbivore: int = 50
+    cmax_animals_carnivore: int = 50
 
     img_dir: str = 'C:/'
     img_base: str = 'BioSim'
@@ -83,6 +83,11 @@ class Graphics(Graphics_param):
 
     def _set_cmax_animals(self, cmax_animals: dict):
         """{'Herbivore': 50, 'Carnivore': 20}"""
+        # TODO: Må håndtere None-verdier
+        if cmax_animals is None:
+            return True
+
+
         for key, value in cmax_animals.items():
             if key == 'Herbivore':
                 self.cmax_animals_herbivore = value
