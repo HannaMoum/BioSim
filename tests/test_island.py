@@ -107,7 +107,7 @@ def test_object_map_reference(geogr_str):
 
 
 @pytest.mark.skip
-@pytest.mark.parametrize('location', [(1, -1), (9, 2)])
+@pytest.mark.parametrize('location', [(1, -1), (-1, 1), (9, 2), (2, 9)])
 def test_add_animals_IndexError(geogr_str, location):
     """Test that IndexError arise if negative coordinates or non-existent coordinates are provided."""
     island = World(geogr_str)
