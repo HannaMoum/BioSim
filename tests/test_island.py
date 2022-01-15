@@ -107,11 +107,20 @@ def test_object_map_reference(geogr_str):
 
 
 @pytest.mark.skip
-@pytest.mark.parametrize('location', [(1, -1), (-1, 1), (9, 2), (2, 9)])
+@pytest.mark.parametrize('location', [(1, -1), (-1, 1), (0, 1), (9, 2), (2, 9)])
 def test_add_animals_IndexError(geogr_str, location):
     """Test that IndexError arise if negative coordinates or non-existent coordinates are provided."""
     island = World(geogr_str)
-    add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight', 5}]}]
+    add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5}]}]
     with pytest.raises(IndexError):
         island.add_population(add_pop)
 
+@pytest.mark.parametrize('location', [(2, 2), (2, 3)])
+@pytest.mark.skip
+def test_add_animals_success(geogr_str, location):
+    """Test that animals are added in the correct locations."""
+    island = World(geogr_str)
+    add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
+                                         {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
+    island.add_population(add_pop)
+    assert len(island.object_map[location].population == 2)
