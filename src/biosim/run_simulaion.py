@@ -5,7 +5,7 @@ from graphics import Graphics
 
 #from biosim.lowland import Landscape
 
-plt.show()
+#plt.show()
 import numpy as np
 import seaborn as sns
 
@@ -53,8 +53,8 @@ if __name__ == '__main__':
                  img_years=None
                  )
 
-    sim.simulate(num_years=30)
-    sim.make_movie()
+    sim.simulate(num_years=10)
+    #sim.make_movie()
 
     #sim.set_landscape_parameters('L', {'f_max': 800})
 
