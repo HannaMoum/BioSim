@@ -89,7 +89,7 @@ def test_object_map_shape(geogr_str):
 
 @pytest.mark.skip
 def test_object_map_type(geogr_str):
-    """Test correct creation of object references by checking their attribute landscape_type."""
+    """Test correct creation of object references by checking their type."""
     island = World(geogr_str)
     for reference_row in island.object_map:
         for reference in reference_row:
@@ -107,6 +107,14 @@ def test_object_map_reference(geogr_str):
 
 
 @pytest.mark.skip
+def test_object_map_coordinate(geogr_str):
+    """Test that given coordinates picks out the correct object."""
+    island = World(geogr_str)
+    assert all([island.object_map[1, 1].landscape_type == 'L',
+                island.object_map[1, 2].landscape_type == 'H'])
+
+
+@pytest.mark.skip
 @pytest.mark.parametrize('location', [(1, -1), (-1, 1), (0, 1), (9, 2), (2, 9)])
 def test_add_animals_IndexError(geogr_str, location):
     """Test that IndexError arise if negative coordinates or non-existent coordinates are provided."""
@@ -114,6 +122,7 @@ def test_add_animals_IndexError(geogr_str, location):
     add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5}]}]
     with pytest.raises(IndexError):
         island.add_population(add_pop)
+
 
 @pytest.mark.parametrize('location', [(2, 2), (2, 3)])
 @pytest.mark.skip
