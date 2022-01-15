@@ -4,29 +4,27 @@ from random import choice
 
 
 class World:
+    """An island with unique geography and evolution.
 
-    #valid_letters = 'LHWD' noe som dette kanskje?
+    Attributes
+    ----------
+    base_map: `ndarray` of `str`
+        Island map consisting of singular landscape letters.
+    migrate_map: `ndarray` of `bool`
+        Island map presenting migratable locations.
+    object_map: `ndarray` of `obj`
+        Island map consisting of :py:class:`.Landscape` object references
 
-    def __init__(self, island_map):#, ini_pop): #TODO: Edit other files so that ini_pop is not an input
-        """
-        World er en klasse som skaper verden ut i fra ett gitt kart og parametere.
-        Klassen holder orden på landskaps-objekter som ligger i kartet, og hvert landskapsobjekt
-        kan inneholde dyr.
-        Inneholder nårværende status (state). Tid ligger i BioSim.
+    Parameters
+    -----------
+    island_map: `str`
+        String of {'W', 'D', 'L', 'H'} mapping the entire island's geography.
+    """
 
-        Tar i mot:
-            island_map: Island_map er en tekst-streng som er ferdig validert i BioSim.
-            ini_pop: dict for alle dyra som skal plasseres ut i verden. Den er ferdig valide
-        """
-
+    def __init__(self, island_map):
         self._base_map = self._make_base_map(island_map)
         self._migrate_map = self._make_migrate_map()
         self._object_map = self._make_object_map()
-
-        #self._ini_pop = ini_pop #Not an input, not an attribute
-        #self.add_population(ini_pop) #Restructure this. Method has to be called in Biosim
-        # TODO: Save ini_pop directly from input
-        # Add_population returns nothing, it is an action of its' own
 
     @property
     def base_map(self):
@@ -35,8 +33,7 @@ class World:
 
     @property
     def migrate_map(self):
-        """Map of the island's migratable and non-migratable cells (`ndarray` of `bool`).
-        #Gives True/False if movement on to location is allowed"""
+        """Map of the island's migratable and non-migratable cells (`ndarray` of `bool`)."""
         return self._migrate_map
 
     @property
@@ -44,8 +41,27 @@ class World:
         """Map of island consisting of landscape-object references (`ndarray` of `obj`)."""
         return self._object_map
 
-    def _validate_island_map(self, island_map:str) -> bool:
-        # Should already be textwrapped
+    def _validate_island_map(self, island_map):
+        """Validate correct setup of island map string.
+
+        Parameters
+        ----------
+        island_map: `list` of `str`
+            Draft of the island's geography.
+
+            Each element of the list represents a row consisting of landscapeletters.
+
+        Raises
+        ------
+        ValueError
+            * Provided input consists of one or more illegal landscape letter, or
+            * outer edges of the island are not uniquely made up landscape Water.
+
+        Returns
+        -------
+        `bool`
+            Return True if ValueError is not risen.
+        """
         length = len(island_map[0])
         for line in island_map:
             for letter in line:
@@ -64,8 +80,7 @@ class World:
         return True
 
     def _make_base_map(self, input_map: str) -> object:
-        """
-        Mapping island with respect to each landscape letter.
+        """Mapping island with respect to each landscape letter.
 
         Parameters
         ----------
@@ -81,7 +96,7 @@ class World:
         """
 
         map_list = input_map.split()
-        self._validate_island_map(map_list)  # Validerer her, inne i øya selv
+        self._validate_island_map(map_list)
         row, col = len(map_list), len(map_list[0])
 
         build_map = np.empty(shape=(row, col), dtype='str')
@@ -96,8 +111,7 @@ class World:
         return self._base_map != 'W'
 
     def _make_object_map(self) -> object:
-        """
-        Create map of the island's landscape objects references.
+        """Create map of the island's landscape objects references.
 
         Returns
         -------
@@ -150,11 +164,11 @@ class World:
         global_migrated_animals = []
         with np.nditer(self.object_map, flags=['multi_index', 'refs_ok']) as it:
             for grid_cell in it:
-                current_loaction = grid_cell.item()
+                current_location = grid_cell.item()
 
-                if len(current_loaction.population) > 0: #if current_loaction.population:
+                if current_location.population:
                     local_migrated_animals = []
-                    for animal in current_loaction.population:
+                    for animal in current_location.population:
                         if animal not in global_migrated_animals:
 
                             migrate_to_location = self._get_migrate_to_location(animal, it.multi_index)
@@ -164,13 +178,15 @@ class World:
                                 local_migrated_animals.append(animal)
 
                     for animal in local_migrated_animals:
-                        current_loaction.population.remove(animal)
+                        current_location.population.remove(animal)
 
                     global_migrated_animals += local_migrated_animals
 
-    def _get_migrate_to_location(self, animal:object, location_coordinates: tuple)-> object:
+    def _get_migrate_to_location(self, animal, location_coordinates):
         r, c = location_coordinates
-        view = self.migrate_map[r - 1:r + 2, c - 1:c + 2]
+        view = self.migrate_map[r-1:r+2, c-1:c+2]
+
+        #if mask:= migra
 
         if animal.probability_to_migrate():
             direction = choice('NSEW')
@@ -178,11 +194,12 @@ class World:
                              [direction == 'W', False, direction == 'E'],
                              [False, direction == 'S', False]])
 
-            destination_location = self.object_map[r - 1:r + 2, c - 1:c + 2][view & mask]
-            if destination_location.size > 0:
-                return destination_location.item() # Returnerer landskapsobjektet dyret skal migrere til (om dyret skal migrere)
+            if destination_location := self.object_map[r-1:r+2, c-1:c+2][view & mask]:
+                return destination_location.item()
+            else:
+                return False
         else:
-             return False
+            return False
 
     # Methods concerning mapping
     def get_property_map(self, fx_map_type:str) -> object:

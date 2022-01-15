@@ -3,6 +3,7 @@ import pytest
 from biosim.world import World
 import numpy as np
 from biosim.landscape import Landscape
+from biosim.animals import Herbivore, Carnivore
 
 SEED = 12345678  # random seed for tests
 
@@ -87,14 +88,6 @@ def test_migrate_map(geogr_str):
             assert wanted_bool == boolean
 
 
-@pytest.mark.skip
-def test_object_map_save(geogr_str):
-    """Test correct attribute save from making an object map."""
-    object_map_creation = World(geogr_str)._make_object_map()
-    object_map_attribute = World(geogr_str).object_map
-    assert object_map_creation == object_map_attribute  # Not sure this will work...
-
-
 def test_object_map_shape(geogr_str):
     """Test creation of correct size for object_map."""
     island = World(geogr_str)
@@ -150,8 +143,10 @@ def test_add_animals_success(geogr_str, location):
 
 
 @pytest.mark.parametrize('function_call', ['v_size_herb_pop', 'v_size_carn_pop'])
-def test_get_property_map_herb_count(geogr_str, function_call):
-    """Test get_ and make_property_map for herbivores by checking expected population."""
+def test_get_property_map_population_size(geogr_str, function_call):
+    """Test get_ and make_property_map for all species by checking expected population,
+    in expected location.
+    All other cells are expect to contain zero population."""
     island = World(geogr_str)
     add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
                                        {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
@@ -162,6 +157,24 @@ def test_get_property_map_herb_count(geogr_str, function_call):
     expected_zeros = (row * col) - 1
 
     assert all([species_map[1, 1] == 1, zeros == expected_zeros])
+
+
+@pytest.mark.parametrize('function_call, species', [('v_herb_properties_objects', Herbivore),
+                                                    ('v_carn_properties_objects', Carnivore)])
+def test_get_property_map_objects(geogr_str, function_call, species):
+    """Test get_ and make_property_map_objects for all species by checking expected
+    saved attributes in expected location.
+    All other cells are expected to contain None"""
+    island = World(geogr_str)
+    add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5},
+                                       {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
+    island.add_population(add_pop)
+    attributes = island.get_property_map_objects(function_call)
+    nones = sum(True for sub_array in attributes for value in sub_array if not value)
+    row, col = attributes.shape
+    expected_nones = (row * col) - 1
+
+    assert all([attributes[1, 1] == [(6, 6.5, species(6.5, 6).fitness)], nones == expected_nones])
 
 
 
