@@ -18,9 +18,10 @@ class World:
             island_map: Island_map er en tekst-streng som er ferdig validert i BioSim.
             ini_pop: dict for alle dyra som skal plasseres ut i verden. Den er ferdig valide
         """
-        self._base_map = self._make_base_map(island_map)
-        self._migrate_map = self._make_migrate_map()
-        self._object_map = self._make_object_map()
+        if self._validate_island_map(island_map):
+            self._base_map = self._make_base_map(island_map)
+            self._migrate_map = self._make_migrate_map()
+            self._object_map = self._make_object_map()
 
         #self._ini_pop = ini_pop #Not an input, not an attribute
         #self.add_population(ini_pop) #Restructure this. Method has to be called in Biosim
@@ -45,21 +46,23 @@ class World:
 
     def _validate_island_map(self, island_map:str) -> bool:
         # Should already be textwrapped
+        print(type(island_map))
         str_list = island_map.split(sep='\n')
 
-        for element in str_list:
-            for letter in island_map:
+
+        for line in str_list:
+            for letter in line:
                 if letter not in 'WHLD':
                     raise ValueError(
                         f'{letter} is not a defined landscape.\n'
                         f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
                         'respectively given by their belonging capital letter.')
 
-            if not (element[0] and not element[-1]) == 'W':
-                raise ValueError('All the islands` outer edges must be of landscape Water.')
+            if not all((line.startswith('W'), line.endswith('W'))): #not (line[0] and not line[-1]) == 'W':
+                raise ValueError('1 All the islands` outer edges must be of landscape Water.')
 
-        if not (str_list[0] and not str_list[-1]) == 'W':
-            raise ValueError('All the islands` outer edges must be of landscape Water.')
+        if not set(str_list[0] + str_list[-1]) == {'W'}:# == 'W' #and not str_list[-1]) == 'W':
+            raise ValueError('2 All the islands` outer edges must be of landscape Water.')
 
         return True
 
@@ -82,7 +85,6 @@ class World:
         """
 
         map_list = input_map.split()
-        self._validate_island_map(map_list)  # Validerer her, inne i øya selv
         row, col = len(map_list), len(map_list[0])
 
         build_map = np.empty(shape=(row, col), dtype='str')

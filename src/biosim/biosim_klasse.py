@@ -39,13 +39,17 @@ class BioSim(BioSim_param):
 
         random.seed(seed) # Påvirker potensielt andre script som kjører. Vurder å lage egen Random-instans, slik at BioSIm kan eie sitt eget random seed.
 
-        if self._validate_island_map(island_map): # ikke sjekk hele her, fordeles ned til animals
-            self.island = World(island_map) #Bare opprette self.island direkte
+        if self._validate_island_map(island_map):
+            self.island = World(island_map)
 
         self.add_population(ini_pop)
 
     def _validate_island_map(self, island_map:str)-> bool:
         """Returns True/False. Checks that the str contains no white space, and that the rows are of the same length"""
+        if not type(island_map) is str:
+            raise ValueError('island_map must be of type str.')
+            return False
+
         str_list = island_map.split(sep='\n')
         length_check = len(str_list[0])
 
@@ -79,28 +83,6 @@ class BioSim(BioSim_param):
                                      img_fmt,
                                      img_years)
 
-    def _validate_island_map(self, island_map_list: list) -> bool:
-        # Should already be textwrapped
-        length_check = len(island_map_list[0])
-        for element in island_map_list:
-
-            for letter in element:
-                if letter not in 'WHLD':
-                    raise ValueError(
-                        f'{letter} is not a defined landscape.\n'
-                        f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
-                        'respectively given by their belonging capital letter.')
-
-            if len(element) != length_check:
-                raise ValueError('Island map must contain an equal amount of columns.')
-
-            if not (element[0] and not element[-1]) == 'W':
-                raise ValueError('All the islands` outer edges must be of landscape Water.')
-
-        if not (island_map_list[0] and not island_map_list[-1]) == 'W' * length_check:
-            raise ValueError('All the islands` outer edges must be of landscape Water.')
-
-        return True
 
     def _validate_hist_specs(self, hist_specs:dict)-> bool:
         """
