@@ -210,15 +210,17 @@ class Graphics(Graphics_param):
 
         return ax_age, ax_weight, ax_fitness
 
-    def show_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year):
+    def show_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year, show:bool, save: bool):
 
         fig = self._make_grid(data_heat_herb, data_heat_carn,
                               herb_data, carn_data,
                               hist_herb_data,
                               hist_carn_data, pause, year)
-        plt.pause(pause)
+        if show:
+            plt.pause(pause)
 
-        self._save_grid(fig, year)
+        if save:
+            self._save_grid(fig, year)
 
     def _make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year):
 

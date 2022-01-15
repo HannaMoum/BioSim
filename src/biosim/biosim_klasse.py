@@ -67,6 +67,13 @@ class BioSim(BioSim_param):
                                      img_fmt,
                                      img_years)
         self._vis_years = self._set_vis_years(vis_years)
+        self._img_years = self._set_img_years(img_years)
+
+    def _set_img_years(self, img_years: int):
+        # TODO: Burde også teste for negative verdier, andre datatyper.
+        if img_years is None:
+            img_years = self._vis_years
+        return img_years
 
     def _set_vis_years(self, vis_years: int)-> int:
         # TODO: Gjøre validering av vis_years
@@ -311,28 +318,39 @@ class BioSim(BioSim_param):
 
             yearly_plot = False
             pause = 0.2
+            show = False
+            save = False
 
             if self._vis_years == 0:
-                yearly_plot = False # Hvis vis_years = 0 skal det ikke vises noe grafikk.
-
-            elif self._vis_years == None:
+                #yearly_plot = False # Hvis vis_years = 0 skal det ikke vises noe grafikk.
+                show = False
+            elif self._vis_years is None:
                 if year == self._num_years:
                     pause = 3
-                    yearly_plot = True
-
+                    show = True
             elif self._vis_years >= 1:
                 if year % self._vis_years == 0:
                     pause = 1/self._vis_years #TODO: Finn en pause basert på antall år som simuleres og intervall mellom bilder.
-                    yearly_plot = True
+                    show = True
 
-            if yearly_plot:
+            if self._img_years == 0:
+                save =False
+            if self._img_years is None:
+                if year == self._num_years:
+                    save = True
+            elif self._img_years >= 1:
+                if year % self._img_years == 0:
+                    save = True
+
+            if any((show, save)):
                 self.graphics.show_grid(self.cube_population_herbs,
                                          self.cube_population_carns,
                                          self.get_yearly_herb_count(),
                                          self.get_yearly_carn_count(),
                                          self.cubelist_properties_herbs,
                                          self.cubelist_properties_carns,
-                                         pause = pause, year = year)
+                                         pause, year, show, save)
+
 
             print('\r',f'Year:{year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '')
 

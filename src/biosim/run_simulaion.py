@@ -44,7 +44,7 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60.0, 'delta': 2}},
-                 vis_years=2,
+                 vis_years=None,
                  ymax_animals=None,
                  cmax_animals={'Herbivore': 40, 'Carnivore': 10},
                  img_dir='C:/temp/BioSim/figs',
