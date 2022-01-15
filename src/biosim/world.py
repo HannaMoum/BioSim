@@ -147,7 +147,7 @@ class World:
 
     ###################################################################################################################
     def get_property_map(self, fx_map_type:str) -> object:
-        """User interface that provides mapped values of specified methods of the class.
+        """User interface that provides mapped values from specified methods of the class.
 
         Notes
         -----
