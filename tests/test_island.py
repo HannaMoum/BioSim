@@ -88,14 +88,6 @@ def test_migrate_map(geogr_str):
             assert wanted_bool == boolean
 
 
-@pytest.mark.skip
-def test_object_map_save(geogr_str):
-    """Test correct attribute save from making an object map."""
-    object_map_creation = World(geogr_str)._make_object_map()
-    object_map_attribute = World(geogr_str).object_map
-    assert object_map_creation == object_map_attribute  # Not sure this will work...
-
-
 def test_object_map_shape(geogr_str):
     """Test creation of correct size for object_map."""
     island = World(geogr_str)
