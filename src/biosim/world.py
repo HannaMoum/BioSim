@@ -164,11 +164,11 @@ class World:
         global_migrated_animals = []
         with np.nditer(self.object_map, flags=['multi_index', 'refs_ok']) as it:
             for grid_cell in it:
-                current_loaction = grid_cell.item()
+                current_location = grid_cell.item()
 
-                if len(current_loaction.population) > 0: #if current_loaction.population:
+                if len(current_location.population) > 0: #if current_loaction.population:
                     local_migrated_animals = []
-                    for animal in current_loaction.population:
+                    for animal in current_location.population:
                         if animal not in global_migrated_animals:
 
                             migrate_to_location = self._get_migrate_to_location(animal, it.multi_index)
@@ -178,7 +178,7 @@ class World:
                                 local_migrated_animals.append(animal)
 
                     for animal in local_migrated_animals:
-                        current_loaction.population.remove(animal)
+                        current_location.population.remove(animal)
 
                     global_migrated_animals += local_migrated_animals
 
