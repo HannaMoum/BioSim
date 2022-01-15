@@ -230,7 +230,7 @@ class Graphics(Graphics_param):
         year -= 1 # Må ta -1 fordi dataene er null-basert (første index er 0)
 
         fig = plt.figure(figsize=(14, 10))
-        fig.suptitle(str(f'Year: {(plot_year):.0f}'), fontsize=36, x=0.08, y=0.95)
+        fig.suptitle(str(f'Year: {(plot_year):.0f}'), fontsize=36, x=0.15, y=0.95)
 
         grid = plt.GridSpec(10, 14, wspace=0.5, hspace=1)
 
