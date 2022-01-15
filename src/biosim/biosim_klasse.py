@@ -44,6 +44,20 @@ class BioSim(BioSim_param):
 
         self.add_population(ini_pop)
 
+    def _validate_island_map(self, island_map:str)-> bool:
+        """Returns True/False. Checks that the str contains no white space, and that the rows are of the same length"""
+        str_list = island_map.split(sep='\n')
+        length_check = len(str_list[0])
+
+        for element in str_list:
+            if len(element) != length_check:
+                raise ValueError('Island map must contain an equal amount of columns.')
+                return False
+        return True
+
+
+
+
         # def _validate_island_map(self, island_map_list: list) -> bool:
         #     # Should already be textwrapped
         #     length_check = len(island_map_list[0])
