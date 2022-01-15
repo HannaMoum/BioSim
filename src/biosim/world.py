@@ -158,19 +158,32 @@ class World:
     # Her kommer det ut en np.array med scalar-verdier
     def get_property_map(self, fx_map_type:str)->object:
         """
+        User interface that provide the value or action of any specified
+        method or attribute of the class.
+
+        Parameters
+        ----------
+        fx_map_type: `str`
+            Contains name of an attribute or method of the class.
+
+        Returns
+        -------
+
+        """
+        """
         Brukergrensesnittet som gjør at man kan skrive inn hvilken type informasjon som fabrikke nskal benytte seg av.
         Forteller fabrikken hvilken funksjon man vil bruke.
         getattr slår opp i klassen og ser om vi har en tilsvarende funksjon i klassen som samsvarer med navnet på den funksjonen vi putter inn.
         dir(BioSim)
         Om funksjonen ligger i klassen så sender den tilbake en referanse til funksjonsobjektet.
         """
-        return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map)
+        return self._make_property_map(getattr(self, fx_map_type))###, self.base_map, self.object_map)
 
     # Factory for property_maps
-    def _make_property_map(self, fx: callable(object), base_map: object, object_map: object):
-        property_map = np.empty(base_map.shape, dtype=float)
+    def _make_property_map(self, fx: callable(object)):#, base_map: object, object_map: object):
+        property_map = np.empty(self.base_map.shape, dtype=float)
         vget_property = np.vectorize(fx)
-        property_map[:, :] = vget_property(object_map)
+        property_map[:, :] = vget_property(self.object_map)
         return property_map
 
     # Parameter-funksjoner som kan brukes i fabrikken
