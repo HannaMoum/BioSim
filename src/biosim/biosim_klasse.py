@@ -69,38 +69,6 @@ class BioSim(BioSim_param):
                                      img_years)
 
 
-    def _validate_island_map(self, island_map:str) -> bool:
-        #map = textwrap.dedent(island_map)  # Should already be textwrapped
-        island_map_list = island_map.split(sep='\n') #Endret til input
-
-        length_check = len(island_map_list[0])
-        for element in island_map_list:
-            # Control all symbols
-            for letter in element:
-                if letter not in 'WHLD':
-                    raise ValueError(
-                        f'{letter} is not a defined landscape.\n'
-                        f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
-                        'respectively given by their belonging capital letter.')
-            # Control size
-            if len(element) != length_check:
-                raise ValueError('Island map must contain an equal amount of columns.')
-            # Control edges
-            if not (element[0] and element[-1]) == 'W':
-                raise ValueError('All the islands` outer edges must be of landscape Water.')
-        # Control edges
-        if not (island_map_list[0] and island_map_list[-1]) == 'W' * length_check:
-            raise ValueError('All the islands` outer edges must be of landscape Water.')
-
-        return True
-        # Raises value error if rules broken.
-        # Returns True if all OK.
-
-    def _validate_ini_pop(self, ini_pop:dict)-> bool:
-        # TODO: Lag en valideringsrutine
-        """Validates the ini_pop input, and check that it follow the rules"""
-        return True
-
     def _validate_hist_specs(self, hist_specs:dict)-> bool:
         """
         hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
