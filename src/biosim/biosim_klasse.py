@@ -66,7 +66,11 @@ class BioSim(BioSim_param):
                                      img_base,
                                      img_fmt,
                                      img_years)
+        self._vis_years = self._set_vis_years(vis_years)
 
+    def _set_vis_years(self, vis_years: int)-> int:
+        # TODO: Gjøre validering av vis_years
+        return vis_years
 
     def _validate_island_map(self, island_map:str)-> bool:
         """Returns True/False. Checks that the str contains no white space, and that the rows are of the same length"""
@@ -119,13 +123,12 @@ class BioSim(BioSim_param):
 
         if not os.path.isdir(img_dir): # Returnerer true om dir finnes.
             try:
-                os.makedirs(img_dir)
-            except OSError:
+                os.makedirs(img_dir) # Sender melding til OS-et om å opprette katalogen. OS-et kan si "ja" eller "nei".
+            except OSError: # Om det ikke får raises en OSError
                 raise OSError('Making dir failed')
                 return False
 
         return True
-
 
 
     def get_yearly_herb_count(self)-> object:
@@ -135,7 +138,7 @@ class BioSim(BioSim_param):
         # kube.sum(rad_dimensjonen).sum(kolonne_dimensjonen) = array med en sum (scalar) per år.
         serie = kube.sum(-1).sum(-1)
         # TODO: Do validation
-        assert len(serie) == self._num_years
+        # assert len(serie) == self._num_years
         return serie
 
     def get_yearly_carn_count(self):
@@ -143,7 +146,7 @@ class BioSim(BioSim_param):
         kube =  self.cube_population_carns
         serie = kube.sum(-1).sum(-1)
         # TODO: Do validation
-        assert len(serie) == self._num_years
+        # assert len(serie) == self._num_years
         return serie
 
     def set_animal_parameters(self, species:str, params:dict): # TODO: må oppdatere for carnivore også
@@ -238,9 +241,8 @@ class BioSim(BioSim_param):
         #yearly_property_map_herbs = []
         #yearly_property_map_carns = []
 
-        current_year = 0
-        for year in range(self._num_years):
-            current_year += 1
+
+        for year in range(1, self._num_years + 1):
             with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     landscape = element.item()
@@ -259,6 +261,7 @@ class BioSim(BioSim_param):
                         landscape.give_birth()
                         landscape.aging()
                         landscape.do_death()
+
             #-------------------------------------------------------------------------------------
             # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
 
@@ -267,7 +270,6 @@ class BioSim(BioSim_param):
             # Carnivore populasjonsstørrelse for alle lokasjoner per år
             yearly_pop_map_carns.append(self.island.get_property_map('v_size_carn_pop'))
 
-            #---------------------------------------------------------------------
 
             yearly_herb_objects_map = self.island.get_property_map_objects('v_herb_properties_objects')
             # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
@@ -295,23 +297,52 @@ class BioSim(BioSim_param):
             # Brukes ikke nå, men ikke slett!
             #yearly_property_map_carns.append(yearly_carn_objects_map)
 
-            print('\r',f'Year:{current_year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '')
+            # Data at end of simulation
+            # TODO: Add evaluation. Check shape and size. Raises valueerror
+            self.cube_population_herbs = np.stack(yearly_pop_map_herbs)
+            self.cube_population_carns = np.stack(yearly_pop_map_carns)
 
-        # Data at end of simulation
-        # TODO: Add evaluation. Check shape and size. Raises valueerror
-        self.cube_population_herbs = np.stack(yearly_pop_map_herbs)
-        self.cube_population_carns = np.stack(yearly_pop_map_carns)
+            #--------------------------------------------------------------------------------------------------------
+            # Graphics for the year
+            if not self._vis_years is None:
+                if self._vis_years > 0:
+                    if num_years % self._vis_years != 0:
+                        raise ValueError('num_years must be multiple of vis_years')
+
+            yearly_plot = False
+            pause = 0.2
+
+            if self._vis_years == 0:
+                yearly_plot = False # Hvis vis_years = 0 skal det ikke vises noe grafikk.
+
+            elif self._vis_years == None:
+                if year == self._num_years:
+                    pause = 3
+                    yearly_plot = True
+
+            elif self._vis_years >= 1:
+                if year % self._vis_years == 0:
+                    pause = 1/self._vis_years #TODO: Finn en pause basert på antall år som simuleres og intervall mellom bilder.
+                    yearly_plot = True
+
+            if yearly_plot:
+                self.graphics._make_grid(self.cube_population_herbs,
+                                         self.cube_population_carns,
+                                         self.get_yearly_herb_count(),
+                                         self.get_yearly_carn_count(),
+                                         self.cubelist_properties_herbs,
+                                         self.cubelist_properties_carns,
+                                         pause = pause)
+
+            print('\r',f'Year:{year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '')
+
+
 
         # Disse brukes ikke akkurat nå, men ikke slett!
         #self.cube_properties_herbs = np.stack(yearly_property_map_herbs)
         #self.cube_properties_carns = np.stack(yearly_property_map_carns)
 
-        self.graphics.show(self.cube_population_herbs,
-                           self.cube_population_carns,
-                           self.get_yearly_herb_count(),
-                           self.get_yearly_carn_count(),
-                           self.cubelist_properties_herbs,
-                           self.cubelist_properties_carns)
+
 
     def add_population(self, ini_pop:dict):
         """Validates input dict befor sending calling add_population method in
