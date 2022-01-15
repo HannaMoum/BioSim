@@ -48,7 +48,6 @@ class World:
         # Should already be textwrapped
         length = len(island_map[0])
         for line in island_map:
-            print(line)
             for letter in line:
                 if letter not in 'WHLD':
                     raise ValueError(
