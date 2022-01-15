@@ -55,7 +55,7 @@ class World:
                         f'Defined landscapes are: ["Lowland", "Highland", "Desert", "Water"]\n'
                         'respectively given by their belonging capital letter.')
 
-            if not all([line.startswith('W'), line.endswith('W')]): #not (line[0] and not line[-1]) == 'W':
+            if not all([line.startswith('W'), line.endswith('W')]):
                 raise ValueError('All the islands` outer edges must be of landscape Water.')
 
         if not island_map[0] == 'W'*length or not island_map[-1] == 'W'*length:
@@ -63,7 +63,7 @@ class World:
 
         return True
 
-    def _make_base_map(self, input_map: str)-> object:
+    def _make_base_map(self, input_map: str) -> object:
         """
         Mapping island with respect to each landscape letter.
 
@@ -73,7 +73,6 @@ class World:
             Geography of island.
 
             Made up by the letters 'W', 'D', 'L' and 'H' each representing a landscape.
-            Forutsetter at den er ferdig validert.
 
         Returns
         -------
@@ -91,7 +90,6 @@ class World:
                 build_map[row_index, col_index] = landscape_letter
 
         return build_map
-
 
     def _make_migrate_map(self) -> object:
         """Create a map mapping all migratable cells (`ndarray` of `bool`)."""
@@ -155,8 +153,13 @@ class World:
     # Her kommer det ut en np.array med scalar-verdier
     def get_property_map(self, fx_map_type:str)->object:
         """
-        User interface that provide the value or action of any specified
-        method or attribute of the class.
+        User interface that provides the value or action of any specified method or
+        attribute of the class.
+
+        Notes
+        -----
+        Function takes method :py:meth:`.v_size_herb_pop` or :py:meth:`.v_size_carn_pop` as input
+        and provides a map of their respective populations sizes for every cell on the island.
 
         Parameters
         ----------
@@ -165,32 +168,71 @@ class World:
 
         Returns
         -------
+        `ndarray`
+            Array mapping chosen property
+        """
+        return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map) #TODO: self is not input
 
-        """
-        """
-        Brukergrensesnittet som gjør at man kan skrive inn hvilken type informasjon som fabrikke nskal benytte seg av.
-        Forteller fabrikken hvilken funksjon man vil bruke.
-        getattr slår opp i klassen og ser om vi har en tilsvarende funksjon i klassen som samsvarer med navnet på den funksjonen vi putter inn.
-        dir(BioSim)
-        Om funksjonen ligger i klassen så sender den tilbake en referanse til funksjonsobjektet.
-        """
-        return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map)
-
-    # Factory for property_maps
     def _make_property_map(self, fx: callable(object), base_map: object, object_map: object):
-        """Create map of ..."""
+        """
+        Create map of chosen properties for :py:meth:`.get_property_map`.
+
+        Parameters
+        ----------
+        fx: class attribute or method
+            Method to be vectorized.
+        base_map #TODO Remove
+        object_map #TODO remove
+
+        Returns
+        -------
+        `ndarray`
+            Array mapping chosen property
+        """
         property_map = np.empty(base_map.shape, dtype=float)
         vget_property = np.vectorize(fx)
         property_map[:, :] = vget_property(object_map)
         return property_map
 
-    # Parameter-funksjoner som kan brukes i fabrikken
+
     def v_size_herb_pop(self, location: object)->int:
-        """Population sizer for herbivores at given location. """
+        """Find the herbivore population size at given location.
+
+        See Also
+        --------
+        :py:meth:`.get_property_map`
+            Relationship
+
+        Parameters
+        ----------
+        location: `obj`
+            Location in island.
+
+        Returns
+        -------
+        `int`
+            Number of herbivores.
+        """
         return location.herbivores_number
 
     def v_size_carn_pop(self, location: object)->int:
-        """Population sizer for carnivores at given location."""
+        """Find the carnivore population size at given location.
+
+        See Also
+        --------
+        :py:meth:`.get_property_map`
+            Relationship
+
+        Parameters
+        ----------
+        location: `obj`
+            Location in island.
+
+        Returns
+        -------
+        `int`
+            Number of carnivores.
+        """
         return location.carnivores_number
 
     # ----------------------------------------------------------------------------------------------------------------
