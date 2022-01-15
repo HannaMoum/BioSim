@@ -39,7 +39,7 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
-    sim = BioSim(island_map=geogr, ini_pop=ini_herbs + ini_carns,
+    sim = BioSim(island_map=geogr, ini_pop=ini_herbs+ini_carns,
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
@@ -50,13 +50,22 @@ if __name__ == '__main__':
                  img_dir='C:/temp/BioSim/figs',
                  img_base='BioSim',
                  img_fmt='png',
-                 img_years=None
+                 img_years=0
                  )
 
-    sim.simulate(num_years=10)
+    sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
+    sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
+                                            'omega': 0.3, 'F': 65,
+                                            'DeltaPhiMax': 9.})
+    sim.set_landscape_parameters('L', {'f_max': 800})
+
+    sim.simulate(num_years=100)
+    # sim.add_population(population=ini_carns)
+    #sim.simulate(num_years=100)
+
+    #sim.simulate(num_years=10)
     #sim.make_movie()
 
-    #sim.set_landscape_parameters('L', {'f_max': 800})
 
     # herb_pop_map = sim.get_property_map('v_size_herb_pop')
 

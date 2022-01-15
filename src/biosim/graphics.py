@@ -158,16 +158,8 @@ class Graphics(Graphics_param):
         return ax
 
     def plot_histogram(self, hist_herb_data:object, hist_carn_data:object, ax_age, ax_weight, ax_fitness, year: int = -1)-> object:
-        """
-        """
         colors = ['green', 'red']
-        age, weight, fitness = (0, 1, 2)
-        """
-        max_age, delta_age = (60, 2) #TODO: Skal leses inn som parametere når BioSim objektet instansieres
-        max_weight, delta_weight = (60, 2)
-        max_fitness, delta_fitness = (1, 0.05)
-        """
-        #fig, ax = plt.subplots(nrows=3, ncols=1, figsize = (12, 18))
+
         yearly_herb_data = hist_herb_data[year]
         yearly_carn_data = hist_carn_data[year]
 
@@ -254,7 +246,6 @@ class Graphics(Graphics_param):
     def _save_grid(self, fig: object, year: int):
         fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
 
-
     def make_movie(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
         def make_frame(year_frame):
             fig = self._make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
@@ -264,15 +255,7 @@ class Graphics(Graphics_param):
         # animation.write_gif(filename + '.gif', fps=1)
         animation.write_videofile('C:/temp/direkte_video' + '.mp4', fps=1) # fps er antall bilder per sekund
 
-    def make_from_files(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
-
-        def make_frame(year_frame):
-            fig = self._make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
-
-            #fig.savefig(f'{os.path.join(self.img_dir, self.img_base)}{year_frame:05d}.{self.img_fmt}', format=self.img_fmt)
-
-        for year in range(year_):
-            make_frame(year)
+    def make_movie_from_files(self):
 
         fps = 1
         image_files = [os.path.join(self.img_dir, img)
@@ -280,6 +263,6 @@ class Graphics(Graphics_param):
                        if img.endswith("."+self.img_fmt)]# Lager en liste over alle filene
         image_files.sort()
 
-        filename = f'{os.path.join(self.img_dir, self.img_base)}_video.mp4'
+        filename = f'{self.img_dir}/{self.img_base}_video.mp4'
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps) # Går gjennom et og et bilde og bygger opp video-kuben.
         clip.write_videofile(filename) # Lager det om til en videofil.

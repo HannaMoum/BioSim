@@ -12,7 +12,6 @@ from graphics import Graphics
 
 @dataclass
 class BioSim_param:
-    codes_for_landscape_types: str = 'WLHD' #Brukes denne?
     hist_spec_pattern = {'fitness': {'max': float, 'delta': int},
                       'age': {'max': float, 'delta': int},
                       'weight': {'max': float, 'delta': int}}
@@ -37,10 +36,16 @@ class BioSim(BioSim_param):
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
 
-        random.seed(seed) # Påvirker potensielt andre script som kjører. Vurder å lage egen Random-instans, slik at BioSIm kan eie sitt eget random seed.
+        random.seed(seed)
+        # Påvirker potensielt andre script som kjører.
+        # Vurder å lage egen Random-instans, slik at BioSIm kan eie sitt eget random seed.
 
         if self._validate_island_map(island_map):
             self.island = World(island_map)
+
+        self._year = 0
+        self._num_animals_per_species = {}
+        self._num_animals = 0
 
         self.add_population(ini_pop)
 
@@ -51,8 +56,6 @@ class BioSim(BioSim_param):
         self.cubelist_properties_herbs = []
         self.cubelist_properties_carns = []
 
-        # self.cube_properties_herbs = np.empty(())
-        # self.cube_properties_carns = np.empty(())
 
         if all((self._validate_hist_specs(hist_specs),
                 self._validate_cmax_animals(cmax_animals),
@@ -68,6 +71,9 @@ class BioSim(BioSim_param):
                                      img_years)
         self._vis_years = self._set_vis_years(vis_years)
         self._img_years = self._set_img_years(img_years)
+
+        if self._validate_im_dir_im_base(img_dir, img_base):
+            self._img_dir = img_dir
 
     def _set_img_years(self, img_years: int):
         # TODO: Burde også teste for negative verdier, andre datatyper.
@@ -137,6 +143,20 @@ class BioSim(BioSim_param):
 
         return True
 
+    @property
+    def year(self):
+        """Last year simulated."""
+        return self._year
+
+    @property
+    def num_animals(self):
+        """Total number of animals on island."""
+        return self._num_animals
+
+    @property
+    def num_animals_per_species(self):
+        """Number of animals per species in island, as dictionary."""
+        return self._num_animals_per_species
 
     def get_yearly_herb_count(self)-> object:
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
@@ -145,7 +165,7 @@ class BioSim(BioSim_param):
         # kube.sum(rad_dimensjonen).sum(kolonne_dimensjonen) = array med en sum (scalar) per år.
         serie = kube.sum(-1).sum(-1)
         # TODO: Do validation
-        # assert len(serie) == self._num_years
+        # assert len(serie) == self._num_years. Valideringen er logisk feil, kan ikke brukes.
         return serie
 
     def get_yearly_carn_count(self):
@@ -156,7 +176,7 @@ class BioSim(BioSim_param):
         # assert len(serie) == self._num_years
         return serie
 
-    def set_animal_parameters(self, species:str, params:dict): # TODO: må oppdatere for carnivore også
+    def set_animal_parameters(self, species:str, params:dict):
         """
         Set parameters for animal species.
 
@@ -168,7 +188,6 @@ class BioSim(BioSim_param):
         if species == 'Carnivore':
             Carnivore.set_params(params)
 
-        #Evt: type(species).set_params(params)
 
     def set_landscape_parameters(self, landscape:str, params:dict):
         """
@@ -185,69 +204,30 @@ class BioSim(BioSim_param):
         else:
             raise ValueError('Feil input')
 
-        # # Oppdaterer alle eksisterende objekter.f_max. Denne settes normalt kun i __init__, og må oppdateres når klassevariabelen endres.
-        # # TODO: Sjekk om dette har tilbakevirkende kraft på instansene som allerede finnes.
-        # with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
-        #     for element in it:
-        #         landskapsobjekt = element.item()
-        #         if landskapsobjekt.landscape_type == 'H':
-        #             landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Highland']
-        #         elif landskapsobjekt.landscape_type == 'L':
-        #             landskapsobjekt.f_max = landskapsobjekt.params['f_max']['Lowland']
-        #         else:
-        #             landskapsobjekt.f_max = 0
+    def add_population(self, ini_pop:dict):
+        """Validates input dict befor sending calling add_population method in
+        the world class
+        Initial_population looks like:
 
-    # def migration_preparation(self):
-    #     with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
-    #         for element in it:
-    #             landscape_obj = element.item()
-    #             landscape_obj.migration_prep()  # Better hierarcy
-    #             # for animal in landscape_obj.herb_pop + landscape_obj.carn_pop:
-    #             #     animal.has_migrated = False
+        ini_pop = [{'loc': (3,4),
+        'pop': [{'species': 'Herbivore',
+                'age': 10, 'weight': 12.5},
+            {'species': 'Herbivore',
+                'age': 9, 'weight': 10.3}]}]
+        """
+        self.island.add_population(ini_pop)
 
-    # def migration(self):
-    #     """."""
-    #     with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
-    #         for element in it:
-    #             landscape_obj = element.item()
-    #             #current_row, current_col = it.multi_index
-    #             row, col = it.multi_index
-    #
-    #             migrate_herbs, migrate_carns = landscape_obj.migrate() #-> {herb: (r,c)}
-    #
-    #             def method_2(landscape_pop, migrate_dict, current_row, current_col, species):
-    #                 moved = []
-    #                 for animal, location in migrate_dict.items():
-    #                     r, c = location
-    #                     new_row = current_row + r
-    #                     new_col = current_col + c
-    #
-    #                     if self.island.object_map[new_row, new_col].is_migratable:
-    #                         self.island.object_map[new_row, new_col].population.append(animal)
-    #                         # if species == 'Herbivore':
-    #                         #     self.island.object_map[new_row, new_col].herb_pop.append(animal) #Still not good...
-    #                         # if species == 'Carnivore':
-    #                         #     self.island.object_map[new_row, new_col].carn_pop.append(animal)
-    #
-    #                         moved.append(animal)
-    #
-    #                 for migrated_animal in moved:
-    #                     landscape_pop.remove(migrated_animal)
-    #
-    #             if landscape_obj.is_migratable:
-    #                 method_2(landscape_obj.population, {**migrate_herbs, **migrate_carns}, row, col, 'dummy')
-    #                 # method_2(landscape_obj.herb_pop, migrate_herbs, row, col, 'Herbivore')
-    #                 # method_2(landscape_obj.carn_pop, migrate_carns, row, col, 'Carnivore')
-
-
+    def make_movie(self):
+        """Create MPEG4 movie from visualization images saved."""
+        if os.listdir(self._img_dir):
+            self.graphics.make_movie_from_files()
+        else:
+            raise FileNotFoundError(f'{self._img_dir} is empty.')
 
     def simulate(self, num_years:int = 10):
         self._num_years = num_years # Trenger num_years utenfor simulate metoden. Brukes i get_yearly_carn_count og get_yearly_herb_count
         yearly_pop_map_herbs = []
         yearly_pop_map_carns = []
-        #yearly_property_map_herbs = []
-        #yearly_property_map_carns = []
-
 
         for year in range(1, self._num_years + 1):
             with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
@@ -259,8 +239,6 @@ class BioSim(BioSim_param):
                     if landscape.landscape_type in 'LHD':
                         landscape.hunting()
             self.island.do_migration()
-            #self.migration_preparation()
-            #self.migration()
             with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     landscape = element.item()
@@ -289,8 +267,7 @@ class BioSim(BioSim_param):
                         acc_list_herb += list_on_location
             yearly_herbivore_property_array = np.asarray(acc_list_herb)
             self.cubelist_properties_herbs.append(yearly_herbivore_property_array)
-            # Brukes ikke nå, men ikke slett!
-            #yearly_property_map_herbs.append(yearly_herb_objects_map)
+
 
             yearly_carn_objects_map = self.island.get_property_map_objects('v_carn_properties_objects')
             acc_list_carn = []
@@ -301,8 +278,6 @@ class BioSim(BioSim_param):
                         acc_list_carn += list_on_location
             yearly_carnivore_property_array = np.asarray(acc_list_carn)
             self.cubelist_properties_carns.append(yearly_carnivore_property_array)
-            # Brukes ikke nå, men ikke slett!
-            #yearly_property_map_carns.append(yearly_carn_objects_map)
 
             # Data at end of simulation
             # TODO: Add evaluation. Check shape and size. Raises valueerror
@@ -316,13 +291,11 @@ class BioSim(BioSim_param):
                     if num_years % self._vis_years != 0:
                         raise ValueError('num_years must be multiple of vis_years')
 
-            yearly_plot = False
             pause = 0.2
             show = False
             save = False
 
             if self._vis_years == 0:
-                #yearly_plot = False # Hvis vis_years = 0 skal det ikke vises noe grafikk.
                 show = False
             elif self._vis_years is None:
                 if year == self._num_years:
@@ -350,37 +323,15 @@ class BioSim(BioSim_param):
                                          self.cubelist_properties_herbs,
                                          self.cubelist_properties_carns,
                                          pause, year, show, save)
-
+            self._year += 1
+            self._num_animals_per_species = {'Herbivores': yearly_pop_map_herbs[-1].sum(),
+                                             'Carnivores': yearly_pop_map_carns[-1].sum()}
+            self._num_animals = yearly_pop_map_herbs[-1].sum() + yearly_pop_map_carns[-1].sum()
 
             print('\r',f'Year:{year}  Herbivores:{yearly_pop_map_herbs[-1].sum()}   Carnivores:{yearly_pop_map_carns[-1].sum()}', end = '')
 
-
-
-        # Disse brukes ikke akkurat nå, men ikke slett!
-        #self.cube_properties_herbs = np.stack(yearly_property_map_herbs)
-        #self.cube_properties_carns = np.stack(yearly_property_map_carns)
+        print()
 
 
 
-    def add_population(self, ini_pop:dict):
-        """Validates input dict befor sending calling add_population method in
-        the world class
-        Initial_population looks like:
 
-        ini_pop = [{'loc': (3,4),
-        'pop': [{'species': 'Herbivore',
-                'age': 10, 'weight': 12.5},
-            {'species': 'Herbivore',
-                'age': 9, 'weight': 10.3}]}]
-        """
-        self.island.add_population(ini_pop)
-        #pass
-
-    def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
-        self.graphics.make_from_files(self.cube_population_herbs,
-                                      self.cube_population_carns,
-                                      self.get_yearly_herb_count(),
-                                      self.get_yearly_carn_count(),
-                                      self.cubelist_properties_herbs,
-                                      self.cubelist_properties_carns)
