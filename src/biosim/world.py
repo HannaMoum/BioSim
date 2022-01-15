@@ -7,7 +7,7 @@ class World:
 
     #valid_letters = 'LHWD' noe som dette kanskje?
 
-    def __init__(self, island_map, ini_pop): #TODO: Edit other files so that ini_pop is not an input
+    def __init__(self, island_map):#, ini_pop): #TODO: Edit other files so that ini_pop is not an input
         """
         World er en klasse som skaper verden ut i fra ett gitt kart og parametere.
         Klassen holder orden på landskaps-objekter som ligger i kartet, og hvert landskapsobjekt
@@ -22,8 +22,8 @@ class World:
         self._migrate_map = self._make_migrate_map()
         self._object_map = self._make_object_map()
 
-        self._ini_pop = ini_pop #Not an input, not an attribute
-        self.add_population(ini_pop) #Restructure this. Method has to be called in Biosim
+        #self._ini_pop = ini_pop #Not an input, not an attribute
+        #self.add_population(ini_pop) #Restructure this. Method has to be called in Biosim
         # TODO: Save ini_pop directly from input
         # Add_population returns nothing, it is an action of its' own
 

@@ -39,9 +39,11 @@ class BioSim(BioSim_param):
 
         random.seed(seed) # Påvirker potensielt andre script som kjører. Vurder å lage egen Random-instans, slik at BioSIm kan eie sitt eget random seed.
 
-        if all((self._validate_island_map(island_map),
-               self._validate_ini_pop(ini_pop))): # ikke sjekk hele her, fordeles ned til animals
-            self.island = World(island_map, ini_pop)
+        # if all((self._validate_island_map(island_map),
+        #        self._validate_ini_pop(ini_pop))): # ikke sjekk hele her, fordeles ned til animals
+        #     self.island = World(island_map, ini_pop) #Bare opprette self.island direkte
+        self.island = World(island_map)
+        self.add_population(ini_pop)
 
         # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
         self._num_years = 0  # Duration of sim
@@ -329,7 +331,7 @@ class BioSim(BioSim_param):
                            self.cubelist_properties_herbs,
                            self.cubelist_properties_carns)
 
-    def add_population(self, population:dict):
+    def add_population(self, ini_pop:dict):
         """Validates input dict befor sending calling add_population method in
         the world class
         Initial_population looks like:
@@ -340,7 +342,8 @@ class BioSim(BioSim_param):
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
         """
-        pass
+        self.island.add_population(ini_pop)
+        #pass
 
     def make_movie(self):
         """Create MPEG4 movie from visualization images saved."""
