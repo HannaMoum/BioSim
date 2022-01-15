@@ -109,22 +109,20 @@ class Graphics(Graphics_param):
 
     def plot_island_map(self, ax):
         """Plotter verdenskartet"""
-        #if plot_map == None:
         plot_map = self._island_plot
         row, col = plot_map.shape
-        with plt.style.context('seaborn-whitegrid'):  # Konfigurerbar? Skal dette være en input?
-            colormap = colors.ListedColormap(['blue', 'darkgreen', 'lightgreen', 'yellow'])  # Skal dette være en input
-            #fig, ax = plt.subplots(figsize=(col / scale, row / scale))
-            ax.imshow(plot_map, cmap=colormap, extent=[1, col + 1, row + 1, 1])
-            ax.set_xticks(range(1, col + 1))
-            ax.set_yticks(range(1, row + 1))
-            ax.set_xticklabels(range(1, col + 1))
-            ax.set_yticklabels(range(1, row + 1))
-            #plt.show()
+        colormap = colors.ListedColormap(['blue', 'darkgreen', 'lightgreen', 'yellow'])
 
-        return ax  # Returnerer grafen
+        ax.imshow(plot_map, cmap=colormap, extent=[1, col + 1, row + 1, 1])
+        ax.set_xticks(range(1, col + 1))
+        ax.set_yticks(range(1, row + 1))
+        ax.set_xticklabels(range(1, col + 1), rotation = 90)
+        ax.set_yticklabels(range(1, row + 1))
+        ax.set(title = 'Island map')
 
-    def plot_heatmap(self, data: object, species: str, ax, square = True, year: int = -1):
+        return ax
+
+    def plot_heatmap(self, data: object, species: str, ax, year: int = -1):
         """Plotter heatmap"""
         if species == 'Herbivore':
             title = 'Herbivore distribution'
@@ -136,13 +134,12 @@ class Graphics(Graphics_param):
             center = self.cmax_animals_carnivore
         else:
             raise ValueError('Feil')
-
-        ax = sns.heatmap(data[year, :, :], annot=False, cmap=cmap, ax = ax, center = center)
+        # TODO: Fjerne annot som argument hvis vi bestemmer oss for å ikke ha tall i heatmapet.
+        ax = sns.heatmap(data[year, :, :], annot=False, cmap=cmap, ax = ax,
+                         center = center, xticklabels = [x for x in range(1, data.shape[2] + 1)],
+                         yticklabels = [x for x in range(1, data.shape[1] + 1)])
         ax.set_title(title)
-        #ax.set_xticklabels(range(1, data.shape[2] + 1))
-        #ax.set_yticklabels(range(1, data.shape[1] + 1))
 
-        #plt.show()
         return ax
 
     def plotting_population_count(self, herb_data: object, carn_data: object, ax: object, year):
@@ -151,8 +148,8 @@ class Graphics(Graphics_param):
         Data er np array, med en sum per år i simuleringen
         """
 
-        ax.plot(herb_data[0:year], linestyle='dashed', color='green', label='herbs')
-        ax.plot(carn_data[0:year], color='red', label='carns')
+        ax.plot(herb_data[0:year], color='green', label='Herbivore')
+        ax.plot(carn_data[0:year], color='red', label='Carnivore')
         ax.set_title('Population size', loc='left')
         ax.set_xlabel('Years')
         ax.set_ylabel('Number of animals')
@@ -213,7 +210,6 @@ class Graphics(Graphics_param):
         return ax_age, ax_weight, ax_fitness
 
     def show_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year, show:bool, save: bool):
-
         fig = self._make_grid(data_heat_herb, data_heat_carn,
                               herb_data, carn_data,
                               hist_herb_data,
@@ -225,14 +221,13 @@ class Graphics(Graphics_param):
             self._save_grid(fig, year)
 
     def _make_grid(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, pause, year):
-
         plot_year = year
         year -= 1 # Må ta -1 fordi dataene er null-basert (første index er 0)
 
         fig = plt.figure(figsize=(14, 10))
         fig.suptitle(str(f'Year: {(plot_year):.0f}'), fontsize=36, x=0.15, y=0.95)
 
-        grid = plt.GridSpec(10, 14, wspace=0.5, hspace=1)
+        grid = plt.GridSpec(10, 14, wspace=0.75, hspace=1.5)
 
         map_ax = plt.subplot(grid[0:3, 0:4])
         self.plot_island_map(map_ax)
@@ -246,9 +241,9 @@ class Graphics(Graphics_param):
         pop_ax = plt.subplot(grid[4:10, 0:5])
         self.plotting_population_count(herb_data, carn_data, pop_ax, year = year)
 
-        age_ax = plt.subplot(grid[6:8, 5:13])
-        weight_ax = plt.subplot(grid[8:10, 5:13])
-        fitness_ax = plt.subplot(grid[4:6, 5:13])
+        age_ax = plt.subplot(grid[6:8, 6:13])
+        weight_ax = plt.subplot(grid[8:10, 6:13])
+        fitness_ax = plt.subplot(grid[4:6, 6:13])
         self.plot_histogram(hist_herb_data, hist_carn_data, age_ax, weight_ax, fitness_ax, year)
 
         return fig
@@ -256,17 +251,7 @@ class Graphics(Graphics_param):
     def _save_grid(self, fig: object, year: int):
         fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
 
-    def make_movie(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
-        def make_frame(year_frame):
-            fig = self._make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
-            return mplfig_to_npimage(fig) # Tar fig-en og lager til numpy-image som kan brukes videre.
-
-        animation = VideoClip(make_frame, duration=year_-1) # VideoClip får returen fra make_frame, som er en numpy-image. Duration er lengden på videoen.
-        # animation.write_gif(filename + '.gif', fps=1)
-        animation.write_videofile('C:/temp/direkte_video' + '.mp4', fps=1) # fps er antall bilder per sekund
-
     def make_movie_from_files(self):
-
         fps = 1
         image_files = [os.path.join(self.img_dir, img)
                        for img in os.listdir(self.img_dir)
