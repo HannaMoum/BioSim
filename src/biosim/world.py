@@ -4,29 +4,27 @@ from random import choice
 
 
 class World:
+    """An island with unique geography and evolution.
 
-    #valid_letters = 'LHWD' noe som dette kanskje?
+    Attributes
+    ----------
+    base_map: `ndarray` of `str`
+        Island map consisting of singular landscape letters.
+    migrate_map: `ndarray` of `bool`
+        Island map presenting migratable locations.
+    object_map: `ndarray` of `obj`
+        Island map consisting of :py:class:`.Landscape` object references
+
+    Parameters
+    -----------
+    island_map: `str`
+        String of {'W', 'D', 'L', 'H'} mapping the entire island's geography.
+    """
 
     def __init__(self, island_map):#, ini_pop): #TODO: Edit other files so that ini_pop is not an input
-        """
-        World er en klasse som skaper verden ut i fra ett gitt kart og parametere.
-        Klassen holder orden på landskaps-objekter som ligger i kartet, og hvert landskapsobjekt
-        kan inneholde dyr.
-        Inneholder nårværende status (state). Tid ligger i BioSim.
-
-        Tar i mot:
-            island_map: Island_map er en tekst-streng som er ferdig validert i BioSim.
-            ini_pop: dict for alle dyra som skal plasseres ut i verden. Den er ferdig valide
-        """
-
         self._base_map = self._make_base_map(island_map)
         self._migrate_map = self._make_migrate_map()
         self._object_map = self._make_object_map()
-
-        #self._ini_pop = ini_pop #Not an input, not an attribute
-        #self.add_population(ini_pop) #Restructure this. Method has to be called in Biosim
-        # TODO: Save ini_pop directly from input
-        # Add_population returns nothing, it is an action of its' own
 
     @property
     def base_map(self):
@@ -35,8 +33,7 @@ class World:
 
     @property
     def migrate_map(self):
-        """Map of the island's migratable and non-migratable cells (`ndarray` of `bool`).
-        #Gives True/False if movement on to location is allowed"""
+        """Map of the island's migratable and non-migratable cells (`ndarray` of `bool`)."""
         return self._migrate_map
 
     @property
