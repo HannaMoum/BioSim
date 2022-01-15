@@ -10,4 +10,5 @@ The island module
 ---------------------
 .. automodule:: biosim.world
    :members:
+   :undoc-members: #Must be removed
 
