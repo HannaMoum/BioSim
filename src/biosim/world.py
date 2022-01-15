@@ -21,7 +21,7 @@ class World:
         String of {'W', 'D', 'L', 'H'} mapping the entire island's geography.
     """
 
-    def __init__(self, island_map):#, ini_pop): #TODO: Edit other files so that ini_pop is not an input
+    def __init__(self, island_map):
         self._base_map = self._make_base_map(island_map)
         self._migrate_map = self._make_migrate_map()
         self._object_map = self._make_object_map()
@@ -42,8 +42,7 @@ class World:
         return self._object_map
 
     def _validate_island_map(self, island_map):
-        """
-        Validate correct setup of island map string.
+        """Validate correct setup of island map string.
 
         Parameters
         ----------
@@ -63,7 +62,6 @@ class World:
         `bool`
             Return True if ValueError is not risen.
         """
-        # Should already be textwrapped
         length = len(island_map[0])
         for line in island_map:
             for letter in line:
@@ -113,8 +111,7 @@ class World:
         return self._base_map != 'W'
 
     def _make_object_map(self) -> object:
-        """
-        Create map of the island's landscape objects references.
+        """Create map of the island's landscape objects references.
 
         Returns
         -------
