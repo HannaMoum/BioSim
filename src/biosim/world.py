@@ -1,5 +1,5 @@
 import numpy as np
-from landscape import Landscape
+from biosim.landscape import Landscape
 from random import choice
 
 
@@ -45,7 +45,6 @@ class World:
 
     def _validate_island_map(self, island_map_list: list) -> bool:
         # Should already be textwrapped
-
         length_check = len(island_map_list[0])
         for element in island_map_list:
 
@@ -116,16 +115,32 @@ class World:
 
         return object_map
 
-    def add_population(self, population:dict):
-        """
-        Tar populasjons-dicten for hvert landskap og ber landskapet oppdatere populasjonen
+    def add_population(self, population):
+        """Add population in given locations.
+
+        Parameters
+        ----------
+        population: `list` of `dict`
+            Population of animals to be placed in specified locations on the island.
+
+        See Also
+        ---------
+        :py:meth:`.add_animals`
         """
         for dictionary in population:
 
-            r, c = dictionary['loc']
-            r -= 1
-            c -= 1
-            landscape_object = self.object_map[r, c]
+            row, col = dictionary['loc']
+            row -= 1
+            col -= 1
+            max_r, max_col = self.base_map.shape
+
+            if row < 0 or col < 0:
+                raise IndexError('Given coordinates for adding population must be greater than zero.')
+
+            if row >= max_r or col >= max_col:
+                raise IndexError('Given coordinates for adding population does not exist on the created island.')
+
+            landscape_object = self.object_map[row, col]
 
             population = dictionary['pop']
             landscape_object.add_animals(population)
