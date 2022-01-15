@@ -19,6 +19,10 @@ class Graphics_param:
     cmax_animals_herbivore: int
     cmax_animals_carnivore: int
 
+    img_dir: str = 'C:/'
+    img_base: str = 'BioSim'
+    img_fmt: str = 'png'
+
     age_max: float = 60
     age_delta: float = 2
     weight_max: float = 60
@@ -56,6 +60,14 @@ class Graphics(Graphics_param):
         self.ymax_animals = ymax_animals
         self._set_cmax_animals(cmax_animals)
         self._vis_years = vis_years
+        self.img_dir = img_dir
+        self.img_base = img_base
+        self.img_fmt = img_fmt
+
+        if not img_years:
+            self._img_years = vis_years
+        else:
+            self._img_years = img_years
 
     def _set_hist_specs(self, hist_specs: dict):
         for key, value in hist_specs.items():
@@ -269,23 +281,23 @@ class Graphics(Graphics_param):
         animation.write_videofile('C:/temp/direkte_video' + '.mp4', fps=1) # fps er antall bilder per sekund
 
     def make_from_files(self, data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, year_ = 10):
-        format = 'png'
+        print(self.img_dir)
+        print((f'{os.path.join(self.img_dir, self.img_base)}{12:05d}.{self.img_fmt}'))
 
         def make_frame(year_frame):
             fig = self._make_grid(data_heat_herb, data_heat_carn, herb_data, carn_data, hist_herb_data, hist_carn_data, int(year_frame))
 
-            fig.savefig(f'C:/temp/figs/{year_frame:05d}.{format}', format=format)
+            fig.savefig(f'{os.path.join(self.img_dir, self.img_base)}{year_frame:05d}.{self.img_fmt}', format=self.img_fmt)
 
         for year in range(year_):
             make_frame(year)
 
         fps = 1
-        image_folder = 'C:/temp/figs'
-        image_files = [os.path.join(image_folder, img)
-                       for img in os.listdir(image_folder)
-                       if img.endswith(".png")]# Lager en liste over alle filene
+        image_files = [os.path.join(self.img_dir, img)
+                       for img in os.listdir(self.img_dir)
+                       if img.endswith("."+self.img_fmt)]# Lager en liste over alle filene
         image_files.sort()
 
-        filename = 'C:/temp/video_fra_bilder.mp4'
+        filename = f'{os.path.join(self.img_dir, self.img_base)}_video.mp4'
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps) # Går gjennom et og et bilde og bygger opp video-kuben.
         clip.write_videofile(filename) # Lager det om til en videofil.

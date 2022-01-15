@@ -46,10 +46,15 @@ if __name__ == '__main__':
                              'weight': {'max': 60.0, 'delta': 2}},
                  vis_years=None,
                  ymax_animals=None,
-                 cmax_animals={'Herbivore': 40, 'Carnivore': 10}
+                 cmax_animals={'Herbivore': 40, 'Carnivore': 10},
+                 img_dir='C:/temp/test',
+                 img_base='BioSim',
+                 img_fmt='png',
+                 img_years=None
                  )
 
-    sim.simulate(num_years=100)
+    sim.simulate(num_years=30)
+    sim.make_movie()
 
     #sim.set_landscape_parameters('L', {'f_max': 800})
 

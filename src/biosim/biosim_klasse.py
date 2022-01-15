@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import os
 from dataclasses import dataclass
 from biosim.animals import Herbivore
 from biosim.animals import Carnivore
@@ -52,7 +53,9 @@ class BioSim(BioSim_param):
         # self.cube_properties_herbs = np.empty(())
         # self.cube_properties_carns = np.empty(())
 
-        if all((self._validate_hist_specs(hist_specs), self._validate_cmax_animals(cmax_animals))):
+        if all((self._validate_hist_specs(hist_specs),
+                self._validate_cmax_animals(cmax_animals),
+                self._validate_im_dir_im_base(img_dir, img_base))):
             self.graphics = Graphics(self.island.base_map,
                                      hist_specs,
                                      ymax_animals,
@@ -62,6 +65,7 @@ class BioSim(BioSim_param):
                                      img_base,
                                      img_fmt,
                                      img_years)
+
 
     def _validate_island_map(self, island_map:str) -> bool:
         #map = textwrap.dedent(island_map)  # Should already be textwrapped
@@ -122,6 +126,23 @@ class BioSim(BioSim_param):
                 raise KeyError(f'{key} is not a legal key in cmax_animals. Legal keys are Herbivore and Carnivore')
             else:
                 return True
+
+    def _validate_im_dir_im_base(self, img_dir:str, img_base:str):
+        if any((all((type(img_dir) == str, type(img_base) == 'str')),
+                    all((type(img_dir) == None, type(img_base) == None)))):
+            raise ValueError('Error. Both must be str or None')
+            return None
+
+        if not os.path.isdir(img_dir): # Returnerer true om dir finnes.
+            try:
+                os.makedirs(img_dir)
+            except OSError:
+                raise OSError('Making dir failed')
+                return False
+
+        return True
+
+
 
     def get_yearly_herb_count(self)-> object:
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
@@ -320,3 +341,12 @@ class BioSim(BioSim_param):
                 'age': 9, 'weight': 10.3}]}]
         """
         pass
+
+    def make_movie(self):
+        """Create MPEG4 movie from visualization images saved."""
+        self.graphics.make_from_files(self.cube_population_herbs,
+                                      self.cube_population_carns,
+                                      self.get_yearly_herb_count(),
+                                      self.get_yearly_carn_count(),
+                                      self.cubelist_properties_herbs,
+                                      self.cubelist_properties_carns)
