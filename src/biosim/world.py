@@ -181,6 +181,7 @@ class World:
 
     # Factory for property_maps
     def _make_property_map(self, fx: callable(object)):#, base_map: object, object_map: object):
+        """Create map of ..."""
         property_map = np.empty(self.base_map.shape, dtype=float)
         vget_property = np.vectorize(fx)
         property_map[:, :] = vget_property(self.object_map)
