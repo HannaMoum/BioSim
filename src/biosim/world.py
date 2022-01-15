@@ -91,7 +91,6 @@ class World:
 
         return build_map
 
-
     def _make_migrate_map(self) -> object:
         """Create a map mapping all migratable cells (`ndarray` of `bool`)."""
         return self._base_map != 'W'
@@ -154,8 +153,8 @@ class World:
     # Her kommer det ut en np.array med scalar-verdier
     def get_property_map(self, fx_map_type:str)->object:
         """
-        User interface that provide the value or action of any specified
-        method or attribute of the class.
+        User interface that provides the value or action of any specified method or
+        attribute of the class.
 
         Parameters
         ----------
@@ -164,7 +163,8 @@ class World:
 
         Returns
         -------
-
+        `ndarray`
+            Array mapping chosen property
         """
         """
         Brukergrensesnittet som gjør at man kan skrive inn hvilken type informasjon som fabrikke nskal benytte seg av.
@@ -173,11 +173,26 @@ class World:
         dir(BioSim)
         Om funksjonen ligger i klassen så sender den tilbake en referanse til funksjonsobjektet.
         """
-        return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map)
+        return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map) #TODO: self is not input
 
     # Factory for property_maps
     def _make_property_map(self, fx: callable(object), base_map: object, object_map: object):
-        """Create map of ..."""
+        """
+        Create map of chosen properties
+
+        Parameters
+        ----------
+        fx: class attribute or method
+            Method to be vectorized.
+        base_map #TODO Remove
+        object_map #TODO remove
+
+        Returns
+        -------
+        `ndarray`
+            Array mapping chosen property
+        """
+        """Create map of chosen properties."""
         property_map = np.empty(base_map.shape, dtype=float)
         vget_property = np.vectorize(fx)
         property_map[:, :] = vget_property(object_map)
@@ -185,11 +200,31 @@ class World:
 
     # Parameter-funksjoner som kan brukes i fabrikken
     def v_size_herb_pop(self, location: object)->int:
-        """Population sizer for herbivores at given location. """
+        """Find the herbivore population size at given location.
+
+        Parameters
+        ----------
+        location: `obj`
+            Location in island.
+        Returns
+        -------
+        `int`
+            Number of herbivores.
+        """
         return location.herbivores_number
 
     def v_size_carn_pop(self, location: object)->int:
-        """Population sizer for carnivores at given location."""
+        """Find the carnivore population size at given location.
+
+        Parameters
+        ----------
+        location: `obj`
+            Location in island.
+        Returns
+        -------
+        `int`
+            Number of carnivores.
+        """
         return location.carnivores_number
 
     # ----------------------------------------------------------------------------------------------------------------
