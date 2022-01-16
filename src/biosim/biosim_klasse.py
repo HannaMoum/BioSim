@@ -18,6 +18,9 @@ class BioSim_param:
                          'age': {'max': float, 'delta': int},
                          'weight': {'max': float, 'delta': int}}
 
+    default_img_dir: str = 'C:/temp/BioSim'
+    default_img_base: str = 'BioSim'
+    default_img_fmt: str = 'png'
 
 class BioSim(BioSim_param):
     """Define and perform a simulation.
@@ -106,24 +109,27 @@ class BioSim(BioSim_param):
         self.yearly_pop_map_herbs = []
         self.yearly_pop_map_carns = []
 
+        self._img_dir = img_dir
+        self._img_base = img_base
+        self._img_fmt = img_fmt
 
         if all((self._validate_hist_specs(hist_specs),
                 self._validate_cmax_animals(cmax_animals),
-                self._validate_im_dir_im_base(img_dir, img_base))):
+                self._validate_im_dir_im_base(img_dir, img_base, img_fmt))):
             self.graphics = Graphics(self.island.base_map,
                                      hist_specs,
                                      ymax_animals,
                                      cmax_animals,
                                      vis_years,
-                                     img_dir,
-                                     img_base,
-                                     img_fmt,
+                                     self._img_dir,
+                                     self._img_base,
+                                     self._img_fmt,
                                      img_years)
         self._vis_years = self._set_vis_years(vis_years)
         self._img_years = self._set_img_years(img_years)
 
-        if self._validate_im_dir_im_base(img_dir, img_base):
-            self._img_dir = img_dir
+        # if self._validate_im_dir_im_base(img_dir, img_base):
+        #     self._img_dir = img_dir
 
     def _set_img_years(self, img_years: int):
         # TODO: Burde også teste for negative verdier, andre datatyper.
@@ -186,17 +192,28 @@ class BioSim(BioSim_param):
             else:
                 return True
 
-    def _validate_im_dir_im_base(self, img_dir:str, img_base:str):
+    def _validate_im_dir_im_base(self, img_dir:str, img_base:str, img_fmt:str):
         # TODO: Må sette default på im:dir, for å håndtere når variabelen er satt til None
 
         if not any((all((type(img_dir) is str, type(img_base) is str)),
-                    all((type(img_dir) is None, type(img_base) is None)))):
+                    all((img_dir is None, img_base is None)))):
             raise ValueError('Error. Both must be str or None')
             return None #REMOVE
 
-        if not os.path.isdir(img_dir): # Returnerer true om dir finnes.
+        if img_dir is None:
+            self._img_dir = self.default_img_dir
+        if img_base is None:
+            self._img_base = self.default_img_base
+        if img_fmt is None:
+            self._img_fmt = self.default_img_fmt
+        else:
+            if img_fmt not in ['jpeg', 'jpg', 'png', 'tif', 'tiff']:
+                raise ValueError('img_fmt not supported. Valid formats are: jpeg, jpg, png, tif, tiff')
+
+
+        if not os.path.isdir(self._img_dir): # Returnerer true om dir finnes.
             try:
-                os.makedirs(img_dir) # Sender melding til OS-et om å opprette katalogen. OS-et kan si "ja" eller "nei".
+                os.makedirs(self._img_dir) # Sender melding til OS-et om å opprette katalogen. OS-et kan si "ja" eller "nei".
             except OSError: # Om det ikke får raises en OSError
                 raise OSError('Making dir failed')
                 return False #REMOVE
