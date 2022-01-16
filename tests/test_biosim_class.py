@@ -24,7 +24,7 @@ def test_map_validation(map_str, hist_specs):
 
 @pytest.mark.parametrize('map', ["WWW\nWLW\nWW", 1234])
 def test_invalid_map(hist_specs, map):
-    """Test that ValueErrors are risen when invalid map format is given."""
+    """Test that ValueError rises when invalid map format is given."""
     with pytest.raises(ValueError):
         BioSim(map, hist_specs=hist_specs)
 
@@ -36,7 +36,7 @@ def test_invalid_map(hist_specs, map):
                                                 'age': {'max': 60.0, 'delta': 2},
                                                 'weight': {'max': 60, 'omega': 2}}])
 def test_hist_spec_invalid(map_str, hist_spec_invalid):
-    """Test that KeyError is risen if provided hist_spec is invalid."""
+    """Test that KeyError rises if provided hist_spec is invalid."""
     with pytest.raises(KeyError):
         BioSim(map_str, hist_specs=hist_spec_invalid)
 
@@ -74,8 +74,14 @@ def test_cmax_animals_validation_true(map_str, hist_specs, cmax):
 
 
 def test_cmax_animals_validation_error(map_str, hist_specs):
-    """Test that error is risen if invalid cmax_animals dictionary is provided."""
+    """Test that KeyError rises if invalid cmax_animals dictionary is provided."""
     with pytest.raises(KeyError):
         BioSim(map_str, hist_specs=hist_specs, cmax_animals={'Herbivore': 40, 'Dog': 10})
 
 
+@pytest.mark.parametrize('img_dir, img_base', [(None, 'BioSimInconsistent'),
+                                               ('C:/temp/BioSimInconsistent', None)])
+def test_validate_im_params_inconsise(map_str, hist_specs, img_dir, img_base):
+    """Test that ValueError rises if inconsistent image parameters are provided as input"""
+    with pytest.raises(ValueError):
+        BioSim(map_str, hist_specs=hist_specs, img_dir=img_dir, img_base=img_base)
