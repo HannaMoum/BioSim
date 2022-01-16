@@ -62,7 +62,8 @@ class BioSim(BioSim_param):
             Provides opportunity to simulate in intervals with pauses.
         _num_years: `int`
             Simulation duration in years
-
+        hist_spec_pattern: `dict`
+            Default pattern of input hist_spec
 
 
 
@@ -182,14 +183,12 @@ class BioSim(BioSim_param):
         Returns
         -------
         vis_years: `int`
-
         """
         # TODO: Gjøre validering av vis_years. Må komme inn som 0, int eller None. Hvis det er en int så må den være 0 eller større.
         return vis_years
 
     def _validate_island_map(self, island_map:str)-> bool:
-        """
-        Validate input type island_map before sending to World class.
+        """Validate input type island_map before sending to World class.
 
         Parameters
         ----------
@@ -219,6 +218,17 @@ class BioSim(BioSim_param):
         return True
 
     def _validate_hist_specs(self, hist_specs:dict)-> bool:
+        """Private validation of input value hist_specs.
+
+        Parameters
+        ----------
+        hist_specs: `dict`
+            Specifications for histograms
+
+        Returns
+        -------
+
+        """
         """
         hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
                       'age': {'max': 60.0, 'delta': 2},
@@ -235,7 +245,7 @@ class BioSim(BioSim_param):
                     error_sub_key = True
 
         if any((error_main_key, error_sub_key)):
-            raise KeyError(f'Not is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
+            raise KeyError(f'Key is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
         else:
             return True
 
