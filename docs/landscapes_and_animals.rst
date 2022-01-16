@@ -8,6 +8,16 @@ Each landscape has its' own specific terrain type, and keeps track of
 the animals currently living there, as well as control all interaction between animals
 and their evolution.
 
+Landscapes are given a default parametervalue that by option can be changed for two of the landscapes,
+while the others are unchangeable. See below:
+
++-------------------+---------+----------+-------------+-------------+-----------------------------------+
+| Parameter         | Lowland | Highland | Desert      | Water       | Explanation                       |
++===================+=========+==========+=============+=============+===================================+
+| :math:`f_{max}`   | 800.0   | 300.0    | 0.00        | 0.00        | Total available fodder.           |
+|                   |         |          | (static)    | (static)    | Unchangeable for desert and water.|
++-------------------+---------+----------+-------------+-------------+-----------------------------------+
+
 .. automodule:: biosim.landscape
    :members:
 
@@ -17,7 +27,7 @@ The animal module
 The animal module provides a class Animal with two subclasses; Herbivore and Carnivore.
 Each animal represents an object with specified characteristics.
 Different characteristics are given as attributes/parameters/properties,
-while abilities and actions are given by methods.
+while the traits are given as methods.
 
 Each animal is given a set of default parameters affecting their evolution that by
 option can be changed. Overview and explanation is to be found in table below:
