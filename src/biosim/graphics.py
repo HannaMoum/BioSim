@@ -144,6 +144,9 @@ class Graphics(GraphicsParams):
 
     def _set_histogram_specs(self, hist_specs: dict):
         """Setting the parameters for plotting histograms"""
+        if hist_specs is None:
+            return True
+
         for key, value in hist_specs.items():
             if key == 'fitness':
                 self.fitness_max = value['max']

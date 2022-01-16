@@ -242,6 +242,9 @@ class BioSim(BioSimParam):
         `bool`
             True if hist_specs passes validation.
         """
+        if hist_specs is None:
+            return True
+
         error_main_key = False
         error_sub_key = False
         for key in hist_specs:
