@@ -308,7 +308,8 @@ class BioSim(BioSim_param):
             self._img_fmt = self.default_img_fmt
         else:
             if img_fmt not in ['jpeg', 'jpg', 'png', 'tif', 'tiff']:
-                raise ValueError('img_fmt not supported. Valid formats are: jpeg, jpg, png, tif, tiff')
+                raise ValueError(f'Image format {img_fmt} not supported. '
+                                 f'Valid formats are: jpeg, jpg, png, tif, tiff')
 
 
         if not os.path.isdir(self._img_dir): # Returnerer true om dir finnes.
