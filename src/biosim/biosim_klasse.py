@@ -298,7 +298,7 @@ class BioSim(BioSim_param):
                 all((type(img_dir) is str, type(img_base) is str)),
                 all((img_dir is None, img_base is None))
                 )):
-            raise ValueError('Error. Both must be str or None')
+            raise ValueError('Either both img_dir and img_base must specified or neither of them can be specified.')
 
         if img_dir is None:
             self._img_dir = self.default_img_dir
