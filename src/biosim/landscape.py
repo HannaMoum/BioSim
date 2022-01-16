@@ -118,13 +118,13 @@ class Landscape:
 
     @property
     def herbivores_number(self):
-        """The amount of herbivores in current landscape (`int`)."""
+        """The number of herbivores in current landscape (`int`)."""
         herbivores_number = len(self.herbivores)
         return herbivores_number
 
     @property
     def carnivores_number(self):
-        """The amount of carnivores in current landscape (`int`)."""
+        """The number of carnivores in current landscape (`int`)."""
         carnivores_number = len(self.carnivores)
         return carnivores_number
 
@@ -172,13 +172,13 @@ class Landscape:
         --------
         :py:meth:`.giving_birth`, :py:meth:`.probability_to_give_birth`
         """
-        # TODO: Linjene under burde kunne slås sammen til en funksjon
-        herbivores = self.herbivores
-        herb_babies = [newborn for individual in herbivores if
-                       (newborn := individual.giving_birth('Herbivore', self.herbivores_number))]
-        carnivores = self.carnivores
-        carn_babies = [newborn for individual in carnivores if
-                       (newborn := individual.giving_birth('Carnivore', self.carnivores_number))]
+        def create_newborns(species, num_animals, species_list):
+            newborns = [newborn for individual in species_list if
+                        (newborn := individual.giving_birth(species, num_animals))]
+            return newborns
+
+        herb_babies = create_newborns('Herbivore', self.herbivores_number, self.herbivores)
+        carn_babies = create_newborns('Carnivore', self.carnivores_number, self.carnivores)
 
         if herb_babies:
             self.population += herb_babies
