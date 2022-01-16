@@ -10,6 +10,7 @@ def hist_specs():
                   'weight': {'max': 60, 'delta': 2}}
     return hist_specs
 
+
 @pytest.fixture()
 def map_str():
     return "WWW\nWLW\nWWW"
@@ -45,3 +46,14 @@ def test_set_vis_years(hist_specs, map_str):
     sim = BioSim(map_str, hist_specs=hist_specs, vis_years=5)
     assert sim._vis_years == 5
 
+
+@pytest.mark.parametrize('hist_spec_invalid', [{'fitness': {'max': 1.0, 'delta': 0.05},
+                                                'wrong_age': {'max': 60.0, 'delta': 2},
+                                                'weight': {'max': 60, 'delta': 2}},
+                                               {'fitness': {'max': 1.0, 'delta': 0.05},
+                                                'age': {'max': 60.0, 'delta': 2},
+                                                'weight': {'max': 60, 'omega': 2}}])
+def test_hist_spec_validation(map_str, hist_spec_invalid):
+    """Test that KeyError is risen if provided hist_spec is invalid."""
+    with pytest.raises(KeyError):
+        BioSim(map_str, hist_specs=hist_spec_invalid)
