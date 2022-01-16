@@ -64,8 +64,12 @@ class BioSim(BioSim_param):
             Simulation duration in years
         hist_spec_pattern: `dict`
             Default pattern of input hist_spec
-
-
+        default_img_dir: `str`
+            Default path to directory for figures, 'C:/temp/BioSim'.
+        default_img_base: `str`
+            Default beginning of file name for figures, 'BioSim'.
+        default_img_fmt: `str`
+            Default image format, 'png'.
 
         Notes
         -----
@@ -357,7 +361,14 @@ class BioSim(BioSim_param):
         self.island.add_population(population)
 
     def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
+        """Create MPEG4 movie from visualizing images saved.
+
+        Raises
+        -------
+        FileNotFoundError
+
+        """
+        """Create MPEG4 movie from visualizing images saved."""
         if os.listdir(self._img_dir):
             self.graphics.make_movie_from_files()
         else:
