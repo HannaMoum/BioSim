@@ -1,5 +1,5 @@
 import pytest
-from biosim.biosim_klasse import BioSim
+from biosim.biosim_klasse import BioSim, BioSimParam
 from biosim.world import World
 
 
@@ -92,4 +92,12 @@ def test_validate_im_params_unsupported_format(map_str, hist_specs):
     img_fmt = 'txt'
     with pytest.raises(ValueError):
         BioSim(map_str, hist_specs=hist_specs, img_fmt=img_fmt)
+
+
+def test_validate_im_params_default_value(map_str, hist_specs):
+    """Test that default values are provided if image parameters are unspecified from user."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    assert all([sim._img_dir == sim.default_img_dir,
+                sim._img_base == sim.default_img_base,
+                sim._img_fmt == sim.default_img_fmt])
 
