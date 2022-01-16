@@ -251,6 +251,8 @@ class Graphics(GraphicsParams):
         if save:
             self._save_grid(fig, year)
 
+        plt.close(fig)
+
     def make_movie_from_files(self):
         fps = 1
         image_files = [os.path.join(self.img_dir, img)
