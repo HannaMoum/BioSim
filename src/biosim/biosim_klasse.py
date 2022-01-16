@@ -395,13 +395,12 @@ class BioSim(BioSim_param):
         Raises
         -------
         FileNotFoundError
-
+            No saved figures to create movie from found.
         """
-        """Create MPEG4 movie from visualizing images saved."""
         if os.listdir(self._img_dir):
             self.graphics.make_movie_from_files()
         else:
-            raise FileNotFoundError(f'{self._img_dir} is empty.')
+            raise FileNotFoundError(f'{self._img_dir} is empty. Need figures to create movie.')
 
 
     def simulate(self, num_years:int = 10):
