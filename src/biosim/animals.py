@@ -364,12 +364,16 @@ class Carnivore(Animal):
 
         Notes
         ------
+        A carnivore kills a herbivore with probability
+
         .. math::
             p = \\begin{cases}
                 0  & if  \Phi_{carn} {\\leq} \Phi_{herb}
-                \\\ \frac{\Phi_{carn} - \Phi_{herb}}{\Delta\Phi_{max}} & if 0 < \Phi_{carn}-\Phi_{herb} <\Delta\Phi_{max}
-                \\\ 1 & otherwise\
+                \\\ \\frac{\Phi_{carn} - \Phi_{herb}}{\Delta\Phi_{max}} & if 0 < \Phi_{carn}-\Phi_{herb} <\Delta\Phi_{max}
+                \\\ 1 & otherwise
             \\end{cases}
+
+        until it has eas eaten an amount `F` or tried to kill every herbivore in its' location.
 
         Parameters
         ----------
