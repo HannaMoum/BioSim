@@ -126,7 +126,7 @@ class BioSim(BioSim_param):
         """Returns True/False. Checks that the str contains no white space, and that the rows are of the same length"""
         if not type(island_map) is str:
             raise ValueError('island_map must be of type str.')
-            return False
+            return False #REMOVE
 
         str_list = island_map.split(sep='\n')
         length_check = len(str_list[0])
@@ -134,7 +134,7 @@ class BioSim(BioSim_param):
         for element in str_list:
             if len(element) != length_check:
                 raise ValueError('Island map must contain an equal amount of columns.')
-                return False
+                return False #REMOVE
         return True
 
     def _validate_hist_specs(self, hist_specs:dict)-> bool:
@@ -174,14 +174,14 @@ class BioSim(BioSim_param):
         if not any((all((type(img_dir) is str, type(img_base) is str)),
                     all((type(img_dir) is None, type(img_base) is None)))):
             raise ValueError('Error. Both must be str or None')
-            return None
+            return None #REMOVE
 
         if not os.path.isdir(img_dir): # Returnerer true om dir finnes.
             try:
                 os.makedirs(img_dir) # Sender melding til OS-et om å opprette katalogen. OS-et kan si "ja" eller "nei".
             except OSError: # Om det ikke får raises en OSError
                 raise OSError('Making dir failed')
-                return False
+                return False #REMOVE
 
         return True
 
@@ -311,7 +311,7 @@ class BioSim(BioSim_param):
             with np.nditer(yearly_herb_objects_map, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     list_on_location = element.item()
-                    if type(list_on_location) == list:
+                    if type(list_on_location) == list: #if list_on_location:
                         acc_list_herb += list_on_location
             yearly_herbivore_property_array = np.asarray(acc_list_herb)
             self.cubelist_properties_herbs.append(yearly_herbivore_property_array)
@@ -322,7 +322,7 @@ class BioSim(BioSim_param):
             with np.nditer(yearly_carn_objects_map, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     list_on_location = element.item()
-                    if type(list_on_location) == list:
+                    if type(list_on_location) == list:#if list_on_location:
                         acc_list_carn += list_on_location
             yearly_carnivore_property_array = np.asarray(acc_list_carn)
             self.cubelist_properties_carns.append(yearly_carnivore_property_array)
