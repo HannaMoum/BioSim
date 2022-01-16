@@ -28,6 +28,10 @@ def test_invalid_map(hist_specs, map):
         BioSim(map, hist_specs=hist_specs)
 
 
+def test_set_img_years(hist_specs, map_str):
+    """Test that img_years is set to default value when not else is requested."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    assert sim._img_years == sim._vis_years
 
 
 
