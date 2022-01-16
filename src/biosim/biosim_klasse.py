@@ -423,6 +423,8 @@ class BioSim(BioSimParam):
         """
         if population:
             self.island.add_population_in_location(population)
+            num_animals_added = sum(len(dictionary['pop']) for dictionary in population)
+            self._num_animals += num_animals_added
         else:
             return None
 
