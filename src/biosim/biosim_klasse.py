@@ -314,12 +314,6 @@ class BioSim(BioSim_param):
         """
         self.island.add_population(population)
 
-    def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
-        if os.listdir(self._img_dir):
-            self.graphics.make_movie_from_files()
-        else:
-            raise FileNotFoundError(f'{self._img_dir} is empty.')
 
     def simulate(self, num_years:int = 10):
         if self._initial_num_year is None:
@@ -454,6 +448,12 @@ class BioSim(BioSim_param):
         # assert len(serie) == self._num_years
         return serie
 
+    def make_movie(self):
+        """Create MPEG4 movie from visualization images saved."""
+        if os.listdir(self._img_dir):
+            self.graphics.make_movie_from_files()
+        else:
+            raise FileNotFoundError(f'{self._img_dir} is empty.')
 
 
 
