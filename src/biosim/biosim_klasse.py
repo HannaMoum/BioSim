@@ -74,12 +74,16 @@ class BioSim(BioSimParam):
         Notes
         -----
 
-        :math:`\mathtt{island\_map}` should be created the following way:
+        :math:`\mathtt{island\_map}` should be created one of the following ways:
+            >>> # Possibility 1
             >>> create_map = \"""\\
                                   WLW
                                   WWW
                                   WWW\"""
             >>> island_map = textwrap.dedent(create_map)
+            >>>
+            >>> # Possibility 2
+            >>> island_map = "WWW\\nWLW\\nWWW"
 
         :math:`\mathtt{ini\_pop}` should be created by the following set-up:
             >>> ini_pop = [{'loc': (2, 2),
