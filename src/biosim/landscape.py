@@ -11,7 +11,7 @@ class Landscape:
 
     Notes
     ------
-    Implemented terrains are 'Lowland', 'Highland', 'Desert', 'Water'.
+    Implemented terrains are 'Lowland', 'Highland', 'Desert' and 'Water'.
 
     Attributes
     ----------
@@ -34,7 +34,7 @@ class Landscape:
     # Changeable parameters values by option set to default values
     params = deepcopy(_default_params)
 
-    def __init__(self, landscape_type: str):
+    def __init__(self, landscape_type):
         self._landscape_type = landscape_type
         self._f_max = None
         self._fodder = self.f_max
@@ -46,17 +46,16 @@ class Landscape:
 
         Parameters
         ----------
-        new_params: `dict` of `dict`, optional
+        new_params: `dict` of `str`, optional
             Legal keys: 'f_max' followed by `Highland` or `Lowland`, or both.
         """
-        if 'f_max' in new_params:  # Trengs kanskje ikke å sjekkes, sjekk input...
-            param_dict = new_params['f_max']
-            if not all([value >= 0 for value in param_dict.values()]):
-                raise ValueError('f_max must be equal to or greater than zero')
-            if 'Highland' in param_dict:
-                cls.params['f_max']['Highland'] = param_dict['Highland']
-            if 'Lowland' in param_dict:
-                cls.params['f_max']['Lowland'] = param_dict['Lowland']
+        param_dict = new_params['f_max']
+        if not all([value >= 0 for value in param_dict.values()]):
+            raise ValueError('f_max must be equal to or greater than zero')
+        if 'Highland' in param_dict:
+            cls.params['f_max']['Highland'] = param_dict['Highland']
+        if 'Lowland' in param_dict:
+            cls.params['f_max']['Lowland'] = param_dict['Lowland']
 
     @property
     def landscape_type(self):
@@ -106,25 +105,25 @@ class Landscape:
 
     @property
     def herbivores(self):
-        """All animals of species Herbivore in current landscape (`list`)."""
+        """All animals of species Herbivore in current landscape (`list`, read-only)."""
         herbivores = [animal for animal in self.population if animal.species == 'Herbivore']
         return herbivores
 
     @property
     def carnivores(self):
-        """All animals of species Carnivore in current landscape (`list`)."""
+        """All animals of species Carnivore in current landscape (`list`, read-only)."""
         carnivores = [animal for animal in self.population if animal.species == 'Carnivore']
         return carnivores
 
     @property
     def herbivores_number(self):
-        """The number of herbivores in current landscape (`int`)."""
+        """The number of herbivores in current landscape (`int`, read-only)."""
         herbivores_number = len(self.herbivores)
         return herbivores_number
 
     @property
     def carnivores_number(self):
-        """The number of carnivores in current landscape (`int`)."""
+        """The number of carnivores in current landscape (`int`, read-only)."""
         carnivores_number = len(self.carnivores)
         return carnivores_number
 
