@@ -29,6 +29,25 @@ def test_invalid_map(hist_specs, map):
         BioSim(map, hist_specs=hist_specs)
 
 
+@pytest.mark.parametrize('hist_spec_invalid', [{'fitness': {'max': 1.0, 'delta': 0.05},
+                                                'wrong_age': {'max': 60.0, 'delta': 2},
+                                                'weight': {'max': 60, 'delta': 2}},
+                                               {'fitness': {'max': 1.0, 'delta': 0.05},
+                                                'age': {'max': 60.0, 'delta': 2},
+                                                'weight': {'max': 60, 'omega': 2}}])
+def test_hist_spec_invalid(map_str, hist_spec_invalid):
+    """Test that KeyError is risen if provided hist_spec is invalid."""
+    with pytest.raises(KeyError):
+        BioSim(map_str, hist_specs=hist_spec_invalid)
+
+
+def test_hist_spec_valid(map_str, hist_specs):
+    """Test expected return if provided hist_specs are valid."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    boolean = sim._validate_hist_specs(hist_specs)
+    assert boolean
+
+
 def test_set_img_years_default(hist_specs, map_str):
     """Test that img_years is set to default value when not else is requested."""
     sim = BioSim(map_str, hist_specs=hist_specs)
@@ -47,13 +66,4 @@ def test_set_vis_years(hist_specs, map_str):
     assert sim._vis_years == 5
 
 
-@pytest.mark.parametrize('hist_spec_invalid', [{'fitness': {'max': 1.0, 'delta': 0.05},
-                                                'wrong_age': {'max': 60.0, 'delta': 2},
-                                                'weight': {'max': 60, 'delta': 2}},
-                                               {'fitness': {'max': 1.0, 'delta': 0.05},
-                                                'age': {'max': 60.0, 'delta': 2},
-                                                'weight': {'max': 60, 'omega': 2}}])
-def test_hist_spec_validation(map_str, hist_spec_invalid):
-    """Test that KeyError is risen if provided hist_spec is invalid."""
-    with pytest.raises(KeyError):
-        BioSim(map_str, hist_specs=hist_spec_invalid)
+
