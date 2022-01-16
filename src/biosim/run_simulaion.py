@@ -50,7 +50,7 @@ if __name__ == '__main__':
                  img_dir='C:/temp/BioSim/figs',
                  img_base='BioSim',
                  img_fmt='png',
-                 img_years=1
+                 img_years=0
                  )
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': 9.})
     sim.set_landscape_parameters('L', {'f_max': 800})
 
-    sim.simulate(num_years=5)
+    sim.simulate(num_years=10)
     sim.add_population(population=ini_carns)
     #sim.simulate(num_years=10)
 

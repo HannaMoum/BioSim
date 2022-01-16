@@ -59,7 +59,7 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, weight, age=0):
-        self.id = next(self.id_iter)
+        #self.id = next(self.id_iter)
 
         if not isinstance(weight, (int, float)) or weight < 0:
             raise ValueError('Weight must be a positive number')
