@@ -107,21 +107,23 @@ class BioSim(BioSimParam):
 
         random.seed(seed)
         # Påvirker potensielt andre script som kjører.
-        # Vurder å lage egen Random-instans, slik at BioSIm kan eie sitt eget random seed.
+        # Vurder å lage egen Random-instans, slik at BioSim kan eie sitt eget random seed.
 
         if self._validate_island_map(island_map):
             self.island = World(island_map)
 
+        # Initial property values
         self._year = 0
         self._num_animals_per_species = {}
         self._num_animals = 0
 
         self.add_population(ini_pop)
 
+        # Controlling simulate procedure
         self._initial_num_year = None
-
-        # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
         self._num_years = 0  # Duration of sim
+
+        # Generating data
         self.population_map_herbivore = np.empty(())
         self.population_map_carnivore = np.empty(())
         self.population_size_herbivore = []
@@ -129,11 +131,10 @@ class BioSim(BioSimParam):
         self.herbivore_age_weight_fitness = []
         self.carnivore_age_weight_fitness = []
 
-
+        # Controlling graphics
         self._img_dir = img_dir
         self._img_base = img_base
         self._img_fmt = img_fmt
-
         if all((self._validate_hist_specs(hist_specs),
                 self._validate_cmax_animals(cmax_animals),
                 self._validate_im_params(img_dir, img_base, img_fmt))):
@@ -148,9 +149,6 @@ class BioSim(BioSimParam):
                                      img_years)
         self._vis_years = self._set_vis_years(vis_years)
         self._img_years = self._set_img_years(img_years)
-
-        # if self._validate_im_dir_im_base(img_dir, img_base):
-        #     self._img_dir = img_dir
 
     def _set_img_years(self, img_years: int):
         """Private setter method for img_years.
@@ -334,7 +332,6 @@ class BioSim(BioSimParam):
                 os.makedirs(self._img_dir)
             except OSError:
                 raise OSError('Making directory failed')
-                raise OSError('Making directory failed')
 
         return True
 
@@ -438,7 +435,6 @@ class BioSim(BioSimParam):
             self.graphics.make_movie_from_files()
         else:
             raise FileNotFoundError(f'{self._img_dir} is empty. Need figures to create movie.')
-
 
     def simulate(self, num_years:int = 10):
 
