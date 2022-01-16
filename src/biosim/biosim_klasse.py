@@ -331,6 +331,7 @@ class BioSim(BioSim_param):
                 os.makedirs(self._img_dir)
             except OSError:
                 raise OSError('Making directory failed')
+                raise OSError('Making directory failed')
 
         return True
 
@@ -350,8 +351,18 @@ class BioSim(BioSim_param):
         return self._num_animals_per_species
 
     def set_animal_parameters(self, species:str, params:dict):
+        """Set parameters for animal species.
+
+        Parameters
+        ----------
+        species: {'Herbivore', 'Carnivore'}
+        params
+
+        Returns
+        -------
+
         """
-        Set parameters for animal species.
+        """Set parameters for animal species.
 
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
@@ -400,6 +411,10 @@ class BioSim(BioSim_param):
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
         """
+        #Sjekk om liste eksisterer (ikke tom)
+            #add_pop
+        #else:
+            #pass// return None
         self.island.add_population_in_location(population)
 
     def make_movie(self):
