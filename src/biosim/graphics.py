@@ -90,7 +90,7 @@ class Graphics(GraphicsParams):
 
     def _set_cmax_animals(self, cmax_animals: dict):
         """{'Herbivore': 50, 'Carnivore': 20}"""
-        # TODO: Må håndtere None-verdier
+
         if cmax_animals is None:
             return True
 

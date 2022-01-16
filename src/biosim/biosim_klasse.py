@@ -203,7 +203,6 @@ class BioSim(BioSim_param):
             return True
 
     def _validate_cmax_animals(selfself, cmax_animals:dict)-> bool:
-        # TODO: Må håndtere None-verdi
         """dummy text2
 
 
