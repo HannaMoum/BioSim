@@ -76,7 +76,9 @@ def test_cmax_animals_validation_true(map_str, hist_specs, cmax):
 def test_cmax_animals_validation_error(map_str, hist_specs):
     """Test that KeyError rises if invalid cmax_animals dictionary is provided."""
     with pytest.raises(KeyError):
-        BioSim(map_str, hist_specs=hist_specs, cmax_animals={'Herbivore': 40, 'Dog': 10})
+        BioSim(map_str,
+               hist_specs=hist_specs,
+               cmax_animals={'Herbivore': 40, 'Dog': 10})
 
 
 @pytest.mark.parametrize('img_dir, img_base', [(None, 'BioSimInconsistent'),
@@ -84,20 +86,40 @@ def test_cmax_animals_validation_error(map_str, hist_specs):
 def test_validate_im_params_inconsistent(map_str, hist_specs, img_dir, img_base):
     """Test that ValueError rises if inconsistent image parameters are provided as input"""
     with pytest.raises(ValueError):
-        BioSim(map_str, hist_specs=hist_specs, img_dir=img_dir, img_base=img_base)
+        BioSim(map_str,
+               hist_specs=hist_specs,
+               img_dir=img_dir,
+               img_base=img_base)
 
 
 def test_validate_im_params_unsupported_format(map_str, hist_specs):
     """Test that ValueError rises of unsupported image format is provided."""
     img_fmt = 'txt'
     with pytest.raises(ValueError):
-        BioSim(map_str, hist_specs=hist_specs, img_fmt=img_fmt)
+        BioSim(map_str,
+               hist_specs=hist_specs,
+               img_fmt=img_fmt)
 
 
-def test_validate_im_params_default_value(map_str, hist_specs):
+def test_validate_im_params_default_values(map_str, hist_specs):
     """Test that default values are provided if image parameters are unspecified from user."""
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert all([sim._img_dir == sim.default_img_dir,
                 sim._img_base == sim.default_img_base,
                 sim._img_fmt == sim.default_img_fmt])
+
+
+def test_validate_im_params_specified_values(map_str, hist_specs):
+    """Test that correct values are saved in the image parameters when specified."""
+    img_dir = 'C:/temp/BioSimTester'
+    img_base = 'BioSimTester'
+    img_fmt = 'jpg'
+    sim = BioSim(map_str,
+                 hist_specs=hist_specs,
+                 img_dir=img_dir,
+                 img_base=img_base,
+                 img_fmt=img_fmt)
+    assert all([sim._img_dir == img_dir,
+                sim._img_base == img_base,
+                sim._img_fmt == img_fmt])
 
