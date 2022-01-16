@@ -25,29 +25,29 @@ class BioSim(BioSim_param):
         Parameters
         ----------
         island_map: `str`
-            String of {'W', 'D', 'L', 'H'} mapping the entire island's geography.
+            Multilinestring of {'W', 'D', 'L', 'H'} mapping the entire island's geography.
         ini_pop: `list` of `dict`, optional
             Population to be placed on island
         seed: `int`, optional
             Random seed
         vis_years: `int`, optional
-            Number of years to visualize evolution
-        ymax_animals: #XXX, optional
-            XXX
-        cmax_animals: #XXX, optional
-            XXX
-        hist_specs: XXX, optional
-            XXX
-        img_dir: XXX; optional
-            XXX
-        img_base: XXX, optional
-            XXX
-        img_fmt: XXX, optional
-            XXX
-        img_year: XXX, optional
-            XXX
-        log_file: XXX, optional
-            XXX
+            Years between visualization updates (if 0, disable graphics)
+        ymax_animals: `int` or `float`, optional
+            Number specifying y-axis limit for graph showing animal numbers
+        cmax_animals: `dict`, optional
+            Dict specifying color-code limits for animal densities
+        hist_specs: `dict`, optional
+            Specifications for histograms, see below
+        img_dir: `str` optional
+            String with path to directory for figures
+        img_base: `str`, optional
+            String with beginning of file name for figures
+        img_fmt: `str`, optional
+            String with file type for figures, e.g. 'png'
+        img_year: `int`, optional
+            Years between visualizations saved to files (default: vis_years)
+        log_file: `str`, optional
+            If given, write animal counts to this file
 
         Attributes
         ----------
