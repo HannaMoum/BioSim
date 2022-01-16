@@ -282,10 +282,11 @@ class BioSim(BioSimParam):
         if cmax_animals is None:
             return True
         for key, value in cmax_animals.items():
+            print(key)
             if key not in ['Herbivore', 'Carnivore']:
                 raise KeyError(f'{key} is not a legal key in cmax_animals. Legal keys are Herbivore and Carnivore.')
-            else:
-                return True
+
+        return True
 
     def _validate_im_params(self, img_dir:str, img_base:str, img_fmt:str):
         """Private validation of provided image parameters.
