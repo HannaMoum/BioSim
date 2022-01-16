@@ -11,9 +11,8 @@ from biosim.world import World
 from biosim.graphics import Graphics
 
 
-
 @dataclass
-class BioSim_param:
+class BioSimParam:
     hist_spec_pattern = {'fitness': {'max': float, 'delta': int},
                          'age': {'max': float, 'delta': int},
                          'weight': {'max': float, 'delta': int}}
@@ -22,7 +21,8 @@ class BioSim_param:
     default_img_base: str = 'BioSim'
     default_img_fmt: str = 'png'
 
-class BioSim(BioSim_param):
+
+class BioSim(BioSimParam):
     """Define and perform a simulation.
 
         Parameters
@@ -212,7 +212,6 @@ class BioSim(BioSim_param):
         """
         if not type(island_map) is str:
             raise ValueError('Island map must be be a string.')
-            return False #REMOVE
 
         str_list = island_map.split(sep='\n')
         length_check = len(str_list[0])
@@ -220,7 +219,7 @@ class BioSim(BioSim_param):
         for element in str_list:
             if len(element) != length_check:
                 raise ValueError('Island map must contain an equal amount of columns.')
-                return False #REMOVE
+
         return True
 
     def _validate_hist_specs(self, hist_specs:dict)-> bool:
@@ -331,6 +330,7 @@ class BioSim(BioSim_param):
                 os.makedirs(self._img_dir)
             except OSError:
                 raise OSError('Making directory failed')
+                raise OSError('Making directory failed')
 
         return True
 
@@ -350,8 +350,18 @@ class BioSim(BioSim_param):
         return self._num_animals_per_species
 
     def set_animal_parameters(self, species:str, params:dict):
+        """Set parameters for animal species.
+
+        Parameters
+        ----------
+        species: {'Herbivore', 'Carnivore'}
+        params
+
+        Returns
+        -------
+
         """
-        Set parameters for animal species.
+        """Set parameters for animal species.
 
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
@@ -377,6 +387,26 @@ class BioSim(BioSim_param):
             raise ValueError('Feil input')
 
     def add_population(self, population): #TODO: Sjekk om begge populasjoner (ini_pop) er tomme. Ikke noe poeng å kjøre simulering.
+        #TODO: men skal vel være mulig å opprette øya for det, og deretter plassere ut dyr...
+        """Add population on island.
+
+        Parameters
+        ----------
+        population: `list` of `dict
+            Population of animals to be placed in specified locations on the island.
+
+        Returns
+        -------
+        None
+            Return None if no initial population is given.
+
+            Otherwise add population on island.
+
+        See Also
+        --------
+        :py:meth:`.add_population_in_location`
+            Relationship
+        """
         """Validates input dict befor sending calling add_population method in
         the world class
         Initial_population looks like:
@@ -387,7 +417,10 @@ class BioSim(BioSim_param):
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
         """
-        self.island.add_population(population)
+        if population:
+            self.island.add_population_in_location(population)
+        else:
+            return None
 
     def make_movie(self):
         """Create MPEG4 movie from visualizing images saved.
@@ -395,13 +428,12 @@ class BioSim(BioSim_param):
         Raises
         -------
         FileNotFoundError
-
+            No saved figures to create movie from found.
         """
-        """Create MPEG4 movie from visualizing images saved."""
         if os.listdir(self._img_dir):
             self.graphics.make_movie_from_files()
         else:
-            raise FileNotFoundError(f'{self._img_dir} is empty.')
+            raise FileNotFoundError(f'{self._img_dir} is empty. Need figures to create movie.')
 
 
     def simulate(self, num_years:int = 10):

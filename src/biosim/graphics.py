@@ -29,6 +29,17 @@ class GraphicsParams:
     island_map_colors: tuple = ('blue', 'darkgreen', 'lightgreen', 'yellow')
 
     def transform_landscape_type_from_str_to_int(self, value):
+        """
+
+        Parameters
+        ----------
+        value: `{'L', 'H', 'D', W'}`
+            Landscape letter
+
+        Returns
+        -------
+        `int`
+        """
         if value in self.codes_for_landscape_types:
             replacement_values = list(zip(self.codes_for_landscape_types, self.plot_values_for_landscape_types))
             for letter, number in replacement_values:

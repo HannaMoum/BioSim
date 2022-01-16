@@ -124,7 +124,7 @@ class World:
 
         return object_map
 
-    def add_population(self, population):
+    def add_population_in_location(self, population):
         """Add population in given locations.
 
         Parameters
