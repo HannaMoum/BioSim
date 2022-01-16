@@ -215,7 +215,7 @@ class BioSim(BioSimParam):
         if not type(island_map) is str:
             raise ValueError('Island map must be be a string.')
 
-        str_list = island_map.split(sep='\n')
+        str_list = island_map.split()
         length_check = len(str_list[0])
 
         for element in str_list:
