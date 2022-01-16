@@ -17,10 +17,6 @@ class GraphicsParams:
     cmax_animals_herbivore: int = 50
     cmax_animals_carnivore: int = 50
 
-    img_dir: str = 'C:/'
-    img_base: str = 'BioSim'
-    img_fmt: str = 'png'
-
     age_max: float = 60
     age_delta: float = 2
     weight_max: float = 60
@@ -29,13 +25,12 @@ class GraphicsParams:
     fitness_delta: float = 0.05
 
     codes_for_landscape_types: str = 'WLHD'
+    plot_values_for_landscape_types: str = '0123'
+    island_map_colors: tuple = ('blue', 'darkgreen', 'lightgreen', 'yellow')
 
-    def code_landscape(self, value):  # Finn mer beskrivende funksjonsnavn
-        # TODO: Funksjonen må oppdateres med å sjekke at input value er lovlig.
-        plot_values_for_landscape_types = '0123'
-        # Vurder å ha de som parametere, sånn at de kan brukes globalt
+    def transform_landscape_type_from_str_to_int(self, value):
         if value in self.codes_for_landscape_types:
-            replacement_values = list(zip(self.codes_for_landscape_types, plot_values_for_landscape_types))
+            replacement_values = list(zip(self.codes_for_landscape_types, self.plot_values_for_landscape_types))
             for letter, number in replacement_values:
                 if value == letter:
                     return int(number)
@@ -47,10 +42,7 @@ class Graphics(GraphicsParams):
                  ymax_animals: int, cmax_animals: dict,
                  vis_years: int, img_dir, img_base,
                  img_fmt, img_years):
-        """
-        numpy_island_map er base_map fra World.
-        """
-        #self._island_plot = self._make_plot_map(numpy_island_map)
+
         self._base_map = base_map
         self._set_histogram_specs(hist_specs)
         self.ymax_animals = ymax_animals
@@ -72,12 +64,14 @@ class Graphics(GraphicsParams):
         """
         # Konveterer en numpy array med bokstaver (str) til en numpy array med tall 0, 1, 2 og 3.
         island_map_plot = np.copy(self._base_map)
-        vcode_landscape = np.vectorize(self.code_landscape) # Gjør det mulig at fx kan benyttes celle for celle.
-        island_map_plot[:, :] = vcode_landscape(island_map_plot) # Bruker fx celle for celle på island_map_plot
+        # Gjør det mulig at fx kan benyttes celle for celle.
+        v_transform_landscape_type_from_str_to_int = np.vectorize(self.transform_landscape_type_from_str_to_int)
+        # Bruker fx celle for celle på island_map_plot
+        island_map_plot[:, :] = v_transform_landscape_type_from_str_to_int(island_map_plot)
         island_map_plot = np.array(island_map_plot, dtype=int) # Konverterer fra siffer (tall som str) til tall (int).
 
         row, col = island_map_plot.shape
-        colormap = colors.ListedColormap(['blue', 'darkgreen', 'lightgreen', 'yellow'])
+        colormap = colors.ListedColormap(self.island_map_colors)
 
         ax.imshow(island_map_plot, cmap=colormap, extent=[1, col + 1, row + 1, 1])
         ax.set_xticks(range(1, col + 1))
@@ -111,7 +105,7 @@ class Graphics(GraphicsParams):
             cmap = 'Reds'
             center = self.cmax_animals_carnivore
         else:
-            raise ValueError('Species mus be Herbivore or Carnivore')
+            raise ValueError('Species must be Herbivore or Carnivore')
 
         ax = sns.heatmap(data[year, :, :], cmap=cmap, ax=ax,
                          center=center, xticklabels=[x for x in range(1, data.shape[2] + 1)],
@@ -125,7 +119,6 @@ class Graphics(GraphicsParams):
         Brukes til å plotte population size over tid
         Data er np array, med en sum per år i simuleringen
         """
-
         ax.plot(herb_data[0:year], color='green', label='Herbivore')
         ax.plot(carn_data[0:year], color='red', label='Carnivore')
         ax.set_title('Population size', loc='left')
