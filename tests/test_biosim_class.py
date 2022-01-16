@@ -178,9 +178,22 @@ def test_year_sim_twice(map_str, hist_specs):
                              {'species': 'Carnivore', 'age': 5, 'weight': 5}]
       }]
 ])
-def test_num_animals(map_str, hist_specs, ini_pop):
-    """Test that expected amount of animals are to be found on the island."""
-    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs)
-
+def test_num_animals_initially(map_str, hist_specs, ini_pop):
+    """Test that expected amount of animals are to be found on the island initially."""
+    sim = BioSim(map_str,
+                 ini_pop,
+                 hist_specs=hist_specs)
     num_animals = len(ini_pop[0]['pop'])
     assert sim.num_animals == num_animals
+
+
+def test_num_animals_added(map_str, hist_specs):
+    """Test that expected amount of animals are to be found on the island after adding animals explicitly."""
+    ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
+                                       {'species': 'Carnivore', 'age': 5, 'weight': 5}]}]
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    sim.add_population(ini_pop)
+    assert sim.num_animals == 2
+
+
+
