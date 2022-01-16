@@ -62,7 +62,8 @@ class BioSim(BioSim_param):
             Provides opportunity to simulate in intervals with pauses.
         _num_years: `int`
             Simulation duration in years
-
+        hist_spec_pattern: `dict`
+            Default pattern of input hist_spec
 
 
 
@@ -182,14 +183,12 @@ class BioSim(BioSim_param):
         Returns
         -------
         vis_years: `int`
-
         """
         # TODO: Gjøre validering av vis_years. Må komme inn som 0, int eller None. Hvis det er en int så må den være 0 eller større.
         return vis_years
 
     def _validate_island_map(self, island_map:str)-> bool:
-        """
-        Validate input type island_map before sending to World class.
+        """Validate input type island_map before sending to World class.
 
         Parameters
         ----------
@@ -203,7 +202,8 @@ class BioSim(BioSim_param):
 
         Returns
         -------
-            True, if island map are validated correctly.
+        `bool`
+            True, if island map passes validation.
         """
         if not type(island_map) is str:
             raise ValueError('Island map must be be a string.')
@@ -219,10 +219,22 @@ class BioSim(BioSim_param):
         return True
 
     def _validate_hist_specs(self, hist_specs:dict)-> bool:
-        """
-        hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
-                      'age': {'max': 60.0, 'delta': 2},
-                      'weight': {'max': 60, 'delta': 2}},
+        """Private validation of provided input hist_specs.
+
+        Parameters
+        ----------
+        hist_specs: `dict`
+            Specifications for histograms
+
+        Raises
+        ------
+        KeyError
+            Provided key in :py:attr:`.hist_specs` is not valid.
+
+        Returns
+        -------
+        `bool`
+            True if hist_specs passes validation.
         """
         error_main_key = False
         error_sub_key = False
@@ -235,20 +247,33 @@ class BioSim(BioSim_param):
                     error_sub_key = True
 
         if any((error_main_key, error_sub_key)):
-            raise KeyError(f'Not is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
+            raise KeyError(f'Provided key is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
         else:
             return True
 
     def _validate_cmax_animals(selfself, cmax_animals:dict)-> bool:
-        """dummy text2
+        """Private validation of provided input cmax_animals.
 
+        Parameters
+        ----------
+        cmax_animals: `dict` or None
+            Dict specifying color-code limits for animal densities.
 
-        more dummy text"""
+        Raises
+        ------
+        KeyError
+            Provided key is not valid.
+
+        Returns
+        -------
+        `bool`
+            True, if cmax_animals passes validation.
+        """
         if cmax_animals is None:
             return True
         for key, value in cmax_animals.items():
             if key not in ['Herbivore', 'Carnivore']:
-                raise KeyError(f'{key} is not a legal key in cmax_animals. Legal keys are Herbivore and Carnivore')
+                raise KeyError(f'{key} is not a legal key in cmax_animals. Legal keys are Herbivore and Carnivore.')
             else:
                 return True
 
