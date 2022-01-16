@@ -138,7 +138,7 @@ class BioSim(BioSim_param):
         return img_years
 
     def _set_vis_years(self, vis_years: int)-> int:
-        # TODO: Gjøre validering av vis_years
+        # TODO: Gjøre validering av vis_years. Må komme inn som 0, int eller None. Hvis det er en int så må den være 0 eller større.
         """dummy text1"""
         return vis_years
 
