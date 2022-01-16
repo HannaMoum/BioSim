@@ -118,12 +118,15 @@ class BioSim(BioSim_param):
 
         # Disse variablene lages under instansiering. De brukes for å lage data som kan sendes til grafikk-klassen.
         self._num_years = 0  # Duration of sim
-        self.cube_population_herbs = np.empty(())
-        self.cube_population_carns = np.empty(())
+        self.population_map_herbivore = np.empty(())
+        self.population_map_carnivore = np.empty(())
+        self.population_size_herbivore = []
+        self.population_size_carnivore = []
+
+
         self.cubelist_properties_herbs = []
         self.cubelist_properties_carns = []
-        self.yearly_pop_map_herbs = []
-        self.yearly_pop_map_carns = []
+
 
         self._img_dir = img_dir
         self._img_base = img_base
@@ -392,7 +395,12 @@ class BioSim(BioSim_param):
             self._annual_cycle()
             self._collect_annual_data()
             self._do_annual_graphics(current_year)
-            print('\r',f'Year:{current_year}  Herbivores:{self.yearly_pop_map_herbs[-1].sum()}   Carnivores:{self.yearly_pop_map_carns[-1].sum()}', end = '')
+
+            self._num_animals_per_species = {'Herbivores': self.population_map_herbivore.sum(),
+                                             'Carnivores': self.population_map_carnivore.sum()}
+            self._num_animals = self.population_map_herbivore.sum() + self.population_map_carnivore.sum()
+
+            print('\r',f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   Carnivores:{self.population_map_carnivore.sum()}', end ='')
 
         print()
 
@@ -416,17 +424,12 @@ class BioSim(BioSim_param):
                     landscape.do_death()
 
     def _collect_annual_data(self):
-        # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
+        # Data for every year. Her genereres data for hvert år.
+        self.population_map_herbivore = self.island.get_property_map('v_size_herb_pop')
+        self.population_map_carnivore = self.island.get_property_map('v_size_carn_pop')
 
-        # Herbivore populasjonsstørrelse for alle lokasjoner per år
-        self.yearly_pop_map_herbs.append(self.island.get_property_map('v_size_herb_pop'))
-        # Carnivore populasjonsstørrelse for alle lokasjoner per år
-        self.yearly_pop_map_carns.append(self.island.get_property_map('v_size_carn_pop'))
-
-        # Data at end of simulation
-        # TODO: Add evaluation. Check shape and size. Raises valueerror
-        self.cube_population_herbs = self.island.get_property_map('v_size_herb_pop') #np.stack(self.yearly_pop_map_herbs)
-        self.cube_population_carns = self.island.get_property_map('v_size_carn_pop')#np.stack(self.yearly_pop_map_carns)
+        self.population_size_herbivore.append(self.population_map_herbivore.sum())
+        self.population_size_carnivore.append(self.population_map_carnivore.sum())
 
         yearly_herb_objects_map = self.island.get_property_map_objects('v_herb_properties_objects')
         # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
@@ -449,26 +452,6 @@ class BioSim(BioSim_param):
                     acc_list_carn += list_on_location
         yearly_carnivore_property_array = np.asarray(acc_list_carn)
         self.cubelist_properties_carns.append(yearly_carnivore_property_array)
-
-
-
-    def _get_yearly_herb_count(self)-> object:
-        """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
-        Returnerer en np array.shape(1,) 1D"""
-        kube =  self.cube_population_herbs
-        # kube.sum(rad_dimensjonen).sum(kolonne_dimensjonen) = array med en sum (scalar) per år.
-        serie = kube.sum(-1)
-        # TODO: Do validation
-        # assert len(serie) == self._num_years. Valideringen er logisk feil, kan ikke brukes.
-        return serie
-
-    def _get_yearly_carn_count(self):
-        """Dette er en datagenererings-metode for å finne ut hvor mange carnivores som finnes i verden akk nå."""
-        kube =  self.cube_population_carns
-        serie = kube.sum(-1)
-        # TODO: Do validation
-        # assert len(serie) == self._num_years
-        return serie
 
     def _do_annual_graphics(self, current_year:int):
         # Graphics for the year
@@ -502,17 +485,21 @@ class BioSim(BioSim_param):
                 save = True
 
         if any((show, save)):
-            self.graphics.show_grid(self.cube_population_herbs,
-                                    self.cube_population_carns,
-                                    self._get_yearly_herb_count(),
-                                    self._get_yearly_carn_count(),
+            # self.graphics.show_grid(self.population_map_herbivore,
+            #                         self.population_map_carnivore,
+            #                         self._get_yearly_herb_count(),
+            #                         self._get_yearly_carn_count(),
+            #                         self.cubelist_properties_herbs,
+            #                         self.cubelist_properties_carns,
+            #                         pause, current_year, show, save)
+            self.graphics.show_grid(self.population_map_herbivore,
+                                    self.population_map_carnivore,
+                                    np.asarray(self.population_size_herbivore),
+                                    np.asarray(self.population_size_carnivore),
                                     self.cubelist_properties_herbs,
                                     self.cubelist_properties_carns,
                                     pause, current_year, show, save)
 
-        self._num_animals_per_species = {'Herbivores': self.yearly_pop_map_herbs[-1].sum(),
-                                         'Carnivores': self.yearly_pop_map_carns[-1].sum()}
-        self._num_animals = self.yearly_pop_map_herbs[-1].sum() + self.yearly_pop_map_carns[-1].sum()
 
 
 
