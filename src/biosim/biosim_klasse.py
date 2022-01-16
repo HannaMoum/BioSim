@@ -390,8 +390,7 @@ class BioSim(BioSimParam):
         else:
             raise ValueError('Feil input')
 
-    def add_population(self, population): #TODO: Sjekk om begge populasjoner (ini_pop) er tomme. Ikke noe poeng å kjøre simulering.
-        #TODO: men skal vel være mulig å opprette øya for det, og deretter plassere ut dyr...
+    def add_population(self, population):
         """Add population on island.
 
         Parameters
@@ -423,8 +422,20 @@ class BioSim(BioSimParam):
         """
         if population:
             self.island.add_population_in_location(population)
-            num_animals_added = sum(len(dictionary['pop']) for dictionary in population)
-            self._num_animals += num_animals_added
+            num_animals, num_herbs, num_carns = 0, 0, 0
+
+            for dictionary in population:
+                num_animals += len(dictionary['pop'])
+
+                for animal in dictionary['pop']:
+                    if animal['species'] == 'Herbivore':
+                        num_herbs += 1
+                    if animal['species'] == 'Carnivore':
+                        num_carns += 1
+
+            self._num_animals += num_animals
+            self._num_animals_per_species['Herbivore'] += num_herbs
+            self._num_animals_per_species['Carnivore'] += num_carns
         else:
             return None
 
