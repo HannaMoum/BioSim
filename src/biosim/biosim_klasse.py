@@ -274,24 +274,6 @@ class BioSim(BioSim_param):
         """Number of animals per species on island (`dict`)."""
         return self._num_animals_per_species
 
-    def get_yearly_herb_count(self)-> object:
-        """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
-        Returnerer en np array.shape(1,) 1D"""
-        kube =  self.cube_population_herbs
-        # kube.sum(rad_dimensjonen).sum(kolonne_dimensjonen) = array med en sum (scalar) per år.
-        serie = kube.sum(-1).sum(-1)
-        # TODO: Do validation
-        # assert len(serie) == self._num_years. Valideringen er logisk feil, kan ikke brukes.
-        return serie
-
-    def get_yearly_carn_count(self):
-        """Dette er en datagenererings-metode for å finne ut hvor mange carnivores som finnes i verden akk nå."""
-        kube =  self.cube_population_carns
-        serie = kube.sum(-1).sum(-1)
-        # TODO: Do validation
-        # assert len(serie) == self._num_years
-        return serie
-
     def set_animal_parameters(self, species:str, params:dict):
         """
         Set parameters for animal species.
@@ -453,6 +435,24 @@ class BioSim(BioSim_param):
             print('\r',f'Year:{current_year}  Herbivores:{self.yearly_pop_map_herbs[-1].sum()}   Carnivores:{self.yearly_pop_map_carns[-1].sum()}', end = '')
 
         print()
+
+    def get_yearly_herb_count(self)-> object:
+        """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
+        Returnerer en np array.shape(1,) 1D"""
+        kube =  self.cube_population_herbs
+        # kube.sum(rad_dimensjonen).sum(kolonne_dimensjonen) = array med en sum (scalar) per år.
+        serie = kube.sum(-1).sum(-1)
+        # TODO: Do validation
+        # assert len(serie) == self._num_years. Valideringen er logisk feil, kan ikke brukes.
+        return serie
+
+    def get_yearly_carn_count(self):
+        """Dette er en datagenererings-metode for å finne ut hvor mange carnivores som finnes i verden akk nå."""
+        kube =  self.cube_population_carns
+        serie = kube.sum(-1).sum(-1)
+        # TODO: Do validation
+        # assert len(serie) == self._num_years
+        return serie
 
 
 
