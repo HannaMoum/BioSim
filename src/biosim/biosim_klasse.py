@@ -354,43 +354,7 @@ class BioSim(BioSim_param):
         for current_year in range(start_loop, self._num_years + 1):
             self._year += 1
             self._annual_cycle()
-
-            #-------------------------------------------------------------------------------------
-            # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
-
-            # Herbivore populasjonsstørrelse for alle lokasjoner per år
-            self.yearly_pop_map_herbs.append(self.island.get_property_map('v_size_herb_pop'))
-            # Carnivore populasjonsstørrelse for alle lokasjoner per år
-            self.yearly_pop_map_carns.append(self.island.get_property_map('v_size_carn_pop'))
-
-
-            yearly_herb_objects_map = self.island.get_property_map_objects('v_herb_properties_objects')
-            # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
-            # Måtte derfor skrive egen akkumulerings funksjon som legger sammen alle populasjonslistene på landskapene på øya, til en liste med alle dyr på øya.
-            acc_list_herb = []
-            with np.nditer(yearly_herb_objects_map, flags=['multi_index', 'refs_ok']) as it:
-                for element in it:
-                    list_on_location = element.item()
-                    if type(list_on_location) == list: #if list_on_location:
-                        acc_list_herb += list_on_location
-            yearly_herbivore_property_array = np.asarray(acc_list_herb)
-            self.cubelist_properties_herbs.append(yearly_herbivore_property_array)
-
-
-            yearly_carn_objects_map = self.island.get_property_map_objects('v_carn_properties_objects')
-            acc_list_carn = []
-            with np.nditer(yearly_carn_objects_map, flags=['multi_index', 'refs_ok']) as it:
-                for element in it:
-                    list_on_location = element.item()
-                    if type(list_on_location) == list:#if list_on_location:
-                        acc_list_carn += list_on_location
-            yearly_carnivore_property_array = np.asarray(acc_list_carn)
-            self.cubelist_properties_carns.append(yearly_carnivore_property_array)
-
-            # Data at end of simulation
-            # TODO: Add evaluation. Check shape and size. Raises valueerror
-            self.cube_population_herbs = np.stack(self.yearly_pop_map_herbs)
-            self.cube_population_carns = np.stack(self.yearly_pop_map_carns)
+            self._collect_annual_data()
 
             #--------------------------------------------------------------------------------------------------------
             # Graphics for the year
@@ -458,6 +422,41 @@ class BioSim(BioSim_param):
                     landscape.give_birth()
                     landscape.aging()
                     landscape.do_death()
+
+    def _collect_annual_data(self):
+        # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
+
+        # Herbivore populasjonsstørrelse for alle lokasjoner per år
+        self.yearly_pop_map_herbs.append(self.island.get_property_map('v_size_herb_pop'))
+        # Carnivore populasjonsstørrelse for alle lokasjoner per år
+        self.yearly_pop_map_carns.append(self.island.get_property_map('v_size_carn_pop'))
+
+        yearly_herb_objects_map = self.island.get_property_map_objects('v_herb_properties_objects')
+        # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
+        # Måtte derfor skrive egen akkumulerings funksjon som legger sammen alle populasjonslistene på landskapene på øya, til en liste med alle dyr på øya.
+        acc_list_herb = []
+        with np.nditer(yearly_herb_objects_map, flags=['multi_index', 'refs_ok']) as it:
+            for element in it:
+                list_on_location = element.item()
+                if type(list_on_location) == list:  # if list_on_location:
+                    acc_list_herb += list_on_location
+        yearly_herbivore_property_array = np.asarray(acc_list_herb)
+        self.cubelist_properties_herbs.append(yearly_herbivore_property_array)
+
+        yearly_carn_objects_map = self.island.get_property_map_objects('v_carn_properties_objects')
+        acc_list_carn = []
+        with np.nditer(yearly_carn_objects_map, flags=['multi_index', 'refs_ok']) as it:
+            for element in it:
+                list_on_location = element.item()
+                if type(list_on_location) == list:  # if list_on_location:
+                    acc_list_carn += list_on_location
+        yearly_carnivore_property_array = np.asarray(acc_list_carn)
+        self.cubelist_properties_carns.append(yearly_carnivore_property_array)
+
+        # Data at end of simulation
+        # TODO: Add evaluation. Check shape and size. Raises valueerror
+        self.cube_population_herbs = np.stack(self.yearly_pop_map_herbs)
+        self.cube_population_carns = np.stack(self.yearly_pop_map_carns)
 
     def _get_yearly_herb_count(self)-> object:
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
