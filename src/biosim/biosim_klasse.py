@@ -60,6 +60,9 @@ class BioSim(BioSim_param):
             How many years you simulate at once.
 
             Provides opportunity to simulate in intervals with pauses.
+        _num_years: `int`
+            Simulation duration in years
+
 
 
 
@@ -140,6 +143,23 @@ class BioSim(BioSim_param):
         #     self._img_dir = img_dir
 
     def _set_img_years(self, img_years: int):
+        """
+        Private setter function for img_years.
+
+        If input provided, set img_years to input value,
+        else set to default value :py:attr:`.vis_years`.
+
+        Parameters
+        ----------
+        img_years: `int` or None
+            Years between visualizations saved to files
+
+        Returns
+        -------
+        img_years: `int`
+            If input provided, set img_years to input value,
+            else set to default value :py:attr:`.vis_years`.
+        """
         # TODO: Burde også teste for negative verdier, andre datatyper.
         if img_years is None:
             img_years = self._vis_years
