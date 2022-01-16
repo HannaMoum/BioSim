@@ -335,7 +335,6 @@ class World:
         property_map[:, :] = vget_property(object_map)
         return property_map
 
-    # TODO: Om vi får en populasjon per landskap kan disse bli til 1 funksjon
     def v_herb_properties_objects(self, location: object) -> list:
         """Find the herbivores' attributes at given location.
 
