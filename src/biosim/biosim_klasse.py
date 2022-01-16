@@ -282,7 +282,6 @@ class BioSim(BioSimParam):
         if cmax_animals is None:
             return True
         for key, value in cmax_animals.items():
-            print(key)
             if key not in ['Herbivore', 'Carnivore']:
                 raise KeyError(f'{key} is not a legal key in cmax_animals. Legal keys are Herbivore and Carnivore.')
 
@@ -448,12 +447,12 @@ class BioSim(BioSimParam):
         if self._initial_num_year is None:
             self._initial_num_year = num_years
             self._num_years = num_years
-            start_loop = 1
+            start_loop = 0
         else:
             start_loop = self.year + 1
             self._num_years = self.year + num_years
 
-        for current_year in range(start_loop, self._num_years + 1):
+        for current_year in range(start_loop, self._num_years):
             self._year += 1
             self._annual_cycle()
             self._collect_annual_data()
