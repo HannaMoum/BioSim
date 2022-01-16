@@ -143,8 +143,7 @@ class BioSim(BioSim_param):
         #     self._img_dir = img_dir
 
     def _set_img_years(self, img_years: int):
-        """
-        Private setter function for img_years.
+        """Private setter method for img_years.
 
         If input provided, set img_years to input value,
         else set to default value :py:attr:`.vis_years`.
@@ -166,8 +165,26 @@ class BioSim(BioSim_param):
         return img_years
 
     def _set_vis_years(self, vis_years: int)-> int:
+        """Private setter method for vis_years.
+
+        Validates correct input.
+
+        Parameters
+        ----------
+        vis_years: `int`
+            Years between visualization updates.
+
+        Raises
+        ------
+        ValueError
+            vis_years must a positive whole number.
+
+        Returns
+        -------
+        vis_years: `int`
+
+        """
         # TODO: Gjøre validering av vis_years. Må komme inn som 0, int eller None. Hvis det er en int så må den være 0 eller større.
-        """dummy text1"""
         return vis_years
 
     def _validate_island_map(self, island_map:str)-> bool:
