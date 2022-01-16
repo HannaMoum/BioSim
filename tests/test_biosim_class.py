@@ -196,4 +196,15 @@ def test_num_animals_added(map_str, hist_specs):
     assert sim.num_animals == 2
 
 
+def test_num_animals_per_species(map_str, hist_specs):
+    """Test that expeted amount of animals of each species are to be found on the island."""
+    ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
+                                       {'species': 'Carnivore', 'age': 5, 'weight': 5}]}]
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    sim.add_population(ini_pop)
+    herbs = sim.num_animals_per_species['Herbivore']
+    carns = sim.num_animals_per_species['Carnivore']
+    assert all([herbs == 1, carns == 1])
+
+
 
