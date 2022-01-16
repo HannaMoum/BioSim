@@ -472,6 +472,7 @@ class BioSim(BioSimParam):
 
             self._num_animals_per_species = {'Herbivore': self.population_map_herbivore.sum(),
                                              'Carnivore': self.population_map_carnivore.sum()}
+            print(self.population_map_herbivore)
             self._num_animals = self.population_map_herbivore.sum() + self.population_map_carnivore.sum()
 
             print('\r',f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   Carnivores:{self.population_map_carnivore.sum()}', end ='')

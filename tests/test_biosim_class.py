@@ -1,8 +1,15 @@
 import pytest
 from biosim.biosim_klasse import BioSim, BioSimParam
 from biosim.world import World
+from biosim.animals import Herbivore, Carnivore
 import os
 
+@pytest.fixture(autouse=True)
+def reset_params_default():
+    """Reset parameters to default after test has run."""
+    yield
+    Herbivore.set_params(Herbivore._default_params)
+    Carnivore.set_params(Carnivore._default_params)
 
 @pytest.fixture()
 def hist_specs():
@@ -196,7 +203,7 @@ def test_num_animals_added(map_str, hist_specs):
     assert sim.num_animals == 2
 
 
-def test_num_animals_per_species(map_str, hist_specs):
+def test_num_animals_per_species_added(map_str, hist_specs):
     """Test that expeted amount of animals of each species are to be found on the island."""
     ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
                                        {'species': 'Carnivore', 'age': 5, 'weight': 5}]}]
@@ -205,6 +212,23 @@ def test_num_animals_per_species(map_str, hist_specs):
     herbs = sim.num_animals_per_species['Herbivore']
     carns = sim.num_animals_per_species['Carnivore']
     assert all([herbs == 1, carns == 1])
+
+
+def test_num_animals_after_sim(map_str, hist_specs, mocker):
+    """Test expected number of animals after simulation of one year,
+    providing birth happens."""
+    mocker.patch('biosim.animals.uniform', return_value=0)
+    Herbivore.set_params({'xi': 0, 'zeta': 0})
+    ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 7, 'weight': 16},
+                                       {'species': 'Herbivore', 'age': 7, 'weight': 16}]}]
+    sim = BioSim(map_str,
+                 ini_pop,
+                 hist_specs=hist_specs,
+                 vis_years=0)
+    assert sim.num_animals == 2
+    sim.simulate(1)
+    assert sim.num_animals == 4
+
 
 
 
