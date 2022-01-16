@@ -107,9 +107,9 @@ class Graphics(GraphicsParams):
         else:
             raise ValueError('Species must be Herbivore or Carnivore')
 
-        ax = sns.heatmap(data[year, :, :], cmap=cmap, ax=ax,
-                         center=center, xticklabels=[x for x in range(1, data.shape[2] + 1)],
-                         yticklabels=[x for x in range(1, data.shape[1] + 1)])
+        ax = sns.heatmap(data[:, :], cmap=cmap, ax=ax,
+                         center=center, xticklabels=[x for x in range(1, data.shape[1] + 1)],
+                         yticklabels=[x for x in range(1, data.shape[0] + 1)])
         ax.set_title(title)
 
         return ax

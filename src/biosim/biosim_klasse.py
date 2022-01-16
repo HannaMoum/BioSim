@@ -412,6 +412,11 @@ class BioSim(BioSim_param):
         # Carnivore populasjonsstørrelse for alle lokasjoner per år
         self.yearly_pop_map_carns.append(self.island.get_property_map('v_size_carn_pop'))
 
+        # Data at end of simulation
+        # TODO: Add evaluation. Check shape and size. Raises valueerror
+        self.cube_population_herbs = self.island.get_property_map('v_size_herb_pop') #np.stack(self.yearly_pop_map_herbs)
+        self.cube_population_carns = self.island.get_property_map('v_size_carn_pop')#np.stack(self.yearly_pop_map_carns)
+
         yearly_herb_objects_map = self.island.get_property_map_objects('v_herb_properties_objects')
         # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
         # Måtte derfor skrive egen akkumulerings funksjon som legger sammen alle populasjonslistene på landskapene på øya, til en liste med alle dyr på øya.
@@ -434,17 +439,14 @@ class BioSim(BioSim_param):
         yearly_carnivore_property_array = np.asarray(acc_list_carn)
         self.cubelist_properties_carns.append(yearly_carnivore_property_array)
 
-        # Data at end of simulation
-        # TODO: Add evaluation. Check shape and size. Raises valueerror
-        self.cube_population_herbs = np.stack(self.yearly_pop_map_herbs)
-        self.cube_population_carns = np.stack(self.yearly_pop_map_carns)
+
 
     def _get_yearly_herb_count(self)-> object:
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
         Returnerer en np array.shape(1,) 1D"""
         kube =  self.cube_population_herbs
         # kube.sum(rad_dimensjonen).sum(kolonne_dimensjonen) = array med en sum (scalar) per år.
-        serie = kube.sum(-1).sum(-1)
+        serie = kube.sum(-1)
         # TODO: Do validation
         # assert len(serie) == self._num_years. Valideringen er logisk feil, kan ikke brukes.
         return serie
@@ -452,7 +454,7 @@ class BioSim(BioSim_param):
     def _get_yearly_carn_count(self):
         """Dette er en datagenererings-metode for å finne ut hvor mange carnivores som finnes i verden akk nå."""
         kube =  self.cube_population_carns
-        serie = kube.sum(-1).sum(-1)
+        serie = kube.sum(-1)
         # TODO: Do validation
         # assert len(serie) == self._num_years
         return serie
