@@ -213,7 +213,6 @@ class BioSim(BioSim_param):
         if not any((all((type(img_dir) is str, type(img_base) is str)),
                     all((img_dir is None, img_base is None)))):
             raise ValueError('Error. Both must be str or None')
-            return None #REMOVE
 
         if img_dir is None:
             self._img_dir = self.default_img_dir
@@ -231,7 +230,6 @@ class BioSim(BioSim_param):
                 os.makedirs(self._img_dir) # Sender melding til OS-et om å opprette katalogen. OS-et kan si "ja" eller "nei".
             except OSError: # Om det ikke får raises en OSError
                 raise OSError('Making dir failed')
-                return False #REMOVE
 
         return True
 
