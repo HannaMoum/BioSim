@@ -231,9 +231,9 @@ class World:
         `ndarray`
             Array mapping chosen property
         """
-        return self._make_property_map(getattr(self, fx_map_type))#, self.base_map, self.object_map) #TODO: self is not input
+        return self._make_property_map(getattr(self, fx_map_type))
 
-    def _make_property_map(self, fx: callable(object)):#, base_map, object_map):
+    def _make_property_map(self, fx: callable(object)):
         """
         Create map of chosen property for :py:meth:`.get_property_map`.
 
@@ -241,8 +241,6 @@ class World:
         ----------
         fx: class method
             Method to be vectorized.
-        base_map #TODO Remove
-        object_map #TODO remove
 
         Returns
         -------
@@ -313,26 +311,24 @@ class World:
         `ndarray`
             Array mapping attributes of chosen species.
         """
-        return self._make_property_map_objects(getattr(self, fx_map_type), self.base_map, self.object_map)
+        return self._make_property_map_objects(getattr(self, fx_map_type))
 
-    def _make_property_map_objects(self, fx: callable(object), base_map, object_map):
+    def _make_property_map_objects(self, fx: callable(object)):
         """Create mapping of a chosen species' attribuets for :py:meth:`.get_property_map_objects`.
 
         Parameters
         ----------
         fx: class method
             Method to be vectorized.
-        base_map #TODO Remove
-        object_map #TODO remove
 
         Returns
         -------
         `ndarray`
             Array mapping chosen property.
         """
-        property_map = np.empty(base_map.shape, dtype=object)
+        property_map = np.empty(self.base_map.shape, dtype=object)
         vget_property = np.vectorize(fx)
-        property_map[:, :] = vget_property(object_map)
+        property_map[:, :] = vget_property(self.object_map)
         return property_map
 
     def v_herb_properties_objects(self, location):
