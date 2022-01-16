@@ -247,7 +247,7 @@ class BioSim(BioSim_param):
                     error_sub_key = True
 
         if any((error_main_key, error_sub_key)):
-            raise KeyError(f'Key is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
+            raise KeyError(f'Provided key is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
         else:
             return True
 
