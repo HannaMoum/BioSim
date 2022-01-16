@@ -52,6 +52,17 @@ class BioSim(BioSim_param):
         log_file: `str`, optional
             If given, write animal counts to this file
 
+        Attributes
+        ----------
+        island: `obj`
+            Object of class :py:class:`.World`
+        _initial_num_year: None or `int`
+            How many years you simulate at once.
+
+            Provides opportunity to simulate in intervals with pauses.
+
+
+
         Notes
         -----
 
@@ -74,9 +85,6 @@ class BioSim(BioSim_param):
         Permitted properties are 'weight', 'age' and 'fitness'.
 
         :math:`\mathtt{img\_dir}` and :math:`\mathtt{img\_base}` must either both be None or both be strings.
-
-        Attributes
-        ----------
 
         """
 
@@ -144,7 +152,8 @@ class BioSim(BioSim_param):
 
     def _validate_island_map(self, island_map:str)-> bool:
         """
-        Validate input type island_map before sending to World class
+        Validate input type island_map before sending to World class.
+
         Parameters
         ----------
         island_map: `str`
@@ -235,17 +244,17 @@ class BioSim(BioSim_param):
 
     @property
     def year(self):
-        """Last year simulated."""
+        """Last year simulated (`int`)."""
         return self._year
 
     @property
     def num_animals(self):
-        """Total number of animals on island."""
+        """Total number of animals on island (`int`)."""
         return self._num_animals
 
     @property
     def num_animals_per_species(self):
-        """Number of animals per species in island, as dictionary."""
+        """Number of animals per species on island (`dict`)."""
         return self._num_animals_per_species
 
     def get_yearly_herb_count(self)-> object:
@@ -315,7 +324,7 @@ class BioSim(BioSim_param):
 
     def simulate(self, num_years:int = 10):
         if self._initial_num_year is None:
-            self._initial_num_year = num_years
+            self._initial_num_year = num_years #TODO: +=
             start_loop = 1
             self._num_years = num_years
 
