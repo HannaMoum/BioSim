@@ -396,6 +396,13 @@ class BioSim(BioSimParam):
         population: `list` of `dict
             Population of animals to be placed in specified locations on the island.
 
+        Returns
+        -------
+        None
+            Return None if no initial population is given.
+
+            Otherwise add population on island.
+
         See Also
         --------
         :py:meth:`.add_population_in_location`
@@ -411,11 +418,10 @@ class BioSim(BioSimParam):
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
         """
-        #Sjekk om liste eksisterer (ikke tom)
-            #add_pop
-        #else:
-            #pass// return None
-        self.island.add_population_in_location(population)
+        if population:
+            self.island.add_population_in_location(population)
+        else:
+            return None
 
     def make_movie(self):
         """Create MPEG4 movie from visualizing images saved.
