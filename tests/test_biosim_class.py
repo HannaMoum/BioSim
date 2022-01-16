@@ -142,6 +142,7 @@ def test_validate_im_params_valid(map_str, hist_specs):
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert sim._validate_im_params
 
+
 def test_year_initial(map_str, hist_specs):
     """Test that parameter year is set to 0 before any simualtion."""
     sim = BioSim(map_str, hist_specs=hist_specs)
@@ -170,3 +171,16 @@ def test_year_sim_twice(map_str, hist_specs):
     sim.simulate(second_sim)
     assert sim.year == first_sim + second_sim
 
+
+@pytest.mark.parametrize('ini_pop', [
+    [{'loc': (2, 2), 'pop': []}],
+    [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
+                             {'species': 'Carnivore', 'age': 5, 'weight': 5}]
+      }]
+])
+def test_num_animals(map_str, hist_specs, ini_pop):
+    """Test that expected amount of animals are to be found on the island."""
+    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs)
+
+    num_animals = len(ini_pop[0]['pop'])
+    assert sim.num_animals == num_animals
