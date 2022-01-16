@@ -28,15 +28,20 @@ def test_invalid_map(hist_specs, map):
         BioSim(map, hist_specs=hist_specs)
 
 
-def test_set_img_years(hist_specs, map_str):
+def test_set_img_years_default(hist_specs, map_str):
     """Test that img_years is set to default value when not else is requested."""
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert sim._img_years == sim._vis_years
 
 
+def test_set_img_years(hist_specs, map_str):
+    """Test that private setter method provides correct img_years value when defined."""
+    sim = BioSim(map_str, hist_specs=hist_specs, img_years=5)
+    assert sim._img_years == 5
+
 
 def test_set_vis_years(hist_specs, map_str):
-    """Test that private setter function provides correct vis_years value."""
+    """Test that private setter method provides correct vis_years value."""
     sim = BioSim(map_str, hist_specs=hist_specs, vis_years=5)
     assert sim._vis_years == 5
 
