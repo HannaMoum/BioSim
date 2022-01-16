@@ -314,6 +314,12 @@ class BioSim(BioSim_param):
         """
         self.island.add_population(population)
 
+    def make_movie(self):
+        """Create MPEG4 movie from visualization images saved."""
+        if os.listdir(self._img_dir):
+            self.graphics.make_movie_from_files()
+        else:
+            raise FileNotFoundError(f'{self._img_dir} is empty.')
 
     def simulate(self, num_years:int = 10):
         if self._initial_num_year is None:
@@ -415,12 +421,12 @@ class BioSim(BioSim_param):
 
             if any((show, save)):
                 self.graphics.show_grid(self.cube_population_herbs,
-                                         self.cube_population_carns,
-                                         self.get_yearly_herb_count(),
-                                         self.get_yearly_carn_count(),
-                                         self.cubelist_properties_herbs,
-                                         self.cubelist_properties_carns,
-                                         pause, current_year, show, save)
+                                        self.cube_population_carns,
+                                        self._get_yearly_herb_count(),
+                                        self._get_yearly_carn_count(),
+                                        self.cubelist_properties_herbs,
+                                        self.cubelist_properties_carns,
+                                        pause, current_year, show, save)
 
             self._num_animals_per_species = {'Herbivores': self.yearly_pop_map_herbs[-1].sum(),
                                              'Carnivores': self.yearly_pop_map_carns[-1].sum()}
@@ -430,7 +436,7 @@ class BioSim(BioSim_param):
 
         print()
 
-    def get_yearly_herb_count(self)-> object:
+    def _get_yearly_herb_count(self)-> object:
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
         Returnerer en np array.shape(1,) 1D"""
         kube =  self.cube_population_herbs
@@ -440,7 +446,7 @@ class BioSim(BioSim_param):
         # assert len(serie) == self._num_years. Valideringen er logisk feil, kan ikke brukes.
         return serie
 
-    def get_yearly_carn_count(self):
+    def _get_yearly_carn_count(self):
         """Dette er en datagenererings-metode for å finne ut hvor mange carnivores som finnes i verden akk nå."""
         kube =  self.cube_population_carns
         serie = kube.sum(-1).sum(-1)
@@ -448,12 +454,7 @@ class BioSim(BioSim_param):
         # assert len(serie) == self._num_years
         return serie
 
-    def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
-        if os.listdir(self._img_dir):
-            self.graphics.make_movie_from_files()
-        else:
-            raise FileNotFoundError(f'{self._img_dir} is empty.')
+
 
 
 
