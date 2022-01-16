@@ -209,9 +209,11 @@ class Animal:
         At birth, the mother loses :math:`\\xi` times the birthweight of the baby.
         If this is more than her own weight, no baby is born and mother's weight remain unchanged.
 
+        The baby's birthweight is drawn from a gaussian distribution. If the weight drawn is
+        less than zero, it is treated as miscarriage, with no baby born and mother's weight unchanged.
+
         Gender plays no role in mating.
         Each animal can give birth to at most one offspring every year.
-        #TODO: Add description and implement new conditions
 
         For more information see table of parameters.
 
@@ -300,6 +302,8 @@ class Animal:
 
 
 class Herbivore(Animal):
+    """Animalspecies adopting all methods from superclass Animal."""
+
     species = 'Herbivore'
 
     # Default parameter values for Herbivore
@@ -319,12 +323,17 @@ class Herbivore(Animal):
         'omega': 0.4,
         'F': 10.0
     }
+
+    # Changeable parameters values by option set to default values
     params = deepcopy(_default_params)
 
 
 class Carnivore(Animal):
+    """Animalspecies adopting all methods from superclass Animal,
+    with its' own unique traits added."""
 
     species = 'Carnivore'
+
     # Default parameter values for Carnivore
     _default_params = {
         'w_birth': 6.0,
@@ -343,6 +352,8 @@ class Carnivore(Animal):
         'F': 50.0,
         'DeltaPhiMax': 10.0
     }
+
+    # Changeable parameters values by option set to default values
     params = deepcopy(_default_params)
 
     def hungry(self):
