@@ -282,13 +282,16 @@ class BioSim(BioSim_param):
                 return True
 
     def _validate_im_params(self, img_dir:str, img_base:str, img_fmt:str):
-        """
+        """Private validation of provided image parameters.
 
         Parameters
         ----------
-        img_dir
-        img_base
-        img_fmt
+        img_dir: `str`
+            Path to directory for figures
+        img_base: `str`
+            Beginning of file name for figures
+        img_fmt: `str`
+            File format for figures
 
         Raises
         ------
@@ -302,7 +305,8 @@ class BioSim(BioSim_param):
 
         Returns
         -------
-
+        `bool`
+            True if all the method's input parameters passes validation.
         """
         if not any((
                 all((type(img_dir) is str, type(img_base) is str)),
