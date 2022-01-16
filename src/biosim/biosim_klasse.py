@@ -315,11 +315,10 @@ class BioSim(BioSimParam):
             True if all the method's input parameters passes validation.
         """
         if not any((
-                all((type(img_dir) is str, type(img_base) is str)),
+                all((isinstance(img_dir, str), isinstance(img_base, str))),
                 all((img_dir is None, img_base is None))
                 )):
             raise ValueError('Either both img_dir and img_base must specified or neither of them can be specified.')
-
         if img_dir is None:
             self._img_dir = self.default_img_dir
         if img_base is None:
