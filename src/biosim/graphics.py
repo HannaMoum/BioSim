@@ -43,15 +43,16 @@ class GraphicsParams:
 
 class Graphics(GraphicsParams):
 
-    def __init__(self, numpy_island_map, hist_specs: dict,
+    def __init__(self, base_map, hist_specs: dict,
                  ymax_animals: int, cmax_animals: dict,
                  vis_years: int, img_dir, img_base,
                  img_fmt, img_years):
         """
         numpy_island_map er base_map fra World.
         """
-        self._island_plot = self._make_plot_map(numpy_island_map)
-        self._set_hist_specs(hist_specs)
+        #self._island_plot = self._make_plot_map(numpy_island_map)
+        self._base_map = base_map
+        self._set_histogram_specs(hist_specs)
         self.ymax_animals = ymax_animals
         self._set_cmax_animals(cmax_animals)
         self._vis_years = vis_years
@@ -64,17 +65,28 @@ class Graphics(GraphicsParams):
         else:
             self._img_years = img_years
 
-    def _set_hist_specs(self, hist_specs: dict):
-        for key, value in hist_specs.items():
-            if key == 'fitness':
-                self.fitness_max = value['max']
-                self.fitness_delta = value['delta']
-            if key == 'age':
-                self.age_max = value['max']
-                self.age_delta = value['delta']
-            if key == 'weight':
-                self.weight_max = value['max']
-                self.weight_delta = value['delta']
+    def _plot_island_map(self, ax:object)->object:
+        """
+        Lager numpy array (kartet) som brukes for å plotte verdenskartet.
+        Plotter verdenskartet
+        """
+        # Konveterer en numpy array med bokstaver (str) til en numpy array med tall 0, 1, 2 og 3.
+        island_map_plot = np.copy(self._base_map)
+        vcode_landscape = np.vectorize(self.code_landscape) # Gjør det mulig at fx kan benyttes celle for celle.
+        island_map_plot[:, :] = vcode_landscape(island_map_plot) # Bruker fx celle for celle på island_map_plot
+        island_map_plot = np.array(island_map_plot, dtype=int) # Konverterer fra siffer (tall som str) til tall (int).
+
+        row, col = island_map_plot.shape
+        colormap = colors.ListedColormap(['blue', 'darkgreen', 'lightgreen', 'yellow'])
+
+        ax.imshow(island_map_plot, cmap=colormap, extent=[1, col + 1, row + 1, 1])
+        ax.set_xticks(range(1, col + 1))
+        ax.set_yticks(range(1, row + 1))
+        ax.set_xticklabels(range(1, col + 1), rotation=90)
+        ax.set_yticklabels(range(1, row + 1))
+        ax.set(title='Island map')
+
+        return ax
 
     def _set_cmax_animals(self, cmax_animals: dict):
         """{'Herbivore': 50, 'Carnivore': 20}"""
@@ -88,39 +100,7 @@ class Graphics(GraphicsParams):
             if key == 'Carnivore':
                 self.cmax_animals_carnivore = value
 
-    def _make_plot_map(self, numpy_island_map):
-        """
-        Lager numpy array (kartet) som brukes for å plotte verdenskartet.
-        """
-        # Lager intern kopi, for å unngå å ødelegge opprinnelig array.
-        # Hadde bare blitt et view om man ikke hadde gjort det.
-        island_map_plot = np.copy(numpy_island_map)
-        # Vektoriserer funksjonen. Funksjonen kan da benyttes celle for celle i arrayen (eller et utvalg av arrayen).
-        vcode_landscape = np.vectorize(self.code_landscape)
-        # Bruker den vektoriserte funksjonen element for element i slicen som er laget (her alle celler).
-        island_map_plot[:, :] = vcode_landscape(island_map_plot)
-        # Konverterer fra siffer (tall som str) til tall (int).
-        island_map_plot = np.array(island_map_plot, dtype=int)
-
-        return island_map_plot
-        # Returnerer np array med verdiene 0 til 3, som kan brukes til plotting.
-
-    def _plot_island_map(self, ax):
-        """Plotter verdenskartet"""
-        plot_map = self._island_plot
-        row, col = plot_map.shape
-        colormap = colors.ListedColormap(['blue', 'darkgreen', 'lightgreen', 'yellow'])
-
-        ax.imshow(plot_map, cmap=colormap, extent=[1, col + 1, row + 1, 1])
-        ax.set_xticks(range(1, col + 1))
-        ax.set_yticks(range(1, row + 1))
-        ax.set_xticklabels(range(1, col + 1), rotation=90)
-        ax.set_yticklabels(range(1, row + 1))
-        ax.set(title='Island map')
-
-        return ax
-
-    def _plot_heatmap(self, data: object, species: str, ax, year: int = -1):
+    def _plot_heatmap(self, data: object, species: str, ax:object, year: int)->object:
         """Plotter heatmap"""
         if species == 'Herbivore':
             title = 'Herbivore distribution'
@@ -131,16 +111,16 @@ class Graphics(GraphicsParams):
             cmap = 'Reds'
             center = self.cmax_animals_carnivore
         else:
-            raise ValueError('Feil')
-        # TODO: Fjerne annot som argument hvis vi bestemmer oss for å ikke ha tall i heatmapet.
-        ax = sns.heatmap(data[year, :, :], annot=False, cmap=cmap, ax=ax,
+            raise ValueError('Species mus be Herbivore or Carnivore')
+
+        ax = sns.heatmap(data[year, :, :], cmap=cmap, ax=ax,
                          center=center, xticklabels=[x for x in range(1, data.shape[2] + 1)],
                          yticklabels=[x for x in range(1, data.shape[1] + 1)])
         ax.set_title(title)
 
         return ax
 
-    def _plotting_population_count(self, herb_data: object, carn_data: object, ax: object, year):
+    def _plot_population_size(self, herb_data: object, carn_data: object, ax: object, year)->object:
         """
         Brukes til å plotte population size over tid
         Data er np array, med en sum per år i simuleringen
@@ -157,9 +137,24 @@ class Graphics(GraphicsParams):
 
         return ax
 
+    def _set_histogram_specs(self, hist_specs: dict):
+        """Setting the parameters for plotting histograms"""
+        for key, value in hist_specs.items():
+            if key == 'fitness':
+                self.fitness_max = value['max']
+                self.fitness_delta = value['delta']
+            if key == 'age':
+                self.age_max = value['max']
+                self.age_delta = value['delta']
+            if key == 'weight':
+                self.weight_max = value['max']
+                self.weight_delta = value['delta']
+
     def _plot_histogram(self, hist_herb_data: list, hist_carn_data: list,
                         ax_age, ax_weight, ax_fitness,
-                        year: int = -1) -> object:
+                        year: int) -> object:
+        """Plotting the histograms for age, weight and fitness"""
+        # Setting colors for Herbivores, Carnivores
         hist_colors = ['green', 'red']
 
         yearly_herb_data = hist_herb_data[year]
@@ -169,6 +164,19 @@ class Graphics(GraphicsParams):
             yearly_carn_data = np.zeros(shape=(1, 3))
         if yearly_herb_data.shape == (0,):
             yearly_herb_data = np.zeros(shape=(1, 3))
+
+        # Fitness
+        ax_fitness.hist([yearly_herb_data[:, 2], yearly_carn_data[:, 2]],
+                        bins=int(self.fitness_max / self.fitness_delta),
+                        range=(0, self.fitness_max),
+                        histtype='step',
+                        stacked=False,
+                        fill=False,
+                        color=hist_colors,
+                        label=['Herbivore', 'Carnivore'])
+        ax_fitness.legend(bbox_to_anchor=(1.01, 1))
+        ax_fitness.set(xlim=(0, self.fitness_max),
+                       title='Fitness')
 
         # Age
         ax_age.hist([yearly_herb_data[:, 0], yearly_carn_data[:, 0]],
@@ -194,19 +202,6 @@ class Graphics(GraphicsParams):
         ax_weight.set(xlim=(0, self.weight_max),
                       title='Weight')
 
-        # Fitness
-        ax_fitness.hist([yearly_herb_data[:, 2], yearly_carn_data[:, 2]],
-                        bins=int(self.fitness_max / self.fitness_delta),
-                        range=(0, self.fitness_max),
-                        histtype='step',
-                        stacked=False,
-                        fill=False,
-                        color=hist_colors,
-                        label=['Herbivore', 'Carnivore'])
-        ax_fitness.legend(bbox_to_anchor=(1.01, 1))
-        ax_fitness.set(xlim=(0, self.fitness_max),
-                       title='Fitness')
-
         return ax_age, ax_weight, ax_fitness
 
     def _make_grid(self, data_heat_herb, data_heat_carn,
@@ -230,7 +225,7 @@ class Graphics(GraphicsParams):
         self._plot_heatmap(data_heat_carn, 'Carnivore', carn_heatax, year=year)
 
         pop_ax = plt.subplot(grid[4:10, 0:5])
-        self._plotting_population_count(herb_data, carn_data, pop_ax, year=year)
+        self._plot_population_size(herb_data, carn_data, pop_ax, year=year)
 
         age_ax = plt.subplot(grid[6:8, 6:13])
         weight_ax = plt.subplot(grid[8:10, 6:13])
