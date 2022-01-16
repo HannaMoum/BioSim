@@ -9,6 +9,7 @@ and complete examples are provided:
 
 .. automodule:: biosim.biosim_klasse
    :members:
+   :private-members:
 
 The island module
 ---------------------
