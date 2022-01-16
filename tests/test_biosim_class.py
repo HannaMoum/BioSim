@@ -1,6 +1,7 @@
 import pytest
 from biosim.biosim_klasse import BioSim, BioSimParam
 from biosim.world import World
+import os
 
 
 @pytest.fixture()
@@ -123,3 +124,13 @@ def test_validate_im_params_specified_values(map_str, hist_specs):
                 sim._img_base == img_base,
                 sim._img_fmt == img_fmt])
 
+def test_validate_im_params_oserror(mocker, map_str, hist_specs):
+    """Test that OSError rises as expected."""
+    mocker.patch('os.makedirs', side_effect=OSError())
+    img_dir = 'not_a_path'
+    img_base = 'not_a_name'
+    with pytest.raises(OSError):
+        BioSim(map_str,
+               hist_specs=hist_specs,
+               img_dir=img_dir,
+               img_base=img_base)
