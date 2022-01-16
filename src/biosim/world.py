@@ -13,7 +13,7 @@ class World:
     migrate_map: `ndarray` of `bool`
         Island map presenting migratable locations.
     object_map: `ndarray` of `obj`
-        Island map consisting of :py:class:`.Landscape` object references
+        Island map consisting of :py:class:`.Landscape` object references.
 
     Parameters
     -----------
@@ -79,7 +79,7 @@ class World:
 
         return True
 
-    def _make_base_map(self, input_map: str) -> object:
+    def _make_base_map(self, input_map):
         """Mapping island with respect to each landscape letter.
 
         Parameters
@@ -106,11 +106,11 @@ class World:
 
         return build_map
 
-    def _make_migrate_map(self) -> object:
+    def _make_migrate_map(self):
         """Create a map mapping all migratable cells (`ndarray` of `bool`)."""
         return self._base_map != 'W'
 
-    def _make_object_map(self) -> object:
+    def _make_object_map(self):
         """Create map of the island's landscape objects references.
 
         Returns
@@ -214,7 +214,7 @@ class World:
             return False
 
     # Methods concerning mapping
-    def get_property_map(self, fx_map_type:str) -> object:
+    def get_property_map(self, fx_map_type):
         """User interface that provides mapped values from specified methods of the class.
 
         Notes
@@ -233,7 +233,7 @@ class World:
         """
         return self._make_property_map(getattr(self, fx_map_type), self.base_map, self.object_map) #TODO: self is not input
 
-    def _make_property_map(self, fx: callable(object), base_map: object, object_map: object):
+    def _make_property_map(self, fx: callable(object), base_map, object_map):
         """
         Create map of chosen property for :py:meth:`.get_property_map`.
 
@@ -254,7 +254,7 @@ class World:
         property_map[:, :] = vget_property(object_map)
         return property_map
 
-    def v_size_herb_pop(self, location: object)->int:
+    def v_size_herb_pop(self, location):
         """Find the herbivore population size at given location.
 
         See Also
@@ -274,7 +274,7 @@ class World:
         """
         return location.herbivores_number
 
-    def v_size_carn_pop(self, location: object)->int:
+    def v_size_carn_pop(self, location):
         """Find the carnivore population size at given location.
 
         See Also
@@ -294,13 +294,13 @@ class World:
         """
         return location.carnivores_number
 
-    def get_property_map_objects(self, fx_map_type:str) -> object:
+    def get_property_map_objects(self, fx_map_type):
         """User interface that provides mapped values from specified methods of the class.
 
         Notes
         -----
         Function takes method :py:meth:`.v_herb_properties_objects` or :py:meth:`.v_carn_properties_objects`
-        as input and provides full exposure of the respective animals' attributes age, weight and fitness,
+        as input and provides full exposure of the respective animals' attributes age, weight and fitness
         for every cell on the island.
 
         Parameters
@@ -315,7 +315,7 @@ class World:
         """
         return self._make_property_map_objects(getattr(self, fx_map_type), self.base_map, self.object_map)
 
-    def _make_property_map_objects(self, fx: callable(object), base_map: object, object_map: object):
+    def _make_property_map_objects(self, fx: callable(object), base_map, object_map):
         """Create mapping of a chosen species' attribuets for :py:meth:`.get_property_map_objects`.
 
         Parameters
@@ -335,7 +335,7 @@ class World:
         property_map[:, :] = vget_property(object_map)
         return property_map
 
-    def v_herb_properties_objects(self, location: object) -> list:
+    def v_herb_properties_objects(self, location):
         """Find the herbivores' attributes at given location.
 
         See Also
@@ -359,7 +359,7 @@ class World:
                 characteristics.append((animal.age, animal.weight, animal.fitness))
             return characteristics
 
-    def v_carn_properties_objects(self, location: object) -> list:
+    def v_carn_properties_objects(self, location):
         """Find the carnivores' attributes at given location.
 
         See Also
