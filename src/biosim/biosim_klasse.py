@@ -1,3 +1,5 @@
+"""Implements a complete simulation"""
+
 import numpy as np
 import random
 import os
@@ -18,13 +20,34 @@ class BioSim_param:
 
 
 class BioSim(BioSim_param):
-    """Island hosting landscapes with animals.
+    """Define and perform a simulation.
 
         Parameters
         ----------
-        island_map:
+        island_map: `str`
+            String of {'W', 'D', 'L', 'H'} mapping the entire island's geography.
         ini_pop: `list` of `dict`, optional
-
+            Population to be placed on island
+        seed: `int`, optional
+            Random seed
+        vis_years: `int`, optional
+            Number of years to visualize evolution
+        ymax_animals: #XXX, optional
+            XXX
+        cmax_animals: #XXX, optional
+            XXX
+        hist_specs: XXX, optional
+            XXX
+        img_dir: XXX; optional
+            XXX
+        img_base: XXX, optional
+            XXX
+        img_fmt: XXX, optional
+            XXX
+        img_year: XXX, optional
+            XXX
+        log_file: XXX, optional
+            XXX
 
         Attributes
         ----------
