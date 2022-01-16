@@ -122,10 +122,8 @@ class BioSim(BioSim_param):
         self.population_map_carnivore = np.empty(())
         self.population_size_herbivore = []
         self.population_size_carnivore = []
-
-
-        self.cubelist_properties_herbs = []
-        self.cubelist_properties_carns = []
+        self.herbivore_age_weight_fitness = []
+        self.carnivore_age_weight_fitness = []
 
 
         self._img_dir = img_dir
@@ -459,6 +457,10 @@ class BioSim(BioSim_param):
         self.population_size_herbivore.append(self.population_map_herbivore.sum())
         self.population_size_carnivore.append(self.population_map_carnivore.sum())
 
+
+
+
+
         yearly_herb_objects_map = self.island.get_property_map_objects('v_herb_properties_objects')
         # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
         # Måtte derfor skrive egen akkumulerings funksjon som legger sammen alle populasjonslistene på landskapene på øya, til en liste med alle dyr på øya.
@@ -468,8 +470,8 @@ class BioSim(BioSim_param):
                 list_on_location = element.item()
                 if type(list_on_location) == list:  # if list_on_location:
                     acc_list_herb += list_on_location
-        yearly_herbivore_property_array = np.asarray(acc_list_herb)
-        self.cubelist_properties_herbs.append(yearly_herbivore_property_array)
+        self.herbivore_age_weight_fitness = np.asarray(acc_list_herb)
+        #self.cubelist_properties_herbs = herbivore_age_weight_fitness#.append(yearly_herbivore_property_array)
 
         yearly_carn_objects_map = self.island.get_property_map_objects('v_carn_properties_objects')
         acc_list_carn = []
@@ -478,8 +480,8 @@ class BioSim(BioSim_param):
                 list_on_location = element.item()
                 if type(list_on_location) == list:  # if list_on_location:
                     acc_list_carn += list_on_location
-        yearly_carnivore_property_array = np.asarray(acc_list_carn)
-        self.cubelist_properties_carns.append(yearly_carnivore_property_array)
+        self.carnivore_age_weight_fitness = np.asarray(acc_list_carn)
+        #self.cubelist_properties_carns = yearly_carnivore_property_array#.append(yearly_carnivore_property_array)
 
     def _do_annual_graphics(self, current_year:int):
         # Graphics for the year
@@ -513,19 +515,12 @@ class BioSim(BioSim_param):
                 save = True
 
         if any((show, save)):
-            # self.graphics.show_grid(self.population_map_herbivore,
-            #                         self.population_map_carnivore,
-            #                         self._get_yearly_herb_count(),
-            #                         self._get_yearly_carn_count(),
-            #                         self.cubelist_properties_herbs,
-            #                         self.cubelist_properties_carns,
-            #                         pause, current_year, show, save)
             self.graphics.show_grid(self.population_map_herbivore,
                                     self.population_map_carnivore,
                                     np.asarray(self.population_size_herbivore),
                                     np.asarray(self.population_size_carnivore),
-                                    self.cubelist_properties_herbs,
-                                    self.cubelist_properties_carns,
+                                    self.herbivore_age_weight_fitness,
+                                    self.carnivore_age_weight_fitness,
                                     pause, current_year, show, save)
 
 

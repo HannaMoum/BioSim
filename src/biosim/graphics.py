@@ -143,23 +143,23 @@ class Graphics(GraphicsParams):
                 self.weight_max = value['max']
                 self.weight_delta = value['delta']
 
-    def _plot_histogram(self, hist_herb_data: list, hist_carn_data: list,
+    def _plot_histogram(self, histogram_herbivore_data: list, histogram_carnivore_data: list,
                         ax_age, ax_weight, ax_fitness,
                         year: int) -> object:
         """Plotting the histograms for age, weight and fitness"""
         # Setting colors for Herbivores, Carnivores
         hist_colors = ['green', 'red']
 
-        yearly_herb_data = hist_herb_data[year]
-        yearly_carn_data = hist_carn_data[year]
+        herbivore_data = histogram_herbivore_data
+        carnivore_data = histogram_carnivore_data
 
-        if yearly_carn_data.shape == (0,):
-            yearly_carn_data = np.zeros(shape=(1, 3))
-        if yearly_herb_data.shape == (0,):
-            yearly_herb_data = np.zeros(shape=(1, 3))
+        if carnivore_data.shape == (0,):
+            carnivore_data = np.zeros(shape=(1, 3))
+        if herbivore_data.shape == (0,):
+            herbivore_data = np.zeros(shape=(1, 3))
 
         # Fitness
-        ax_fitness.hist([yearly_herb_data[:, 2], yearly_carn_data[:, 2]],
+        ax_fitness.hist([herbivore_data[:, 2], carnivore_data[:, 2]],
                         bins=int(self.fitness_max / self.fitness_delta),
                         range=(0, self.fitness_max),
                         histtype='step',
@@ -172,7 +172,7 @@ class Graphics(GraphicsParams):
                        title='Fitness')
 
         # Age
-        ax_age.hist([yearly_herb_data[:, 0], yearly_carn_data[:, 0]],
+        ax_age.hist([herbivore_data[:, 0], carnivore_data[:, 0]],
                     bins=int(self.age_max / self.age_delta),
                     range=(0, self.age_max),
                     histtype='step',
@@ -184,7 +184,7 @@ class Graphics(GraphicsParams):
                    title='Age')
 
         # Weight
-        ax_weight.hist([yearly_herb_data[:, 1], yearly_carn_data[:, 1]],
+        ax_weight.hist([herbivore_data[:, 1], carnivore_data[:, 1]],
                        bins=int(self.weight_max / self.weight_delta),
                        range=(0, self.weight_max),
                        histtype='step',
