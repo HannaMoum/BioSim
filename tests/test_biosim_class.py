@@ -134,3 +134,8 @@ def test_validate_im_params_oserror(mocker, map_str, hist_specs):
                hist_specs=hist_specs,
                img_dir=img_dir,
                img_base=img_base)
+
+def test_validate_im_params_valid(map_str, hist_specs):
+    """Test expected return if (un)provided image parameters are valid."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    assert sim._validate_im_params
