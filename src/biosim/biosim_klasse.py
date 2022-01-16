@@ -290,6 +290,16 @@ class BioSim(BioSim_param):
         img_base
         img_fmt
 
+        Raises
+        ------
+        ValueError
+            Either both :math:`\mathtt{img\_dir}` and :math:`\mathtt{img\_base}` must be specified,
+            or none at all
+        ValueError
+            Unsupported image format provided.
+        OSError
+            The making of directory path failed.
+
         Returns
         -------
 
@@ -311,12 +321,11 @@ class BioSim(BioSim_param):
                 raise ValueError(f'Image format {img_fmt} not supported. '
                                  f'Valid formats are: jpeg, jpg, png, tif, tiff')
 
-
-        if not os.path.isdir(self._img_dir): # Returnerer true om dir finnes.
+        if not os.path.isdir(self._img_dir):
             try:
-                os.makedirs(self._img_dir) # Sender melding til OS-et om å opprette katalogen. OS-et kan si "ja" eller "nei".
-            except OSError: # Om det ikke får raises en OSError
-                raise OSError('Making dir failed')
+                os.makedirs(self._img_dir)
+            except OSError:
+                raise OSError('Making directory failed')
 
         return True
 
