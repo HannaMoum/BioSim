@@ -261,7 +261,7 @@ class BioSim(BioSimParam):
         else:
             return True
 
-    def _validate_cmax_animals(selfself, cmax_animals:dict)-> bool:
+    def _validate_cmax_animals(self, cmax_animals:dict)-> bool:
         """Private validation of provided input cmax_animals.
 
         Parameters
