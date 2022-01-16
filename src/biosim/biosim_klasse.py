@@ -282,8 +282,22 @@ class BioSim(BioSim_param):
                 return True
 
     def _validate_im_params(self, img_dir:str, img_base:str, img_fmt:str):
-        if not any((all((type(img_dir) is str, type(img_base) is str)),
-                    all((img_dir is None, img_base is None)))):
+        """
+
+        Parameters
+        ----------
+        img_dir
+        img_base
+        img_fmt
+
+        Returns
+        -------
+
+        """
+        if not any((
+                all((type(img_dir) is str, type(img_base) is str)),
+                all((img_dir is None, img_base is None))
+                )):
             raise ValueError('Error. Both must be str or None')
 
         if img_dir is None:
