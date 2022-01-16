@@ -338,35 +338,22 @@ class BioSim(BioSim_param):
         else:
             raise FileNotFoundError(f'{self._img_dir} is empty.')
 
-    def simulate(self, num_years:int = 10):
-        if self._initial_num_year is None:
-            self._initial_num_year = num_years #TODO: +=
-            start_loop = 1
-            self._num_years = num_years
 
+    def simulate(self, num_years:int = 10):
+
+        # simulate er tricky fordi den skal kunne startes, stoppes, og deretter fortsette fra forrige kjøring.
+        # Start-stopp logikk
+        if self._initial_num_year is None:
+            self._initial_num_year = num_years
+            self._num_years = num_years
+            start_loop = 1
         else:
             start_loop = self.year + 1
             self._num_years = self.year + num_years
 
         for current_year in range(start_loop, self._num_years + 1):
             self._year += 1
-
-            with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
-                for element in it:
-                    landscape = element.item()
-                    if landscape.landscape_type in 'LH':
-                        landscape.regrowth()
-                        landscape.grassing()
-                    if landscape.landscape_type in 'LHD':
-                        landscape.hunting()
-            self.island.do_migration()
-            with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
-                for element in it:
-                    landscape = element.item()
-                    if landscape.landscape_type in 'LHD':
-                        landscape.give_birth()
-                        landscape.aging()
-                        landscape.do_death()
+            self._annual_cycle()
 
             #-------------------------------------------------------------------------------------
             # Data for every year. Her genereres data for hvert år. Dataene pakkes på slutten av simuleringen til kuber eller lister av tabeller.
@@ -452,6 +439,25 @@ class BioSim(BioSim_param):
             print('\r',f'Year:{current_year}  Herbivores:{self.yearly_pop_map_herbs[-1].sum()}   Carnivores:{self.yearly_pop_map_carns[-1].sum()}', end = '')
 
         print()
+
+    def _annual_cycle(self):
+        """All steps in annual cycle on the island"""
+        with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
+            for element in it:
+                landscape = element.item()
+                if landscape.landscape_type in 'LH':
+                    landscape.regrowth()
+                    landscape.grassing()
+                if landscape.landscape_type in 'LHD':
+                    landscape.hunting()
+        self.island.do_migration()
+        with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
+            for element in it:
+                landscape = element.item()
+                if landscape.landscape_type in 'LHD':
+                    landscape.give_birth()
+                    landscape.aging()
+                    landscape.do_death()
 
     def _get_yearly_herb_count(self)-> object:
         """Dette er en datagenererings-metode for å finne ut hvor mange herbivores som finnes i verden akk nå.
