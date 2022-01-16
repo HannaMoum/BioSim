@@ -119,8 +119,9 @@ class Graphics(GraphicsParams):
         Brukes til å plotte population size over tid
         Data er np array, med en sum per år i simuleringen
         """
-        ax.plot(herb_data[0:year], color='green', label='Herbivore')
-        ax.plot(carn_data[0:year], color='red', label='Carnivore')
+        years =np.asarray([x for x in range(1, len(herb_data)+1)])
+        ax.plot(years, herb_data, color='green', label='Herbivore')
+        ax.plot(years, carn_data, color='red', label='Carnivore')
         ax.set_title('Population size', loc='left')
         ax.set_xlabel('Years')
         ax.set_ylabel('Number of animals')
