@@ -143,9 +143,24 @@ class BioSim(BioSim_param):
         return vis_years
 
     def _validate_island_map(self, island_map:str)-> bool:
-        """Returns True/False. Checks that the str contains no white space, and that the rows are of the same length"""
+        """
+        Validate input type island_map before sending to World class
+        Parameters
+        ----------
+        island_map: `str`
+            String of {'W', 'D', 'L', 'H'} mapping the entire island's geography.
+
+        Raises
+        ------
+        ValueError
+            Island_map must be a string, and contain an equal amount of columns.
+
+        Returns
+        -------
+            True, if island map are validated correctly.
+        """
         if not type(island_map) is str:
-            raise ValueError('island_map must be of type str.')
+            raise ValueError('Island map must be be a string.')
             return False #REMOVE
 
         str_list = island_map.split(sep='\n')
