@@ -388,6 +388,7 @@ class BioSim(BioSim_param):
         See Also
         --------
         :py:meth:`.add_population_in_location`
+            Relationship
         """
         """Validates input dict befor sending calling add_population method in
         the world class
