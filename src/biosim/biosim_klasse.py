@@ -25,9 +25,9 @@ class BioSim(BioSim_param):
         Parameters
         ----------
         island_map: `str`
-            Multilinestring of {'W', 'D', 'L', 'H'} mapping the entire island's geography.
+            Multilinestring of {'W', 'D', 'L', 'H'} mapping the entire island's geography, see Notes.
         ini_pop: `list` of `dict`, optional
-            Population to be placed on island
+            Population to be placed on island, see Notes.
         seed: `int`, optional
             Random seed
         vis_years: `int`, optional
@@ -37,7 +37,7 @@ class BioSim(BioSim_param):
         cmax_animals: `dict`, optional
             Dict specifying color-code limits for animal densities
         hist_specs: `dict`, optional
-            Specifications for histograms, see below
+            Specifications for histograms, see Notes
         img_dir: `str` optional
             String with path to directory for figures
         img_base: `str`, optional
@@ -48,6 +48,16 @@ class BioSim(BioSim_param):
             Years between visualizations saved to files (default: vis_years)
         log_file: `str`, optional
             If given, write animal counts to this file
+
+        Notes
+        -----
+        :math:`\mathtt{hist\_specs}` is a dictionary with one entry per property for which a histogram shall be shown.
+        For each property, a dictionary providing the maximum value and the bin width must be
+        given, e.g.,
+            >>> {'weight': {'max': 80, 'delta': 2}, 'fitness': {'max': 1.0, 'delta': 0.05}}
+        Permitted properties are 'weight', 'age' and 'fitness'.
+
+        :math:`\mathtt{img\_dir}` and :math:`\mathtt{img\_base}` must either both be None or both be strings.
 
         Attributes
         ----------
