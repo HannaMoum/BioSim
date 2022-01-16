@@ -377,6 +377,18 @@ class BioSim(BioSim_param):
             raise ValueError('Feil input')
 
     def add_population(self, population): #TODO: Sjekk om begge populasjoner (ini_pop) er tomme. Ikke noe poeng å kjøre simulering.
+        #TODO: men skal vel være mulig å opprette øya for det, og deretter plassere ut dyr...
+        """Add population on island.
+
+        Parameters
+        ----------
+        population: `list` of `dict
+            Population of animals to be placed in specified locations on the island.
+
+        See Also
+        --------
+        :py:meth:`.add_population_in_location`
+        """
         """Validates input dict befor sending calling add_population method in
         the world class
         Initial_population looks like:
@@ -387,7 +399,7 @@ class BioSim(BioSim_param):
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
         """
-        self.island.add_population(population)
+        self.island.add_population_in_location(population)
 
     def make_movie(self):
         """Create MPEG4 movie from visualizing images saved.
