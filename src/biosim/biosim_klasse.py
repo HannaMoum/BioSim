@@ -285,9 +285,37 @@ class BioSim(BioSim_param):
                 return True
 
     def _validate_im_params(self, img_dir:str, img_base:str, img_fmt:str):
-        if not any((all((type(img_dir) is str, type(img_base) is str)),
-                    all((img_dir is None, img_base is None)))):
-            raise ValueError('Error. Both must be str or None')
+        """Private validation of provided image parameters.
+
+        Parameters
+        ----------
+        img_dir: `str`
+            Path to directory for figures
+        img_base: `str`
+            Beginning of file name for figures
+        img_fmt: `str`
+            File format for figures
+
+        Raises
+        ------
+        ValueError
+            Either both :math:`\mathtt{img\_dir}` and :math:`\mathtt{img\_base}` must be specified,
+            or none at all
+        ValueError
+            Unsupported image format provided.
+        OSError
+            The making of directory path failed.
+
+        Returns
+        -------
+        `bool`
+            True if all the method's input parameters passes validation.
+        """
+        if not any((
+                all((type(img_dir) is str, type(img_base) is str)),
+                all((img_dir is None, img_base is None))
+                )):
+            raise ValueError('Either both img_dir and img_base must specified or neither of them can be specified.')
 
         if img_dir is None:
             self._img_dir = self.default_img_dir
@@ -297,14 +325,14 @@ class BioSim(BioSim_param):
             self._img_fmt = self.default_img_fmt
         else:
             if img_fmt not in ['jpeg', 'jpg', 'png', 'tif', 'tiff']:
-                raise ValueError('img_fmt not supported. Valid formats are: jpeg, jpg, png, tif, tiff')
+                raise ValueError(f'Image format {img_fmt} not supported. '
+                                 f'Valid formats are: jpeg, jpg, png, tif, tiff')
 
-
-        if not os.path.isdir(self._img_dir): # Returnerer true om dir finnes.
+        if not os.path.isdir(self._img_dir):
             try:
-                os.makedirs(self._img_dir) # Sender melding til OS-et om å opprette katalogen. OS-et kan si "ja" eller "nei".
-            except OSError: # Om det ikke får raises en OSError
-                raise OSError('Making dir failed')
+                os.makedirs(self._img_dir)
+            except OSError:
+                raise OSError('Making directory failed')
 
         return True
 
