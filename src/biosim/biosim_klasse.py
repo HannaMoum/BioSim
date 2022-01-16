@@ -11,9 +11,8 @@ from biosim.world import World
 from biosim.graphics import Graphics
 
 
-
 @dataclass
-class BioSim_param:
+class BioSimParam:
     hist_spec_pattern = {'fitness': {'max': float, 'delta': int},
                          'age': {'max': float, 'delta': int},
                          'weight': {'max': float, 'delta': int}}
@@ -22,7 +21,8 @@ class BioSim_param:
     default_img_base: str = 'BioSim'
     default_img_fmt: str = 'png'
 
-class BioSim(BioSim_param):
+
+class BioSim(BioSimParam):
     """Define and perform a simulation.
 
         Parameters
