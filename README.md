@@ -49,6 +49,9 @@ to provide better efficiency.
 Projectcode developed and tested in a collaboration between Cassandra Hjortdahl and Hanna Lye Moum.
 Lectures and guidance given by Hans Ekkehard Plesser.
 
+##GitLab
+Below is the provided link for access to the entire project repository:
+https://gitlab.com/nmbu.no/emner/inf200/h2021/january-teams/a15_cassandra_hanna/biosim-a15-cassandra-hanna/-/tree/main
 ##Licence
 MIT
 
