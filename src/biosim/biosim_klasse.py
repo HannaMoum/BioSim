@@ -15,8 +15,8 @@ from biosim.graphics import Graphics
 @dataclass
 class BioSim_param:
     hist_spec_pattern = {'fitness': {'max': float, 'delta': int},
-                      'age': {'max': float, 'delta': int},
-                      'weight': {'max': float, 'delta': int}}
+                         'age': {'max': float, 'delta': int},
+                         'weight': {'max': float, 'delta': int}}
 
 
 class BioSim(BioSim_param):
@@ -51,6 +51,19 @@ class BioSim(BioSim_param):
 
         Notes
         -----
+
+        :math:`\mathtt{island\_map}` should be created the following way:
+            >>> create_map = \"""\\
+                                  WLW
+                                  WWW
+                                  WWW\"""
+            >>> island_map = textwrap.dedent(create_map)
+
+        :math:`\mathtt{ini\_pop}` should be created by the following set-up:
+            >>> ini_pop = [{'loc': (2, 2),
+            >>>             'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
+            >>>                     {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
+
         :math:`\mathtt{hist\_specs}` is a dictionary with one entry per property for which a histogram shall be shown.
         For each property, a dictionary providing the maximum value and the bin width must be
         given, e.g.,
