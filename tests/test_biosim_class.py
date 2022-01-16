@@ -81,7 +81,15 @@ def test_cmax_animals_validation_error(map_str, hist_specs):
 
 @pytest.mark.parametrize('img_dir, img_base', [(None, 'BioSimInconsistent'),
                                                ('C:/temp/BioSimInconsistent', None)])
-def test_validate_im_params_inconsise(map_str, hist_specs, img_dir, img_base):
+def test_validate_im_params_inconsistent(map_str, hist_specs, img_dir, img_base):
     """Test that ValueError rises if inconsistent image parameters are provided as input"""
     with pytest.raises(ValueError):
         BioSim(map_str, hist_specs=hist_specs, img_dir=img_dir, img_base=img_base)
+
+
+def test_validate_im_params_unsupported_format(map_str, hist_specs):
+    """Test that ValueError rises of unsupported image format is provided."""
+    img_fmt = 'txt'
+    with pytest.raises(ValueError):
+        BioSim(map_str, hist_specs=hist_specs, img_fmt=img_fmt)
+
