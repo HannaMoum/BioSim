@@ -3,7 +3,7 @@ Simulation and Island
 
 The simulation module
 ---------------------
-.. automodule:: biosim.simulation
+.. automodule:: biosim.biosim_klasse
    :members:
 
 The island module
