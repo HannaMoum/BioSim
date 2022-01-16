@@ -120,6 +120,7 @@ class BioSim(BioSim_param):
 
     def _set_vis_years(self, vis_years: int)-> int:
         # TODO: Gjøre validering av vis_years
+        """dummy text1"""
         return vis_years
 
     def _validate_island_map(self, island_map:str)-> bool:
@@ -160,6 +161,10 @@ class BioSim(BioSim_param):
 
     def _validate_cmax_animals(selfself, cmax_animals:dict)-> bool:
         # TODO: Må håndtere None-verdi
+        """dummy text2
+
+
+        more dummy text"""
         if cmax_animals is None:
             return True
         for key, value in cmax_animals.items():
