@@ -448,7 +448,7 @@ class BioSim(BioSimParam):
             self._num_years = num_years
             start_loop = 0
         else:
-            start_loop = self.year + 1
+            start_loop = self.year #Fixed bug from self.year + 1
             self._num_years = self.year + num_years
 
         for current_year in range(start_loop, self._num_years):
