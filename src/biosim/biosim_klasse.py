@@ -114,7 +114,7 @@ class BioSim(BioSimParam):
 
         # Initial property values
         self._year = 0
-        self._num_animals_per_species = {}
+        self._num_animals_per_species = {'Herbivore': 0, 'Carnivore': 0}
         self._num_animals = 0
 
         self.add_population(ini_pop)
@@ -457,8 +457,8 @@ class BioSim(BioSimParam):
             self._collect_annual_data()
             self._do_annual_graphics(current_year)
 
-            self._num_animals_per_species = {'Herbivores': self.population_map_herbivore.sum(),
-                                             'Carnivores': self.population_map_carnivore.sum()}
+            self._num_animals_per_species = {'Herbivore': self.population_map_herbivore.sum(),
+                                             'Carnivore': self.population_map_carnivore.sum()}
             self._num_animals = self.population_map_herbivore.sum() + self.population_map_carnivore.sum()
 
             print('\r',f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   Carnivores:{self.population_map_carnivore.sum()}', end ='')
