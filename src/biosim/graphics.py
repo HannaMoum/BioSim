@@ -105,7 +105,7 @@ class Graphics(GraphicsParams):
             if key == 'Carnivore':
                 self.cmax_animals_carnivore = value
 
-    def _plot_heatmap(self, data: object, species: str, ax:object, year: int)->object:
+    def _plot_heatmap(self, heat_map_data: object, species: str, ax:object)->object:
         """Plotter heatmap"""
         if species == 'Herbivore':
             title = 'Herbivore distribution'
@@ -118,14 +118,14 @@ class Graphics(GraphicsParams):
         else:
             raise ValueError('Species must be Herbivore or Carnivore')
 
-        ax = sns.heatmap(data[:, :], cmap=cmap, ax=ax,
-                         center=center, xticklabels=[x for x in range(1, data.shape[1] + 1)],
-                         yticklabels=[x for x in range(1, data.shape[0] + 1)])
+        ax = sns.heatmap(heat_map_data[:, :], cmap=cmap, ax=ax,
+                         center=center, xticklabels=[x for x in range(1, heat_map_data.shape[1] + 1)],
+                         yticklabels=[x for x in range(1, heat_map_data.shape[0] + 1)])
         ax.set_title(title)
 
         return ax
 
-    def _plot_population_size(self, herb_data: object, carn_data: object, ax: object, year)->object:
+    def _plot_population_size(self, herb_data: object, carn_data: object, ax: object)->object:
         """
         Brukes til å plotte population size over tid
         Data er np array, med en sum per år i simuleringen
@@ -156,8 +156,7 @@ class Graphics(GraphicsParams):
                 self.weight_delta = value['delta']
 
     def _plot_histogram(self, histogram_herbivore_data: list, histogram_carnivore_data: list,
-                        ax_age, ax_weight, ax_fitness,
-                        year: int) -> object:
+                        ax_age:object, ax_weight:object, ax_fitness:object) -> object:
         """Plotting the histograms for age, weight and fitness"""
         # Setting colors for Herbivores, Carnivores
         hist_colors = ['green', 'red']
@@ -209,11 +208,11 @@ class Graphics(GraphicsParams):
 
         return ax_age, ax_weight, ax_fitness
 
-    def _make_grid(self, data_heat_herb, data_heat_carn,
-                   herb_data, carn_data,
-                   hist_herb_data, hist_carn_data, year):
+    def _make_grid(self, heatmap_data_herbivore:object, heatmap_data_carnivore:object,
+                   population_size_herbivore:object, population_size_carnivore:object,
+                   histogram_data_herbivore:object, histogram_data_carnivore:object,
+                   year:int):
         plot_year = year
-        year -= 1  # Må ta -1 fordi dataene er null-basert (første index er 0)
 
         fig = plt.figure(figsize=(14, 10))
         fig.suptitle(str(f'Year: {plot_year:.0f}'), fontsize=36, x=0.15, y=0.95)
@@ -224,32 +223,32 @@ class Graphics(GraphicsParams):
         self._plot_island_map(map_ax)
 
         herb_heatax = plt.subplot(grid[0:3, 4:9])
-        self._plot_heatmap(data_heat_herb, 'Herbivore', herb_heatax, year=year)
+        self._plot_heatmap(heatmap_data_herbivore, 'Herbivore', herb_heatax)
 
         carn_heatax = plt.subplot(grid[0:3, 9:14])
-        self._plot_heatmap(data_heat_carn, 'Carnivore', carn_heatax, year=year)
+        self._plot_heatmap(heatmap_data_carnivore, 'Carnivore', carn_heatax)
 
         pop_ax = plt.subplot(grid[4:10, 0:5])
-        self._plot_population_size(herb_data, carn_data, pop_ax, year=year)
+        self._plot_population_size(population_size_herbivore, population_size_carnivore, pop_ax)
 
         age_ax = plt.subplot(grid[6:8, 6:13])
         weight_ax = plt.subplot(grid[8:10, 6:13])
         fitness_ax = plt.subplot(grid[4:6, 6:13])
-        self._plot_histogram(hist_herb_data, hist_carn_data, age_ax, weight_ax, fitness_ax, year)
+        self._plot_histogram(histogram_data_herbivore, histogram_data_carnivore, age_ax, weight_ax, fitness_ax)
 
         return fig
 
     def _save_grid(self, fig: object, year: int):
         fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
 
-    def show_grid(self, data_heat_herb, data_heat_carn,
-                  herb_data, carn_data,
-                  hist_herb_data, hist_carn_data,
-                  pause, year, show: bool, save: bool):
-        fig = self._make_grid(data_heat_herb, data_heat_carn,
-                              herb_data, carn_data,
-                              hist_herb_data,
-                              hist_carn_data, year)
+    def show_grid(self, heatmap_data_herbivore:object, heatmap_data_carnivore:object,
+                  population_size_herbivore:object, population_size_carnivore:object,
+                  histogram_data_herbivore:object, histogram_data_carnivore:object,
+                  pause:float, year:int, show: bool, save: bool):
+
+        fig = self._make_grid(heatmap_data_herbivore, heatmap_data_carnivore,
+                              population_size_herbivore, population_size_carnivore,
+                              histogram_data_herbivore, histogram_data_carnivore, year)
         if show:
             plt.pause(pause)
 
