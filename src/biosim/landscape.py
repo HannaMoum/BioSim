@@ -1,4 +1,4 @@
-from random import random, choice, sample
+from random import sample
 from copy import deepcopy
 
 from biosim.animals import Animal
@@ -16,21 +16,22 @@ class Landscape:
     Attributes
     ----------
     fodder: `int` or `float`
-        Fodder available
-    herb_pop: `list` of :py:class:`.animals.Herbivore`.
-        Herbivore population
-    carn_pop: `list` of :py:class:`.animals.Carnivore`
-        Carnivore population
-    #TODO: Add new attributes
+        Fodder currently available.
+    f_max: `int` or `float`
+        Total amount of fodder available.
+    population: `list`
+        All animals in current landscape.
 
     Parameters
     ----------
     landscape_type: {'L', 'H', 'D', 'W'}
-        Terrain describing the landscape cell
+        Terrain describing the landscape cell.
     """
 
-    # dict: Parameter values for calculations
+    # default parameter values for landscapes
     _default_params = {'f_max': {'Highland': 300.0, 'Lowland': 800.0}}
+
+    # Changeable parameters values by option set to default values
     params = deepcopy(_default_params)
 
     def __init__(self, landscape_type: str):
@@ -45,12 +46,8 @@ class Landscape:
 
         Parameters
         ----------
-        new_params: `dict`, optional
-            Legal keys: 'f_max'
-        #TODO: Edit
-        params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
-        Input vil se slik ut fra word: new_params = {'f_max': {'Highland': 200.0}}
-        Landscape.set_params({'f_max': {'Highland': params['f_max']}})
+        new_params: `dict` of `dict`, optional
+            Legal keys: 'f_max' followed by `Highland` or `Lowland`, or both.
         """
         if 'f_max' in new_params:  # Trengs kanskje ikke å sjekkes, sjekk input...
             param_dict = new_params['f_max']
@@ -68,6 +65,10 @@ class Landscape:
 
     @property
     def f_max(self):
+        """Total amount of fodder available every year in one terrain (`int` or `float`).
+
+        :math:`\mathtt{f\_max}` is changeable by option for landscapes Lowland and Highland,
+        but set to zero for Desert and Water."""
         if self.landscape_type == 'H':
             self._f_max = self.params['f_max']['Highland']
         elif self.landscape_type == 'L':
@@ -86,17 +87,17 @@ class Landscape:
     def fodder(self, value):
         if value > self.f_max:
             raise ValueError('Value must be below f_max')
-        # TODO: make sure documentation states that f_max is not available for desert and water somewhere
         self._fodder = value
 
     @property
-    def population(self) -> list:
+    def population(self):
+        """All animals in current landscape (`list`)."""
         return self._population
 
     @population.setter
     def population(self, value):
         population_set = set(value)
-        # TODO: Duplicate control Should be removed. This is only valuable for bugsearch
+        # TODO: Duplicate control should be removed. This is only valuable for bugsearch
         contains_duplicates = len(value) != len(population_set)
         if not contains_duplicates:
             self._population = value
@@ -105,25 +106,25 @@ class Landscape:
 
     @property
     def herbivores(self):
-        """List of all animals of species Herbivore (`list`)."""
+        """All animals of species Herbivore in current landscape (`list`)."""
         herbivores = [animal for animal in self.population if animal.species == 'Herbivore']
         return herbivores
 
     @property
     def carnivores(self):
-        """All animals of species Carnivore (`list`)."""
+        """All animals of species Carnivore in current landscape (`list`)."""
         carnivores = [animal for animal in self.population if animal.species == 'Carnivore']
         return carnivores
 
     @property
     def herbivores_number(self):
-        """The amount of herbivores in a terrain (`int`)."""
+        """The amount of herbivores in current landscape (`int`)."""
         herbivores_number = len(self.herbivores)
         return herbivores_number
 
     @property
     def carnivores_number(self):
-        """The amount of carnivores in a terrain (`int`)."""
+        """The amount of carnivores in current landscape (`int`)."""
         carnivores_number = len(self.carnivores)
         return carnivores_number
 
@@ -152,11 +153,9 @@ class Landscape:
         --------
         :py:meth:`.killing`, :py:meth:`.probability_to_kill`
         """
-        carnivores = self.carnivores  # TODO: Skriv self.carnivores rett inn i sorted()
-        hunting_order = sample(carnivores, self.carnivores_number)
+        hunting_order = sample(self.carnivores, self.carnivores_number)
 
-        herbivores = self.herbivores  # TODO: Skriv self.herbivores rett inn i sorted()
-        prey_order = sorted(herbivores, key=lambda x: x.fitness)
+        prey_order = sorted(self.herbivores, key=lambda x: x.fitness)
 
         for hunter in hunting_order:
             hunter.F_tilde = 0
