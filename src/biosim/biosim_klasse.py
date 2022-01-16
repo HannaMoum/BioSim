@@ -254,6 +254,7 @@ class BioSim(BioSimParam):
             for sub_key in hist_specs[key]:
                 if sub_key not in self.hist_spec_pattern[key]:
                     error_sub_key = True
+                    break
 
         if any((error_main_key, error_sub_key)):
             raise KeyError(f'Provided key is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
