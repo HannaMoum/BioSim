@@ -16,7 +16,7 @@ def map_str():
     return "WWW\nWLW\nWWW"
 
 
-def test_map_validation(hist_specs, map_str):
+def test_map_validation(map_str, hist_specs):
     """Test creation of World object if map input is valid."""
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert type(sim.island) == World
@@ -48,22 +48,34 @@ def test_hist_spec_valid(map_str, hist_specs):
     assert boolean
 
 
-def test_set_img_years_default(hist_specs, map_str):
+def test_set_img_years_default(map_str, hist_specs):
     """Test that img_years is set to default value when not else is requested."""
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert sim._img_years == sim._vis_years
 
 
-def test_set_img_years(hist_specs, map_str):
+def test_set_img_years(map_str, hist_specs):
     """Test that private setter method provides correct img_years value when defined."""
     sim = BioSim(map_str, hist_specs=hist_specs, img_years=5)
     assert sim._img_years == 5
 
 
-def test_set_vis_years(hist_specs, map_str):
+def test_set_vis_years(map_str, hist_specs):
     """Test that private setter method provides correct vis_years value."""
     sim = BioSim(map_str, hist_specs=hist_specs, vis_years=5)
     assert sim._vis_years == 5
 
+
+@pytest.mark.parametrize('cmax', [None, {'Herbivore': 40, 'Carnivore': 10}])
+def test_cmax_animals_validation_true(map_str, hist_specs, cmax):
+    """Test that validation of cmax goes trough when provided with valid options."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    assert sim._validate_cmax_animals(cmax)
+
+
+def test_cmax_animals_validation_error(map_str, hist_specs):
+    """Test that error is risen if invalid cmax_animals dictionary is provided."""
+    with pytest.raises(KeyError):
+        BioSim(map_str, hist_specs=hist_specs, cmax_animals={'Herbivore': 40, 'Dog': 10})
 
 
