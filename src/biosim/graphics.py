@@ -242,7 +242,8 @@ class Graphics(GraphicsParams):
         return fig
 
     def _save_grid(self, fig: object, year: int):
-        fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
+        # File numbering starts at 0 for year 1
+        fig.savefig(f'{self.img_dir}/{self.img_base}_{year-1:05d}.{self.img_fmt}', format=self.img_fmt)
 
     def show_grid(self, heatmap_data_herbivore:object, heatmap_data_carnivore:object,
                   population_size_herbivore:object, population_size_carnivore:object,
