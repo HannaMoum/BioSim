@@ -202,7 +202,8 @@ class BioSim(BioSim_param):
 
         Returns
         -------
-            True, if island map are validated correctly.
+        `bool`
+            True, if island map pass validation.
         """
         if not type(island_map) is str:
             raise ValueError('Island map must be be a string.')
@@ -225,14 +226,15 @@ class BioSim(BioSim_param):
         hist_specs: `dict`
             Specifications for histograms
 
+        Raises
+        ------
+        KeyError
+            Provided key in :py:attr:`.hist_specs` is not valid.
+
         Returns
         -------
-
-        """
-        """
-        hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
-                      'age': {'max': 60.0, 'delta': 2},
-                      'weight': {'max': 60, 'delta': 2}},
+        `bool`
+            True if hist_specs pass validation.
         """
         error_main_key = False
         error_sub_key = False
