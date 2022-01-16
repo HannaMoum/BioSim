@@ -148,8 +148,8 @@ def test_year_initial(map_str, hist_specs):
     assert sim.year == 0
 
 
-def test_year_first_sim(map_str, hist_specs):
-    """Test that parameter year is correctly updated after one simulation.
+def test_year_sim_once(map_str, hist_specs):
+    """Test that attribute year is correctly updated after one simulation.
     (vis_years=0 enables graphics for more efficient testing.)."""
     sim = BioSim(map_str,
                  hist_specs=hist_specs,
@@ -157,3 +157,16 @@ def test_year_first_sim(map_str, hist_specs):
     num_years = 10
     sim.simulate(num_years)
     assert sim.year == num_years
+
+
+def test_year_sim_twice(map_str, hist_specs):
+    """Test that attribute year is correctly updated after two simulations."""
+    sim = BioSim(map_str,
+                 hist_specs=hist_specs,
+                 vis_years=0)
+    first_sim = 5
+    second_sim = 3
+    sim.simulate(first_sim)
+    sim.simulate(second_sim)
+    assert sim.year == first_sim + second_sim
+
