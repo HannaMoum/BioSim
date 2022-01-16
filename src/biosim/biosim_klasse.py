@@ -212,7 +212,6 @@ class BioSim(BioSimParam):
         """
         if not type(island_map) is str:
             raise ValueError('Island map must be be a string.')
-            return False #REMOVE
 
         str_list = island_map.split(sep='\n')
         length_check = len(str_list[0])
@@ -220,7 +219,7 @@ class BioSim(BioSimParam):
         for element in str_list:
             if len(element) != length_check:
                 raise ValueError('Island map must contain an equal amount of columns.')
-                return False #REMOVE
+
         return True
 
     def _validate_hist_specs(self, hist_specs:dict)-> bool:
