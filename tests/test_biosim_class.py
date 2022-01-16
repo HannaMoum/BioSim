@@ -124,6 +124,7 @@ def test_validate_im_params_specified_values(map_str, hist_specs):
                 sim._img_base == img_base,
                 sim._img_fmt == img_fmt])
 
+
 def test_validate_im_params_oserror(mocker, map_str, hist_specs):
     """Test that OSError rises as expected."""
     mocker.patch('os.makedirs', side_effect=OSError())
@@ -135,7 +136,24 @@ def test_validate_im_params_oserror(mocker, map_str, hist_specs):
                img_dir=img_dir,
                img_base=img_base)
 
+
 def test_validate_im_params_valid(map_str, hist_specs):
     """Test expected return if (un)provided image parameters are valid."""
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert sim._validate_im_params
+
+def test_year_initial(map_str, hist_specs):
+    """Test that parameter year is set to 0 before any simualtion."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    assert sim.year == 0
+
+
+def test_year_first_sim(map_str, hist_specs):
+    """Test that parameter year is correctly updated after one simulation.
+    (vis_years=0 enables graphics for more efficient testing.)."""
+    sim = BioSim(map_str,
+                 hist_specs=hist_specs,
+                 vis_years=0)
+    num_years = 10
+    sim.simulate(num_years)
+    assert sim.year == num_years
