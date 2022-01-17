@@ -363,16 +363,20 @@ def test_giving_birth_false(species_obj, species_str):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_death_probability_binomial(species):
-    """Binoimal test: Test the statistical significance of deviation from an animal's probability to die
+    """Binomial test.
+
+    Test the statistical significance of deviation from an animal's probability to die
     (if weight grater than zero), of the observed deaths.
-    Using scipy.stats bionom_test to find the p_value, and deciding upon a 5% level of significance."""
-    alpha = 0.05 #Level of significance we demand for the probability to not be biased
+    Using scipy.stats bionom_test to find the p_value, and deciding upon a 5% level of significance,
+    for the probability not to be biased.
+    """
+    alpha = 0.05
     animal = species(12.5, 10)
     num_tests = 200
-    n = sum(animal.dies() for _ in range(num_tests)) #Observed death cases
+    observed_deaths = sum(animal.dies() for _ in range(num_tests))
 
     probability = species.params['omega'] * (1 - animal.fitness)
-    p_value = binom_test(n, num_tests, probability, alternative='two-sided')
+    p_value = binom_test(observed_deaths, num_tests, probability, alternative='two-sided')
     assert p_value > alpha
 
 
