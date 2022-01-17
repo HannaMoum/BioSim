@@ -269,17 +269,16 @@ def test_birth_prob_fertilization(species):
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_prob_puberty(mocker, species):
     """Deterministic test: no birth takes place if all requirements but reached_puberty are fulfilled.
-    Used mocked uniform
-    xi = 0: assures maternal health
-    zeta = weight/sigma_birth,  when 0 < sigma_birth < 1 and w_birth = anything (but negative)
-    num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocker ('random.uniform) return 1:
-     assures no match_probability
-    sigma_birth = 0.2 (small enough to assure no miscarriages)
+
+    Mocked uniform assures matching probability, xi = 0 assures maternal health,
+    sigma_birth = 0.2 is small enough to assure no miscarriages,
+    and zeta = weight/sigma_birth,  when 0 < sigma_birth < 1 and w_birth is anything (but negative),
+    assures reached_puberty fails.
     """
     mocker.patch('biosim.animals.uniform', return_value=0)
     age = species.params['a_half']
     weight = species.params['w_half']
-    species.set_params({'xi': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
+    species.set_params({'xi': 0, 'sigma_birth': 0.2})
     species.set_params({'zeta': weight/species.params['sigma_birth']})
     num_animals = 10
 
