@@ -59,7 +59,6 @@ class Animal:
             cls.params[key] = new_params[key]
 
     def __init__(self, weight, age=0):
-        #self.id = next(self.id_iter)
 
         if not isinstance(weight, (int, float)) or weight < 0:
             raise ValueError('Weight must be a positive number')
@@ -108,12 +107,16 @@ class Animal:
 
     @property
     def fitness(self):
-        # TODO: SKriv docstring
+        """The animal's fitness (`float`, read-only)
+
+        See Also
+        --------
+        :py:meth:`._calculate_fitness`
+        """
         return self._fitness
 
-
     def _calculate_fitness(self):
-        """The animal's fitness (`float`, read-only).
+        """Calculate the animal's fitness.
 
         Notes
         ------
@@ -133,6 +136,11 @@ class Animal:
             {\\frac{1}{1+e^{\\pm\phi(x-x_{\\frac{1}{2}})}}}
 
         For more information see table of parameters.
+
+        Returns
+        -------
+        fitness: `float`
+            The animal's fitness
         """
         def q(sgn, x, x_half, phi):
             return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
@@ -147,8 +155,7 @@ class Animal:
             return fitness
 
     def eat(self, food_available):
-        """
-        Animal gains weight from eating.
+        """Animal gains weight from eating.
 
         Animal will always eat until satisfied (`F`), otherwise it will eat :math:`\mathtt{food\_available}`.
         Weight increases by `Food eaten` :math:`* \\beta`.
@@ -188,8 +195,7 @@ class Animal:
         return p > r
 
     def probability_to_give_birth(self, number_of_animals):
-        """
-        Decide the animal's probability to give birth.
+        """Decide the animal's probability to give birth.
 
         Notes
         ------
@@ -253,8 +259,7 @@ class Animal:
         return False
 
     def giving_birth(self, species, number_of_animals):
-        """
-        Animal gives birth and loses weight.
+        """Animal gives birth and loses weight.
 
         Animal gives birth if requirements from :py:meth:`.probability_to_give_birth` are met.
         Weight decreases by newborn's weight :math:`*\\xi`
@@ -285,8 +290,7 @@ class Animal:
         return None
 
     def dies(self):
-        """
-        Decide whether animal dies.
+        """Decide whether animal dies.
 
         Notes
         -----
@@ -364,8 +368,7 @@ class Carnivore(Animal):
     params = deepcopy(_default_params)
 
     def hungry(self):
-        """
-        Decide whether carnivore is hungry.
+        """Decide whether carnivore is hungry.
 
         Carnivore is satisfied when it has eaten amount `F`.
 
@@ -377,8 +380,7 @@ class Carnivore(Animal):
         return self.F_tilde < self.params['F']
 
     def probability_to_kill(self, herb_fitness):
-        """
-        Decide the carnivore's probability to kill a herbivore.
+        """Decide the carnivore's probability to kill a herbivore.
 
         Notes
         ------
