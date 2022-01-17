@@ -351,6 +351,16 @@ class Graphics(GraphicsParams):
         return fig
 
     def _save_grid(self, fig: object, year: int):
+        """
+        Saving the grid with the different plots.
+
+        Parameters
+        ----------
+        fig: `object`
+            The figure which is being saved
+        year: `int`
+            Specifying the year
+        """
         fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
 
         msg = f'Saved: {self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}'
