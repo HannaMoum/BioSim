@@ -50,7 +50,7 @@ class BioSim(BioSimParam):
             String with beginning of file name for figures
         img_fmt: `str`, optional
             String with file type for figures, e.g. 'png'
-        img_year: `int`, optional
+        img_years: `int`, optional
             Years between visualizations saved to files (default: vis_years)
         log_file: `str`, optional
             If given, write animal counts to this file
@@ -64,11 +64,23 @@ class BioSim(BioSimParam):
 
             Controls that the modulus between simulating years and visualizing years are equal to zero.
         _num_years: `int`
-            Simulation duration in years
+            Simulation duration in years.
         hist_spec_pattern: `dict`
-            Default pattern of input hist_spec
+            Default pattern of input hist_spec.
         default_img_fmt: `str`
             Default image format, 'png'.
+        population_map_herbivore: `ndarray`
+            Array containing herbivore population for each cell.
+        population_map_carnivore: `ndarray`
+            Array containing carnivore population for each cell.
+        population_size_herbivore: `list`
+            List containig total herbivore population size for every simualted year.
+        population_size_carnivore: `list`
+            List containig total carnivore population size for every simualted year.
+        herbivore_age_weight_fitness: `ndarray`
+            Array containing information about every herbivore's age, weight and fitness.
+        carnivore_age_weight_fitness: `ndarray`
+            Array containing information about every carnivore's age, weight and fitness.
 
         Notes
         -----
@@ -136,7 +148,8 @@ class BioSim(BioSimParam):
         self._img_fmt = img_fmt
         if all((self._validate_hist_specs(hist_specs),
                 self._validate_cmax_animals(cmax_animals),
-                self._validate_im_params(img_dir, img_base, img_fmt, img_years))):
+                self._validate_im_params(img_dir, img_base, img_fmt, img_years)
+                )):
             self.graphics = Graphics(self.island.base_map,
                                      hist_specs,
                                      ymax_animals,
@@ -504,7 +517,7 @@ class BioSim(BioSimParam):
 
         logger.info('make_movie started')
 
-    def simulate(self, num_years = 10):
+    def simulate(self, num_years=10):
         """
         Run simulation and gather information.
 
@@ -556,7 +569,6 @@ class BioSim(BioSimParam):
             msg = f'Completed year:{current_year} Herbivores:{self.population_map_herbivore.sum()}   ' \
                   f'Carnivores:{self.population_map_carnivore.sum()}'
             logger.info(msg)
-
 
             print('\r',
                   f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   Carnivores:{self.population_map_carnivore.sum()}',
