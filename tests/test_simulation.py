@@ -1,8 +1,12 @@
+import os
+import shutil
+
 import pytest
 from biosim.simulation import BioSim
 from biosim.world import World
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape
+import matplotlib.pyplot as plt
 
 
 @pytest.fixture(autouse=True)
@@ -286,12 +290,22 @@ def test_add_population_none(map_str, hist_specs):
 
 
 def test_make_movie(map_str, hist_specs):
-    """Test that no errror rises when trying to make a movie with correctly provided information."""
+    """Test that no error rises when trying to make a movie with correctly provided information."""
     img_dir = 'C:\\temp\BioSim'
     img_base = 'BioSim'
-    ini_pop = [{'loc': (2,2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
+    shutil.rmtree(img_dir)
+    ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
     sim = BioSim(map_str, ini_pop, hist_specs=hist_specs, img_dir=img_dir, img_base=img_base)
-    sim.simulate(15)
-    assert sim.make_movie()
+    sim.simulate(10)
+    assert not sim.make_movie()
 
 
+def test_make_movie_error(map_str, hist_specs):
+    """Test that error rises if directory is empty."""
+    img_dir = 'C:\\temp\BioSim'
+    img_base = 'BioSim'
+    shutil.rmtree(img_dir)
+    ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
+    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs, img_dir=img_dir, img_base=img_base)
+    with pytest.raises(FileNotFoundError):
+        sim.make_movie()
