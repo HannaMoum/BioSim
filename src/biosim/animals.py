@@ -63,16 +63,17 @@ class Animal:
 
         if not isinstance(weight, (int, float)) or weight < 0:
             raise ValueError('Weight must be a positive number')
-        self.weight = weight
+        self._weight = weight
 
         if not float(age).is_integer() or not isinstance(age, (int, float)):
             raise ValueError('Age must be a whole number')
         elif age < 0:
             raise ValueError('Age must be a positive number')
 
-        self.age = age
+        self._age = age
 
         self._F_tilde = 0
+        self._fitness = self._calculate_fitness()
 
     @property
     def age(self):
@@ -84,6 +85,7 @@ class Animal:
     @age.setter
     def age(self, value):
         self._age = value
+        self._fitness = self._calculate_fitness()
 
     @property
     def weight(self):
@@ -93,6 +95,7 @@ class Animal:
     @weight.setter
     def weight(self, value):
         self._weight = value
+        self._fitness = self._calculate_fitness()
 
     @property
     def F_tilde(self):
@@ -105,6 +108,11 @@ class Animal:
 
     @property
     def fitness(self):
+        # TODO: SKriv docstring
+        return self._fitness
+
+
+    def _calculate_fitness(self):
         """The animal's fitness (`float`, read-only).
 
         Notes
@@ -126,7 +134,6 @@ class Animal:
 
         For more information see table of parameters.
         """
-
         def q(sgn, x, x_half, phi):
             return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 

@@ -57,10 +57,10 @@ if __name__ == '__main__':
     # sim.simulate(num_years=5)
     # sim.simulate(num_years=3)
 
-    # import cProfile
-    # import pstats
-    # from pstats import SortKey
-    #
-    # cProfile.run('sim.simulate(5)', 'restats')
-    # p = pstats.Stats('restats')
-    # p.sort_stats(SortKey.CUMULATIVE).print_stats('simulation.py')
+    import cProfile
+    import pstats
+    from pstats import SortKey
+
+    cProfile.run('sim.simulate(5)', 'restats')
+    p = pstats.Stats('restats')
+    p.sort_stats(SortKey.CUMULATIVE).print_stats('animals.py')

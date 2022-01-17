@@ -6,7 +6,6 @@ from biosim.simulation import BioSim
 from biosim.world import World
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape
-import matplotlib.pyplot as plt
 
 
 @pytest.fixture(autouse=True)
