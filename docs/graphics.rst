@@ -7,3 +7,4 @@ The graphics module provides the visualization of the simulation.
 
 .. automodule:: biosim.graphics
     :members:
+    :private-members:
