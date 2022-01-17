@@ -162,22 +162,21 @@ class Graphics(GraphicsParams):
                 self.cmax_animals_carnivore = value
 
     def _plot_heatmap(self, heat_map_data: object, species: str, ax: object) -> object:
-        """
-        Plotting heatmaps based on given data.
+        """Plot heatmaps based on provided data from simulation.
 
         Parameters
         ----------
-        heat_map_data: `np array`
-            np array containing data for every location
+        heat_map_data: `ndarray`
+            Array containing population for every location.
         species: `str`
-            Specifying the species for the plot
+            The species to make heat-map for.
         ax: `object`
-            The axes for the plot
+            The axes to hold the plot
 
         Returns
         -------
         ax: `object`
-            The axis with the heatmap
+            Axes containing the heatmap plot
         """
         if species == 'Herbivore':
             title = 'Herbivore distribution'
