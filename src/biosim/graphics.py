@@ -317,7 +317,7 @@ class Graphics(GraphicsParams):
         histogram_data_carnivore: `object`
             np array with one column per property, and one row per carnivore
         year: `int`
-            Specifying which year the grid is made for
+            Specifying the year being displayed in the grid
 
         Returns
         -------
@@ -370,7 +370,31 @@ class Graphics(GraphicsParams):
                   population_size_herbivore:object, population_size_carnivore:object,
                   histogram_data_herbivore:object, histogram_data_carnivore:object,
                   pause:float, year:int, show: bool, save: bool):
-
+        """
+        Showing the grid which is made by _make_grid.
+        Parameters
+        ----------
+        heatmap_data_herbivore: `object`
+            np array containing data for every location for the herbivores
+        heatmap_data_carnivore: `object`
+            np array containing data for every location for the carnivores
+        population_size_herbivore: `object`
+            One dimensional array containing population size for each year, for the herbivores
+        population_size_carnivore: `object`
+            One dimensional array containing population size for each year, for the carnivores
+        histogram_data_herbivore: `object`
+            np array with one column per property, and one row per herbivore
+        histogram_data_carnivore: `object`
+            np array with one column per property, and one row per carnivore
+        pause: `float`
+            Specifying the time the figure is displayed
+        year: `int`
+            Specifying the year being displayed in the grid
+        show: `bool`
+            Specifying if the grid should be shown
+        save: `bool`
+            Specifying if the grid should be saved
+        """
         fig = self._make_grid(heatmap_data_herbivore, heatmap_data_carnivore,
                               population_size_herbivore, population_size_carnivore,
                               histogram_data_herbivore, histogram_data_carnivore, year)
