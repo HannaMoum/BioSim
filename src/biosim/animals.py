@@ -108,6 +108,11 @@ class Animal:
 
     @property
     def fitness(self):
+        # TODO: SKriv docstring
+        return self._fitness
+
+
+    def _calculate_fitness(self):
         """The animal's fitness (`float`, read-only).
 
         Notes
@@ -129,10 +134,6 @@ class Animal:
 
         For more information see table of parameters.
         """
-        return self._fitness
-
-
-    def _calculate_fitness(self):
         def q(sgn, x, x_half, phi):
             return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 
