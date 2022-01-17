@@ -183,10 +183,6 @@ class Graphics(GraphicsParams):
         ax: `object`
             The axes with the population size plot for both populations
         """
-        """
-        Brukes til å plotte population size over tid
-        Data er np array, med en sum per år i simuleringen
-        """
         years =np.asarray([x for x in range(1, len(herb_data)+1)])
         ax.plot(years, herb_data, color='green', label='Herbivore')
         ax.plot(years, carn_data, color='red', label='Carnivore')
@@ -200,7 +196,14 @@ class Graphics(GraphicsParams):
         return ax
 
     def _set_histogram_specs(self, hist_specs: dict):
-        """Setting the parameters for plotting histograms"""
+        """
+        Setting the parameters for plotting histograms, if given.
+
+        Parameters
+        ----------
+        hist_specs: `dict`
+            Specifications for histograms
+        """
         if hist_specs is None:
             return True
 
