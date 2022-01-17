@@ -72,9 +72,9 @@ class BioSim(BioSimParam):
         population_map_carnivore: `ndarray`
             Array containing carnivore population for each cell.
         population_size_herbivore: `list`
-            List containig total herbivore population size for every simualted year.
+            List containig total herbivore population size for every simulated year.
         population_size_carnivore: `list`
-            List containig total carnivore population size for every simualted year.
+            List containig total carnivore population size for every simulated year.
         herbivore_age_weight_fitness: `ndarray`
             Array containing information about every herbivore's age, weight and fitness.
         carnivore_age_weight_fitness: `ndarray`
