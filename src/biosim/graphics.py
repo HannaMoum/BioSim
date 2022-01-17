@@ -81,7 +81,6 @@ class Graphics(GraphicsParams):
         ax: `object`
             The axes with the plot
         """
-        # # ('blue', 'darkgreen', 'lightgreen', 'yellow')
         colormap = ['blue']
         if 'L' in self._base_map:
             colormap.append('darkgreen')
