@@ -9,12 +9,9 @@ import moviepy.video.io.ImageSequenceClip
 from biosim.base_logger import logger
 
 
-
-
 @dataclass
 class GraphicsParams:
     """Provide default parameters for class :py:class:`.Graphics`."""
-    #ymax_animals: int  # Number specifying y-axis limit for graph showing animal numbers
     cmax_animals_herbivore: int = 50  #: maximum color-code value for herbivore densities
     cmax_animals_carnivore: int = 50  #: maximum color-code value for carnivore densities
 
@@ -25,9 +22,9 @@ class GraphicsParams:
     fitness_max: float = 1  #: Maximum value for fitness histogram
     fitness_delta: float = 0.05  #: Bin width for fitness histogram
 
-    codes_for_landscape_types: str = 'WLHD'
-    plot_values_for_landscape_types: str = '0123'
-    island_map_colors: tuple = ('blue', 'darkgreen', 'lightgreen', 'yellow')
+    codes_for_landscape_types: str = 'WLHD'  #: Landscape-codes as letters
+    plot_values_for_landscape_types: str = '0123'  #: Landscape-codes as numbers
+    island_map_colors: tuple = ('blue', 'darkgreen', 'lightgreen', 'yellow')  #: Island map colors
 
     def transform_landscape_type_from_str_to_int(self, value):
         """
@@ -52,7 +49,28 @@ class GraphicsParams:
 
 class Graphics(GraphicsParams):
     """
-    dummy text
+    Create visualization from simulation ran by :py:class:`.BioSim`
+
+    Parameters
+    ----------
+    base_map: `ndarray` of `str`
+        Island map consisting of singular landscape letters.
+    hist_specs: hist_specs: `dict`
+            Specifications for histograms
+    ymax_animals: `int` or `float`
+        Number specifying y-axis limit for graph showing animal numbers
+    cmax_animals: `dict`
+        Dictionary specifying color-code limits for animal densities
+    vis_years: `int`
+        Years between visualization updates
+    img_dir: `str`
+        String with path to directory for figures
+    img_base: `str`
+        String with beginning of file name for figures
+    img_fmt: `str`
+        String with file type for figures, e.g. 'png'
+    img_years: `int`
+        Years between visualizations saved to files
     """
 
     def __init__(self, base_map, hist_specs: dict,
@@ -70,12 +88,11 @@ class Graphics(GraphicsParams):
         self.img_fmt = img_fmt
 
         if not img_years:
-            self._img_years = vis_years
+            self._img_years = vis_years #TODO: Check if this is excess code from set_img_years in simulation
         else:
             self._img_years = img_years
 
-
-    def _plot_island_map(self, ax:object)->object:
+    def _plot_island_map(self, ax: object) -> object:
         """ Plots the map of the island, with the following color codes:
         Lowland: lightgreen, Highland: darkgreen, Dessert: yellow and Water: blue.
 
@@ -104,7 +121,7 @@ class Graphics(GraphicsParams):
         v_transform_landscape_type_from_str_to_int = np.vectorize(self.transform_landscape_type_from_str_to_int)
         # Bruker fx celle for celle på island_map_plot
         island_map_plot[:, :] = v_transform_landscape_type_from_str_to_int(island_map_plot)
-        island_map_plot = np.array(island_map_plot, dtype=int) # Konverterer fra siffer (tall som str) til tall (int).
+        island_map_plot = np.array(island_map_plot, dtype=int)  # Konverterer fra siffer (tall som str) til tall (int).
 
         row, col = island_map_plot.shape
         colormap = colors.ListedColormap(self.island_map_colors)
@@ -135,7 +152,7 @@ class Graphics(GraphicsParams):
             if key == 'Carnivore':
                 self.cmax_animals_carnivore = value
 
-    def _plot_heatmap(self, heat_map_data: object, species: str, ax:object)->object:
+    def _plot_heatmap(self, heat_map_data: object, species: str, ax: object) -> object:
         """
         Plotting heatmaps based on given data.
 
@@ -171,7 +188,7 @@ class Graphics(GraphicsParams):
 
         return ax
 
-    def _plot_population_size(self, herb_data: object, carn_data: object, ax: object)->object:
+    def _plot_population_size(self, herb_data: object, carn_data: object, ax: object) -> object:
         """
         Plotting the population size of the herbivores and carnivores.
 
@@ -189,7 +206,7 @@ class Graphics(GraphicsParams):
         ax: `object`
             The axes with the population size plot for both populations
         """
-        years =np.asarray([x for x in range(1, len(herb_data)+1)])
+        years = np.asarray([x for x in range(1, len(herb_data) + 1)])
         ax.plot(years, herb_data, color='green', label='Herbivore')
         ax.plot(years, carn_data, color='red', label='Carnivore')
         ax.set_title('Population size', loc='left')
@@ -232,7 +249,7 @@ class Graphics(GraphicsParams):
                 self.weight_delta = value['delta']
 
     def _plot_histogram(self, histogram_herbivore_data: object, histogram_carnivore_data: object,
-                        ax_age:object, ax_weight:object, ax_fitness:object) -> object:
+                        ax_age: object, ax_weight: object, ax_fitness: object) -> object:
         """
         Plotting the histograms for age, weight and fitness.
 
@@ -308,10 +325,10 @@ class Graphics(GraphicsParams):
 
         return ax_age, ax_weight, ax_fitness
 
-    def _make_grid(self, heatmap_data_herbivore:object, heatmap_data_carnivore:object,
-                   population_size_herbivore:object, population_size_carnivore:object,
-                   histogram_data_herbivore:object, histogram_data_carnivore:object,
-                   year:int):
+    def _make_grid(self, heatmap_data_herbivore: object, heatmap_data_carnivore: object,
+                   population_size_herbivore: object, population_size_carnivore: object,
+                   histogram_data_herbivore: object, histogram_data_carnivore: object,
+                   year: int):
         """
         Making the grid with the different plots.
 
@@ -379,10 +396,10 @@ class Graphics(GraphicsParams):
         msg = f'Saved: {self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}'
         logger.info(msg)
 
-    def show_grid(self, heatmap_data_herbivore:object, heatmap_data_carnivore:object,
-                  population_size_herbivore:object, population_size_carnivore:object,
-                  histogram_data_herbivore:object, histogram_data_carnivore:object,
-                  pause:float, year:int, show: bool, save: bool):
+    def show_grid(self, heatmap_data_herbivore: object, heatmap_data_carnivore: object,
+                  population_size_herbivore: object, population_size_carnivore: object,
+                  histogram_data_herbivore: object, histogram_data_carnivore: object,
+                  pause: float, year: int, show: bool, save: bool):
         """
         Showing the grid which is made by _make_grid.
         Parameters
