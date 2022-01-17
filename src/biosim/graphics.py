@@ -218,9 +218,33 @@ class Graphics(GraphicsParams):
                 self.weight_max = value['max']
                 self.weight_delta = value['delta']
 
-    def _plot_histogram(self, histogram_herbivore_data: list, histogram_carnivore_data: list,
+    def _plot_histogram(self, histogram_herbivore_data: object, histogram_carnivore_data: object,
                         ax_age:object, ax_weight:object, ax_fitness:object) -> object:
-        """Plotting the histograms for age, weight and fitness"""
+        """
+        Plotting the histograms for age, weight and fitness.
+
+        Parameters
+        ----------
+        histogram_herbivore_data: `np array`
+            np array with one column per property, and one row per animal
+        histogram_carnivore_data: `np array`
+            np array with one column per property, and one row per animal
+        ax_age: `object`
+            Axes to plot the age property
+        ax_weight: `object`
+            Axes to plot the weight property
+        ax_fitness: `object`
+            Axes to plot the fitness property
+
+        Returns
+        -------
+        ax_age: `object`
+            Axes with age distribution plot
+        ax_weight: `object`
+            Axes with weight distribution plot
+        ax_fitness: `object`
+            Axes with fitness distribution plot
+        """
         # Setting colors for Herbivores, Carnivores
         hist_colors = ['green', 'red']
 
