@@ -227,8 +227,7 @@ class Graphics(GraphicsParams):
         return ax
 
     def _set_histogram_specs(self, hist_specs: dict):
-        """
-        Private setter method for histogram specifications.
+        """Set histogram specifications.
 
         Parameters
         ----------
@@ -256,23 +255,26 @@ class Graphics(GraphicsParams):
                 self.weight_max = value['max']
                 self.weight_delta = value['delta']
 
-    def _plot_histogram(self, histogram_herbivore_data: object, histogram_carnivore_data: object,
-                        ax_age: object, ax_weight: object, ax_fitness: object) -> object:
-        """
-        Plotting the histograms for age, weight and fitness.
+    def _plot_histogram(self,
+                        histogram_herbivore_data: object,
+                        histogram_carnivore_data: object,
+                        ax_age: object,
+                        ax_weight: object,
+                        ax_fitness: object) -> object:
+        """Plot histograms for age, weight and fitness.
 
         Parameters
         ----------
-        histogram_herbivore_data: `np array`
-            np array with one column per property, and one row per animal
-        histogram_carnivore_data: `np array`
-            np array with one column per property, and one row per animal
+        histogram_herbivore_data: `ndarray`
+            Array with one column per property, and one row per animal
+        histogram_carnivore_data: `ndarray`
+            Array with one column per property, and one row per animal
         ax_age: `object`
-            Axes to plot the age property
+            Axes to hold plot for age histogram.
         ax_weight: `object`
-            Axes to plot the weight property
+            Axes to hold plot for weight histogram.
         ax_fitness: `object`
-            Axes to plot the fitness property
+            Axes to hold plot for fitness histogram.
 
         Returns
         -------
@@ -408,8 +410,8 @@ class Graphics(GraphicsParams):
                   population_size_herbivore: object, population_size_carnivore: object,
                   histogram_data_herbivore: object, histogram_data_carnivore: object,
                   pause: float, year: int, show: bool, save: bool):
-        """
-        Showing the grid which is made by _make_grid.
+        """Show grid created by :py:meth:`._make_grid`.
+
         Parameters
         ----------
         heatmap_data_herbivore: `object`
