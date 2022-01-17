@@ -192,7 +192,6 @@ class BioSim(BioSimParam):
         -------
         vis_years: `int`
         """
-        # TODO: Gjøre validering av vis_years. Må komme inn som 0, int eller None. Hvis det er en int så må den være 0 eller større.
         if isinstance(vis_years, int):
             if vis_years < 0:
                 raise ValueError('vis_years needs to be larger than 0 or None')
