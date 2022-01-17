@@ -1,5 +1,5 @@
 import pytest
-from biosim.biosim_klasse import BioSim
+from biosim.simulation import BioSim
 from biosim.world import World
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape
