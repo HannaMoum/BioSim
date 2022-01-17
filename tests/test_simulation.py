@@ -243,5 +243,12 @@ def test_set_animal_parameters(map_str, hist_specs, species, species_str):
     assert all([species.params['omega'] == 0.6, species.params['beta'] == 1])
 
 
+def test_set_animal_parameters_invalid(map_str, hist_specs):
+    """Test that ValueError rises if wrongful species are provided."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    with pytest.raises(ValueError):
+        sim.set_animal_parameters('Penguin', {'omega': 0.6})
+
+
 def test_set_landscape_parameters(map_str, hist_specs):
     pass
