@@ -13,9 +13,10 @@ from biosim.base_logger import logger
 
 @dataclass
 class GraphicsParams:
+    """Provide default parameters for class :py:class:`.Graphics`."""
     ymax_animals: int
-    cmax_animals_herbivore: int = 50
-    cmax_animals_carnivore: int = 50
+    cmax_animals_herbivore: int = 50  #: maximum color-code value for herbivore densities
+    cmax_animals_carnivore: int = 50  #: maximum color-code value for carnivore densities
 
     age_max: float = 60
     age_delta: float = 2
@@ -30,6 +31,7 @@ class GraphicsParams:
 
     def transform_landscape_type_from_str_to_int(self, value):
         """
+        Replace landscape type letter with a number.
 
         Parameters
         ----------
@@ -38,7 +40,8 @@ class GraphicsParams:
 
         Returns
         -------
-        `int`
+        {0, 1, 2, 3}
+            Integer representing a landscape.
         """
         if value in self.codes_for_landscape_types:
             replacement_values = list(zip(self.codes_for_landscape_types, self.plot_values_for_landscape_types))
@@ -48,6 +51,9 @@ class GraphicsParams:
 
 
 class Graphics(GraphicsParams):
+    """
+    dummy text
+    """
 
     def __init__(self, base_map, hist_specs: dict,
                  ymax_animals: int, cmax_animals: dict,
@@ -197,12 +203,19 @@ class Graphics(GraphicsParams):
 
     def _set_histogram_specs(self, hist_specs: dict):
         """
-        Setting the parameters for plotting histograms, if given.
+        Private setter method for histogram specifications.
 
         Parameters
         ----------
-        hist_specs: `dict`
+        hist_specs: `dict`, optional
             Specifications for histograms
+
+            If not specified, :math:`\mathtt{hist\_specs}` are set to default values.
+
+        Returns
+        -------
+        `bool`
+            True if :math:`\mathtt{hist\_specs}` are unprovided.
         """
         if hist_specs is None:
             return True

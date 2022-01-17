@@ -113,7 +113,6 @@ class BioSim(BioSimParam):
                  vis_years=1, ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
-
         random.seed(seed)
         # Påvirker potensielt andre script som kjører.
         # Vurder å lage egen Random-instans, slik at BioSim kan eie sitt eget random seed.
