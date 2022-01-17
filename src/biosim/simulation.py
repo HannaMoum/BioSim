@@ -193,6 +193,14 @@ class BioSim(BioSimParam):
         vis_years: `int`
         """
         # TODO: Gjøre validering av vis_years. Må komme inn som 0, int eller None. Hvis det er en int så må den være 0 eller større.
+        if isinstance(vis_years, int):
+            if vis_years < 0:
+                raise ValueError('vis_years needs to be larger than 0 or None')
+        if isinstance(vis_years, str):
+            raise ValueError('vis_years must be of type int or None. Can not be of type str')
+        if isinstance(vis_years, float):
+            raise ValueError('vis_years must be of type int or None. Can not be of type float')
+
         return vis_years
 
     def _validate_island_map(self, island_map: str) -> bool:
