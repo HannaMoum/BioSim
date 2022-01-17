@@ -8,7 +8,8 @@ from biosim.animals import Herbivore, Carnivore
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
 
-@pytest.fixture(autouse=True) #Combine with parameterization?
+
+@pytest.fixture(autouse=True)
 def reset_params_default():
     """Reset parameters to default after test has run."""
     yield
@@ -82,27 +83,12 @@ def test_animal_create_weight_wrong(species):
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_animal_create_F_tilde(species): #TODO: Change name when F-tilde changes name
+def test_animal_create_F_tilde(species):
     """Validate initial value of F-tilde and its' possibility to change."""
     animal = species(12.5, 10)
     eat_amount = 5
     assert all([animal.F_tilde == 0, animal.F_tilde + eat_amount == eat_amount])
 
-
-# @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-# def test_animal_create_has_migrated(species):
-#     """Test that has_migrated attribute is set to False when animal is created."""
-#     assert not species(12.5, 10).has_migrated
-#
-#
-# @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-# def test_animal_has_migrated_edit(species):
-#     """Test that has_migrated attribute is changed correctly on demand."""
-#     animal = species(12.5, 10)
-#     animal.has_migrated = True
-#     assert animal.has_migrated
-
-#TODO: Test id_iter in int???
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_zero_fitness(species):
@@ -154,14 +140,14 @@ def test_eat_limited(species):
     animal = species(12.5, 10)
     initial_weight = animal.weight
 
-    limited_food = species.params['F'] - species.params['F']*0.5  # Make sure we have a positive value
+    limited_food = species.params['F'] - species.params['F'] * 0.5
     animal.eat(limited_food)
     weight_gain = limited_food * species.params['beta']
     assert animal.weight == initial_weight + weight_gain
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
-def test_eat_F_tilde_grow(species): #TODO: Edit name when F_tilde changes
+def test_eat_F_tilde_grow(species):
     """Test correct growth of attribute F_tilde when animals eat."""
     animal = species(12.5, 10)
     available_food = 100
@@ -171,7 +157,7 @@ def test_eat_F_tilde_grow(species): #TODO: Edit name when F_tilde changes
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_aging(species):
-    """Deterministic test: Age must increase by one each year.""" #OBS! Dette er det samme som Plesser har...
+    """Deterministic test: Age must increase by one each year."""
     animal = species(12.5)
     num_years = 10
     for n in range(num_years):
@@ -192,7 +178,7 @@ def test_decrease_weight_when_aging(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_migration_probability(mocker, species):
-    """Use mocked uniform to test that all animals will migrate under correct circumstances"""
+    """Use mocked uniform to test that all animals will migrate under correct circumstances."""
     mocker.patch('biosim.animals.uniform', return_value=0)
     for _ in range(20):
         assert species(12.5, 10).probability_to_migrate()
@@ -200,12 +186,11 @@ def test_migration_probability(mocker, species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_probability_to_give_birth(species):
-    """Test animal giving birth if all requirements are fulfilled
+    """Test animal giving birth if all requirements are fulfilled.
 
-    xi = 0: assures maternal health
-    zeta = 0: assures puberty
-    num_animals = any positive number >= 8, gamma = 0.5 and fitness = 1/4: Assures match_probability
-    sigma_birth = 0.2 (small enough to assure no miscarriages)
+    xi = 0 assures maternal health, zeta = 0: assures puberty, while
+    num_animals >= 8, gamma = 0.5 and fitness = 1/4 assures match_probability.
+    Sigma_birth = 0.2 is small enough to assure no miscarriages.
     """
     species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
     age = species.params['a_half']
@@ -214,6 +199,7 @@ def test_probability_to_give_birth(species):
 
     for _ in range(100):
         assert species(weight, age).probability_to_give_birth(num_animals)
+
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_ztest(species):
@@ -241,11 +227,10 @@ def test_birth_ztest(species):
 def test_birth_prob_matchmaking(mocker, species):
     """Deterministic test: No birth takes place if all requirements but matchmaking are fulfilled.
 
-    xi = 0: assures maternal health
-    zeta = 0: assures puberty
-    num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocked uniform return 1:
-     assures no match_probability
-    sigma_birth = 0.2 (small enough to assure no miscarriages)
+    xi = 0 assures maternal health, zeta = 0 assures reached puberty and
+    sigma_birth = 0.2 is small enough to assure no miscarriages.
+    num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocked uniform return value 1
+    assures no match_probability.
     """
     mocker.patch('biosim.animals.uniform', return_value=1)
     species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
@@ -290,10 +275,9 @@ def test_birth_prob_puberty(mocker, species):
 def test_birth_prob_maternal_health(species):
     """Deterministic test: no birth takes place if all requirements but maternal health are fulfilled.
 
-    xi = 300: big number assuring maternal health fails
-    zeta = 0: assures puberty
-    num_animals = any positive number >= 8, gamma = 0.5 and fitness = 1/4: Assures match_probability
-    sigma_birth = 0.2 (small enough to assure no miscarriages)
+    xi = 300, big number assuring maternal health fails, zeta = 0 assures reached puberty,
+    num_animals >= 8, gamma = 0.5 and fitness = 1/4 assures match_probability
+    sigma_birth = 0.2 is small enough to assure no miscarriages.
     """
     species.set_params({'xi': 300, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
     age = species.params['a_half']
@@ -307,7 +291,7 @@ def test_birth_prob_maternal_health(species):
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_miscarriage_binomial(species):
     """Binoimal test: Test the statistical significance of deviation from an animal's probability to miscarriage
-    (by manually set parameters), of the observed miscarriages..
+    (by manually set parameters), of the observed miscarriages.
     Using scipy.stats bionom_test to find the p_value, and deciding upon a 5% level of significance."""
     species.set_params({'sigma_birth': 0.2, 'w_birth': 0})
     num_tests = 500
@@ -318,6 +302,7 @@ def test_miscarriage_binomial(species):
     p_value = binom_test(num_cases, num_tests, 1/2)
     alpha = 0.05
     assert p_value > alpha
+
 
 @pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
 def test_giving_birth_true(species_obj, species_str):
@@ -442,6 +427,7 @@ def test_killing_probability_true(mocker, DeltaPhiMax):
     herb_fitness = carn.fitness * 0.5
     assert carn.probability_to_kill(herb_fitness)
 
+
 @pytest.mark.parametrize('DeltaPhiMax', [12.5, 0])
 def test_killing_probability_false(mocker, DeltaPhiMax):
     """Use mocked uniform to test that killing can not happen even if the carnivore's fitness
@@ -474,6 +460,3 @@ def test_killing_no_prob():
     than the carnivore's fitness."""
     carn = Carnivore(12.5, 10)
     assert not carn.killing(herb_fitness=carn.fitness * 2, herb_weight=10)
-
-
-
