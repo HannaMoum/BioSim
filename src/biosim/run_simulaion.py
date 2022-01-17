@@ -41,10 +41,10 @@ if __name__ == '__main__':
                  ymax_animals=None,
                  cmax_animals={'Herbivore': 40, 'Carnivore': 10},
                  img_fmt='png',
-                 img_years=0)
-                 # img_dir= 'C:/temp/BioSim',
-                 # img_base='BioSim'
-                 # )
+                 img_years=0)#,
+                 #img_dir='C:/temp/BioSim',
+                 #img_base='BioSim'
+                 #)
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
