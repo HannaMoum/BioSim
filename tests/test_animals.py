@@ -426,10 +426,10 @@ def test_killing_probability_fitness_less():
 
 
 def test_killing_probability_fitness_equal():
-    """Test that a kill can not take place if a carnviore's and a herbivore's fitnesses are equal."""
+    """Test that a kill can not take place if a carnviore's and a herbivore's fitness are equal."""
     carn = Carnivore(Carnivore.params['w_half'], Carnivore.params['a_half'])
     herb = Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])
-    assert not all([carn.probability_to_give_birth(herb.fitness), carn.fitness == herb.fitness])
+    assert not all([carn.probability_to_kill(herb.fitness), carn.fitness == herb.fitness])
 
 
 @pytest.mark.parametrize('DeltaPhiMax', [12.5, 0])
