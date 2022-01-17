@@ -18,6 +18,7 @@ The simulation consists of
 
    sim_and_island
    landscapes_and_animals
+   graphics
 
 Indices and tables
 ==================
