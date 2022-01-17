@@ -43,10 +43,8 @@ For further development the authors recommend:
 * investigate optimization possibilities in current code 
 to provide better efficiency, such as:
   * provide the Landscape class with one attribute for each animal's species
-population, rather than one for both. This should save some runningtime for the simulation.
-  * add lazy evalution for fitness calculations
-* fix bug: Attribute self.initial_num_year is only developed to control 
-the first simulation, and are not adjusted for further simualtion after a pause.
+population, rather than one for both. This should save some runtime for the simulation.
+  * opportunities to make the graphics faster.
 
 
 ##Credits
