@@ -347,9 +347,9 @@ class Graphics(GraphicsParams):
         Parameters
         ----------
         heatmap_data_herbivore: `object`
-            Array containing population data for herbivores in every location.
+            Array containing population data of herbivores in every location.
         heatmap_data_carnivore: `object`
-            Array containing population data for carnivores in every location.
+            Array containing population data of carnivores in every location.
         population_size_herbivore: `object`
             One dimensional array containing the herbivores' population size for all simulated years.
         population_size_carnivore: `object`
@@ -416,25 +416,25 @@ class Graphics(GraphicsParams):
         Parameters
         ----------
         heatmap_data_herbivore: `object`
-            np array containing data for every location for the herbivores
+            Array containing population data of herbivores in every location.
         heatmap_data_carnivore: `object`
-            np array containing data for every location for the carnivores
+            Array containing population data of carnivores in every location.
         population_size_herbivore: `object`
-            One dimensional array containing population size for each year, for the herbivores
+            One dimensional array containing the herbivores' population size for all simulated years.
         population_size_carnivore: `object`
-            One dimensional array containing population size for each year, for the carnivores
+            One dimensional array containing the carnivores' population size for all simulated years.
         histogram_data_herbivore: `object`
-            np array with one column per property, and one row per herbivore
+            Array with one column per property, and one row per herbivore.
         histogram_data_carnivore: `object`
-            np array with one column per property, and one row per carnivore
+            Array with one column per property, and one row per carnivore.
         pause: `float`
-            Specifying the time the figure is displayed
+            Specification of time the figure is displayed.
         year: `int`
-            Specifying the year being displayed in the grid
+            Specification of the year being displayed in the grid.
         show: `bool`
-            Specifying if the grid should be shown
+            Specification of whether the figure should be shown.
         save: `bool`
-            Specifying if the grid should be saved
+            Specification of whether the figure should be saved.
         """
         fig = self._make_grid(heatmap_data_herbivore, heatmap_data_carnivore,
                               population_size_herbivore, population_size_carnivore,
