@@ -21,8 +21,6 @@ class BioSimParam:
                          'age': {'max': float, 'delta': int},
                          'weight': {'max': float, 'delta': int}}
 
-    default_img_dir: str = 'C:/temp/BioSim'
-    default_img_base: str = 'BioSim'
     default_img_fmt: str = 'png'
 
 
@@ -68,10 +66,6 @@ class BioSim(BioSimParam):
             Simulation duration in years
         hist_spec_pattern: `dict`
             Default pattern of input hist_spec
-        default_img_dir: `str`
-            Default path to directory for figures, 'C:/temp/BioSim'.
-        default_img_base: `str`
-            Default beginning of file name for figures, 'BioSim'.
         default_img_fmt: `str`
             Default image format, 'png'.
 
@@ -141,7 +135,7 @@ class BioSim(BioSimParam):
         self._img_fmt = img_fmt
         if all((self._validate_hist_specs(hist_specs),
                 self._validate_cmax_animals(cmax_animals),
-                self._validate_im_params(img_dir, img_base, img_fmt))):
+                self._validate_im_params(img_dir, img_base, img_fmt, img_years))):
             self.graphics = Graphics(self.island.base_map,
                                      hist_specs,
                                      ymax_animals,
@@ -152,9 +146,9 @@ class BioSim(BioSimParam):
                                      self._img_fmt,
                                      img_years)
         self._vis_years = self._set_vis_years(vis_years)
-        self._img_years = self._set_img_years(img_years)
+        self._img_years = self._set_img_years(img_years, img_dir)
 
-    def _set_img_years(self, img_years: int):
+    def _set_img_years(self, img_years: int, img_dir:int): # Endringer
         """Private setter method for img_years.
 
         If input provided, set img_years to input value,
@@ -174,6 +168,8 @@ class BioSim(BioSimParam):
         # TODO: Burde også teste for negative verdier, andre datatyper.
         if img_years is None:
             img_years = self._vis_years
+        if img_dir is None:
+            img_years = 0
         return img_years
 
     def _set_vis_years(self, vis_years: int) -> int:
@@ -291,7 +287,7 @@ class BioSim(BioSimParam):
 
         return True
 
-    def _validate_im_params(self, img_dir: str, img_base: str, img_fmt: str):
+    def _validate_im_params(self, img_dir:str, img_base:str, img_fmt:str, img_years:int): #Endringer
         """Private validation of provided image parameters.
 
         Parameters
@@ -302,6 +298,8 @@ class BioSim(BioSimParam):
             Beginning of file name for figures
         img_fmt: `str`
             File format for figures
+        img_years: `int`
+            Years between visualizations saved to files
 
         Raises
         ------
@@ -323,22 +321,23 @@ class BioSim(BioSimParam):
                 all((img_dir is None, img_base is None))
         )):
             raise ValueError('Either both img_dir and img_base must specified or neither of them can be specified.')
-        if img_dir is None:
-            self._img_dir = self.default_img_dir
-        if img_base is None:
-            self._img_base = self.default_img_base
+        if all((img_dir is None, img_years is not None)):
+            print('img_dir and img_years not given. No files will be saved.')
+            # Raiser ikke valueerror, fordi da stopper hele programmet.
+            # Bedre å bare gi beskjed om at filer ikke vil lagres, men fortsatt vises
+
         if img_fmt is None:
             self._img_fmt = self.default_img_fmt
         else:
             if img_fmt not in ['jpeg', 'jpg', 'png', 'tif', 'tiff']:
                 raise ValueError(f'Image format {img_fmt} not supported. '
                                  f'Valid formats are: jpeg, jpg, png, tif, tiff')
-
-        if not os.path.isdir(self._img_dir):
-            try:
-                os.makedirs(self._img_dir)
-            except OSError:
-                raise OSError('Making directory failed')
+        if img_dir is not None:
+            if not os.path.isdir(self._img_dir):
+                try:
+                    os.makedirs(self._img_dir)
+                except OSError:
+                    raise OSError('Making directory failed')
 
         return True
 
@@ -554,7 +553,7 @@ class BioSim(BioSimParam):
             if species is carnivore_object_map:
                 self.carnivore_age_weight_fitness = np.asarray(acc_list)
 
-    def _do_annual_graphics(self, current_year: int):
+    def _do_annual_graphics(self, current_year:int): # Endret
         # Graphics for the year
         if self._vis_years is not None:
             if self._vis_years > 0:
@@ -568,11 +567,11 @@ class BioSim(BioSimParam):
         if self._vis_years == 0:
             show = False
         elif self._vis_years is None:
-            if current_year == self._num_years:
+            if (current_year + 1) == self._num_years: # Endret med +1
                 pause = 3
                 show = True
         elif self._vis_years >= 1:
-            if current_year % self._vis_years == 0:
+            if (current_year + 1) % self._vis_years == 0: # Endret med +1
                 pause = 1 / self._vis_years  # TODO: Finn en pause basert på antall år som simuleres og intervall mellom bilder.
                 show = True
 
