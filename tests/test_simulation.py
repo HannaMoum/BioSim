@@ -323,7 +323,7 @@ def test_add_population_none(map_str, hist_specs):
 
 
 def test_make_movie(map_str, hist_specs, img_dir_base):
-    """Test that no error rises when trying to make a movie with correctly provided information."""
+    """Test that movie is saved correctly."""
     img_base = 'BioSim'
     ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
     sim = BioSim(map_str,
@@ -348,8 +348,13 @@ def test_make_movie_error(map_str, hist_specs, img_dir_base):
 
 
 def test_simulation_modulus_error(map_str, hist_specs):
+    """Test that ValueError rises if the modulus between vis_years and number
+    of years simulating is different from zero."""
     sim = BioSim(map_str,
                  hist_specs=hist_specs,
                  vis_years=8)
     with pytest.raises(ValueError):
         sim.simulate(10)
+
+
+
