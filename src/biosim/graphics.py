@@ -342,7 +342,7 @@ class Graphics(GraphicsParams):
                    histogram_data_herbivore: object,
                    histogram_data_carnivore: object,
                    year: int):
-        """Make grid with different plots.
+        """Make grid with several plots.
 
         Parameters
         ----------
@@ -364,7 +364,7 @@ class Graphics(GraphicsParams):
         Returns
         -------
         fig: `object`
-            Figure containing different axes with plots.
+            Figure containing several axes with plots.
         """
         plot_year = year
 
@@ -393,15 +393,14 @@ class Graphics(GraphicsParams):
         return fig
 
     def _save_grid(self, fig: object, year: int):
-        """
-        Saving the grid with the different plots.
+        """Save grid with several plots.
 
         Parameters
         ----------
         fig: `object`
-            The figure which is being saved
+            Figure which is being saved
         year: `int`
-            Specifying the year
+            Specification of the year
         """
         fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
 
