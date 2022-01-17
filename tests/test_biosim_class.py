@@ -206,7 +206,7 @@ def test_num_animals_added(map_str, hist_specs):
 
 
 def test_num_animals_per_species_added(map_str, hist_specs):
-    """Test that expeted amount of animals of each species are to be found on the island."""
+    """Test that expected amount of animals of each species are to be found on the island."""
     ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
                                        {'species': 'Carnivore', 'age': 5, 'weight': 5}]}]
     sim = BioSim(map_str, hist_specs=hist_specs)
