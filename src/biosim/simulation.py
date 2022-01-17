@@ -13,6 +13,7 @@ from biosim.animals import Carnivore
 from biosim.landscape import Landscape
 from biosim.world import World
 from biosim.graphics import Graphics
+from biosim.base_logger import logger
 
 
 @dataclass
@@ -147,6 +148,8 @@ class BioSim(BioSimParam):
                                      img_years)
         self._vis_years = self._set_vis_years(vis_years)
         self._img_years = self._set_img_years(img_years, img_dir)
+
+        logger.info('BioSim initialized')
 
     def _set_img_years(self, img_years: int, img_dir: int):
         """Private setter method for img_years.
@@ -401,6 +404,9 @@ class BioSim(BioSimParam):
             raise ValueError(f'Cannot specify parameters for animal species {species}: '
                              f'Provided species must be in ["Herbivore", "Carnivore"]')
 
+        msg = f'set_animal_parameters{species, params}'
+        logger.info(msg)
+
     def set_landscape_parameters(self, landscape, params):
         """
         Set parameters for landscape types.
@@ -434,6 +440,9 @@ class BioSim(BioSimParam):
         else:
             raise ValueError(f'Cannot specify parameters for landscape type {landscape}: '
                              f'Provided landscape type must be in ["L", "H"]')
+
+        msg = f'set_landscape_parameters {landscape, params}'
+        logger.info(msg)
 
     def add_population(self, population):
         """Add population on island.
@@ -477,6 +486,9 @@ class BioSim(BioSimParam):
         else:
             return None
 
+        msg = f'add_population {population}'
+        logger.info(msg)
+
     def make_movie(self):
         """Create MPEG4 movie from visualizing images saved.
 
@@ -489,6 +501,8 @@ class BioSim(BioSimParam):
             self.graphics.make_movie_from_files()
         else:
             raise FileNotFoundError(f'{self._img_dir} is empty. Need figures to create movie.')
+
+        logger.info('make_movie started')
 
     def simulate(self, num_years: int = 10):
         """
@@ -503,6 +517,8 @@ class BioSim(BioSimParam):
         -------
 
         """
+        logger.info('Simulation started')
+
         if self._initial_num_year is None:
             self._initial_num_year = num_years
             self._num_years = num_years
@@ -520,12 +536,25 @@ class BioSim(BioSimParam):
         for current_year in range(start_loop, self._num_years):
             self._year += 1
             self._annual_cycle()
+            msg = f'Annual cycle for {current_year} completed'
+            logger.info(msg)
+
             self._collect_annual_data()
+            msg = f'Collection of annual data for {current_year} completed '
+            logger.info(msg)
+
             self._do_annual_graphics(current_year)
+            msg = f'Production of annual graphics for {current_year} completed'
+            logger.info(msg)
 
             self._num_animals_per_species = {'Herbivore': self.population_map_herbivore.sum(),
                                              'Carnivore': self.population_map_carnivore.sum()}
             self._num_animals = self.population_map_herbivore.sum() + self.population_map_carnivore.sum()
+
+            msg = f'Completed year:{current_year} Herbivores:{self.population_map_herbivore.sum()}   ' \
+                  f'Carnivores:{self.population_map_carnivore.sum()}'
+            logger.info(msg)
+
 
             print('\r',
                   f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   Carnivores:{self.population_map_carnivore.sum()}',

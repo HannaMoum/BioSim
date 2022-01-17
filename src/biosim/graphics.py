@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 import seaborn as sns
 
+from biosim.base_logger import logger
+
 from moviepy.video.io.bindings import mplfig_to_npimage
 import moviepy.video.io.ImageSequenceClip
 
@@ -261,6 +263,9 @@ class Graphics(GraphicsParams):
     def _save_grid(self, fig: object, year: int):
         fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
 
+        msg = f'Saved: {self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}'
+        logger.info(msg)
+
     def show_grid(self, heatmap_data_herbivore:object, heatmap_data_carnivore:object,
                   population_size_herbivore:object, population_size_carnivore:object,
                   histogram_data_herbivore:object, histogram_data_carnivore:object,
@@ -271,11 +276,13 @@ class Graphics(GraphicsParams):
                               histogram_data_herbivore, histogram_data_carnivore, year)
         if show:
             plt.pause(pause)
+            logger.info('Grid displayed')
 
         if save:
             self._save_grid(fig, year)
 
         plt.close(fig)
+
 
     def make_movie_from_files(self):
         fps = 1
@@ -288,3 +295,6 @@ class Graphics(GraphicsParams):
         # Går gjennom et og et bilde og bygger opp video-kuben.
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
         clip.write_videofile(filename)  # Lager det om til en videofil.
+
+        msg = f'Movie made: {filename}'
+        logger.info(msg)
