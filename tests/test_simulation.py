@@ -58,13 +58,13 @@ def test_hist_spec_valid(map_str, hist_specs):
     boolean = sim._validate_hist_specs(hist_specs)
     assert boolean
 
-
+# todo: FIX
 def test_set_img_years_default(map_str, hist_specs):
     """Test that img_years is set to default value when not else is requested."""
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert sim._img_years == sim._vis_years
 
-
+# TODO: FIX
 def test_set_img_years(map_str, hist_specs):
     """Test that private setter method provides correct img_years value when defined."""
     sim = BioSim(map_str, hist_specs=hist_specs, img_years=5)
@@ -112,6 +112,7 @@ def test_validate_im_params_unsupported_format(map_str, hist_specs):
                img_fmt=img_fmt)
 
 
+# todo: FIX
 def test_validate_im_params_default_values(map_str, hist_specs):
     """Test that default values are provided if image parameters are unspecified from user."""
     sim = BioSim(map_str, hist_specs=hist_specs)
@@ -282,3 +283,15 @@ def test_add_population_none(map_str, hist_specs):
     ini_pop = []
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert sim.add_population(ini_pop) is None
+
+
+def test_make_movie(map_str, hist_specs):
+    """Test that no errror rises when trying to make a movie with correctly provided information."""
+    img_dir = 'C:\\temp\BioSim'
+    img_base = 'BioSim'
+    ini_pop = [{'loc': (2,2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
+    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs, img_dir=img_dir, img_base=img_base)
+    sim.simulate(15)
+    assert sim.make_movie()
+
+
