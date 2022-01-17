@@ -531,7 +531,7 @@ class BioSim(BioSimParam):
         if self._vis_years is not None:
             if self._vis_years > 0:
                 if self._initial_num_year % self._vis_years != 0:
-                    raise ValueError('num_years must be multiple of vis_years')
+                    raise ValueError('Number of simulated years must be multiple of vis_years')
 
         for current_year in range(start_loop, self._num_years):
             self._year += 1
