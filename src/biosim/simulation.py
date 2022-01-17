@@ -584,32 +584,30 @@ class BioSim(BioSimParam):
     def _collect_annual_data(self):
         """Generate data for each year simulated
 
-        Notes
-        -----
-        Generate data for heatmaps, population size and histograms
-
+        Generate data for heatmaps, population size and histograms.
         """
-        # Data for heatmaps
+        # Generate heatmaps
         self.population_map_herbivore = self.island.get_property_map('v_size_herb_pop')
         self.population_map_carnivore = self.island.get_property_map('v_size_carn_pop')
 
-        # Data for population size
+        # Generate population size
         self.population_size_herbivore.append(self.population_map_herbivore.sum())
         self.population_size_carnivore.append(self.population_map_carnivore.sum())
 
-        # Data for histograms
+        # Generate histograms
         herbivore_object_map = self.island.get_property_map_objects('v_herb_properties_objects')
         carnivore_object_map = self.island.get_property_map_objects('v_carn_properties_objects')
+
         object_maps = [herbivore_object_map, carnivore_object_map]
         for species in object_maps:
-            # Standard akkumulering i numpy fungerte ikke fordi vi hadde en array full av None verdier, der det ikke var noen dyr.
-            # Måtte derfor skrive egen akkumulerings funksjon som legger sammen alle populasjonslistene på landskapene på øya, til en liste med alle dyr på øya.
             acc_list = []
+
             with np.nditer(species, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     list_on_location = element.item()
                     if list_on_location:
                         acc_list += list_on_location
+
             if species is herbivore_object_map:
                 self.herbivore_age_weight_fitness = np.asarray(acc_list)
             if species is carnivore_object_map:
