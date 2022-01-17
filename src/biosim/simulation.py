@@ -427,7 +427,7 @@ class BioSim(BioSimParam):
 
         Parameters
         ----------
-        population: `list` of `dict
+        population: `list` of `dict`
             Population of animals to be placed in specified locations on the island.
 
         Returns
@@ -439,8 +439,8 @@ class BioSim(BioSimParam):
 
         See Also
         --------
-        :py:meth:`.add_population_in_location`
-            Relationship
+        :py:class:`.BioSim`: for correct making of :math:`\mathtt{population}` (see parameter :math:`\mathtt{ini\_pop}`)
+        :py:meth:`.add_population_in_location`: Relationship
         """
         if not isinstance(population, (list, type(None))):
             raise TypeError('Explicitly added population must be provided as a list. '
