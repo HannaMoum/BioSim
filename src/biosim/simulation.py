@@ -165,12 +165,16 @@ class BioSim(BioSimParam):
             If input provided, set img_years to input value,
             else set to default value :py:attr:`.vis_years`.
         """
-        if img_years < 0:
-            raise ValueError('input value img_years must be positive or equal to zero.')
+        if img_years:
+            if img_years < 0:
+                raise ValueError('input value img_years must be positive or equal to zero.')
+
         if img_years is None:
-            img_years = self._vis_years
-        if img_dir is None:
-            img_years = 0
+            if img_dir is None:
+                img_years = 0
+            else:
+                img_years = self._vis_years
+
         return img_years
 
     def _set_vis_years(self, vis_years: int) -> int:
