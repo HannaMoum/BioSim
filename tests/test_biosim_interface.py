@@ -23,7 +23,8 @@ import os
 import os.path
 import matplotlib.pyplot as plt
 
-from biosim.simulation import BioSim
+#from biosim.simulation import BioSim
+from biosim.biosim_klasse import BioSim
 
 
 @pytest.fixture(autouse=True)
