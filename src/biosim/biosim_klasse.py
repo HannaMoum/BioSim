@@ -359,6 +359,7 @@ class BioSim(BioSimParam):
         Parameters
         ----------
         species: {'Herbivore', 'Carnivore'}
+            Animal subclass to get its' parameters changed.
         params: `dict`
             Parameter specification for species
 
@@ -376,26 +377,44 @@ class BioSim(BioSimParam):
 
         See module for :py:class:`.Animal` for valid parameters.
         """
-
         if species == 'Herbivore':
             Herbivore.set_params(params)
         if species == 'Carnivore':
             Carnivore.set_params(params)
 
-    def set_landscape_parameters(self, landscape:str, params:dict):
+    def set_landscape_parameters(self, landscape, params):
         """
-        Set parameters for landscape type.
+        Set parameters for landscape types.
 
-        :param landscape: String, code letter for landscape
-        :param params: Dict with valid parameter specification for landscape
-         params = {'f_max': {'Highland': 300.0,'Lowland': 800.0}}
+        Parameters
+        ----------
+        landscape: {'L', 'H'}
+            Landscape letter describing :py:attr:`.landscape_type`.
+        params: `dict`
+            Parameter specification for landscape type.
+
+        Examples
+        -----
+        Adjustment of the default parameters are done the following way:
+            >>> # Create dictionary for new parameter
+            >>> new_params = {'f_max': 700}
+            >>>
+            >>> # Create a simulation object with necessary input
+            >>> sim = BioSim(map_str, hist_specs=hist_specs)
+            >>>
+            >>> # Set new parameters
+            >>> sim.set_animal_parameters('L', new_params)
+
+        Parameters can only be set for lowland ('L') and highland ('H') landscape types.
+        See module for :py:class:`.Landscape` for valid parameters.
         """
         if landscape == 'L':
             Landscape.set_params({'f_max': {'Lowland': params['f_max']}})
         elif landscape == 'H':
             Landscape.set_params({'f_max': {'Highland': params['f_max']}})
         else:
-            raise ValueError('Feil input')
+            raise ValueError(f'Cannot specify parameters for landscape type {landscape}: '
+                             f'Provided landscape type must be in ["L", "H"]')
 
     def add_population(self, population):
         """Add population on island.
