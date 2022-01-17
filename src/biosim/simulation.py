@@ -62,7 +62,7 @@ class BioSim(BioSimParam):
         _initial_num_year: None or `int`
             How many years you simulate at once.
 
-            Provides opportunity to simulate in intervals with pauses.
+            Controls that the modulus between simulating years and visualizing years are equal to zero.
         _num_years: `int`
             Simulation duration in years
         hist_spec_pattern: `dict`
