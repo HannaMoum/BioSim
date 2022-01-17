@@ -124,7 +124,7 @@ def test_add_animals_IndexError(geogr_str, location):
     island = World(geogr_str)
     add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5}]}]
     with pytest.raises(IndexError):
-        island.add_population(add_pop)
+        island.add_population_in_location(add_pop)
 
 
 @pytest.mark.parametrize('location', [(2, 2), (2, 3)])
@@ -133,7 +133,7 @@ def test_add_animals_success(geogr_str, location):
     island = World(geogr_str)
     add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
                                          {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
-    island.add_population(add_pop)
+    island.add_population_in_location(add_pop)
     row, col = location
     adjust_row = row - 1
     adjust_col = col - 1
@@ -150,7 +150,7 @@ def test_get_property_map_population_size(geogr_str, function_call):
     island = World(geogr_str)
     add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
                                        {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
-    island.add_population(add_pop)
+    island.add_population_in_location(add_pop)
     species_map = island.get_property_map(function_call)
     zeros = sum(True for sub_array in species_map for number in sub_array if not number)
     row, col = species_map.shape
@@ -168,7 +168,7 @@ def test_get_property_map_objects(geogr_str, function_call, species):
     island = World(geogr_str)
     add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5},
                                        {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
-    island.add_population(add_pop)
+    island.add_population_in_location(add_pop)
     attributes = island.get_property_map_objects(function_call)
     nones = sum(True for sub_array in attributes for value in sub_array if not value)
     row, col = attributes.shape
@@ -185,7 +185,7 @@ def test_migration(mocker, geogr_str):
     island = World(geogr_str)
     add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5},
                                        {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
-    island.add_population(add_pop)
+    island.add_population_in_location(add_pop)
     island.do_migration()
 
     assert all([island.object_map[1, 2].population,
@@ -200,7 +200,7 @@ def test_migration_water(mocker, geogr_str, direction):
     mocker.patch('biosim.world.choice', return_value=direction)
     island = World(geogr_str)
     add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5}]}]
-    island.add_population(add_pop)
+    island.add_population_in_location(add_pop)
     island.do_migration()
 
     assert not all([island.object_map[1, 2].population,
@@ -223,7 +223,7 @@ def test_one_migration(mocker):
 
     island = World(geogr)
     add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5}]}]
-    island.add_population(add_pop)
+    island.add_population_in_location(add_pop)
     island.do_migration()
 
     assert all([not island.object_map[1, 1].population,
@@ -238,7 +238,7 @@ def test_no_migration(mocker, geogr_str):
 
     island = World(geogr_str)
     add_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 6, 'weight': 6.5}]}]
-    island.add_population(add_pop)
+    island.add_population_in_location(add_pop)
     island.do_migration()
 
     assert all([island.object_map[1, 1].population,
