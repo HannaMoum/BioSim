@@ -59,7 +59,9 @@ class Landscape:
 
     @property
     def landscape_type(self):
-        """The object's landscape type ({'L', 'H', 'D', 'W'}, read-only)."""
+        """The object's landscape type ({'L', 'H', 'D', 'W'}, read-only).
+
+        L: Lowland, H: Highland, D: Desert, W: Water."""
         return self._landscape_type
 
     @property
