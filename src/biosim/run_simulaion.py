@@ -1,13 +1,23 @@
+# TODO: Move to examples, or delete before delivery (wait until tuesday).
 import textwrap
 from biosim.simulation import BioSim
 import matplotlib.pyplot as plt
 from graphics import Graphics
 
-#from biosim.lowland import Landscape
 
 #plt.show()
 import numpy as np
 import seaborn as sns
+
+# import logging
+#
+# logger = logging.getLogger(__name__)
+# logger.setLevel(logging.INFO)
+#
+# file_handler = logging.FileHandler('logfile.log')
+# formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(name)s : %(message)s')
+# file_handler.setFormatter(formatter)
+# logger.addHandler(file_handler)
 
 if __name__ == '__main__':
     # plt.ion() Når du har skrudd av denne vil ikke figur-viduet dette sammen med en gang
@@ -52,6 +62,9 @@ if __name__ == '__main__':
                  # img_dir= 'C:/temp/BioSim',
                  # img_base='BioSim'
                  # )
+
+    # logger.debug('Test logging')
+    # logger.info('Test av infomelding')
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
     sim.set_animal_parameters('Carnivore', {'a_half': 70, 'phi_age': 0.5,
