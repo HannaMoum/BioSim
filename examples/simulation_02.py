@@ -41,5 +41,6 @@ if __name__ == '__main__':
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
                  vis_years=None)
-
+    sim.set_landscape_parameters('L', {'f_max': 800})
+    sim.set_animal_parameters('Herbivore', {'F': 20})
     sim.simulate(num_years=50)
