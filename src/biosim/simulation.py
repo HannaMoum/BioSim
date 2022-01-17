@@ -148,7 +148,7 @@ class BioSim(BioSimParam):
         self._vis_years = self._set_vis_years(vis_years)
         self._img_years = self._set_img_years(img_years, img_dir)
 
-    def _set_img_years(self, img_years: int, img_dir:int): # Endringer
+    def _set_img_years(self, img_years: int, img_dir: int):
         """Private setter method for img_years.
 
         If input provided, set img_years to input value,
@@ -299,7 +299,7 @@ class BioSim(BioSimParam):
 
         return True
 
-    def _validate_im_params(self, img_dir:str, img_base:str, img_fmt:str, img_years:int): #Endringer
+    def _validate_im_params(self, img_dir: str, img_base: str, img_fmt: str, img_years: int):
         """Private validation of provided image parameters.
 
         Parameters
