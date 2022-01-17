@@ -50,7 +50,7 @@ class BioSim(BioSimParam):
             String with beginning of file name for figures
         img_fmt: `str`, optional
             String with file type for figures, e.g. 'png'
-        img_year: `int`, optional
+        img_years: `int`, optional
             Years between visualizations saved to files (default: vis_years)
         log_file: `str`, optional
             If given, write animal counts to this file
