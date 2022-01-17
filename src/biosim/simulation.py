@@ -215,11 +215,9 @@ class BioSim(BioSimParam):
         """
         if isinstance(vis_years, int):
             if vis_years < 0:
-                raise ValueError('vis_years needs to be larger than 0 or None')
-        if isinstance(vis_years, str):
-            raise ValueError('vis_years must be of type int or None. Can not be of type str')
-        if isinstance(vis_years, float):
-            raise ValueError('vis_years must be of type int or None. Can not be of type float')
+                raise ValueError('vis_years needs to be larger than or equal to zero, or None')
+        if isinstance(vis_years, (str, float)):
+            raise ValueError('Invalid input was provided: vis_years must be a whole positive number or None.')
 
         return vis_years
 
