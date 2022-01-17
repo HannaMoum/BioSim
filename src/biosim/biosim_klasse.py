@@ -353,23 +353,30 @@ class BioSim(BioSimParam):
         """Number of animals per species on island (`dict`)."""
         return self._num_animals_per_species
 
-    def set_animal_parameters(self, species:str, params:dict):
+    def set_animal_parameters(self, species, params):
         """Set parameters for animal species.
 
         Parameters
         ----------
         species: {'Herbivore', 'Carnivore'}
-        params
+        params: `dict`
+            Parameter specification for species
 
-        Returns
-        -------
+        Examples
+        -----
+        Adjustment of the default parameters are done the following way:
+            >>> # Create dictionary for new parameters
+            >>> new_params = {'omega': 0.6, 'beta': 1, 'a_half': 35}
+            >>>
+            >>> # Create a simulation object with necessary input
+            >>> sim = BioSim(map_str, hist_specs=hist_specs)
+            >>>
+            >>> # Set new parameters
+            >>> sim.set_animal_parameters('Herbivore', new_params)
 
+        See module for :py:class:`.Animal` for valid parameters.
         """
-        """Set parameters for animal species.
 
-        :param species: String, name of animal species
-        :param params: Dict with valid parameter specification for species
-        """
         if species == 'Herbivore':
             Herbivore.set_params(params)
         if species == 'Carnivore':
