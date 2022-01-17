@@ -166,7 +166,7 @@ class BioSim(BioSimParam):
             else set to default value :py:attr:`.vis_years`.
         """
         if img_years < 0:
-            raise ValueError('img_years needs to be positive')
+            raise ValueError('input value img_years must be positive or equal to zero.')
         if img_years is None:
             img_years = self._vis_years
         if img_dir is None:
@@ -487,9 +487,17 @@ class BioSim(BioSimParam):
             raise FileNotFoundError(f'{self._img_dir} is empty. Need figures to create movie.')
 
     def simulate(self, num_years: int = 10):
+        """
 
-        # simulate er tricky fordi den skal kunne startes, stoppes, og deretter fortsette fra forrige kjøring.
-        # Start-stopp logikk
+        Parameters
+        ----------
+        num_years: `int`
+            Number of years to simulate.
+
+        Returns
+        -------
+
+        """
         if self._initial_num_year is None:
             self._initial_num_year = num_years
             self._num_years = num_years
