@@ -70,7 +70,9 @@ class Graphics(GraphicsParams):
 
 
     def _plot_island_map(self, ax:object)->object:
-        """ Plots the map of the island
+        """ Plots the map of the island, with the following color codes:
+        Lowland: lightgreen, Highland: darkgreen, Dessert: yellow and Water: blue.
+
         Parameters
         ----------
         ax: `object`
