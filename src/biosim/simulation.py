@@ -384,8 +384,11 @@ class BioSim(BioSimParam):
         """
         if species == 'Herbivore':
             Herbivore.set_params(params)
-        if species == 'Carnivore':
+        elif species == 'Carnivore':
             Carnivore.set_params(params)
+        else:
+            raise ValueError(f'Cannot specify parameters for animal species {species}: '
+                             f'Provided species must be in ["Herbivore", "Carnivore"]')
 
     def set_landscape_parameters(self, landscape, params):
         """
