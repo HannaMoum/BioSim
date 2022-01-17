@@ -62,16 +62,31 @@ def test_hist_spec_valid(map_str, hist_specs):
     boolean = sim._validate_hist_specs(hist_specs)
     assert boolean
 
-# todo: FIX
-def test_set_img_years_default(map_str, hist_specs):
-    """Test that img_years is set to default value when not else is requested."""
+
+def test_set_img_years_default_zero(map_str, hist_specs):
+    """Test that img_years is set to default value 0 when not required,
+    and no image directory is provided."""
     sim = BioSim(map_str, hist_specs=hist_specs)
+    assert sim._img_years == 0
+
+
+def test_set_img_years_default_vis(map_str, hist_specs):
+    """Test that img_years is set to default value vis_years, when required,
+    and image directory is provided"""
+    sim = BioSim(map_str,
+                 hist_specs=hist_specs,
+                 img_dir='C:\\temp\Biosim',
+                 img_base='Biosim')
     assert sim._img_years == sim._vis_years
 
-# TODO: FIX
+
 def test_set_img_years(map_str, hist_specs):
-    """Test that private setter method provides correct img_years value when defined."""
-    sim = BioSim(map_str, hist_specs=hist_specs, img_years=5)
+    """Test that private setter method provides correct img_years value when defined correctly."""
+    sim = BioSim(map_str,
+                 hist_specs=hist_specs,
+                 img_years=5,
+                 img_dir='C:\\temp\Biosim',
+                 img_base='Biosim')
     assert sim._img_years == 5
 
 
