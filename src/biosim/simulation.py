@@ -504,13 +504,15 @@ class BioSim(BioSimParam):
 
         logger.info('make_movie started')
 
-    def simulate(self, num_years: int = 10):
+    def simulate(self, num_years = 10):
         """
         Run simulation and gather information.
 
         Notes
         -----
-        The simulation takes all animals trough the :py:meth:`._annual_cycle`
+        The simulation takes all animals trough the :py:meth:`._annual_cycle`,
+        gathers data using :py:meth:`_collect_annual_data`, and sends requested data
+        to the :py:class:`.Graphics` module, performed by method :py:meth:`_do_annual_graphics`.
 
         Parameters
         ----------
@@ -563,7 +565,7 @@ class BioSim(BioSimParam):
         print()
 
     def _annual_cycle(self):
-        """All steps in annual cycle on the island"""
+        """Simulate one cycle of evolution on the island."""
         with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landscape = element.item()
