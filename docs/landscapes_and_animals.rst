@@ -70,3 +70,5 @@ option can be changed. Overview and explanation is to be found in table below:
 
 .. automodule:: biosim.animals
    :members:
+   :private-members:
+
