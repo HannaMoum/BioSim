@@ -31,6 +31,13 @@ def map_str():
     return "WWW\nWLW\nWWW"
 
 
+@pytest.fixture()
+def img_dir_base():
+    img_dir = 'C:\\temp\BioSim'
+    yield img_dir
+    shutil.rmtree(img_dir)
+
+
 def test_map_validation(map_str, hist_specs):
     """Test creation of World object if map input is valid."""
     sim = BioSim(map_str, hist_specs=hist_specs)
@@ -70,22 +77,22 @@ def test_set_img_years_default_zero(map_str, hist_specs):
     assert sim._img_years == 0
 
 
-def test_set_img_years_default_vis(map_str, hist_specs):
+def test_set_img_years_default_vis(map_str, hist_specs, img_dir_base):
     """Test that img_years is set to default value vis_years, when required,
     and image directory is provided"""
     sim = BioSim(map_str,
                  hist_specs=hist_specs,
-                 img_dir='C:\\temp\Biosim',
+                 img_dir=img_dir_base,
                  img_base='Biosim')
     assert sim._img_years == sim._vis_years
 
 
-def test_set_img_years(map_str, hist_specs):
+def test_set_img_years(map_str, hist_specs, img_dir_base):
     """Test that private setter method provides correct img_years value when defined correctly."""
     sim = BioSim(map_str,
                  hist_specs=hist_specs,
                  img_years=5,
-                 img_dir='C:\\temp\Biosim',
+                 img_dir=img_dir_base,
                  img_base='Biosim')
     assert sim._img_years == 5
 
@@ -137,17 +144,16 @@ def test_validate_im_params_unsupported_format(map_str, hist_specs):
                img_fmt=img_fmt)
 
 
-def test_validate_im_params_specified_values(map_str, hist_specs):
+def test_validate_im_params_specified_values(map_str, hist_specs, img_dir_base):
     """Test that correct values are saved in the image parameters when specified."""
-    img_dir = 'C:/temp/BioSimTester'
-    img_base = 'BioSimTester'
+    img_base = 'BioSim'
     img_fmt = 'jpg'
     sim = BioSim(map_str,
                  hist_specs=hist_specs,
-                 img_dir=img_dir,
+                 img_dir=img_dir_base,
                  img_base=img_base,
                  img_fmt=img_fmt)
-    assert all([sim._img_dir == img_dir,
+    assert all([sim._img_dir == img_dir_base,
                 sim._img_base == img_base,
                 sim._img_fmt == img_fmt])
 
@@ -169,6 +175,21 @@ def test_validate_im_params_valid(map_str, hist_specs):
     sim = BioSim(map_str, hist_specs=hist_specs)
     assert sim._validate_im_params
 
+
+def test_figure_saved_name(map_str, hist_specs, img_dir_base):
+    """Test that figures are saved during simulation"""
+    file_name = 'BioSim'
+    sim = BioSim(map_str,
+                 ini_pop=[],
+                 hist_specs=hist_specs,
+                 seed=1,
+                 img_dir=img_dir_base,
+                 img_base=file_name,
+                 img_fmt='png')
+
+    sim.simulate(2)
+    assert all([os.path.isfile('C:\\temp\BioSim\Biosim' + '_00000.png'),
+                os.path.isfile('C:\\temp\BioSim\Biosim' + '_00001.png')])
 
 def test_year_initial(map_str, hist_specs):
     """Test that parameter year is set to 0 before any simualtion."""
@@ -301,23 +322,20 @@ def test_add_population_none(map_str, hist_specs):
     assert sim.add_population(ini_pop) is None
 
 
-def test_make_movie(map_str, hist_specs):
+def test_make_movie(map_str, hist_specs, img_dir_base):
     """Test that no error rises when trying to make a movie with correctly provided information."""
-    img_dir = 'C:\\temp\BioSim'
     img_base = 'BioSim'
-    shutil.rmtree(img_dir)
     ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
-    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs, img_dir=img_dir, img_base=img_base)
+    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs, img_dir=img_dir_base, img_base=img_base)
     sim.simulate(10)
     assert not sim.make_movie()
 
 
-def test_make_movie_error(map_str, hist_specs):
+def test_make_movie_error(map_str, hist_specs, img_dir_base):
     """Test that error rises if directory is empty."""
-    img_dir = 'C:\\temp\BioSim'
     img_base = 'BioSim'
-    shutil.rmtree(img_dir)
     ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
-    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs, img_dir=img_dir, img_base=img_base)
+    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs, img_dir=img_dir_base, img_base=img_base)
     with pytest.raises(FileNotFoundError):
         sim.make_movie()
+
