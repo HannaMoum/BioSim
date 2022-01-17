@@ -37,7 +37,7 @@ class GraphicsParams:
 
         Returns
         -------
-        {0, 1, 2, 3}
+        {'0', '1', '2', '3'}
             Integer representing a landscape.
         """
         if value in self.codes_for_landscape_types:
@@ -93,13 +93,17 @@ class Graphics(GraphicsParams):
             self._img_years = img_years
 
     def _plot_island_map(self, ax: object) -> object:
-        """ Plots the map of the island, with the following color codes:
-        Lowland: lightgreen, Highland: darkgreen, Dessert: yellow and Water: blue.
+        """ Plot the map of the island.
+
+        Notes
+        ------
+        Color-codes for the map are:
+        Lowland: lightgreen, Highland: darkgreen, Desert: yellow, Water: blue.
 
         Parameters
         ----------
         ax: `object`
-            The axes for the plot
+            The axes to hold the plot
 
         Returns
         -------
@@ -136,12 +140,17 @@ class Graphics(GraphicsParams):
         return ax
 
     def _set_cmax_animals(self, cmax_animals: dict):
-        """
-        Setting the cmax values for each species, if given.
+        """Set cmax values for each species, if given.
+
         Parameters
         ----------
         cmax_animals: `dict`
-            {'Herbivore': 50, 'Carnivore': 20}
+            Dictionary specifying color-code limits for animal densities
+
+        Returns
+        -------
+        `bool`
+            True if :math:`\mathtt{cmax\_animals}` are unprovided.
         """
         if cmax_animals is None:
             return True
