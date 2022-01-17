@@ -165,14 +165,8 @@ def test_grassing_fodder_adjustment(terrain_letter, terrain):
     assert location_cell.fodder < Landscape.params['f_max'][terrain]
 
 
-@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland'), ('D', 'Desert')])
-def test_grassing_break_statement(terrain_letter, terrain):
-    # TODO: How?
-    pass
-
-
 def test_correct_eating_order():
-    """Test correct eating order."""  # TODO: Denne referer ikke til koden. Hvordan gjøre dette?
+    """Test correct eating order by implementing the same code and checking expected results."""
     first_eater = Herbivore(12.5, 10)
     second_eater = Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])
     third_eater = Herbivore(0, 3)
@@ -181,12 +175,13 @@ def test_correct_eating_order():
     location_cell = Landscape('L')
     location_cell.population += herbivores
 
-    sorted_herbivores = [herbivore for herbivore in sorted(location_cell.population, key=lambda x: x.fitness, reverse=True)]
+    sorted_herbivores = [herbivore for herbivore in
+                         sorted(location_cell.population, key=lambda x: x.fitness, reverse=True)]
 
     assert sorted_herbivores == [first_eater, second_eater, third_eater]
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_hunting_no_carnivores(terrain):
     """Test for correctly sorted updated herbivore population with the same amount of herbivores,
     when no carnivores are present."""
@@ -202,7 +197,7 @@ def test_hunting_no_carnivores(terrain):
     assert location_cell.herbivores == [first_prey, second_prey, third_prey]
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_hunting_no_killing(terrain):
     """Test for steady herbivore population, if no killing takes place.
     Parameter adjustments assures no killing (no hungry carnivores)."""
@@ -220,7 +215,7 @@ def test_hunting_no_killing(terrain):
     assert len(preys) == len(location_cell.herbivores)
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_hunting_only_killing(terrain):
     """Test for no herbivore population if all are killed during hunt."""
     Carnivore.set_params({'DeltaPhiMax': 0})
@@ -235,7 +230,7 @@ def test_hunting_only_killing(terrain):
     assert not location_cell.herbivores
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_all_giving_birth(mocker, terrain):
     """Test correct update of population if all animals give birth."""
     mocker.patch('biosim.animals.uniform', return_value=0)
@@ -254,7 +249,7 @@ def test_all_giving_birth(mocker, terrain):
                 len(location_cell.population) == 2 * (len(herb_pop) + len(carn_pop))])
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_no_giving_birth(mocker, terrain):
     """Test no update of population if no animals give birth."""
     mocker.patch('biosim.animals.uniform', return_value=1)
@@ -271,7 +266,7 @@ def test_no_giving_birth(mocker, terrain):
                 len(location_cell.population) == len(herb_pop) + len(carn_pop)])
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_aging(terrain):
     """Test that all animals in the landscape have lost weight and become older."""
     herb_pop = [Herbivore(12.5, 10) for _ in range(20)]
@@ -285,7 +280,7 @@ def test_aging(terrain):
         assert all([animal.age > 10, animal.weight < 12.5])
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_death_all(terrain):
     """Test no population left in landscape cell if all animals dies due to lack of weight."""
     herb_pop = [Herbivore(0, 10) for _ in range(20)]
@@ -298,7 +293,7 @@ def test_death_all(terrain):
     assert not all([landscape_cell.herbivores, landscape_cell.carnivores, landscape_cell.population])
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_no_death(terrain, mocker):
     """Test no change of population in landscape cell if all animals survive."""
     mocker.patch('biosim.animals.uniform', return_value=1)
@@ -325,7 +320,7 @@ def test_regrowth(terrain_letter, terrain):
     assert landscape_cell.fodder == Landscape.params['f_max'][terrain]
 
 
-@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])  # ! No water
+@pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_add_valid_animals(terrain):
     added_pop = [{'species': 'Herbivore', 'age': 10, 'weight': 12.5},
                  {'species': 'Carnivore', 'age': 10, 'weight': 12.5},
