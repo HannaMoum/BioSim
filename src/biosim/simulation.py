@@ -15,7 +15,6 @@ from biosim.world import World
 from biosim.graphics import Graphics
 
 
-
 @dataclass
 class BioSimParam:
     hist_spec_pattern = {'fitness': {'max': float, 'delta': int},
@@ -177,7 +176,7 @@ class BioSim(BioSimParam):
             img_years = self._vis_years
         return img_years
 
-    def _set_vis_years(self, vis_years: int)-> int:
+    def _set_vis_years(self, vis_years: int) -> int:
         """Private setter method for vis_years.
 
         Validates correct input.
@@ -199,7 +198,7 @@ class BioSim(BioSimParam):
         # TODO: Gjøre validering av vis_years. Må komme inn som 0, int eller None. Hvis det er en int så må den være 0 eller større.
         return vis_years
 
-    def _validate_island_map(self, island_map:str)-> bool:
+    def _validate_island_map(self, island_map: str) -> bool:
         """Validate input type island_map before sending to World class.
 
         Parameters
@@ -229,7 +228,7 @@ class BioSim(BioSimParam):
 
         return True
 
-    def _validate_hist_specs(self, hist_specs:dict)-> bool:
+    def _validate_hist_specs(self, hist_specs: dict) -> bool:
         """Private validation of provided input hist_specs.
 
         Parameters
@@ -266,7 +265,7 @@ class BioSim(BioSimParam):
         else:
             return True
 
-    def _validate_cmax_animals(self, cmax_animals:dict)-> bool:
+    def _validate_cmax_animals(self, cmax_animals: dict) -> bool:
         """Private validation of provided input cmax_animals.
 
         Parameters
@@ -292,7 +291,7 @@ class BioSim(BioSimParam):
 
         return True
 
-    def _validate_im_params(self, img_dir:str, img_base:str, img_fmt:str):
+    def _validate_im_params(self, img_dir: str, img_base: str, img_fmt: str):
         """Private validation of provided image parameters.
 
         Parameters
@@ -322,7 +321,7 @@ class BioSim(BioSimParam):
         if not any((
                 all((isinstance(img_dir, str), isinstance(img_base, str))),
                 all((img_dir is None, img_base is None))
-                )):
+        )):
             raise ValueError('Either both img_dir and img_base must specified or neither of them can be specified.')
         if img_dir is None:
             self._img_dir = self.default_img_dir
@@ -444,17 +443,7 @@ class BioSim(BioSimParam):
         :py:meth:`.add_population_in_location`
             Relationship
         """
-        """Validates input dict befor sending calling add_population method in
-        the world class
-        Initial_population looks like:
-
-        ini_pop = [{'loc': (3,4),
-        'pop': [{'species': 'Herbivore',
-                'age': 10, 'weight': 12.5},
-            {'species': 'Herbivore',
-                'age': 9, 'weight': 10.3}]}]
-        """
-        if not isinstance(population, list):
+        if not isinstance(population, (list, type(None))):
             raise TypeError('Explicitly added population must be provided as a list. '
                             'For more information see documentation.')
         if population:
@@ -489,7 +478,7 @@ class BioSim(BioSimParam):
         else:
             raise FileNotFoundError(f'{self._img_dir} is empty. Need figures to create movie.')
 
-    def simulate(self, num_years:int = 10):
+    def simulate(self, num_years: int = 10):
 
         # simulate er tricky fordi den skal kunne startes, stoppes, og deretter fortsette fra forrige kjøring.
         # Start-stopp logikk
@@ -498,7 +487,7 @@ class BioSim(BioSimParam):
             self._num_years = num_years
             start_loop = 0
         else:
-            start_loop = self.year #Fixed bug from self.year + 1
+            start_loop = self.year  # Fixed bug from self.year + 1
             self._num_years = self.year + num_years
 
         for current_year in range(start_loop, self._num_years):
@@ -511,7 +500,9 @@ class BioSim(BioSimParam):
                                              'Carnivore': self.population_map_carnivore.sum()}
             self._num_animals = self.population_map_herbivore.sum() + self.population_map_carnivore.sum()
 
-            print('\r',f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   Carnivores:{self.population_map_carnivore.sum()}', end ='')
+            print('\r',
+                  f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   Carnivores:{self.population_map_carnivore.sum()}',
+                  end='')
 
         print()
 
@@ -563,7 +554,7 @@ class BioSim(BioSimParam):
             if species is carnivore_object_map:
                 self.carnivore_age_weight_fitness = np.asarray(acc_list)
 
-    def _do_annual_graphics(self, current_year:int):
+    def _do_annual_graphics(self, current_year: int):
         # Graphics for the year
         if self._vis_years is not None:
             if self._vis_years > 0:
@@ -602,7 +593,3 @@ class BioSim(BioSimParam):
                                     self.herbivore_age_weight_fitness,
                                     self.carnivore_age_weight_fitness,
                                     pause, current_year, show, save)
-
-
-
-
