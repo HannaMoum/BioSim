@@ -40,12 +40,14 @@ Python > 3.8
 ##Further Development
 For further development the authors recommend:
 * optimizing the hierarchy structure
-* provide the Landscape class with one attribute for each animal's species
-population, rather than one for both. This should save some runningtime for the simulation.
 * investigate optimization possibilities in current code 
-to provide better efficiency.
+to provide better efficiency, such as:
+  * provide the Landscape class with one attribute for each animal's species
+population, rather than one for both. This should save some runningtime for the simulation.
+  * add lazy evalution for fitness calculations
 * fix bug: Attribute self.initial_num_year is only developed to control 
 the first simulation, and are not adjusted for further simualtion after a pause.
+
 
 ##Credits
 Projectcode developed and tested in a collaboration between Cassandra Hjortdahl and Hanna Lye Moum.
