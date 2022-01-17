@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 import seaborn as sns
 
-# pip install moviepy. Må pip installeres i environmentet du jobber i
 from moviepy.video.io.bindings import mplfig_to_npimage
 import moviepy.video.io.ImageSequenceClip
 
