@@ -13,6 +13,7 @@ def reset_params_default():
     Carnivore.set_params(Carnivore._default_params)
     Landscape.set_params(Landscape._default_params)
 
+
 @pytest.fixture()
 def hist_specs():
     hist_specs = {'fitness': {'max': 1.0, 'delta': 0.05},
@@ -243,5 +244,41 @@ def test_set_animal_parameters(map_str, hist_specs, species, species_str):
     assert all([species.params['omega'] == 0.6, species.params['beta'] == 1])
 
 
-def test_set_landscape_parameters(map_str, hist_specs):
-    pass
+def test_set_animal_parameters_invalid(map_str, hist_specs):
+    """Test that ValueError rises if wrongful species are provided."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    with pytest.raises(ValueError):
+        sim.set_animal_parameters('Penguin', {'omega': 0.6})
+
+
+@pytest.mark.parametrize('landscape, landscape_type', [('Lowland', 'L'), ('Highland', 'H')])
+def test_set_landscape_parameters_valid(map_str, hist_specs, landscape, landscape_type):
+    """Test that set_landscape_parameters provide expected results for valid landscape types."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    sim.set_landscape_parameters(landscape_type, {'f_max': 400})
+    assert Landscape.params['f_max'][landscape] == 400
+
+
+@pytest.mark.parametrize('landscape', ['D', 'W'])
+def test_set_landscape_parameters_invalid(map_str, hist_specs, landscape):
+    """Test that ValuError rises if invalid landscape type for parametersare given."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    with pytest.raises(ValueError):
+        sim.set_landscape_parameters(landscape, {'f_max': 400})
+
+
+@pytest.mark.parametrize('ini_pop', [
+    {'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'weight': 7}]},
+    123,
+    'abc'])
+def test_add_population_invalid_type(map_str, hist_specs, ini_pop):
+    """Test that ValueError rises if population added is not in a list."""
+    with pytest.raises(TypeError):
+        BioSim(map_str, ini_pop, hist_specs=hist_specs)
+
+
+def test_add_population_none(map_str, hist_specs):
+    """Test that None is returned when empty list is provided as initial population."""
+    ini_pop = []
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    assert sim.add_population(ini_pop) is None
