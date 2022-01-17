@@ -347,12 +347,22 @@ def test_make_movie_error(map_str, hist_specs, img_dir_base):
         sim.make_movie()
 
 
-def test_simulation_modulus_error(map_str, hist_specs):
+def test_simulation_modulus_error_first_sim(map_str, hist_specs):
     """Test that ValueError rises if the modulus between vis_years and number
     of years simulating is different from zero."""
     sim = BioSim(map_str,
                  hist_specs=hist_specs,
                  vis_years=8)
+    with pytest.raises(ValueError):
+        sim.simulate(10)
+
+
+def test_simulation_modulus_error_second_sim(map_str, hist_specs):
+    """Test that ValuError rises if modulus is incorrect during second simulation."""
+    sim = BioSim(map_str,
+                 hist_specs=hist_specs,
+                 vis_years=8)
+    sim.simulate(8)
     with pytest.raises(ValueError):
         sim.simulate(10)
 
