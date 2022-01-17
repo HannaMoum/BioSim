@@ -45,7 +45,8 @@ to provide better efficiency, such as:
   * provide the Landscape class with one attribute for each animal's species
 population, rather than one for both. This should save some runtime for the simulation.
   * opportunities to make the graphics faster.
-
+* Fix bug concerning log_file. In current version log_file is created
+despite any input from the user.
 
 ##Credits
 Projectcode developed and tested in a collaboration between Cassandra Hjortdahl and Hanna Lye Moum.
