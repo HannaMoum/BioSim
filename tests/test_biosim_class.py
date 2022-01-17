@@ -233,6 +233,12 @@ def test_num_animals_after_sim(map_str, hist_specs, mocker):
                     sim.num_animals_per_species['Carnivore'] == 0])
 
 
+@pytest.mark.parametrize('species, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
+def test_set_herbivore_parameters(map_str, hist_specs, species, species_str):
+    """Test that set_animal_parameters for all subspecies provide expected results."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    sim.set_animal_parameters(species_str, {'omega': 0.6, 'beta': 1})
+    assert all([species.params['omega'] == 0.6, species.params['beta'] == 1])
 
 
 
