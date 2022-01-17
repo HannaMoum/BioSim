@@ -109,6 +109,15 @@ def test_set_vis_years(map_str, hist_specs):
     assert sim._vis_years == 5
 
 
+@pytest.mark.parametrize('invalid_vis', [-5, 5.7, 'string'])
+def test_set_vis_years_invalid(map_str, hist_specs, invalid_vis):
+    """Test that ValueError rises if invalid values for vis_years are provided as input."""
+    with pytest.raises(ValueError):
+        BioSim(map_str,
+               hist_specs=hist_specs,
+               vis_years=invalid_vis)
+
+
 @pytest.mark.parametrize('cmax', [None, {'Herbivore': 40, 'Carnivore': 10}])
 def test_cmax_animals_validation_true(map_str, hist_specs, cmax):
     """Test that validation of cmax goes trough when provided with valid options."""
@@ -335,7 +344,7 @@ def test_make_movie(map_str, hist_specs, img_dir_base):
                  img_years=1)
     sim.simulate(10)
     sim.make_movie()
-    assert os.path.isfile('C:\\temp\BioSimT\BioSim_video.mp4')
+    assert os.path.isfile('C:\\temp\BioSimTest\BioSim_video.mp4')
 
 
 def test_make_movie_error(map_str, hist_specs, img_dir_base):
