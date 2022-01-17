@@ -323,7 +323,7 @@ class BioSim(BioSimParam):
             raise ValueError('Either both img_dir and img_base must specified or neither of them can be specified.')
 
         if all((img_dir is None, img_years is not None)):
-            print('img_dir and img_years not given. No files will be saved.')
+            print('image directory (img_dir) not given. No files will be saved.')
 
         if img_fmt is None:
             self._img_fmt = self.default_img_fmt
