@@ -321,10 +321,9 @@ class BioSim(BioSimParam):
                 all((img_dir is None, img_base is None))
         )):
             raise ValueError('Either both img_dir and img_base must specified or neither of them can be specified.')
+
         if all((img_dir is None, img_years is not None)):
-            print('img_dir and img_years not given. No files will be saved.')
-            # Raiser ikke valueerror, fordi da stopper hele programmet.
-            # Bedre å bare gi beskjed om at filer ikke vil lagres, men fortsatt vises
+            print('image directory (img_dir) not given. No files will be saved.')
 
         if img_fmt is None:
             self._img_fmt = self.default_img_fmt
@@ -332,6 +331,7 @@ class BioSim(BioSimParam):
             if img_fmt not in ['jpeg', 'jpg', 'png', 'tif', 'tiff']:
                 raise ValueError(f'Image format {img_fmt} not supported. '
                                  f'Valid formats are: jpeg, jpg, png, tif, tiff')
+
         if img_dir is not None:
             if not os.path.isdir(self._img_dir):
                 try:
@@ -427,7 +427,7 @@ class BioSim(BioSimParam):
 
         Parameters
         ----------
-        population: `list` of `dict
+        population: `list` of `dict`
             Population of animals to be placed in specified locations on the island.
 
         Returns
@@ -439,8 +439,8 @@ class BioSim(BioSimParam):
 
         See Also
         --------
-        :py:meth:`.add_population_in_location`
-            Relationship
+        :py:class:`.BioSim`: for correct making of :math:`\mathtt{population}` (see parameter :math:`\mathtt{ini\_pop}`)
+        :py:meth:`.add_population_in_location`: Relationship
         """
         if not isinstance(population, (list, type(None))):
             raise TypeError('Explicitly added population must be provided as a list. '
