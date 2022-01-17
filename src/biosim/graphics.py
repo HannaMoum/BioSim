@@ -1,15 +1,14 @@
 import os
 from dataclasses import dataclass
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import seaborn as sns
-
-from biosim.base_logger import logger
-
 from moviepy.video.io.bindings import mplfig_to_npimage
 import moviepy.video.io.ImageSequenceClip
+from biosim.base_logger import logger
+
+
 
 
 @dataclass
