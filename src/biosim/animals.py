@@ -239,8 +239,8 @@ class Animal:
         miscarriage = birth_weight < 0
 
         maternal_health = self.weight > birth_weight * self.params['xi']
-
         if all((fertilization, reached_puberty, maternal_health, not miscarriage)):
+
             return birth_weight
 
         return False
