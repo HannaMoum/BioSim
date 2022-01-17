@@ -165,7 +165,8 @@ class BioSim(BioSimParam):
             If input provided, set img_years to input value,
             else set to default value :py:attr:`.vis_years`.
         """
-        # TODO: Burde også teste for negative verdier, andre datatyper.
+        if img_years < 0:
+            raise ValueError('img_years needs to be positive')
         if img_years is None:
             img_years = self._vis_years
         if img_dir is None:
