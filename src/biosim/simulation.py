@@ -39,7 +39,7 @@ class BioSim(BioSimParam):
         ymax_animals: `int` or `float`, optional
             Number specifying y-axis limit for graph showing animal numbers
         cmax_animals: `dict`, optional
-            Dict specifying color-code limits for animal densities
+            Dictionary specifying color-code limits for animal densities
         hist_specs: `dict`, optional
             Specifications for histograms, see Notes
         img_dir: `str` optional
@@ -104,6 +104,10 @@ class BioSim(BioSimParam):
         given, e.g.,
             >>> {'weight': {'max': 80, 'delta': 2}, 'fitness': {'max': 1.0, 'delta': 0.05}}
         Permitted properties are 'weight', 'age' and 'fitness'.
+
+        Valid specification of :math:`\mathtt{cmax\_animals}` are as following:
+            >>> #Provide cmax as a dictionary with one or both keys
+            >>> {'Herbivore': 50, 'Carnivore': 20}
 
         :math:`\mathtt{img\_dir}` and :math:`\mathtt{img\_base}` must either both be None or both be strings.
 
