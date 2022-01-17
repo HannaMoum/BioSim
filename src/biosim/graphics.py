@@ -67,6 +67,7 @@ class Graphics(GraphicsParams):
         else:
             self._img_years = img_years
 
+
     def _plot_island_map(self, ax:object)->object:
         """ Plots the map of the island
         Parameters
@@ -79,6 +80,16 @@ class Graphics(GraphicsParams):
         ax: `object`
             The axes with the plot
         """
+        # # ('blue', 'darkgreen', 'lightgreen', 'yellow')
+        colormap = ['blue']
+        if 'L' in self._base_map:
+            colormap.append('darkgreen')
+        if 'H' in self._base_map:
+            colormap.append('lightgreen')
+        if 'D' in self._base_map:
+            colormap.append('yellow')
+        self.island_map_colors = tuple(colormap)
+
         # Konveterer en numpy array med bokstaver (str) til en numpy array med tall 0, 1, 2 og 3.
         island_map_plot = np.copy(self._base_map)
         # Gjør det mulig at fx kan benyttes celle for celle.
