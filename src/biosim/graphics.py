@@ -103,12 +103,12 @@ class Graphics(GraphicsParams):
         Parameters
         ----------
         ax: `object`
-            The axes to hold the plot
+            Axes to hold the plot
 
         Returns
         -------
         ax: `object`
-            The axes with the plot
+            Axes with the plot
         """
         colormap = ['blue']
         if 'L' in self._base_map:
@@ -198,21 +198,21 @@ class Graphics(GraphicsParams):
 
     def _plot_population_size(self, herb_data: object, carn_data: object, ax: object) -> object:
         """
-        Plotting the population size of the herbivores and carnivores.
+        Plot population size of herbivores and carnivores.
 
         Parameters
         ----------
-        herb_data: `np array`
-            One dimensional array containing population size for each year, for the herbivores
-        carn_data: `np array`
-            One dimensional array containing population size for each year, for the carnivores
+        herb_data: `ndarray`
+            One dimensional array containing the herbivores' population size for all simulated years.
+        carn_data: `ndarray`
+            One dimensional array containing the carnivores' population size for all simulated years.
         ax: `object`
-            The axes for the plot
+            Axes to hold the plot
 
         Returns
         -------
         ax: `object`
-            The axes with the population size plot for both populations
+            Axes with population size plot for both herbivores and carnivores.
         """
         years = np.asarray([x for x in range(1, len(herb_data) + 1)])
         ax.plot(years, herb_data, color='green', label='Herbivore')
@@ -360,7 +360,7 @@ class Graphics(GraphicsParams):
         Returns
         -------
         fig: `object`
-            The figure containing the different axes.
+            Figure containing the different axes.
         """
         plot_year = year
 
