@@ -113,8 +113,13 @@ class Graphics(GraphicsParams):
         return ax
 
     def _set_cmax_animals(self, cmax_animals: dict):
-        """{'Herbivore': 50, 'Carnivore': 20}"""
-
+        """
+        Setting the cmax values for each species, if given.
+        Parameters
+        ----------
+        cmax_animals: `dict`
+            {'Herbivore': 50, 'Carnivore': 20}
+        """
         if cmax_animals is None:
             return True
 
