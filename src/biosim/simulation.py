@@ -454,6 +454,9 @@ class BioSim(BioSimParam):
             {'species': 'Herbivore',
                 'age': 9, 'weight': 10.3}]}]
         """
+        if not isinstance(population, list):
+            raise TypeError('Explicitly added population must be provided as a list. '
+                            'For more information see documentation.')
         if population:
             self.island.add_population_in_location(population)
             num_animals, num_herbs, num_carns = 0, 0, 0
