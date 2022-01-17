@@ -75,6 +75,12 @@ def test_set_img_years(map_str, hist_specs):
     assert sim._img_years == 5
 
 
+def test_set_img_years_error(map_str, hist_specs):
+    """Test that private setter method provides errormessage when invalid input is given."""
+    with pytest.raises(ValueError):
+        BioSim(map_str, hist_specs=hist_specs, img_years=-5)
+
+
 def test_set_vis_years(map_str, hist_specs):
     """Test that private setter method provides correct vis_years value."""
     sim = BioSim(map_str, hist_specs=hist_specs, vis_years=5)
