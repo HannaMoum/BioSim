@@ -144,6 +144,12 @@ def test_validate_im_params_inconsistent(map_str, hist_specs, img_dir, img_base)
                img_base=img_base)
 
 
+def test_validate_im_params_default_img_fmt(map_str, hist_specs):
+    """Test that img_fmt is set to default value when not provided by user."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    assert sim._img_fmt == sim.default_img_fmt
+
+
 def test_validate_im_params_unsupported_format(map_str, hist_specs):
     """Test that ValueError rises of unsupported image format is provided."""
     img_fmt = 'txt'
