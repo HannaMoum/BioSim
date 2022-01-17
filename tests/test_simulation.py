@@ -250,5 +250,17 @@ def test_set_animal_parameters_invalid(map_str, hist_specs):
         sim.set_animal_parameters('Penguin', {'omega': 0.6})
 
 
-def test_set_landscape_parameters(map_str, hist_specs):
-    pass
+@pytest.mark.parametrize('landscape, landscape_type', [('Lowland', 'L'), ('Highland', 'H')])
+def test_set_landscape_parameters_valid(map_str, hist_specs, landscape, landscape_type):
+    """Test that set_landscape_parameters provide expected results for valid landscape types."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    sim.set_landscape_parameters(landscape_type, {'f_max': 400})
+    assert Landscape.params['f_max'][landscape] == 400
+
+
+@pytest.mark.parametrize('landscape', ['D', 'W'])
+def test_set_landscape_parameters_invalid(map_str, hist_specs, landscape):
+    """Test that ValuError rises if invalid landscape type for parametersare given."""
+    sim = BioSim(map_str, hist_specs=hist_specs)
+    with pytest.raises(ValueError):
+        sim.set_landscape_parameters(landscape, {'f_max': 400})
