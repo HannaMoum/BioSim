@@ -346,3 +346,10 @@ def test_make_movie_error(map_str, hist_specs, img_dir_base):
     with pytest.raises(FileNotFoundError):
         sim.make_movie()
 
+
+def test_simulation_modulus_error(map_str, hist_specs):
+    sim = BioSim(map_str,
+                 hist_specs=hist_specs,
+                 vis_years=8)
+    with pytest.raises(ValueError):
+        sim.simulate(10)
