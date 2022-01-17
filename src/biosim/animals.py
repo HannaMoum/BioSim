@@ -142,6 +142,7 @@ class Animal:
         fitness: `float`
             The animal's fitness
         """
+
         def q(sgn, x, x_half, phi):
             return 1 / (1 + math.exp(sgn * phi * (x - x_half)))
 
@@ -253,7 +254,6 @@ class Animal:
 
         maternal_health = self.weight > birth_weight * self.params['xi']
         if all((fertilization, reached_puberty, maternal_health, not miscarriage)):
-
             return birth_weight
 
         return False
@@ -278,7 +278,7 @@ class Animal:
         """
         birth_weight = self.probability_to_give_birth(number_of_animals)
 
-        if birth_weight:  # TODO: Optimization possibilities
+        if birth_weight:
             if species == 'Herbivore':
                 newborn = Herbivore(birth_weight)
             if species == 'Carnivore':
@@ -389,7 +389,8 @@ class Carnivore(Animal):
         .. math::
             p = \\begin{cases}
                 0  & if  \Phi_{carn} {\\leq} \Phi_{herb}
-                \\\ \\frac{\Phi_{carn} - \Phi_{herb}}{\Delta\Phi_{max}} & if 0 < \Phi_{carn}-\Phi_{herb} <\Delta\Phi_{max}
+                \\\ \\frac{\Phi_{carn} - \Phi_{herb}}{\Delta\Phi_{max}} & if 0 < \Phi_{carn}-\Phi_{herb}
+                <\Delta\Phi_{max}
                 \\\ 1 & otherwise
             \\end{cases}
 
