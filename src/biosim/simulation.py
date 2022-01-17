@@ -22,8 +22,6 @@ class BioSimParam:
                          'age': {'max': float, 'delta': int},
                          'weight': {'max': float, 'delta': int}}
 
-    default_img_fmt: str = 'png'
-
 
 class BioSim(BioSimParam):
     """Define and perform a simulation.
@@ -352,12 +350,9 @@ class BioSim(BioSimParam):
         if all((img_dir is None, img_years is not None)):
             print('image directory (img_dir) not given. No files will be saved.')
 
-        if img_fmt is None:
-            self._img_fmt = self.default_img_fmt
-        else:
-            if img_fmt not in ['jpeg', 'jpg', 'png', 'tif', 'tiff']:
-                raise ValueError(f'Image format {img_fmt} not supported. '
-                                 f'Valid formats are: jpeg, jpg, png, tif, tiff')
+        if img_fmt not in ['jpeg', 'jpg', 'png', 'tif', 'tiff']:
+            raise ValueError(f'Image format {img_fmt} not supported. '
+                             f'Valid formats are: jpeg, jpg, png, tif, tiff')
 
         if img_dir is not None:
             if not os.path.isdir(self._img_dir):
