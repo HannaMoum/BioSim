@@ -33,7 +33,7 @@ def map_str():
 
 @pytest.fixture()
 def img_dir_base():
-    img_dir = 'C:\\temp\BioSim'
+    img_dir = 'C:\\temp\BioSimTest'
     yield img_dir
     shutil.rmtree(img_dir)
 
@@ -188,8 +188,8 @@ def test_figure_saved_name(map_str, hist_specs, img_dir_base):
                  img_fmt='png')
 
     sim.simulate(2)
-    assert all([os.path.isfile('C:\\temp\BioSim\Biosim' + '_00000.png'),
-                os.path.isfile('C:\\temp\BioSim\Biosim' + '_00001.png')])
+    assert all([os.path.isfile('C:\\temp\BioSimTest\Biosim' + '_00000.png'),
+                os.path.isfile('C:\\temp\BioSimTest\Biosim' + '_00001.png')])
 
 def test_year_initial(map_str, hist_specs):
     """Test that parameter year is set to 0 before any simualtion."""
@@ -326,9 +326,16 @@ def test_make_movie(map_str, hist_specs, img_dir_base):
     """Test that no error rises when trying to make a movie with correctly provided information."""
     img_base = 'BioSim'
     ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
-    sim = BioSim(map_str, ini_pop, hist_specs=hist_specs, img_dir=img_dir_base, img_base=img_base)
+    sim = BioSim(map_str,
+                 ini_pop,
+                 hist_specs=hist_specs,
+                 img_dir=img_dir_base,
+                 img_base=img_base,
+                 vis_years=10,
+                 img_years=1)
     sim.simulate(10)
-    assert not sim.make_movie()
+    sim.make_movie()
+    assert os.path.isfile('C:\\temp\BioSimT\BioSim_video.mp4')
 
 
 def test_make_movie_error(map_str, hist_specs, img_dir_base):
