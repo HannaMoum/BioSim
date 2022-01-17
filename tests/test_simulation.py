@@ -137,15 +137,6 @@ def test_validate_im_params_unsupported_format(map_str, hist_specs):
                img_fmt=img_fmt)
 
 
-# todo: FIX
-def test_validate_im_params_default_values(map_str, hist_specs):
-    """Test that default values are provided if image parameters are unspecified from user."""
-    sim = BioSim(map_str, hist_specs=hist_specs)
-    assert all([sim._img_dir == sim.default_img_dir,
-                sim._img_base == sim.default_img_base,
-                sim._img_fmt == sim.default_img_fmt])
-
-
 def test_validate_im_params_specified_values(map_str, hist_specs):
     """Test that correct values are saved in the image parameters when specified."""
     img_dir = 'C:/temp/BioSimTester'
