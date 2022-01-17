@@ -120,7 +120,7 @@ class BioSim(BioSimParam):
 
         # Controlling simulate procedure
         self._initial_num_year = None
-        self._num_years = 0  # Duration of sim
+        self._num_years = 0
 
         # Generating data
         self.population_map_herbivore = np.empty(())
@@ -613,9 +613,15 @@ class BioSim(BioSimParam):
             if species is carnivore_object_map:
                 self.carnivore_age_weight_fitness = np.asarray(acc_list)
 
-    def _do_annual_graphics(self, current_year:int): # Endret
-        # Graphics for the year
+    def _do_annual_graphics(self, current_year):
+        """Decide how the current year's graphics shall be provided,
+        and send data to :py:class:`.Graphics`.
 
+        Parameters
+        ----------
+        current_year: `int`
+            Current year being simulated
+        """
         pause = 0.2
         show = False
         save = False
@@ -623,11 +629,11 @@ class BioSim(BioSimParam):
         if self._vis_years == 0:
             show = False
         elif self._vis_years is None:
-            if (current_year + 1) == self._num_years: # Endret med +1
+            if (current_year + 1) == self._num_years:
                 pause = 3
                 show = True
         elif self._vis_years >= 1:
-            if (current_year + 1) % self._vis_years == 0: # Endret med +1
+            if (current_year + 1) % self._vis_years == 0:
                 pause = 1 / self._vis_years  # TODO: Finn en pause basert på antall år som simuleres og intervall mellom bilder.
                 show = True
 
