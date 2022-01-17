@@ -335,34 +335,36 @@ class Graphics(GraphicsParams):
 
         return ax_age, ax_weight, ax_fitness
 
-    def _make_grid(self, heatmap_data_herbivore: object, heatmap_data_carnivore: object,
-                   population_size_herbivore: object, population_size_carnivore: object,
-                   histogram_data_herbivore: object, histogram_data_carnivore: object,
+    def _make_grid(self, heatmap_data_herbivore: object,
+                   heatmap_data_carnivore: object,
+                   population_size_herbivore: object,
+                   population_size_carnivore: object,
+                   histogram_data_herbivore: object,
+                   histogram_data_carnivore: object,
                    year: int):
-        """
-        Making the grid with the different plots.
+        """Make grid with different plots.
 
         Parameters
         ----------
         heatmap_data_herbivore: `object`
-            np array containing data for every location for the herbivores
+            Array containing population data for herbivores in every location.
         heatmap_data_carnivore: `object`
-            np array containing data for every location for the carnivores
+            Array containing population data for carnivores in every location.
         population_size_herbivore: `object`
-            One dimensional array containing population size for each year, for the herbivores
+            One dimensional array containing the herbivores' population size for all simulated years.
         population_size_carnivore: `object`
-            One dimensional array containing population size for each year, for the carnivores
+            One dimensional array containing the carnivores' population size for all simulated years.
         histogram_data_herbivore: `object`
-            np array with one column per property, and one row per herbivore
+            Array with one column per property, and one row per herbivore
         histogram_data_carnivore: `object`
-            np array with one column per property, and one row per carnivore
+            Array with one column per property, and one row per carnivore
         year: `int`
             Specifying the year being displayed in the grid
 
         Returns
         -------
         fig: `object`
-            Figure containing the different axes.
+            Figure containing different axes with plots.
         """
         plot_year = year
 
