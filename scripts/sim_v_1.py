@@ -1,3 +1,4 @@
+# TODO: Delete this file before delivery
 """ Simulating only herbivores and lowland
 """
 from biosim.animals import Herbivore
