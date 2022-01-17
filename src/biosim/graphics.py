@@ -68,9 +68,16 @@ class Graphics(GraphicsParams):
             self._img_years = img_years
 
     def _plot_island_map(self, ax:object)->object:
-        """
-        Lager numpy array (kartet) som brukes for å plotte verdenskartet.
-        Plotter verdenskartet
+        """ Plots the map of the island
+        Parameters
+        ----------
+        ax: `object`
+            The axes for the plot
+
+        Returns
+        -------
+        ax: `object`
+            The axes with the plot
         """
         # Konveterer en numpy array med bokstaver (str) til en numpy array med tall 0, 1, 2 og 3.
         island_map_plot = np.copy(self._base_map)
