@@ -1,8 +1,9 @@
 import pytest
-from biosim.biosim_klasse import BioSim, BioSimParam
+from biosim.biosim_klasse import BioSim
 from biosim.world import World
 from biosim.animals import Herbivore, Carnivore
-import os
+from biosim.landscape import Landscape
+
 
 @pytest.fixture(autouse=True)
 def reset_params_default():
@@ -10,6 +11,7 @@ def reset_params_default():
     yield
     Herbivore.set_params(Herbivore._default_params)
     Carnivore.set_params(Carnivore._default_params)
+    Landscape.set_params(Landscape._default_params)
 
 @pytest.fixture()
 def hist_specs():
@@ -234,11 +236,12 @@ def test_num_animals_after_sim(map_str, hist_specs, mocker):
 
 
 @pytest.mark.parametrize('species, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
-def test_set_herbivore_parameters(map_str, hist_specs, species, species_str):
+def test_set_animal_parameters(map_str, hist_specs, species, species_str):
     """Test that set_animal_parameters for all subspecies provide expected results."""
     sim = BioSim(map_str, hist_specs=hist_specs)
     sim.set_animal_parameters(species_str, {'omega': 0.6, 'beta': 1})
     assert all([species.params['omega'] == 0.6, species.params['beta'] == 1])
 
 
-
+def test_set_landscape_parameters(map_str, hist_specs):
+    pass
