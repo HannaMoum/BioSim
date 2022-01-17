@@ -508,14 +508,14 @@ class BioSim(BioSimParam):
         """
         Run simulation and gather information.
 
+        Notes
+        -----
+        The simulation takes all animals trough the :py:meth:`._annual_cycle`
+
         Parameters
         ----------
         num_years: `int`
             Number of years to simulate.
-
-        Returns
-        -------
-
         """
         logger.info('Simulation started')
 
@@ -582,8 +582,13 @@ class BioSim(BioSimParam):
                     landscape.do_death()
 
     def _collect_annual_data(self):
-        # Data for every year. Her genereres data for hvert år.
+        """Generate data for each year simulated
 
+        Notes
+        -----
+        Generate data for heatmaps, population size and histograms
+
+        """
         # Data for heatmaps
         self.population_map_herbivore = self.island.get_property_map('v_size_herb_pop')
         self.population_map_carnivore = self.island.get_property_map('v_size_carn_pop')
@@ -603,7 +608,7 @@ class BioSim(BioSimParam):
             with np.nditer(species, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     list_on_location = element.item()
-                    if type(list_on_location) == list:
+                    if list_on_location:
                         acc_list += list_on_location
             if species is herbivore_object_map:
                 self.herbivore_age_weight_fitness = np.asarray(acc_list)
