@@ -1,5 +1,9 @@
 """Implements a complete simulation"""
 
+# The material in this file is licensed under the BSD 3-clause license
+# https://opensource.org/licenses/BSD-3-Clause
+# (C) Copyright 2021 Hans Ekkehard Plesser / NMBU
+
 import numpy as np
 import random
 import os
@@ -9,6 +13,7 @@ from biosim.animals import Carnivore
 from biosim.landscape import Landscape
 from biosim.world import World
 from biosim.graphics import Graphics
+
 
 
 @dataclass
