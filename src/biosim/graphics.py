@@ -14,16 +14,16 @@ from biosim.base_logger import logger
 @dataclass
 class GraphicsParams:
     """Provide default parameters for class :py:class:`.Graphics`."""
-    ymax_animals: int
+    #ymax_animals: int  # Number specifying y-axis limit for graph showing animal numbers
     cmax_animals_herbivore: int = 50  #: maximum color-code value for herbivore densities
     cmax_animals_carnivore: int = 50  #: maximum color-code value for carnivore densities
 
-    age_max: float = 60
-    age_delta: float = 2
-    weight_max: float = 60
-    weight_delta: float = 2
-    fitness_max: float = 1
-    fitness_delta: float = 0.05
+    age_max: float = 60  #: Maximum value for age histogram
+    age_delta: float = 2  #: Bin width for age histogram
+    weight_max: float = 60  #: Maximum value for weight histogram
+    weight_delta: float = 2  #: Bin width for weight histogram
+    fitness_max: float = 1  #: Maximum value for fitness histogram
+    fitness_delta: float = 0.05  #: Bin width for fitness histogram
 
     codes_for_landscape_types: str = 'WLHD'
     plot_values_for_landscape_types: str = '0123'
