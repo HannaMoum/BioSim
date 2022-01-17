@@ -508,14 +508,14 @@ class BioSim(BioSimParam):
             self._num_years = num_years
             start_loop = 0
         else:
-            #self._initial_num_year = num_years
+            self._initial_num_year = num_years
             start_loop = self.year
             self._num_years = self.year + num_years
 
-        # if self._vis_years is not None:
-        #     if self._vis_years > 0:
-        #         if self._initial_num_year % self._vis_years != 0:
-        #             raise ValueError('num_years must be multiple of vis_years')
+        if self._vis_years is not None:
+            if self._vis_years > 0:
+                if self._initial_num_year % self._vis_years != 0:
+                    raise ValueError('num_years must be multiple of vis_years')
 
         for current_year in range(start_loop, self._num_years):
             self._year += 1
@@ -583,10 +583,7 @@ class BioSim(BioSimParam):
 
     def _do_annual_graphics(self, current_year:int): # Endret
         # Graphics for the year
-        if self._vis_years is not None:
-            if self._vis_years > 0:
-                if self._initial_num_year % self._vis_years != 0:
-                    raise ValueError('num_years must be multiple of vis_years')
+
         pause = 0.2
         show = False
         save = False
