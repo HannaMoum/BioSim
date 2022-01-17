@@ -51,7 +51,7 @@ class BioSim(BioSimParam):
         img_years: `int`, optional
             Years between visualizations saved to files (default: vis_years)
         log_file: `str`, optional
-            If given, write animal counts to this file
+            See Notes
 
         Attributes
         ----------
@@ -111,6 +111,8 @@ class BioSim(BioSimParam):
 
         :math:`\mathtt{img\_dir}` and :math:`\mathtt{img\_base}` must either both be None or both be strings.
 
+        :math:`\mathtt{log\_file}` is created under the biosim repository whether input is given or not.
+        Input has no affection to this.
         """
 
     def __init__(self, island_map, ini_pop=None, seed=None,
