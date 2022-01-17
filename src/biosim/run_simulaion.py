@@ -50,7 +50,7 @@ if __name__ == '__main__':
                  img_dir='C:/temp/BioSim/figs',
                  img_base='BioSim',
                  img_fmt='png',
-                 img_years=1
+                 img_years=None
                  )
 
     sim.set_animal_parameters('Herbivore', {'zeta': 3.2, 'xi': 1.8})
