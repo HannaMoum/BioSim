@@ -449,9 +449,7 @@ class Graphics(GraphicsParams):
         plt.close(fig)
 
     def make_movie_from_files(self):
-        """
-        Making movie in mp4 format from saved files.
-        """
+        """Make movie in mp4 format from saved files of figures."""
         fps = 1
         image_files = [os.path.join(self.img_dir, img)
                        for img in os.listdir(self.img_dir)
