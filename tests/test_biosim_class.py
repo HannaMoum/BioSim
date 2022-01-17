@@ -217,7 +217,7 @@ def test_num_animals_per_species_added(map_str, hist_specs):
 def test_num_animals_after_sim(map_str, hist_specs, mocker):
     """Test expected number of animals after simulation of one year,
     providing birth happens."""
-    mocker.patch('biosim.animals.uniform', return_value=0)
+    mocker.patch('biosim.animals.min', return_value=1)
     Herbivore.set_params({'xi': 0, 'zeta': 0})
     ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 7, 'weight': 16},
                                        {'species': 'Herbivore', 'age': 7, 'weight': 16}]}]
