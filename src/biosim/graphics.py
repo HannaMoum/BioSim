@@ -137,11 +137,10 @@ class Graphics(GraphicsParams):
         ----------
         heat_map_data: `np array`
             np array containing data for every location
-
         species: `str`
             Specifying the species for the plot
-
         ax: `object`
+            The axes for the plot
 
         Returns
         -------
@@ -167,6 +166,23 @@ class Graphics(GraphicsParams):
         return ax
 
     def _plot_population_size(self, herb_data: object, carn_data: object, ax: object)->object:
+        """
+        Plotting the population size of the herbivores and carnivores.
+
+        Parameters
+        ----------
+        herb_data: `np array`
+            One dimensional array containing population size for each year, for the herbivores
+        carn_data: `np array`
+            One dimensional array containing population size for each year, for the carnivores
+        ax: `object`
+            The axes for the plot
+
+        Returns
+        -------
+        ax: `object`
+            The axes with the population size plot for both populations
+        """
         """
         Brukes til å plotte population size over tid
         Data er np array, med en sum per år i simuleringen
