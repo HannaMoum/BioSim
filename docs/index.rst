@@ -12,6 +12,9 @@ The simulation consists of
    * with several landscapes
    * containing populations of animalspecies
 
+The simulation is split into the main modules: animals, landscapes, island and simulation.
+Additionally, a graphic module is provided to create visualization of the simulation.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
