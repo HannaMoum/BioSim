@@ -17,6 +17,7 @@ from biosim.base_logger import logger
 
 @dataclass
 class BioSimParam:
+    """Provide default pattern for hist_spec for :py:class:`.BioSim`."""
     hist_spec_pattern = {'fitness': {'max': float, 'delta': int},
                          'age': {'max': float, 'delta': int},
                          'weight': {'max': float, 'delta': int}}
@@ -175,7 +176,7 @@ class BioSim(BioSimParam):
         Parameters
         ----------
         img_years: `int` or None
-            Years between visualizations saved to files
+            Years between visualizations saved to files.
 
         Returns
         -------
@@ -401,7 +402,7 @@ class BioSim(BioSimParam):
             >>> new_params = {'omega': 0.6, 'beta': 1, 'a_half': 35}
             >>>
             >>> # Create a simulation object with necessary input
-            >>> sim = BioSim(map_str, hist_specs=hist_specs)
+            >>> sim = BioSim(map_str)
             >>>
             >>> # Set new parameters
             >>> sim.set_animal_parameters('Herbivore', new_params)
@@ -437,7 +438,7 @@ class BioSim(BioSimParam):
             >>> new_params = {'f_max': 700}
             >>>
             >>> # Create a simulation object with necessary input
-            >>> sim = BioSim(map_str, hist_specs=hist_specs)
+            >>> sim = BioSim(map_str)
             >>>
             >>> # Set new parameters
             >>> sim.set_animal_parameters('L', new_params)
@@ -597,7 +598,7 @@ class BioSim(BioSimParam):
                     landscape.do_death()
 
     def _collect_annual_data(self):
-        """Generate data for each year simulated
+        """Generate data for each year simulated.
 
         Generate data for heatmaps, population size and histograms.
         """
