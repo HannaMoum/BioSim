@@ -3,8 +3,7 @@
 import textwrap
 from biosim.simulation import BioSim
 
-"""
-A minimal example of a BioSim simulation.
+"""A minimal example of a BioSim simulation.
 In the first 100 years of the simulation the island only contains herbivores. 
 After 100 years the carnivores are introduced.  
 """
