@@ -27,8 +27,7 @@ class GraphicsParams:
     island_map_colors: tuple = ('blue', 'darkgreen', 'lightgreen', 'yellow')  #: Island map colors
 
     def transform_landscape_type_from_str_to_int(self, value):
-        """
-        Replace landscape type letter with a number.
+        """Replace landscape type letter with a number.
 
         Parameters
         ----------
@@ -48,8 +47,7 @@ class GraphicsParams:
 
 
 class Graphics(GraphicsParams):
-    """
-    Create visualization from simulation ran by :py:class:`.BioSim`
+    """Create visualization from simulation ran by :py:class:`.BioSim`
 
     Parameters
     ----------
@@ -119,13 +117,10 @@ class Graphics(GraphicsParams):
             colormap.append('yellow')
         self.island_map_colors = tuple(colormap)
 
-        # Konveterer en numpy array med bokstaver (str) til en numpy array med tall 0, 1, 2 og 3.
         island_map_plot = np.copy(self._base_map)
-        # Gjør det mulig at fx kan benyttes celle for celle.
         v_transform_landscape_type_from_str_to_int = np.vectorize(self.transform_landscape_type_from_str_to_int)
-        # Bruker fx celle for celle på island_map_plot
         island_map_plot[:, :] = v_transform_landscape_type_from_str_to_int(island_map_plot)
-        island_map_plot = np.array(island_map_plot, dtype=int)  # Konverterer fra siffer (tall som str) til tall (int).
+        island_map_plot = np.array(island_map_plot, dtype=int)
 
         row, col = island_map_plot.shape
         colormap = colors.ListedColormap(self.island_map_colors)
@@ -285,7 +280,7 @@ class Graphics(GraphicsParams):
         ax_fitness: `object`
             Axes with fitness distribution plot
         """
-        # Setting colors for Herbivores, Carnivores
+        # Set colors for Herbivores and Carnivores respectively
         hist_colors = ['green', 'red']
 
         herbivore_data = histogram_herbivore_data
@@ -296,7 +291,6 @@ class Graphics(GraphicsParams):
         if herbivore_data.shape == (0,):
             herbivore_data = np.zeros(shape=(1, 3))
 
-        # Fitness
         ax_fitness.hist([herbivore_data[:, 2], carnivore_data[:, 2]],
                         bins=int(self.fitness_max / self.fitness_delta),
                         range=(0, self.fitness_max),
@@ -309,7 +303,6 @@ class Graphics(GraphicsParams):
         ax_fitness.set(xlim=(0, self.fitness_max),
                        title='Fitness')
 
-        # Age
         ax_age.hist([herbivore_data[:, 0], carnivore_data[:, 0]],
                     bins=int(self.age_max / self.age_delta),
                     range=(0, self.age_max),
@@ -321,7 +314,6 @@ class Graphics(GraphicsParams):
         ax_age.set(xlim=(0, self.age_max),
                    title='Age')
 
-        # Weight
         ax_weight.hist([herbivore_data[:, 1], carnivore_data[:, 1]],
                        bins=int(self.weight_max / self.weight_delta),
                        range=(0, self.weight_max),
@@ -453,13 +445,12 @@ class Graphics(GraphicsParams):
         fps = 1
         image_files = [os.path.join(self.img_dir, img)
                        for img in os.listdir(self.img_dir)
-                       if img.endswith("." + self.img_fmt)]  # Lager en liste over alle filene
+                       if img.endswith("." + self.img_fmt)]
         image_files.sort()
 
         filename = f'{self.img_dir}/{self.img_base}_video.mp4'
-        # Går gjennom et og et bilde og bygger opp video-kuben.
         clip = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(image_files, fps=fps)
-        clip.write_videofile(filename)  # Lager det om til en videofil.
+        clip.write_videofile(filename)
 
         msg = f'Movie made: {filename}'
         logger.info(msg)
