@@ -311,11 +311,10 @@ class Animal:
 
 
 class Herbivore(Animal):
-    """Animalspecies adopting all methods from superclass Animal."""
+    """Animal species adopting all methods from superclass Animal."""
 
     species = 'Herbivore'
 
-    # Default parameter values for Herbivore
     _default_params = {
         'w_birth': 8.0,
         'sigma_birth': 1.5,
@@ -333,17 +332,16 @@ class Herbivore(Animal):
         'F': 10.0
     }
 
-    # Changeable parameters values by option set to default values
+    # Changeable parameter values by option set to default values
     params = deepcopy(_default_params)
 
 
 class Carnivore(Animal):
-    """Animalspecies adopting all methods from superclass Animal,
+    """Animal species adopting all methods from superclass Animal,
     with its' own unique traits added."""
 
     species = 'Carnivore'
 
-    # Default parameter values for Carnivore
     _default_params = {
         'w_birth': 6.0,
         'sigma_birth': 1.0,
