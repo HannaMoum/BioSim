@@ -205,8 +205,8 @@ class World:
             mask = np.array([[False, direction == 'N', False],
                              [direction == 'W', False, direction == 'E'],
                              [False, direction == 'S', False]])
-
-            if destination := self.object_map[r-1:r+2, c-1:c+2][view & mask]:
+            destination = self.object_map[r - 1:r + 2, c - 1:c + 2][view & mask]
+            if destination.size > 0:
                 return destination.item()
             else:
                 return False
