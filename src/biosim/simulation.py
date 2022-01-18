@@ -120,6 +120,7 @@ class BioSim(BioSimParam):
                  log_file=None):
         random.seed(seed)
 
+        # Create island object
         if self._validate_island_map(island_map):
             self.island = World(island_map)
 
