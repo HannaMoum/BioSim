@@ -71,10 +71,8 @@ class Graphics(GraphicsParams):
         Years between visualizations saved to files
     """
 
-    def __init__(self, base_map, hist_specs: dict,
-                 ymax_animals: int, cmax_animals: dict,
-                 vis_years: int, img_dir, img_base,
-                 img_fmt, img_years):
+    def __init__(self, base_map, hist_specs, ymax_animals, cmax_animals, vis_years,
+                 img_dir, img_base, img_fmt, img_years):
 
         self._base_map = base_map
         self._set_histogram_specs(hist_specs)
@@ -90,7 +88,7 @@ class Graphics(GraphicsParams):
         else:
             self._img_years = img_years
 
-    def _plot_island_map(self, ax: object) -> object:
+    def _plot_island_map(self, ax) -> object:
         """ Plot the map of the island.
 
         Notes
@@ -134,7 +132,7 @@ class Graphics(GraphicsParams):
 
         return ax
 
-    def _set_cmax_animals(self, cmax_animals: dict):
+    def _set_cmax_animals(self, cmax_animals):
         """Set cmax values for each species, if given.
 
         Parameters
@@ -156,7 +154,7 @@ class Graphics(GraphicsParams):
             if key == 'Carnivore':
                 self.cmax_animals_carnivore = value
 
-    def _plot_heatmap(self, heat_map_data: object, species: str, ax: object) -> object:
+    def _plot_heatmap(self, heat_map_data, species, ax) -> object:
         """Plot heatmaps based on provided data from simulation.
 
         Parameters
@@ -191,7 +189,7 @@ class Graphics(GraphicsParams):
 
         return ax
 
-    def _plot_population_size(self, herb_data: object, carn_data: object, ax: object) -> object:
+    def _plot_population_size(self, herb_data, carn_data, ax):
         """
         Plot population size of herbivores and carnivores.
 
@@ -221,7 +219,7 @@ class Graphics(GraphicsParams):
 
         return ax
 
-    def _set_histogram_specs(self, hist_specs: dict):
+    def _set_histogram_specs(self, hist_specs):
         """Set histogram specifications.
 
         Parameters
@@ -251,11 +249,11 @@ class Graphics(GraphicsParams):
                 self.weight_delta = value['delta']
 
     def _plot_histogram(self,
-                        histogram_herbivore_data: object,
-                        histogram_carnivore_data: object,
-                        ax_age: object,
-                        ax_weight: object,
-                        ax_fitness: object) -> object:
+                        histogram_herbivore_data,
+                        histogram_carnivore_data,
+                        ax_age,
+                        ax_weight,
+                        ax_fitness):
         """Plot histograms for age, weight and fitness.
 
         Parameters
@@ -327,13 +325,13 @@ class Graphics(GraphicsParams):
 
         return ax_age, ax_weight, ax_fitness
 
-    def _make_grid(self, heatmap_data_herbivore: object,
-                   heatmap_data_carnivore: object,
-                   population_size_herbivore: object,
-                   population_size_carnivore: object,
-                   histogram_data_herbivore: object,
-                   histogram_data_carnivore: object,
-                   year: int):
+    def _make_grid(self, heatmap_data_herbivore,
+                   heatmap_data_carnivore,
+                   population_size_herbivore,
+                   population_size_carnivore,
+                   histogram_data_herbivore,
+                   histogram_data_carnivore,
+                   year):
         """Make grid with several plots.
 
         Parameters
@@ -384,7 +382,7 @@ class Graphics(GraphicsParams):
 
         return fig
 
-    def _save_grid(self, fig: object, year: int):
+    def _save_grid(self, fig, year):
         """Save grid with several plots.
 
         Parameters
@@ -399,10 +397,10 @@ class Graphics(GraphicsParams):
         msg = f'Saved: {self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}'
         logger.info(msg)
 
-    def show_grid(self, heatmap_data_herbivore: object, heatmap_data_carnivore: object,
-                  population_size_herbivore: object, population_size_carnivore: object,
-                  histogram_data_herbivore: object, histogram_data_carnivore: object,
-                  pause: float, year: int, show: bool, save: bool):
+    def show_grid(self, heatmap_data_herbivore, heatmap_data_carnivore,
+                  population_size_herbivore, population_size_carnivore,
+                  histogram_data_herbivore, histogram_data_carnivore,
+                  pause, year, show, save):
         """Show grid created by :py:meth:`._make_grid`.
 
         Parameters
