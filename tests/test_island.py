@@ -1,11 +1,10 @@
-import textwrap
 import pytest
-from biosim.island import Island
+import textwrap
 import numpy as np
+
+from biosim.island import Island
 from biosim.landscape import Landscape
 from biosim.animals import Herbivore, Carnivore
-
-SEED = 12345678  # random seed for tests
 
 
 @pytest.fixture()
@@ -43,11 +42,6 @@ def geogr_str():
                                         WWW
                                         WLW
                                         WHW
-                                    """,
-                                   """\
-                                        WWW
-                                        WH
-                                        WWW
                                     """
                                    ])
 def test_invalid_map_str(geogr):
@@ -58,7 +52,7 @@ def test_invalid_map_str(geogr):
 
 
 def test_valid_map_str(geogr_str):
-    """Test no ValueErrors are risen when valid map string are given."""
+    """Test no ValueErrors rises when valid map string are given."""
     assert np.all(Island(geogr_str))
 
 
@@ -116,7 +110,7 @@ def test_object_map_coordinate(geogr_str):
 
 @pytest.mark.parametrize('location', [(1, -1), (-1, 1), (0, 1), (9, 2), (2, 9)])
 def test_add_animals_IndexError(geogr_str, location):
-    """Test that IndexError arise if negative coordinates or non-existent coordinates are provided."""
+    """Test that IndexError rises if negative coordinates or non-existent coordinates are provided."""
     island = Island(geogr_str)
     add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5}]}]
     with pytest.raises(IndexError):
@@ -207,7 +201,7 @@ def test_migration_water(mocker, geogr_str, direction):
 
 
 def test_one_migration(mocker):
-    """Test that an animal bound to migrate will only migrate once."""
+    """Test that an animal forced to migrate will only migrate once."""
     mocker.patch('biosim.animals.uniform', return_value=0)
     mocker.patch('biosim.island.choice', return_value='E')
 
@@ -228,7 +222,7 @@ def test_one_migration(mocker):
 
 
 def test_no_migration(mocker, geogr_str):
-    """Test for no migration if probability_to_migrate is absent."""
+    """Test for no migration if probability_to_migrate returns False."""
     mocker.patch('biosim.animals.uniform', return_value=1)
     mocker.patch('biosim.island.choice', return_value='E')
 
