@@ -1,12 +1,16 @@
 """Tests for animal class, concerning both herbivores and carnivores."""
 import pytest
-from random import gauss
+from random import gauss, seed
 from statsmodels.stats.weightstats import ztest
 from scipy.stats import binom_test
 from biosim.animals import Herbivore, Carnivore
 
 #  Overall parameters for probabilistic tests
 SEED = 12345678  # random seed for tests
+
+# Significance levels of statistical tests
+ALPHA_0001 = 0.001
+ALPHA_005 = 0.05
 
 
 @pytest.fixture(autouse=True)
@@ -126,7 +130,7 @@ def test_eat_unlimited(species):
     initial_weight = animal_1.weight
 
     satisfying_amount_1 = species.params['F']
-    satisfying_amount_2 = species.params['F']*2
+    satisfying_amount_2 = species.params['F'] * 2
 
     animal_1.eat(satisfying_amount_1) and animal_2.eat(satisfying_amount_2)
     weight_gain = species.params['F'] * species.params['beta']
@@ -210,17 +214,17 @@ def test_birth_ztest(species):
     We compare the p_value to a predefined acceptance limit alpha, and pass the test if p > a.
 
     Test edits parameters to assure all babies are born."""
+    seed(SEED)
     species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
     age = species.params['a_half']
     weight = species.params['w_half']
     num_animals = 10
     animal = species(weight, age)
 
-    alpha = 0.001
     newborn_weights = [animal.probability_to_give_birth(num_animals) for _ in range(200)]
     test_stat, p_value = ztest(newborn_weights, value=species.params['w_birth'])
 
-    assert p_value > alpha
+    assert p_value > ALPHA_0001
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -290,9 +294,10 @@ def test_birth_prob_maternal_health(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_miscarriage_binomial(species):
-    """Binoimal test: Test the statistical significance of deviation from an animal's probability to miscarriage
+    """Binomial test: Test the statistical significance of deviation from an animal's probability to miscarriage
     (by manually set parameters), of the observed miscarriages.
-    Using scipy.stats bionom_test to find the p_value, and deciding upon a 5% level of significance."""
+    Using scipy.stats binom_test to find the p_value, and deciding upon a 5% level of significance."""
+    seed(SEED)
     species.set_params({'sigma_birth': 0.2, 'w_birth': 0})
     num_tests = 500
     newborns = [gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(num_tests)]
@@ -300,8 +305,7 @@ def test_miscarriage_binomial(species):
     num_cases = len(negative_newborns)
 
     p_value = binom_test(num_cases, num_tests, 1/2)
-    alpha = 0.05
-    assert p_value > alpha
+    assert p_value > ALPHA_005
 
 
 @pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
@@ -351,17 +355,17 @@ def test_death_probability_binomial(species):
 
     Test the statistical significance of deviation from an animal's probability to die
     (if weight grater than zero), of the observed deaths.
-    Using scipy.stats bionom_test to find the p_value, and deciding upon a 5% level of significance,
+    Using scipy.stats binom_test to find the p_value, and deciding upon a 5% level of significance,
     for the probability not to be biased.
     """
-    alpha = 0.05
+    seed(SEED)
     animal = species(12.5, 10)
     num_tests = 200
     observed_deaths = sum(animal.dies() for _ in range(num_tests))
 
     probability = species.params['omega'] * (1 - animal.fitness)
     p_value = binom_test(observed_deaths, num_tests, probability, alternative='two-sided')
-    assert p_value > alpha
+    assert p_value > ALPHA_005
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
@@ -406,7 +410,7 @@ def test_killing_probability_fitness_less():
     is bigger than the carnivore's fitness."""
     herb = Herbivore(12.5, 10)
     carn = Carnivore(0, 10)
-    assert not carn.probability_to_give_birth(herb.fitness)
+    assert not carn.probability_to_kill(herb.fitness)
 
 
 def test_killing_probability_fitness_equal():
