@@ -4,7 +4,6 @@ from random import choice
 from biosim.landscape import Landscape
 
 
-
 class Island:
     """An island with unique geography and evolution.
 
@@ -153,13 +152,13 @@ class Island:
                 raise IndexError('Given locations for adding population must be greater than zero.')
 
             if row >= max_r or col >= max_col:
-                raise IndexError('Given locations for adding population does not exist on the created island.')
+                raise IndexError('Given locations for adding population does not exist '
+                                 'on the created island.')
 
             landscape_object = self.object_map[row, col]
 
             population = dictionary['pop']
             landscape_object.add_animals(population)
-
 
     def do_migration(self):
         """Migrate all animals in all terrains."""
@@ -174,7 +173,8 @@ class Island:
                     for animal in current_location.population:
                         if animal not in global_migrated_animals:
 
-                            if migrate_to_location := self._get_migration_location(animal, it.multi_index):
+                            if migrate_to_location := self._get_migration_location(animal,
+                                                                                   it.multi_index):
                                 migrate_to_location.population.append(animal)
                                 local_migrated_animals.append(animal)
 
@@ -297,9 +297,9 @@ class Island:
 
         Notes
         -----
-        Function takes method :py:meth:`.v_herb_properties_objects` or :py:meth:`.v_carn_properties_objects`
-        as input and provides full exposure of the respective animals' attributes age, weight and fitness
-        for every cell on the island.
+        Function takes method :py:meth:`.v_herb_properties_objects`
+        or :py:meth:`.v_carn_properties_objects` as input and provides full exposure of
+        the respective animals' attributes age, weight and fitness for every cell on the island.
 
         Parameters
         ----------
@@ -378,16 +378,3 @@ class Island:
             for animal in location.carnivores:
                 characteristics.append((animal.age, animal.weight, animal.fitness))
             return characteristics
-
-
-
-
-
-
-
-
-
-
-
-
-

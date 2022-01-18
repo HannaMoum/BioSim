@@ -229,7 +229,8 @@ def test_num_animals_initially(map_str, ini_pop):
 
 
 def test_num_animals_added(map_str):
-    """Test that expected amount of animals are to be found on the island after adding animals explicitly."""
+    """Test that expected amount of animals are to be found on the island
+    after adding animals explicitly."""
     ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
                                        {'species': 'Carnivore', 'age': 5, 'weight': 5}]}]
     sim = BioSim(map_str)
@@ -266,7 +267,9 @@ def test_num_animals_after_sim(map_str, mocker):
                     sim.num_animals_per_species['Carnivore'] == 0])
 
 
-@pytest.mark.parametrize('species, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
+@pytest.mark.parametrize('species, species_str',
+                         [(Herbivore, 'Herbivore'),
+                          (Carnivore, 'Carnivore')])
 def test_set_animal_parameters(map_str, species, species_str):
     """Test that set_animal_parameters for all subspecies provide expected results."""
     sim = BioSim(map_str)
@@ -317,7 +320,9 @@ def test_add_population_none(map_str):
 def test_make_movie(map_str, img_dir_base):
     """Test that movie is saved correctly."""
     img_base = 'BioSim'
-    ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
+    ini_pop = [{'loc': (2, 2),
+                'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]}
+               for _ in range(20)]
     sim = BioSim(map_str,
                  ini_pop,
                  img_dir=img_dir_base,
@@ -332,7 +337,9 @@ def test_make_movie(map_str, img_dir_base):
 def test_make_movie_error(map_str, img_dir_base):
     """Test that error rises if directory is empty."""
     img_base = 'BioSim'
-    ini_pop = [{'loc': (2, 2), 'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]} for _ in range(20)]
+    ini_pop = [{'loc': (2, 2),
+                'pop': [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]}
+               for _ in range(20)]
     sim = BioSim(map_str, ini_pop, img_dir=img_dir_base, img_base=img_base)
     with pytest.raises(FileNotFoundError):
         sim.make_movie()
@@ -352,6 +359,3 @@ def test_simulation_modulus_error_second_sim(map_str):
     sim.simulate(8)
     with pytest.raises(ValueError):
         sim.simulate(10)
-
-
-

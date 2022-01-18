@@ -152,7 +152,8 @@ class Landscape:
         for hunter in hunting_order:
             hunter.F_tilde = 0
 
-            survivors = [prey for prey in prey_order if not hunter.killing(prey.fitness, prey.weight)]
+            survivors = [prey for prey in prey_order
+                         if not hunter.killing(prey.fitness, prey.weight)]
             prey_order = survivors
 
         self.population = prey_order + hunting_order
@@ -236,4 +237,5 @@ class Landscape:
                 self.population += [Carnivore(weight, age)]
             else:
                 raise ValueError(f'{animal} is not a defined animal.\n'
-                                 f'Defined animals are: {[cls.__name__ for cls in Animal.__subclasses__()]}')
+                                 f'Defined animals are: '
+                                 f'{[cls.__name__ for cls in Animal.__subclasses__()]}')

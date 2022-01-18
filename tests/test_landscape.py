@@ -93,13 +93,17 @@ def test_initial_population(terrain):
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
 def test_initial_pop_count(terrain):
     """Test that initial counter is set to 0."""
-    assert all([Landscape(terrain).herbivores_number == 0, Landscape(terrain).carnivores_number == 0])
+    assert all([Landscape(terrain).herbivores_number == 0,
+                Landscape(terrain).carnivores_number == 0])
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_set_population(terrain):
     """Test correct update of attribute population."""
-    population = [Herbivore(12.5, 10), Carnivore(12.5, 10), Carnivore(9, 25), Herbivore(9, 25)]
+    population = [Herbivore(12.5, 10),
+                  Carnivore(12.5, 10),
+                  Carnivore(9, 25),
+                  Herbivore(9, 25)]
     location_cell = Landscape(terrain)
     location_cell.population = population
     assert location_cell.population == population
@@ -149,9 +153,12 @@ def test_carnivores_reduction(terrain):
     assert location_cell.carnivores == [population[2]]
 
 
-@pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
+@pytest.mark.parametrize('terrain_letter, terrain',
+                         [('L', 'Lowland'),
+                          ('H', 'Highland')])
 def test_grassing_fodder_adjustment(terrain_letter, terrain):
-    """Test fodder adjustment when grassing in Lowland and Highland, while there are still fodder available."""
+    """Test fodder adjustment when grassing in Lowland and Highland,
+    while there are still fodder available."""
     herbivores = [Herbivore(12.5, 10), Herbivore(0, 3),
                   Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])]
 
@@ -287,7 +294,9 @@ def test_death_all(terrain):
     landscape_cell.population += herb_pop + carn_pop
     landscape_cell.do_death()
 
-    assert not all([landscape_cell.herbivores, landscape_cell.carnivores, landscape_cell.population])
+    assert not all([landscape_cell.herbivores,
+                    landscape_cell.carnivores,
+                    landscape_cell.population])
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
@@ -361,4 +370,3 @@ def test_add_animal_water():
     landscape_cell = Landscape('W')
     with pytest.raises(ValueError):
         landscape_cell.add_animals(added_pop)
-

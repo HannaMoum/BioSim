@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
 import seaborn as sns
-from moviepy.video.io.bindings import mplfig_to_npimage
 import moviepy.video.io.ImageSequenceClip
 from biosim.base_logger import logger
 
@@ -40,7 +39,8 @@ class GraphicsParams:
             Integer representing a landscape.
         """
         if value in self.codes_for_landscape_types:
-            replacement_values = list(zip(self.codes_for_landscape_types, self.plot_values_for_landscape_types))
+            replacement_values = list(zip(self.codes_for_landscape_types,
+                                          self.plot_values_for_landscape_types))
             for letter, number in replacement_values:
                 if value == letter:
                     return int(number)
@@ -116,7 +116,8 @@ class Graphics(GraphicsParams):
         self.island_map_colors = tuple(colormap)
 
         island_map_plot = np.copy(self._base_map)
-        v_transform_landscape_type_from_str_to_int = np.vectorize(self.transform_landscape_type_from_str_to_int)
+        v_transform_landscape_type_from_str_to_int = \
+            np.vectorize(self.transform_landscape_type_from_str_to_int)
         island_map_plot[:, :] = v_transform_landscape_type_from_str_to_int(island_map_plot)
         island_map_plot = np.array(island_map_plot, dtype=int)
 
@@ -182,8 +183,11 @@ class Graphics(GraphicsParams):
         else:
             raise ValueError('Species must be Herbivore or Carnivore')
 
-        ax = sns.heatmap(heat_map_data[:, :], cmap=cmap, ax=ax,
-                         center=center, xticklabels=[x for x in range(1, heat_map_data.shape[1] + 1)],
+        ax = sns.heatmap(heat_map_data[:, :],
+                         cmap=cmap,
+                         ax=ax,
+                         center=center,
+                         xticklabels=[x for x in range(1, heat_map_data.shape[1] + 1)],
                          yticklabels=[x for x in range(1, heat_map_data.shape[0] + 1)])
         ax.set_title(title)
 
@@ -196,9 +200,11 @@ class Graphics(GraphicsParams):
         Parameters
         ----------
         herb_data: `ndarray`
-            One dimensional array containing the herbivores' population size for all simulated years.
+            One dimensional array containing the herbivores' population size for all
+            simulated years.
         carn_data: `ndarray`
-            One dimensional array containing the carnivores' population size for all simulated years.
+            One dimensional array containing the carnivores' population size for all
+            simulated years.
         ax: `object`
             Axes to hold the plot
 
@@ -341,13 +347,15 @@ class Graphics(GraphicsParams):
         heatmap_data_carnivore: `object`
             Array containing population data of carnivores in every location.
         population_size_herbivore: `object`
-            One dimensional array containing the herbivores' population size for all simulated years.
+            One dimensional array containing the herbivores' population size for
+            all simulated years.
         population_size_carnivore: `object`
-            One dimensional array containing the carnivores' population size for all simulated years.
+            One dimensional array containing the carnivores' population size for
+            all simulated years.
         histogram_data_herbivore: `object`
-            Array with one column per property, and one row per herbivore
+            Array with one column per property, and one row per herbivore.
         histogram_data_carnivore: `object`
-            Array with one column per property, and one row per carnivore
+            Array with one column per property, and one row per carnivore.
         year: `int`
             Specifying the year being displayed in the grid
 
@@ -378,7 +386,9 @@ class Graphics(GraphicsParams):
         age_ax = plt.subplot(grid[6:8, 6:13])
         weight_ax = plt.subplot(grid[8:10, 6:13])
         fitness_ax = plt.subplot(grid[4:6, 6:13])
-        self._plot_histogram(histogram_data_herbivore, histogram_data_carnivore, age_ax, weight_ax, fitness_ax)
+        self._plot_histogram(histogram_data_herbivore,
+                             histogram_data_carnivore,
+                             age_ax, weight_ax, fitness_ax)
 
         return fig
 
@@ -392,7 +402,8 @@ class Graphics(GraphicsParams):
         year: `int`
             Specification of the year
         """
-        fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}', format=self.img_fmt)
+        fig.savefig(f'{self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}',
+                    format=self.img_fmt)
 
         msg = f'Saved: {self.img_dir}/{self.img_base}_{year:05d}.{self.img_fmt}'
         logger.info(msg)
@@ -410,9 +421,11 @@ class Graphics(GraphicsParams):
         heatmap_data_carnivore: `object`
             Array containing population data of carnivores in every location.
         population_size_herbivore: `object`
-            One dimensional array containing the herbivores' population size for all simulated years.
+            One dimensional array containing the herbivores' population size for
+            all simulated years.
         population_size_carnivore: `object`
-            One dimensional array containing the carnivores' population size for all simulated years.
+            One dimensional array containing the carnivores' population size for
+            all simulated years.
         histogram_data_herbivore: `object`
             Array with one column per property, and one row per herbivore.
         histogram_data_carnivore: `object`

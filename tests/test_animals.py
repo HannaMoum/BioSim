@@ -124,7 +124,8 @@ def test_fitness_parameter_change(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_eat_unlimited(species):
-    """Test correct weight gain when the amount of food available exceeds that of the animal's hunger."""
+    """Test correct weight gain when the amount of food available
+    exceeds that of the animal's hunger."""
     animal_1 = species(12.5, 10)
     animal_2 = species(12.5, 10)
     initial_weight = animal_1.weight
@@ -135,12 +136,14 @@ def test_eat_unlimited(species):
     animal_1.eat(satisfying_amount_1) and animal_2.eat(satisfying_amount_2)
     weight_gain = species.params['F'] * species.params['beta']
 
-    assert all([animal_1.weight == initial_weight + weight_gain, animal_1.weight == animal_2.weight])
+    assert all([animal_1.weight == initial_weight + weight_gain,
+                animal_1.weight == animal_2.weight])
 
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_eat_limited(species):
-    """Test correct weight gain when the amount of food available subceeds that of the animal's hunger."""
+    """Test correct weight gain when the amount of food available
+    subceeds that of the animal's hunger."""
     animal = species(12.5, 10)
     initial_weight = animal.weight
 
@@ -229,12 +232,13 @@ def test_birth_ztest(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_birth_prob_matchmaking(mocker, species):
-    """Deterministic test: No birth takes place if all requirements but matchmaking are fulfilled.
+    """Deterministic test:
+    No birth takes place if all requirements but matchmaking are fulfilled.
 
     xi = 0 assures maternal health, zeta = 0 assures reached puberty and
     sigma_birth = 0.2 is small enough to assure no miscarriages.
-    num_animals = any positive number < 8, gamma = 0.5, fitness = 1 / 4 and mocked uniform return value 1
-    assures no match_probability.
+    num_animals = any positive number < 8, gamma = 0.5,
+    fitness = 1 / 4 and mocked uniform return value 1 assures no match_probability.
     """
     mocker.patch('biosim.animals.uniform', return_value=1)
     species.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
@@ -294,13 +298,15 @@ def test_birth_prob_maternal_health(species):
 
 @pytest.mark.parametrize('species', [Herbivore, Carnivore])
 def test_miscarriage_binomial(species):
-    """Binomial test: Test the statistical significance of deviation from an animal's probability to miscarriage
-    (by manually set parameters), of the observed miscarriages.
-    Using scipy.stats binom_test to find the p_value, and deciding upon a 5% level of significance."""
+    """Binomial test: Test the statistical significance of deviation from an
+    animal's probability to miscarriage (by manually set parameters),
+    of the observed miscarriages. Using scipy.stats binom_test to find the p_value,
+    and deciding upon a 5% level of significance."""
     seed(SEED)
     species.set_params({'sigma_birth': 0.2, 'w_birth': 0})
     num_tests = 500
-    newborns = [gauss(species.params['w_birth'], species.params['sigma_birth']) for _ in range(num_tests)]
+    newborns = [gauss(species.params['w_birth'], species.params['sigma_birth'])
+                for _ in range(num_tests)]
     negative_newborns = [newborn for newborn in newborns if newborn < 0]
     num_cases = len(negative_newborns)
 
@@ -308,11 +314,14 @@ def test_miscarriage_binomial(species):
     assert p_value > ALPHA_005
 
 
-@pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
+@pytest.mark.parametrize('species_obj, species_str',
+                         [(Herbivore, 'Herbivore'),
+                          (Carnivore, 'Carnivore')])
 def test_giving_birth_true(species_obj, species_str):
     """"Test correct return value if animal gives birth.
 
-    Test use the same parameter values as in test probability_to_give_birth to assure birth takes place."""
+    Test use the same parameter values as in test
+    probability_to_give_birth to assure birth takes place."""
     species_obj.set_params({'xi': 0, 'zeta': 0, 'gamma': 0.5, 'sigma_birth': 0.2})
     age = species_obj.params['a_half']
     weight = species_obj.params['w_half']
@@ -324,7 +333,9 @@ def test_giving_birth_true(species_obj, species_str):
         assert all([newborn, isinstance(newborn, species_obj)])
 
 
-@pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
+@pytest.mark.parametrize('species_obj, species_str',
+                         [(Herbivore, 'Herbivore'),
+                          (Carnivore, 'Carnivore')])
 def test_giving_birth_weight(species_obj, species_str):
     """Test weight loss if animal gives birth.
     Adjust parameters to assure birth."""
@@ -340,7 +351,9 @@ def test_giving_birth_weight(species_obj, species_str):
         assert animal.weight < initial_weight
 
 
-@pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
+@pytest.mark.parametrize('species_obj, species_str',
+                         [(Herbivore, 'Herbivore'),
+                          (Carnivore, 'Carnivore')])
 def test_giving_birth_false(species_obj, species_str):
     """"Test correct return value if animal does not gives birth.
     Let animal be alone in landscape to assure no birth takes place."""

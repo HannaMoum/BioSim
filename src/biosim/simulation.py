@@ -29,7 +29,8 @@ class BioSim(BioSimParam):
         Parameters
         ----------
         island_map: `str`
-            Multilinestring of {'W', 'D', 'L', 'H'} mapping the entire island's geography, see Notes.
+            Multilinestring of {'W', 'D', 'L', 'H'} mapping the entire island's geography,
+            see Notes.
         ini_pop: `list` of `dict`, optional
             Population to be placed on island, see Notes.
         seed: `int`, optional
@@ -60,7 +61,8 @@ class BioSim(BioSimParam):
         _initial_num_year: None or `int`
             How many years you simulate at once.
 
-            Controls that the modulus between simulating years and visualizing years are equal to zero.
+            Controls that the modulus between simulating years and
+            visualizing years are equal to zero.
         _num_years: `int`
             Simulation duration in years.
         hist_spec_pattern: `dict`
@@ -109,10 +111,11 @@ class BioSim(BioSimParam):
             >>> #Provide cmax as a dictionary with one or both keys
             >>> {'Herbivore': 50, 'Carnivore': 20}
 
-        :math:`\mathtt{img\_dir}` and :math:`\mathtt{img\_base}` must either both be None or both be strings.
+        :math:`\mathtt{img\_dir}` and :math:`\mathtt{img\_base}` must either both be None
+        or both be strings.
 
-        :math:`\mathtt{log\_file}` is created under the biosim repository whether input is given or not.
-        Input has no affection to this.
+        :math:`\mathtt{log\_file}` is created under the biosim repository whether input
+        is given or not. Input has no affection to this.
         """
 
     def __init__(self, island_map, ini_pop=None, seed=None,
@@ -220,7 +223,8 @@ class BioSim(BioSimParam):
             if vis_years < 0:
                 raise ValueError('vis_years needs to be larger than or equal to zero, or None')
         if isinstance(vis_years, (str, float)):
-            raise ValueError('Invalid input was provided: vis_years must be a whole positive number or None.')
+            raise ValueError('Invalid input was provided: '
+                             'vis_years must be a whole positive number or None.')
 
         return vis_years
 
@@ -289,7 +293,8 @@ class BioSim(BioSimParam):
                     break
 
         if any((error_main_key, error_sub_key)):
-            raise KeyError(f'Provided key is not allowed in hist_specs. Valid keys are: {self.hist_spec_pattern}')
+            raise KeyError(f'Provided key is not allowed in hist_specs. '
+                           f'Valid keys are: {self.hist_spec_pattern}')
         else:
             return True
 
@@ -315,7 +320,8 @@ class BioSim(BioSimParam):
             return True
         for key, value in cmax_animals.items():
             if key not in ['Herbivore', 'Carnivore']:
-                raise KeyError(f'{key} is not a legal key in cmax_animals. Legal keys are Herbivore and Carnivore.')
+                raise KeyError(f'{key} is not a legal key in cmax_animals. '
+                               f'Legal keys are Herbivore and Carnivore.')
 
         return True
 
@@ -352,7 +358,8 @@ class BioSim(BioSimParam):
                 all((isinstance(img_dir, str), isinstance(img_base, str))),
                 all((img_dir is None, img_base is None))
         )):
-            raise ValueError('Either both img_dir and img_base must specified or neither of them can be specified.')
+            raise ValueError('Either both img_dir and img_base must specified or '
+                             'neither of them can be specified.')
 
         if all((img_dir is None, img_years is not None)):
             print('image directory (img_dir) not given. No files will be saved.')
@@ -563,9 +570,11 @@ class BioSim(BioSimParam):
 
             self._num_animals_per_species = {'Herbivore': self.population_map_herbivore.sum(),
                                              'Carnivore': self.population_map_carnivore.sum()}
-            self._num_animals = self.population_map_herbivore.sum() + self.population_map_carnivore.sum()
+            self._num_animals = self.population_map_herbivore.sum() + \
+                                self.population_map_carnivore.sum()
 
-            msg = f'Completed year:{current_year} Herbivores:{self.population_map_herbivore.sum()}   ' \
+            msg = f'Completed year:{current_year} ' \
+                  f'Herbivores:{self.population_map_herbivore.sum()}   ' \
                   f'Carnivores:{self.population_map_carnivore.sum()}'
             logger.info(msg)
 

@@ -1,7 +1,6 @@
 """Implement Animal model used by subspecies."""
 
 import math
-import itertools
 from copy import deepcopy
 from random import gauss, uniform
 
@@ -156,7 +155,8 @@ class Animal:
     def eat(self, food_available):
         """Animal gains weight from eating.
 
-        Animal will always eat until satisfied (`F`), otherwise it will eat :math:`\mathtt{food\_available}`.
+        Animal will always eat until satisfied (`F`),
+        otherwise it will eat :math:`\mathtt{food\_available}`.
         Weight increases by `Food eaten` :math:`* \\beta`.
 
         Parameters
@@ -221,8 +221,9 @@ class Animal:
         At birth, the mother loses :math:`\\xi` times the birthweight of the baby.
         If this is more than her own weight, no baby is born and mother's weight remain unchanged.
 
-        The baby's birthweight is drawn from a gaussian distribution. If the weight drawn is
-        less than zero, it is treated as miscarriage, with no baby born and mother's weight unchanged.
+        The baby's birthweight is drawn from a gaussian distribution.
+        If the weight drawn is less than zero, it is treated as miscarriage,
+        with no baby born and mother's weight unchanged.
 
         Gender plays no role in mating.
         Each animal can give birth to at most one offspring every year.

@@ -18,6 +18,7 @@ def geogr_str():
     geogr = textwrap.dedent(geogr)
     return geogr
 
+
 @pytest.mark.parametrize('geogr', ["""\
                                         WWW
                                         WLH 
@@ -110,7 +111,8 @@ def test_object_map_coordinate(geogr_str):
 
 @pytest.mark.parametrize('location', [(1, -1), (-1, 1), (0, 1), (9, 2), (2, 9)])
 def test_add_animals_IndexError(geogr_str, location):
-    """Test that IndexError rises if negative coordinates or non-existent coordinates are provided."""
+    """Test that IndexError rises if negative coordinates or
+    non-existent coordinates are provided."""
     island = Island(geogr_str)
     add_pop = [{'loc': location, 'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5}]}]
     with pytest.raises(IndexError):
@@ -233,4 +235,3 @@ def test_no_migration(mocker, geogr_str):
 
     assert all([island.object_map[1, 1].population,
                 not island.object_map[1, 2].population])
-
