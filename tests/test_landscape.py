@@ -2,9 +2,6 @@ import pytest
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape
 
-#  Overall parameters for probabilistic tests
-SEED = 12345678  # random seed for tests
-
 
 @pytest.fixture(autouse=True)
 def reset_params_default_land():
@@ -44,7 +41,7 @@ def test_init_landscape_type(terrain):
 
 @pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
 def test_init_f_max_grass(terrain_letter, terrain):
-    """Test that f_max for lowland and highland are correct parameter values."""
+    """Test that f_max for lowland and highland have correct parameter values."""
     assert Landscape(terrain_letter).f_max == Landscape.params['f_max'][terrain]
 
 
@@ -63,7 +60,7 @@ def test_initial_fodder(terrain):
 
 @pytest.mark.parametrize('terrain', ['L', 'H'])
 def test_legal_changes_of_fodder(terrain):
-    """Test legal changes of fodder for lowland og highland with the correct update."""
+    """Test legal changes of fodder for lowland og highland."""
     landscape_cell = Landscape(terrain)
     landscape_cell.fodder = 200
     assert landscape_cell.fodder == 200
@@ -71,7 +68,7 @@ def test_legal_changes_of_fodder(terrain):
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'W', 'D'])
 def test_illegal_changes_of_fodder(terrain):
-    """Test ValueError is risen when illegal changes are made of fodder."""
+    """Test ValueError rises when illegal changes are made of fodder."""
     landscape_cell = Landscape(terrain)
     with pytest.raises(ValueError):
         landscape_cell.fodder = 900
@@ -86,7 +83,7 @@ def test_initial_population_type(terrain):
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
-def test_inital_population(terrain):
+def test_initial_population(terrain):
     """Test for no initial population. An emtpy list returns False"""
     assert not all([Landscape(terrain).population,
                     Landscape(terrain).herbivores,
@@ -101,7 +98,7 @@ def test_initial_pop_count(terrain):
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_set_population(terrain):
-    """Test correct update of ottribute population."""
+    """Test correct update of attribute population."""
     population = [Herbivore(12.5, 10), Carnivore(12.5, 10), Carnivore(9, 25), Herbivore(9, 25)]
     location_cell = Landscape(terrain)
     location_cell.population = population
@@ -154,7 +151,7 @@ def test_carnivores_reduction(terrain):
 
 @pytest.mark.parametrize('terrain_letter, terrain', [('L', 'Lowland'), ('H', 'Highland')])
 def test_grassing_fodder_adjustment(terrain_letter, terrain):
-    """Test fodder adjustment when grassing in Lowland and Highland while there are still fodder available."""
+    """Test fodder adjustment when grassing in Lowland and Highland, while there are still fodder available."""
     herbivores = [Herbivore(12.5, 10), Herbivore(0, 3),
                   Herbivore(Herbivore.params['w_half'], Herbivore.params['a_half'])]
 
@@ -322,6 +319,7 @@ def test_regrowth(terrain_letter, terrain):
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_add_valid_animals(terrain):
+    """Test correct population update when valid animals are added."""
     added_pop = [{'species': 'Herbivore', 'age': 10, 'weight': 12.5},
                  {'species': 'Carnivore', 'age': 10, 'weight': 12.5},
                  {'species': 'Herbivore', 'age': 20, 'weight': 11}]
@@ -348,6 +346,7 @@ def test_add_correct_animal(terrain):
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D'])
 def test_add_invalid_animal(terrain):
+    """Test that ValueError rises when invalid animal is added."""
     added_pop = [{'species': 'Penguin', 'age': 10, 'weight': 12.5}]
 
     landscape_cell = Landscape(terrain)
@@ -356,6 +355,7 @@ def test_add_invalid_animal(terrain):
 
 
 def test_add_animal_water():
+    """Test that animals cannot be added to Water landscape."""
     added_pop = [{'species': 'Herbivore', 'age': 10, 'weight': 12.5}]
 
     landscape_cell = Landscape('W')
