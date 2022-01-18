@@ -1,9 +1,7 @@
 from random import sample
 from copy import deepcopy
 
-from biosim.animals import Animal
-from biosim.animals import Herbivore
-from biosim.animals import Carnivore
+from biosim.animals import Animal, Herbivore, Carnivore
 
 
 class Landscape:
@@ -28,7 +26,6 @@ class Landscape:
         Terrain describing the landscape cell.
     """
 
-    # default parameter values for landscapes
     _default_params = {'f_max': {'Highland': 300.0, 'Lowland': 800.0}}
 
     # Changeable parameters values by option set to default values
@@ -97,13 +94,7 @@ class Landscape:
 
     @population.setter
     def population(self, value):
-        population_set = set(value)
-        # TODO: Duplicate control should be removed. This is only valuable for bugsearch
-        contains_duplicates = len(value) != len(population_set)
-        if not contains_duplicates:
-            self._population = value
-        else:
-            raise ValueError('Population list can not contain duplicates') #No test added
+        self._population = value
 
     @property
     def herbivores(self):
@@ -178,13 +169,13 @@ class Landscape:
                         (newborn := individual.giving_birth(species, num_animals))]
             return newborns
 
-        herb_babies = create_newborns('Herbivore', self.herbivores_number, self.herbivores)
-        carn_babies = create_newborns('Carnivore', self.carnivores_number, self.carnivores)
+        herbivore_babies = create_newborns('Herbivore', self.herbivores_number, self.herbivores)
+        carnivore_babies = create_newborns('Carnivore', self.carnivores_number, self.carnivores)
 
-        if herb_babies:
-            self.population += herb_babies
-        if carn_babies:
-            self.population += carn_babies
+        if herbivore_babies:
+            self.population += herbivore_babies
+        if carnivore_babies:
+            self.population += carnivore_babies
 
     def aging(self):
         """Age all animals by one year.
