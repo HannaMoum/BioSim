@@ -8,8 +8,7 @@ import numpy as np
 import random
 import os
 from dataclasses import dataclass
-from biosim.animals import Herbivore
-from biosim.animals import Carnivore
+from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape
 from biosim.world import World
 from biosim.graphics import Graphics
@@ -120,8 +119,6 @@ class BioSim(BioSimParam):
                  img_dir=None, img_base=None, img_fmt='png', img_years=None,
                  log_file=None):
         random.seed(seed)
-        # Påvirker potensielt andre script som kjører.
-        # Vurder å lage egen Random-instans, slik at BioSim kan eie sitt eget random seed.
 
         if self._validate_island_map(island_map):
             self.island = World(island_map)
@@ -131,13 +128,14 @@ class BioSim(BioSimParam):
         self._num_animals_per_species = {'Herbivore': 0, 'Carnivore': 0}
         self._num_animals = 0
 
+        # Add population
         self.add_population(ini_pop)
 
-        # Controlling simulate procedure
+        # Control simulate procedure
         self._initial_num_year = None
         self._num_years = 0
 
-        # Generating data
+        # Generate data
         self.population_map_herbivore = np.empty(())
         self.population_map_carnivore = np.empty(())
         self.population_size_herbivore = []
@@ -145,7 +143,7 @@ class BioSim(BioSimParam):
         self.herbivore_age_weight_fitness = []
         self.carnivore_age_weight_fitness = []
 
-        # Controlling graphics
+        # Control graphics
         self._img_dir = img_dir
         self._img_base = img_base
         self._img_fmt = img_fmt
@@ -277,10 +275,12 @@ class BioSim(BioSimParam):
 
         error_main_key = False
         error_sub_key = False
+
         for key in hist_specs:
             if key not in self.hist_spec_pattern:
                 error_main_key = True
                 break
+
             for sub_key in hist_specs[key]:
                 if sub_key not in self.hist_spec_pattern[key]:
                     error_sub_key = True
@@ -480,20 +480,20 @@ class BioSim(BioSimParam):
                             'For more information see documentation.')
         if population:
             self.island.add_population_in_location(population)
-            num_animals, num_herbs, num_carns = 0, 0, 0
+            num_animals, num_herbivores, num_carnivores = 0, 0, 0
 
             for dictionary in population:
                 num_animals += len(dictionary['pop'])
 
                 for animal in dictionary['pop']:
                     if animal['species'] == 'Herbivore':
-                        num_herbs += 1
+                        num_herbivores += 1
                     if animal['species'] == 'Carnivore':
-                        num_carns += 1
+                        num_carnivores += 1
 
             self._num_animals += num_animals
-            self._num_animals_per_species['Herbivore'] += num_herbs
-            self._num_animals_per_species['Carnivore'] += num_carns
+            self._num_animals_per_species['Herbivore'] += num_herbivores
+            self._num_animals_per_species['Carnivore'] += num_carnivores
         else:
             return None
 
@@ -516,8 +516,7 @@ class BioSim(BioSimParam):
         logger.info('make_movie started')
 
     def simulate(self, num_years=10):
-        """
-        Run simulation and gather information.
+        """Run simulation and gather information.
 
         Notes
         -----
@@ -544,7 +543,7 @@ class BioSim(BioSimParam):
         if self._vis_years is not None:
             if self._vis_years > 0:
                 if self._initial_num_year % self._vis_years != 0:
-                    raise ValueError('Number of simulated years must be multiple of vis_years')
+                    raise ValueError('Number of simulated years must be a multiple of vis_years')
 
         for current_year in range(start_loop, self._num_years):
             self._year += 1
@@ -569,7 +568,8 @@ class BioSim(BioSimParam):
             logger.info(msg)
 
             print('\r',
-                  f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   Carnivores:{self.population_map_carnivore.sum()}',
+                  f'Year:{current_year}  Herbivores:{self.population_map_herbivore.sum()}   '
+                  f'Carnivores:{self.population_map_carnivore.sum()}',
                   end='')
 
         print()
@@ -584,7 +584,9 @@ class BioSim(BioSimParam):
                     landscape.grassing()
                 if landscape.landscape_type in 'LHD':
                     landscape.hunting()
+
         self.island.do_migration()
+
         with np.nditer(self.island.object_map, flags=['multi_index', 'refs_ok']) as it:
             for element in it:
                 landscape = element.item()
@@ -598,22 +600,21 @@ class BioSim(BioSimParam):
 
         Generate data for heatmaps, population size and histograms.
         """
-        # Generate heatmaps
+        # Generate data for heatmaps
         self.population_map_herbivore = self.island.get_property_map('v_size_herb_pop')
         self.population_map_carnivore = self.island.get_property_map('v_size_carn_pop')
 
-        # Generate population size
+        # Generate data for population size
         self.population_size_herbivore.append(self.population_map_herbivore.sum())
         self.population_size_carnivore.append(self.population_map_carnivore.sum())
 
-        # Generate histograms
+        # Generate data for histograms
         herbivore_object_map = self.island.get_property_map_objects('v_herb_properties_objects')
         carnivore_object_map = self.island.get_property_map_objects('v_carn_properties_objects')
 
         object_maps = [herbivore_object_map, carnivore_object_map]
         for species in object_maps:
             acc_list = []
-
             with np.nditer(species, flags=['multi_index', 'refs_ok']) as it:
                 for element in it:
                     list_on_location = element.item()
@@ -646,7 +647,7 @@ class BioSim(BioSimParam):
                 show = True
         elif self._vis_years >= 1:
             if (current_year + 1) % self._vis_years == 0:
-                pause = 1 / self._vis_years  # TODO: Finn en pause basert på antall år som simuleres og intervall mellom bilder.
+                pause = 1 / self._vis_years
                 show = True
 
         if self._img_years == 0:
