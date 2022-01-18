@@ -80,9 +80,9 @@ def test_illegal_changes_of_fodder(terrain):
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
 def test_initial_population_type(terrain):
     """Test that initial population type is a list."""
-    assert all([type(Landscape(terrain).population) == list,
-                type(Landscape(terrain).herbivores) == list,
-                type(Landscape(terrain).carnivores) == list])
+    assert all([isinstance(Landscape(terrain).population, list),
+                isinstance(Landscape(terrain).herbivores, list),
+                isinstance(Landscape(terrain).carnivores, list)])
 
 
 @pytest.mark.parametrize('terrain', ['L', 'H', 'D', 'W'])
