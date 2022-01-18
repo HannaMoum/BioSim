@@ -26,7 +26,7 @@ The island module provides necessary maps for the island, to ensure a dynamic ev
 consisting of migration and interaction for all animals. All life and actions stays within
 the island.
 
-.. automodule:: biosim.world
+.. automodule:: biosim.island
    :members:
    :private-members:
 

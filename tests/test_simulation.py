@@ -3,7 +3,7 @@ import shutil
 
 import pytest
 from biosim.simulation import BioSim
-from biosim.island import World
+from biosim.island import Island
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape
 
@@ -38,9 +38,9 @@ def img_dir_base():
 
 
 def test_map_validation(map_str, hist_specs):
-    """Test creation of World object if map input is valid."""
+    """Test creation of Island object if map input is valid."""
     sim = BioSim(map_str, hist_specs=hist_specs)
-    assert type(sim.island) == World
+    assert type(sim.island) == Island
 
 
 @pytest.mark.parametrize('map', ["WWW\nWLW\nWW", 1234])
