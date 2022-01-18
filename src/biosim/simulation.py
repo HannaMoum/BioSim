@@ -10,7 +10,7 @@ import os
 from dataclasses import dataclass
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape
-from biosim.world import World
+from biosim.island import Island
 from biosim.graphics import Graphics
 from biosim.base_logger import logger
 
@@ -55,7 +55,7 @@ class BioSim(BioSimParam):
         Attributes
         ----------
         island: `obj`
-            Object of class :py:class:`.World`
+            Object of class :py:class:`.Island`
         _initial_num_year: None or `int`
             How many years you simulate at once.
 
@@ -122,7 +122,7 @@ class BioSim(BioSimParam):
 
         # Create island object
         if self._validate_island_map(island_map):
-            self.island = World(island_map)
+            self.island = Island(island_map)
 
         # Initial property values
         self._year = 0
@@ -224,7 +224,7 @@ class BioSim(BioSimParam):
         return vis_years
 
     def _validate_island_map(self, island_map: str) -> bool:
-        """Validate input type island_map before sending to World class.
+        """Validate input type island_map before sending to Island class.
 
         Parameters
         ----------

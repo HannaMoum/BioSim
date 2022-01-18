@@ -35,12 +35,19 @@ if __name__ == '__main__':
                            'weight': 15}
                           for _ in range(150)]}]
 
-    sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
+    sim = BioSim(island_map=geogr,
+                 ini_pop=ini_herbs,
                  seed=123456,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}},
-                 vis_years=None)
+                 vis_years=None,
+                 img_dir='C:/temp/BioSim',
+                 img_base='BioSim',
+                 img_years=5
+                 )
+
     sim.set_landscape_parameters('L', {'f_max': 800})
     sim.set_animal_parameters('Herbivore', {'F': 20})
     sim.simulate(num_years=50)
+    sim.make_movie()

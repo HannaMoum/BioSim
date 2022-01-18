@@ -5,7 +5,7 @@ from biosim.landscape import Landscape
 
 
 
-class World:
+class Island:
     """An island with unique geography and evolution.
 
     Attributes
