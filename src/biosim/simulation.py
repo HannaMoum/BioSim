@@ -167,7 +167,7 @@ class BioSim(BioSimParam):
 
         logger.info('BioSim initialized')
 
-    def _set_img_years(self, img_years: int, img_dir: int):
+    def _set_img_years(self, img_years, img_dir):
         """Private setter method for img_years.
 
         If input provided, set img_years to input value,
@@ -197,7 +197,7 @@ class BioSim(BioSimParam):
 
         return img_years
 
-    def _set_vis_years(self, vis_years: int) -> int:
+    def _set_vis_years(self, vis_years):
         """Private setter method for vis_years.
 
         Validates correct input.
@@ -224,7 +224,7 @@ class BioSim(BioSimParam):
 
         return vis_years
 
-    def _validate_island_map(self, island_map: str) -> bool:
+    def _validate_island_map(self, island_map):
         """Validate input type island_map before sending to Island class.
 
         Parameters
@@ -254,7 +254,7 @@ class BioSim(BioSimParam):
 
         return True
 
-    def _validate_hist_specs(self, hist_specs: dict) -> bool:
+    def _validate_hist_specs(self, hist_specs):
         """Private validation of provided input hist_specs.
 
         Parameters
@@ -293,7 +293,7 @@ class BioSim(BioSimParam):
         else:
             return True
 
-    def _validate_cmax_animals(self, cmax_animals: dict) -> bool:
+    def _validate_cmax_animals(self, cmax_animals):
         """Private validation of provided input cmax_animals.
 
         Parameters
@@ -319,7 +319,7 @@ class BioSim(BioSimParam):
 
         return True
 
-    def _validate_im_params(self, img_dir: str, img_base: str, img_fmt: str, img_years: int):
+    def _validate_im_params(self, img_dir, img_base, img_fmt, img_years):
         """Private validation of provided image parameters.
 
         Parameters
