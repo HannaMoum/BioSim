@@ -124,7 +124,7 @@ class Animal:
 
         .. math::
             \Phi = \\begin{cases}
-                0  & w {\\leq} 0
+                0  & w \; {\\leq}\; 0
                 \\\ q^+(a, a_{\\frac{1}{2}}, \phi_{age}) * \
                     q^-(w, w_{\\frac{1}{2}},\phi_{weight}) & else
             \\end{cases}
@@ -384,12 +384,13 @@ class Carnivore(Animal):
 
         Notes
         ------
+
         A carnivore kills a herbivore with probability
 
         .. math::
             p = \\begin{cases}
-                0  & if  \Phi_{carn} {\\leq} \Phi_{herb}
-                \\\ \\frac{\Phi_{carn} - \Phi_{herb}}{\Delta\Phi_{max}} & if 0 < \Phi_{carn}-\Phi_{herb}
+                0  & if  \Phi_{carn} \; {\\leq} \; \Phi_{herb}
+                \\\ \\frac{\Phi_{carn} - \Phi_{herb}}{\Delta\Phi_{max}} & if\; 0 < \Phi_{carn}-\Phi_{herb}
                 <\Delta\Phi_{max}
                 \\\ 1 & otherwise
             \\end{cases}
