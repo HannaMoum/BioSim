@@ -31,12 +31,12 @@ Python > 3.8
 * reference_examples: Examples for using the package
 * tests: A testsuite
 * documentation: for documentation go to
-    * docs
-    * -> _build
-    * -> html
-    * -> index.html
-    * -> open in PyCharm, Chrome, FireFox etc.
-
+```
+|-- docs
+    |-- _build
+        |-- html
+           |-- index.html
+```
 ##Further Development
 For further development the authors recommend:
 * optimizing the hierarchy structure
