@@ -481,7 +481,9 @@ class BioSim(BioSimParam):
 
         See Also
         --------
-        :py:class:`.BioSim`: for correct making of :math:`\mathtt{population}` (see parameter :math:`\mathtt{ini\_pop}`)
+        :py:class:`.BioSim`:
+            for correct making of :math:`\mathtt{population}`
+            (see parameter :math:`\mathtt{ini\_pop}`)
         :py:meth:`.add_population_in_location`: Relationship
         """
         if not isinstance(population, (list, type(None))):
