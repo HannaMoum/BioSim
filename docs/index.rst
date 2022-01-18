@@ -5,12 +5,15 @@
 
 Welcome to Biosim's documentation!
 ======================================================
-This is a model of the ecosystem on Rossumøya.
+This is a model of the ecosystem on Rossumøya,
+an island belonging to the island nation of Pylandia.
+The island's ecosystem is relatively undisturbed, and the long term goal
+is to preserve Rossumøya as a nature park for future generations.
 
 The simulation consists of
    * an island
    * with several landscapes
-   * containing populations of animalspecies
+   * containing populations of animal species
 
 The simulation is split into the main modules: animals, landscapes, island and simulation.
 Additionally, a graphic module is provided to create visualization of the simulation.
