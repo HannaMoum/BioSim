@@ -10,7 +10,7 @@ import os
 from dataclasses import dataclass
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape
-from biosim.world import World
+from biosim.island import World
 from biosim.graphics import Graphics
 from biosim.base_logger import logger
 

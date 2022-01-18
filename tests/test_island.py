@@ -1,6 +1,6 @@
 import textwrap
 import pytest
-from biosim.world import World
+from biosim.island import World
 import numpy as np
 from biosim.landscape import Landscape
 from biosim.animals import Herbivore, Carnivore
