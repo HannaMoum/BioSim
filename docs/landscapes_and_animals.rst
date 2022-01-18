@@ -4,12 +4,12 @@ Landscapes and Animals
 The landscape module
 ---------------------
 The landscape module provides a class Landscape.
-Each landscape has its' own specific terrain type, and keeps track of
+Each landscape has its' own specific terrain type and keeps track of
 the animals currently living there, as well as control all interaction between animals
 and their evolution.
 
-Landscapes are given a default parametervalue that by option can be changed for two of the landscapes,
-while the others are unchangeable. See below:
+Landscapes are given default parameter values that by option can be changed for two of the landscapes,
+while the others remain unchangeable. See below:
 
 +-------------------+---------+----------+-------------+-------------+-----------------------------------+
 | Parameter         | Lowland | Highland | Desert      | Water       | Explanation                       |
