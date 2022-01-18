@@ -30,7 +30,7 @@ Different characteristics are given as attributes/parameters/properties,
 while the traits are given as methods.
 
 Each animal is given a set of default parameters affecting their evolution that by
-option can be changed. Overview and explanation is to be found in table below:
+option can be changed. Overview and explanation is to be found in the table below:
 
 +-------------------------+------------+------------+----------------------------------------------+
 | Parameter               | Herbivore  | Carnivore  | Explanation                                  |

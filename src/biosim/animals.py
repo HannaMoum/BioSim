@@ -22,13 +22,11 @@ class Animal:
     weight: `float`
         The animal's weight.
     """
-    id_iter = itertools.count()
     params = None
 
     @classmethod
     def set_params(cls, new_params):
-        """
-        Set class parameters.
+        """Set class parameters.
 
         Parameters
         ----------
@@ -98,7 +96,7 @@ class Animal:
 
     @property
     def F_tilde(self):
-        """Food currently eaten this year (`int` or `float`)."""
+        """Food currently eaten this year by the animal (`int` or `float`)."""
         return self._F_tilde
 
     @F_tilde.setter
@@ -218,7 +216,7 @@ class Animal:
 
         where
         :math:`\Phi` is the animal's :py:attr:`.fitness`, :math:`w` the :py:attr:`.weight`,\
-         and N is :math:`\mathtt{numer\_of\_animals}`
+         and N is :math:`\mathtt{number\_of\_animals}`
 
         At birth, the mother loses :math:`\\xi` times the birthweight of the baby.
         If this is more than her own weight, no baby is born and mother's weight remain unchanged.
@@ -266,8 +264,8 @@ class Animal:
         
         Parameters
         ----------
-        species: `str`
-            Species giving birth.
+        species: {'Herbivore', 'Carnivore'}
+            Animal of chosen species giving birth.
         number_of_animals: `int`
             Number of same species in current terrain before breeding season.
 
