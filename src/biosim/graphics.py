@@ -86,7 +86,7 @@ class Graphics(GraphicsParams):
         self.img_fmt = img_fmt
 
         if not img_years:
-            self._img_years = vis_years #TODO: Check if this is excess code from set_img_years in simulation
+            self._img_years = vis_years
         else:
             self._img_years = img_years
 
