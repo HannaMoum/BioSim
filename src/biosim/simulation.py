@@ -101,9 +101,9 @@ class BioSim(BioSimParam):
             >>>             'pop': [{'species': 'Herbivore', 'age': 5, 'weight': 5},
             >>>                     {'species': 'Carnivore', 'age': 6, 'weight': 6.5}]}]
 
-        :math:`\mathtt{hist\_specs}` is a dictionary with one entry per property for which a histogram shall be shown.
-        For each property, a dictionary providing the maximum value and the bin width must be
-        given, e.g.,
+        :math:`\mathtt{hist\_specs}` is a dictionary with one entry per property
+        for which a histogram shall be shown. For each property, a dictionary providing
+        the maximum value and the bin width must be given, e.g.,
             >>> {'weight': {'max': 80, 'delta': 2}, 'fitness': {'max': 1.0, 'delta': 0.05}}
         Permitted properties are 'weight', 'age' and 'fitness'.
 
