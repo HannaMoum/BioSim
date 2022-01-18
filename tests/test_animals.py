@@ -317,7 +317,7 @@ def test_giving_birth_true(species_obj, species_str):
 
     for _ in range(20):
         newborn = animal.giving_birth(species_str, num_animals)
-        assert all([newborn, type(newborn) == species_obj])
+        assert all([newborn, isinstance(newborn, species_obj)])
 
 
 @pytest.mark.parametrize('species_obj, species_str', [(Herbivore, 'Herbivore'), (Carnivore, 'Carnivore')])
