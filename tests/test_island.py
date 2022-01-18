@@ -99,7 +99,7 @@ def test_object_map_type(geogr_str):
     island = World(geogr_str)
     for reference_row in island.object_map:
         for reference in reference_row:
-            assert type(reference) == Landscape
+            assert isinstance(reference, Landscape)
 
 
 def test_object_map_reference(geogr_str):
