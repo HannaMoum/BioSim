@@ -56,8 +56,8 @@ class Island:
         Raises
         ------
         ValueError
-            * Provided input consists of one or more illegal landscape letter, or
-            * outer edges of the island are not uniquely made up landscape Water.
+            Provided input consists of one or more illegal landscape letter, or
+            outer edges of the island are not uniquely made up landscape Water.
 
         Returns
         -------
@@ -233,7 +233,7 @@ class Island:
         """
         return self._make_property_map(getattr(self, fx_map_type))
 
-    def _make_property_map(self, fx: callable(object)):
+    def _make_property_map(self, fx):
         """
         Create map of chosen property for :py:meth:`.get_property_map`.
 
@@ -313,7 +313,7 @@ class Island:
         """
         return self._make_property_map_objects(getattr(self, fx_map_type))
 
-    def _make_property_map_objects(self, fx: callable(object)):
+    def _make_property_map_objects(self, fx):
         """Create mapping of a chosen species' attribuets for :py:meth:`.get_property_map_objects`.
 
         Parameters

@@ -22,7 +22,7 @@ The main events of one annual simulation cycle for the evolution is:
 
 The island module
 ---------------------
-The island module provides necessary maps for the island, to ensure a dynamic evolution
+The island module provides necessary maps for the island to ensure a dynamic evolution
 consisting of migration and interaction for all animals. All life and actions stays within
 the island.
 
