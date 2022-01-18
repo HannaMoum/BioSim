@@ -1,6 +1,8 @@
 import numpy as np
-from biosim.landscape import Landscape
 from random import choice
+
+from biosim.landscape import Landscape
+
 
 
 class World:
@@ -94,7 +96,6 @@ class World:
         _build_map: `ndarray` of `str`
             Array containing landscape letters in their respective positions.
         """
-
         map_list = input_map.split()
         self._validate_island_map(map_list)
         row, col = len(map_list), len(map_list[0])
@@ -213,7 +214,6 @@ class World:
         else:
             return False
 
-    # Methods concerning mapping
     def get_property_map(self, fx_map_type):
         """User interface that provides mapped values from specified methods of the class.
 
