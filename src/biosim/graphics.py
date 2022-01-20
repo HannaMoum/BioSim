@@ -186,7 +186,6 @@ class Graphics(GraphicsParams):
         ax = sns.heatmap(heat_map_data[:, :],
                          cmap=cmap,
                          ax=ax,
-                         center=center,
                          xticklabels=[x for x in range(1, heat_map_data.shape[1] + 1)],
                          yticklabels=[x for x in range(1, heat_map_data.shape[0] + 1)])
         ax.set_title(title)
@@ -453,7 +452,7 @@ class Graphics(GraphicsParams):
 
     def make_movie_from_files(self):
         """Make movie in mp4 format from saved files of figures."""
-        fps = 1
+        fps = 30
         image_files = [os.path.join(self.img_dir, img)
                        for img in os.listdir(self.img_dir)
                        if img.endswith("." + self.img_fmt)]
