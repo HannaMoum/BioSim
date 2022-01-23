@@ -37,15 +37,15 @@ if __name__ == '__main__':
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60.0, 'delta': 2}},
-                 vis_years=None,
+                 vis_years=100,
                  img_fmt='png',
-                 img_years=1,
-                 img_dir='C:/temp/BioSim',
+                 img_years= 100,
+                 img_dir='C:/temp/BioSim_test',
                  img_base='BioSim'
                  )
 
-    sim.simulate(num_years=400 )
-    sim.make_movie()
+    sim.simulate(num_years=2000)
+    #sim.make_movie()
     # sim.add_population(population=ini_carns)
     # sim.simulate(num_years=5)
     # sim.simulate(num_years=3)
